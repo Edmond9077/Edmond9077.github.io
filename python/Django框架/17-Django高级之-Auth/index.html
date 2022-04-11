@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django框架/17-Django高级之-Auth | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django框架/17-Django高级之-Auth</h2>
+
+
+
+  <p class="post-date">2020-09-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1-Auth模块是什么"><a href="#1-Auth模块是什么" class="headerlink" title="1 Auth模块是什么"></a>1 Auth模块是什么</h2><p><strong>Auth模块是Django自带的用户认证模块：</strong></p>
+<p>我们在开发一个网站的时候，无可避免的需要设计实现网站的用户系统。此时我们需要实现包括用户注册、用户登录、用户认证、注销、修改密码等功能，这还真是个麻烦的事情呢。</p>
+<p>Django作为一个完美主义者的终极框架，当然也会想到用户的这些痛点。它内置了强大的用户认证系统–auth，它默认使用 auth_user 表来存储用户数据。</p>
+<h2 id="2-auth模块常用方法"><a href="#2-auth模块常用方法" class="headerlink" title="2 auth模块常用方法"></a>2 auth模块常用方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> auth</span><br></pre></td></tr></table></figure>
+
+<h3 id="authenticate"><a href="#authenticate" class="headerlink" title="authenticate()"></a>authenticate()</h3><p>提供了用户认证功能，即验证用户名以及密码是否正确，一般需要username 、password两个关键字参数。</p>
+<p>如果认证成功（用户名和密码正确有效），便会返回一个 User 对象。</p>
+<p>authenticate()会在该 User 对象上设置一个属性来标识后端已经认证了该用户，且该信息在后续的登录过程中是需要的。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user = authenticate(username=<span class="string">'usernamer'</span>,password=<span class="string">'password'</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="login-HttpRequest-user"><a href="#login-HttpRequest-user" class="headerlink" title="login(HttpRequest, user)"></a><strong>login(HttpRequest, user)</strong></h3><p>该函数接受一个HttpRequest对象，以及一个经过认证的User对象。</p>
+<p>该函数实现一个用户登录的功能。它本质上会在后端为该用户生成相关session数据。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> authenticate, login</span><br><span class="line">   </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_view</span><span class="params">(request)</span>:</span></span><br><span class="line">  username = request.POST[<span class="string">'username'</span>]</span><br><span class="line">  password = request.POST[<span class="string">'password'</span>]</span><br><span class="line">  user = authenticate(username=username, password=password)</span><br><span class="line">  <span class="keyword">if</span> user <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">    login(request, user)</span><br><span class="line">    <span class="comment"># Redirect to a success page.</span></span><br><span class="line">    ...</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    <span class="comment"># Return an 'invalid login' error message.</span></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<h3 id="logout-request"><a href="#logout-request" class="headerlink" title="*logout(request)  *"></a>*<em>logout(request)  *</em></h3><p>该函数接受一个HttpRequest对象，无返回值。</p>
+<p>当调用该函数时，当前请求的session信息会全部清除。该用户即使没有登录，使用该函数也不会报错。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> logout</span><br><span class="line">   </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">logout_view</span><span class="params">(request)</span>:</span></span><br><span class="line">  logout(request)</span><br><span class="line">  <span class="comment"># Redirect to a success page.</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="is-authenticated"><a href="#is-authenticated" class="headerlink" title="is_authenticated()"></a>is_authenticated()</h3><p>用来判断当前请求是否通过了认证。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_view</span><span class="params">(request)</span>:</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">not</span> request.user.is_authenticated():</span><br><span class="line">    <span class="keyword">return</span> redirect(<span class="string">'%s?next=%s'</span> % (settings.LOGIN_URL, request.path))</span><br></pre></td></tr></table></figure>
+
+<h3 id="login-requierd"><a href="#login-requierd" class="headerlink" title="login_requierd()"></a><strong>login_requierd()</strong></h3><p>auth 给我们提供的一个装饰器工具，用来快捷的给某个视图添加登录校验。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib.auth.decorators <span class="keyword">import</span> login_required</span><br><span class="line">      </span><br><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_view</span><span class="params">(request)</span>:</span></span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<p>若用户没有登录，则会跳转到django默认的 登录URL ‘/accounts/login/ ‘ 并传递当前访问url的绝对路径 (登陆成功后，会重定向到该路径)。</p>
+<p>如果需要自定义登录的URL，则需要在settings.py文件中通过LOGIN_URL进行修改。</p>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LOGIN_URL = <span class="string">'/login/'</span>  <span class="comment"># 这里配置成你项目登录页面的路由</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="create-user"><a href="#create-user" class="headerlink" title="create_user()"></a>create_user()</h3><p>auth 提供的一个创建新用户的方法，需要提供必要参数（username、password）等。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib.auth.models <span class="keyword">import</span> User</span><br><span class="line">user = User.objects.create_user（username=<span class="string">'用户名'</span>,password=<span class="string">'密码'</span>,email=<span class="string">'邮箱'</span>,...）</span><br></pre></td></tr></table></figure>
+
+<h3 id="create-superuser"><a href="#create-superuser" class="headerlink" title="create_superuser()"></a>create_superuser()</h3><p>auth 提供的一个创建新的超级用户的方法，需要提供必要参数（username、password）等。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib.auth.models <span class="keyword">import</span> User</span><br><span class="line">user = User.objects.create_superuser（username=<span class="string">'用户名'</span>,password=<span class="string">'密码'</span>,email=<span class="string">'邮箱'</span>,...）</span><br></pre></td></tr></table></figure>
+
+<h3 id="check-password-password"><a href="#check-password-password" class="headerlink" title="check_password(password)"></a>check_password(password)</h3><p>auth 提供的一个检查密码是否正确的方法，需要提供当前请求用户的密码。</p>
+<p>密码正确返回True，否则返回False。</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ok = user.check_password(<span class="string">'密码'</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="set-password-password"><a href="#set-password-password" class="headerlink" title="set_password(password)"></a>set_password(password)</h3><p>auth 提供的一个修改密码的方法，接收 要设置的新密码 作为参数。</p>
+<p>注意：设置完一定要调用用户对象的save方法！！！</p>
+<p>用法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user.set_password(password=<span class="string">''</span>)</span><br><span class="line">user.save()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_password</span><span class="params">(request)</span>:</span></span><br><span class="line">    user = request.user</span><br><span class="line">    err_msg = <span class="string">''</span></span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">'POST'</span>:</span><br><span class="line">        old_password = request.POST.get(<span class="string">'old_password'</span>, <span class="string">''</span>)</span><br><span class="line">        new_password = request.POST.get(<span class="string">'new_password'</span>, <span class="string">''</span>)</span><br><span class="line">        repeat_password = request.POST.get(<span class="string">'repeat_password'</span>, <span class="string">''</span>)</span><br><span class="line">        <span class="comment"># 检查旧密码是否正确</span></span><br><span class="line">        <span class="keyword">if</span> user.check_password(old_password):</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> new_password:</span><br><span class="line">                err_msg = <span class="string">'新密码不能为空'</span></span><br><span class="line">            <span class="keyword">elif</span> new_password != repeat_password:</span><br><span class="line">                err_msg = <span class="string">'两次密码不一致'</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                user.set_password(new_password)</span><br><span class="line">                user.save()</span><br><span class="line">                <span class="keyword">return</span> redirect(<span class="string">"/login/"</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            err_msg = <span class="string">'原密码输入错误'</span></span><br><span class="line">    content = &#123;</span><br><span class="line">        <span class="string">'err_msg'</span>: err_msg,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> render(request, <span class="string">'set_password.html'</span>, content)</span><br></pre></td></tr></table></figure>
+
+<h3 id="User对象的属性"><a href="#User对象的属性" class="headerlink" title="User对象的属性"></a>User对象的属性</h3><p>User对象属性：username， password</p>
+<p>is_staff ： 用户是否拥有网站的管理权限.</p>
+<p>is_active ： 是否允许用户登录, 设置为 False，可以在不删除用户的前提下禁止用户登录。</p>
+<h2 id="3-扩展默认的auth-user表"><a href="#3-扩展默认的auth-user表" class="headerlink" title="3 扩展默认的auth_user表"></a>3 扩展默认的auth_user表</h2><p>这内置的认证系统这么好用，但是auth_user表字段都是固定的那几个，我在项目中没法拿来直接使用啊！</p>
+<p>比如，我想要加一个存储用户手机号的字段，怎么办？</p>
+<p>聪明的你可能会想到新建另外一张表然后通过一对一和内置的auth_user表关联，这样虽然能满足要求但是有没有更好的实现方式呢？</p>
+<p>答案是当然有了。</p>
+<p>我们可以通过继承内置的 AbstractUser 类，来定义一个自己的Model类。</p>
+<p>这样既能根据项目需求灵活的设计用户表，又能使用Django强大的认证系统了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib.auth.models <span class="keyword">import</span> AbstractUser</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserInfo</span><span class="params">(AbstractUser)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    用户信息表</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    nid = models.AutoField(primary_key=<span class="literal">True</span>)</span><br><span class="line">    phone = models.CharField(max_length=<span class="number">11</span>, null=<span class="literal">True</span>, unique=<span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.username</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>按上面的方式扩展了内置的auth_user表之后，一定要在settings.py中告诉Django，我现在使用我新定义的UserInfo表来做用户认证。写法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 引用Django自带的User表，继承使用时需要设置</span></span><br><span class="line">AUTH_USER_MODEL = <span class="string">"app名.UserInfo"</span></span><br></pre></td></tr></table></figure>
+
+<p>再次注意：</p>
+<p>一旦我们指定了新的认证系统所使用的表，我们就需要重新在数据库中创建该表，而不能继续使用原来默认的auth_user表了。</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django%E6%A1%86%E6%9E%B6/23-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-cookie-session-token/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django框架/23-Django高级之-cookie-session-token
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django%E6%A1%86%E6%9E%B6/12-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-Django%E4%B8%8EAjax/">
+        
+          python/Django框架/12-Django高级之-Django与Ajax
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-Auth模块是什么"><span class="toc-nav-text">1 Auth模块是什么</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-auth模块常用方法"><span class="toc-nav-text">2 auth模块常用方法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#authenticate"><span class="toc-nav-text">authenticate()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#login-HttpRequest-user"><span class="toc-nav-text">login(HttpRequest, user)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#logout-request"><span class="toc-nav-text">*logout(request)  *</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#is-authenticated"><span class="toc-nav-text">is_authenticated()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#login-requierd"><span class="toc-nav-text">login_requierd()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#create-user"><span class="toc-nav-text">create_user()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#create-superuser"><span class="toc-nav-text">create_superuser()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#check-password-password"><span class="toc-nav-text">check_password(password)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#set-password-password"><span class="toc-nav-text">set_password(password)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#User对象的属性"><span class="toc-nav-text">User对象的属性</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-扩展默认的auth-user表"><span class="toc-nav-text">3 扩展默认的auth_user表</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django框架/17-Django高级之-Auth/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django框架/17-Django高级之-Auth",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

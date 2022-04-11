@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      06-go get golang.org/x 包失败 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>06-go get golang.org/x 包失败</h2>
+
+
+
+  <p class="post-date">2020-04-01</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-问题背景"><a href="#一-问题背景" class="headerlink" title="一 问题背景"></a>一 问题背景</h2><p>当我们使用 <code>go get</code>、<code>go install</code>、<code>go mod</code> 等命令时，会自动下载相应的包或依赖包。但由于众所周知的原因（科学上网），类似于 <code>golang.org/x/...</code> 的包会出现下载失败的情况。如下所示：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//go get下载包</span></span><br><span class="line"><span class="keyword">go</span> get -u golang.org/x/sys</span><br><span class="line"><span class="comment">//报错</span></span><br><span class="line"><span class="keyword">go</span> get golang.org/x/sys: unrecognized <span class="keyword">import</span> path <span class="string">"golang.org/x/sys"</span></span><br><span class="line">(https fetch: Get https:<span class="comment">//golang.org/x/sys?go-get=1: dial tcp 216.239.37.1:443: i/o timeout)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二-解决方案一-手动下载"><a href="#二-解决方案一-手动下载" class="headerlink" title="二 解决方案一(手动下载)"></a>二 解决方案一(手动下载)</h2><p>常见的 <code>golang.org/x/...</code> 包，一般在 GitHub 上都有官方的镜像仓库对应。比如 <code>golang.org/x/text</code> 对应 <code>github.com/golang/text</code>。所以，我们可以手动下载或 clone 对应的 GitHub 仓库到指定的目录下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir <span class="variable">$GOPATH</span>/src/golang.org/x</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$GOPATH</span>/src/golang.org/x</span><br><span class="line">git <span class="built_in">clone</span> git@github.com:golang/text.git</span><br><span class="line">rm -rf text/.git</span><br><span class="line"><span class="comment"># 当如果需要指定版本的时候，该方法就无解了，因为 GitHub 上的镜像仓库多数都没有 tag</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三-解决方案-二-设置代理"><a href="#三-解决方案-二-设置代理" class="headerlink" title="三 解决方案(二)设置代理"></a>三 解决方案(二)设置代理</h2><p>如果你自己或者花钱买了代理，那么可以设置对应的环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://proxyAddress:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=http://proxyAddress:port</span><br></pre></td></tr></table></figure>
+
+<p>或者，直接用 <code>all_proxy</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> all_proxy=http://proxyAddress:port</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-解决方案-三-go-mod-replace"><a href="#四-解决方案-三-go-mod-replace" class="headerlink" title="四 解决方案(三)go mod replace"></a>四 解决方案(三)go mod replace</h2><p>从 Go 1.11 版本开始，新增支持了 <code>go modules</code> 用于解决包依赖管理问题。该工具提供了 <code>replace</code>，就是为了解决包的别名问题，也能替我们解决 <code>golang.org/x</code> 无法下载的的问题。</p>
+<p><code>go module</code> 被集成到原生的 <code>go mod</code> 命令中，如果你的代码库在 <code>$GOPATH</code> 中，<code>module</code> 功能是默认不会开启的通过一个环境变量即可开启 <code>export GO111MODULE=on</code>。</p>
+<p>如下go.mod(通过repalce，替换)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">module example.com/hello</span><br><span class="line"></span><br><span class="line">require (</span><br><span class="line">    golang.org/x/text v0.3.0</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">replace (</span><br><span class="line">    golang.org/x/text =&gt; github.com/golang/text v0.3.0</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="五-终极解决方案-四-GOPROXY-环境变量"><a href="#五-终极解决方案-四-GOPROXY-环境变量" class="headerlink" title="五 终极解决方案(四)GOPROXY 环境变量"></a>五 终极解决方案(四)GOPROXY 环境变量</h2><p>设置 —— <strong>GOPROXY</strong>。</p>
+<p>我们知道从 <code>Go 1.11</code> 版本开始，官方支持了 <code>go module</code> 包依赖管理工具。</p>
+<p>其实还新增了 <code>GOPROXY</code> 环境变量。如果设置了该变量，下载源代码时将会通过这个环境变量设置的代理地址，而不再是以前的直接从代码库下载。</p>
+<p><a href="https://github.com/goproxyio/goproxy" target="_blank" rel="noopener">goproxy.io</a> 这个开源项目帮我们实现好了我们想要的。该项目允许开发者一键构建自己的 <code>GOPROXY</code> 代理服务。同时，也提供了公用的代理服务 <code>https://goproxy.io</code>，我们只需设置该环境变量即可正常下载被墙的源码包了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> GOPROXY=https://goproxy.io</span><br></pre></td></tr></table></figure>
+
+<p>不过，<strong>需要依赖于 <code>go module</code> 功能</strong>。可通过 <code>export GO111MODULE=on</code> 开启 MODULE。</p>
+<p>如果项目不在 <code>GOPATH</code> 中，则无法使用 <code>go get ...</code>，但可以使用 <code>go mod ...</code> 相关命令。</p>
+<p>也可以通过置空这个环境变量来关闭，<code>export GOPROXY=</code>。</p>
+<p>对于 Windows ，可以在 <code>PowerShell</code> 中设置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$env</span>:GOPROXY = <span class="string">"https://goproxy.io"</span></span><br></pre></td></tr></table></figure>
+
+<p>最后，使用 <code>GOPROXY</code> 这个环境变量的解决方式，前提是 <strong>Go version &gt;= 1.11</strong>。</p>
+<p>同时，七牛也出了个国内代理 <a href="https://github.com/goproxy/goproxy.cn" target="_blank" rel="noopener">goproxy.cn</a> 方便国内用户更快的访问不能访问的包</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Go" >
+    <span class="tag-code">Go</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/14-%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%9C%BA%E6%99%AF/">
+        <span class="nav-arrow">← </span>
+        
+          1-Python中的GIL
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Mongodb%E7%B3%BB%E5%88%97/Mongodb%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+        
+          db/Mongodb系列/Mongodb快速入门
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-问题背景"><span class="toc-nav-text">一 问题背景</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-解决方案一-手动下载"><span class="toc-nav-text">二 解决方案一(手动下载)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-解决方案-二-设置代理"><span class="toc-nav-text">三 解决方案(二)设置代理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-解决方案-三-go-mod-replace"><span class="toc-nav-text">四 解决方案(三)go mod replace</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-终极解决方案-四-GOPROXY-环境变量"><span class="toc-nav-text">五 终极解决方案(四)GOPROXY 环境变量</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/go/7-其他/06-go-get-golang.org:x-包失败/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "06-go get golang.org/x 包失败",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

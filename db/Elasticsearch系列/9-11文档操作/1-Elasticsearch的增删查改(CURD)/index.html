@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Elasticsearch系列/9-11文档操作/1-Elasticsearch的增删查改(CURD) | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Elasticsearch系列/9-11文档操作/1-Elasticsearch的增删查改(CURD)</h2>
+
+
+
+  <p class="post-date">2020-03-09</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Elasticsearch的增删查改-CURD"><a href="#Elasticsearch的增删查改-CURD" class="headerlink" title="Elasticsearch的增删查改(CURD)"></a>Elasticsearch的增删查改(CURD)</h1><h2 id="一-CURD之Create"><a href="#一-CURD之Create" class="headerlink" title="一 CURD之Create"></a>一 CURD之Create</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT lqz/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"顾老二"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">30</span>,</span><br><span class="line">  <span class="string">"from"</span>: <span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">  <span class="string">"tags"</span>: [<span class="string">"黑"</span>, <span class="string">"长"</span>, <span class="string">"直"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他明处貌似还有俩老婆：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT lqz/doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"大娘子"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">18</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"sheng"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"肤白貌美，娇憨可爱"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"白"</span>, <span class="string">"富"</span>,<span class="string">"美"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">3</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"龙套偏房"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">22</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"mmp，没怎么看，不知道怎么形容"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"造数据"</span>, <span class="string">"真"</span>,<span class="string">"难"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>家里红旗不倒，家外彩旗飘摇：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT lqz/doc/<span class="number">4</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"石头"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">29</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"粗中有细，狐假虎威"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"粗"</span>, <span class="string">"大"</span>,<span class="string">"猛"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">5</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"魏行首"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">25</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"广云台"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"仿佛兮若轻云之蔽月,飘飘兮若流风之回雪,mmp，最后竟然没有嫁给顾老二！"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"闭月"</span>,<span class="string">"羞花"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：<strong>当执行<code>PUT</code>命令时，如果数据不存在，则新增该条数据，如果数据存在则修改该条数据。</strong></p>
+<p>咱们通过<code>GET</code>命令查询一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"found"</span> : true,</span><br><span class="line">  <span class="string">"_source"</span> : &#123;</span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"顾老二"</span>,</span><br><span class="line">    <span class="string">"age"</span> : <span class="number">30</span>,</span><br><span class="line">    <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">    <span class="string">"desc"</span> : <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">    <span class="string">"tags"</span> : [</span><br><span class="line">      <span class="string">"黑"</span>,</span><br><span class="line">      <span class="string">"长"</span>,</span><br><span class="line">      <span class="string">"直"</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查询也没啥问题，但是你可能说了，人家老二是黄种人，怎么是黑的呢？好吧咱改改<code>desc</code>和<code>tags</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT lqz/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"皮肤很黄，武器很长，性格很直"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"很黄"</span>,<span class="string">"很长"</span>, <span class="string">"很直"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例，我们仅修改了<code>desc</code>和<code>tags</code>两处，而<code>name</code>、<code>age</code>和<code>from</code>三个属性没有变化，我们可以忽略不写吗？查查看：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">3</span>,</span><br><span class="line">  <span class="string">"found"</span> : true,</span><br><span class="line">  <span class="string">"_source"</span> : &#123;</span><br><span class="line">    <span class="string">"desc"</span> : <span class="string">"皮肤很黄，武器很长，性格很直"</span>,</span><br><span class="line">    <span class="string">"tags"</span> : [</span><br><span class="line">      <span class="string">"很黄"</span>,</span><br><span class="line">      <span class="string">"很长"</span>,</span><br><span class="line">      <span class="string">"很直"</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>哎呀，出事故了！修改是修改了，但结果不太理想啊，因为<code>name</code>、<code>age</code>和<code>from</code>属性都没啦！<br> 注意：<strong><code>PUT</code>命令，在做修改操作时，如果未指定其他的属性，则按照指定的属性进行修改操作。</strong>也就是如上例所示的那样，我们修改时只修改了<code>desc</code>和<code>tags</code>两个属性，其他的属性并没有一起添加进去。</p>
+<p>很明显，这是病！dai治！怎么治？上车，咱们继续往下走！</p>
+<h2 id="二-CURD之Update"><a href="#二-CURD之Update" class="headerlink" title="二 CURD之Update"></a>二 CURD之Update</h2><p>让我们首先恢复一下事故现场：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT lqz/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"顾老二"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">30</span>,</span><br><span class="line">  <span class="string">"from"</span>: <span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">  <span class="string">"tags"</span>: [<span class="string">"黑"</span>, <span class="string">"长"</span>, <span class="string">"直"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们要将黑修改成黄：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST lqz/doc/<span class="number">1</span>/_update</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"doc"</span>: &#123;</span><br><span class="line">    <span class="string">"desc"</span>: <span class="string">"皮肤很黄，武器很长，性格很直"</span>,</span><br><span class="line">    <span class="string">"tags"</span>: [<span class="string">"很黄"</span>,<span class="string">"很长"</span>, <span class="string">"很直"</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例中，我们使用<code>POST</code>命令，在<code>id</code>后面跟<code>_update</code>，要修改的内容放到<code>doc</code>文档（属性）中即可。</p>
+<p>我们再来查询一次：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">5</span>,</span><br><span class="line">  <span class="string">"found"</span> : true,</span><br><span class="line">  <span class="string">"_source"</span> : &#123;</span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"顾老二"</span>,</span><br><span class="line">    <span class="string">"age"</span> : <span class="number">30</span>,</span><br><span class="line">    <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">    <span class="string">"desc"</span> : <span class="string">"皮肤很黄，武器很长，性格很直"</span>,</span><br><span class="line">    <span class="string">"tags"</span> : [</span><br><span class="line">      <span class="string">"很黄"</span>,</span><br><span class="line">      <span class="string">"很长"</span>,</span><br><span class="line">      <span class="string">"很直"</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如上例所示，现在其他的属性没有变化，只有<code>desc</code>和<code>tags</code>属性被修改。</p>
+<p>注意：<strong><code>POST</code>命令，这里可用来执行修改操作（还有其他的功能），<code>POST</code>命令配合<code>_update</code>完成修改操作，指定修改的内容放到<code>doc</code>中</strong>。</p>
+<p>写了这么多，我也发现我上面有讲的<code>不对</code>的地方——石头不是跟顾老二不清不楚，石头是跟小桃不清不楚！好吧，刚才那个数据是一个错误示范！我们这就把它干掉！</p>
+<h2 id="三CURD之Delete"><a href="#三CURD之Delete" class="headerlink" title="三CURD之Delete"></a>三CURD之Delete</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE lqz/doc/<span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>很简单，通过<code>DELETE</code>命令，就可以删除掉那个错误示范了！</p>
+<p>删除效果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"4"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">4</span>,</span><br><span class="line">  <span class="string">"result"</span> : <span class="string">"deleted"</span>,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">2</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">1</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"_seq_no"</span> : <span class="number">4</span>,</span><br><span class="line">  <span class="string">"_primary_term"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们再来查询一遍：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/<span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"4"</span>,</span><br><span class="line">  <span class="string">"found"</span> : false</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例中，<code>found：false</code>表示查询数据不存在。</p>
+<h2 id="四-CURD之Retrieve"><a href="#四-CURD之Retrieve" class="headerlink" title="四 CURD之Retrieve"></a>四 CURD之Retrieve</h2><p>我们上面已经不知不觉的使用熟悉这种简单查询方式，通过 <code>GET</code>命令查询指定文档：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">  <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">  <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">  <span class="string">"_version"</span> : <span class="number">5</span>,</span><br><span class="line">  <span class="string">"found"</span> : true,</span><br><span class="line">  <span class="string">"_source"</span> : &#123;</span><br><span class="line">    <span class="string">"name"</span> : <span class="string">"顾老二"</span>,</span><br><span class="line">    <span class="string">"age"</span> : <span class="number">30</span>,</span><br><span class="line">    <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">    <span class="string">"desc"</span> : <span class="string">"皮肤很黄，武器很长，性格很直"</span>,</span><br><span class="line">    <span class="string">"tags"</span> : [</span><br><span class="line">      <span class="string">"很黄"</span>,</span><br><span class="line">      <span class="string">"很长"</span>,</span><br><span class="line">      <span class="string">"很直"</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/9-%E4%B8%8A%E7%BA%BF/2-%E4%B8%8A%E7%BA%BF/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/9-上线/2-上线
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/9-11%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C/2-Elasticsearch%E4%B9%8B%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+        
+          db/Elasticsearch系列/9-11文档操作/2-Elasticsearch之查询的两种方式
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Elasticsearch的增删查改-CURD"><span class="toc-nav-text">Elasticsearch的增删查改(CURD)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-CURD之Create"><span class="toc-nav-text">一 CURD之Create</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-CURD之Update"><span class="toc-nav-text">二 CURD之Update</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三CURD之Delete"><span class="toc-nav-text">三CURD之Delete</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-CURD之Retrieve"><span class="toc-nav-text">四 CURD之Retrieve</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Elasticsearch系列/9-11文档操作/1-Elasticsearch的增删查改(CURD)/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Elasticsearch系列/9-11文档操作/1-Elasticsearch的增删查改(CURD)",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

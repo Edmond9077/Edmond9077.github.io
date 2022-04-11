@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django框架/12-Django高级之-Django与Ajax | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django框架/12-Django高级之-Django与Ajax</h2>
+
+
+
+  <p class="post-date">2020-09-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-什么是Ajax"><a href="#一-什么是Ajax" class="headerlink" title="*一 什么是Ajax *"></a>*<em>一 什么是Ajax *</em></h2><p>AJAX（Asynchronous Javascript And XML）翻译成中文就是“异步Javascript和XML”。即使用Javascript语言与服务器进行异步交互，传输的数据为XML（当然，传输的数据不只是XML,现在更多使用json数据）。</p>
+<ul>
+<li>同步交互：客户端发出一个请求后，需要等待服务器响应结束后，才能发出第二个请求；</li>
+<li>异步交互：客户端发出一个请求后，无需等待服务器响应结束，就可以发出第二个请求。</li>
+</ul>
+<p>AJAX除了<strong>异步</strong>的特点外，还有一个就是：浏览器页面<strong>局部刷新</strong>；（这一特点给用户的感受是在不知不觉中完成请求和响应过程）</p>
+<p>场景：</p>
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gj1x5ijpi9j30pu0hmgp0.jpg" alt="image-20200924183129249" style="zoom:50%;" />
+
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ul>
+<li>AJAX使用Javascript技术向服务器发送异步请求</li>
+<li>AJAX无须刷新整个页面</li>
+</ul>
+<h2 id="二-基于jquery的Ajax实现"><a href="#二-基于jquery的Ajax实现" class="headerlink" title="二 基于jquery的Ajax实现"></a>二 基于jquery的Ajax实现</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;button <span class="class"><span class="keyword">class</span></span>=<span class="string">"send_Ajax"</span>&gt;send_Ajax&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">       $(".send_Ajax").click(function()&#123;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">           $.ajax(&#123;</span></span><br><span class="line"><span class="regexp">               url:"/</span>handle_Ajax/<span class="string">",</span></span><br><span class="line"><span class="string">               type:"</span>POST<span class="string">",</span></span><br><span class="line"><span class="string">               data:&#123;username:"</span>Yuan<span class="string">",password:123&#125;,</span></span><br><span class="line"><span class="string">               success:function(data)&#123;</span></span><br><span class="line"><span class="string">                   console.log(data)</span></span><br><span class="line"><span class="string">               &#125;,</span></span><br><span class="line"><span class="string">         　　　　　　</span></span><br><span class="line"><span class="string">               error: function (jqXHR, textStatus, err) &#123;</span></span><br><span class="line"><span class="string">                        console.log(arguments);</span></span><br><span class="line"><span class="string">                    &#125;,</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">               complete: function (jqXHR, textStatus) &#123;</span></span><br><span class="line"><span class="string">                        console.log(textStatus);</span></span><br><span class="line"><span class="string">                &#125;,</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">               statusCode: &#123;</span></span><br><span class="line"><span class="string">                    '403': function (jqXHR, textStatus, err) &#123;</span></span><br><span class="line"><span class="string">                          console.log(arguments);</span></span><br><span class="line"><span class="string">                     &#125;,</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">                    '400': function (jqXHR, textStatus, err) &#123;</span></span><br><span class="line"><span class="string">                        console.log(arguments);</span></span><br><span class="line"><span class="string">                    &#125;</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">           &#125;)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">       &#125;)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Ajax—-gt-服务器——-gt-Ajax执行流程图"><a href="#Ajax—-gt-服务器——-gt-Ajax执行流程图" class="headerlink" title="Ajax—-&gt;服务器——&gt;Ajax执行流程图"></a>Ajax—-&gt;服务器——&gt;Ajax执行流程图</h3><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gj1x4mpne9j30pk08yq39.jpg" alt="img"></p>
+<h2 id="三-案例"><a href="#三-案例" class="headerlink" title="三 案例"></a>三 案例</h2><h3 id="一-通过Ajax，实现前端输入两个数字，服务器做加法，返回到前端页面"><a href="#一-通过Ajax，实现前端输入两个数字，服务器做加法，返回到前端页面" class="headerlink" title="一 通过Ajax，实现前端输入两个数字，服务器做加法，返回到前端页面"></a>一 通过Ajax，实现前端输入两个数字，服务器做加法，返回到前端页面</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_ajax</span><span class="params">(requests)</span>:</span></span><br><span class="line">    n1=int(requests.POST.get(<span class="string">'n1'</span>))</span><br><span class="line">    n2=int(requests.POST.get(<span class="string">'n2'</span>))</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(n1+n2)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#submit"</span>).click(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">        url: <span class="string">'/test_ajax/'</span>,</span><br><span class="line">        type: <span class="string">'post'</span>,</span><br><span class="line">        data: &#123;</span><br><span class="line">            n1: $(<span class="string">"#num1"</span>).val(),</span><br><span class="line">            n2: $(<span class="string">"#num2"</span>).val()</span><br><span class="line">        &#125;,</span><br><span class="line">        success: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(data)</span><br><span class="line">            $(<span class="string">"#sum"</span>).val(data)</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"num1"</span>&gt;</span>+<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"num2"</span>&gt;</span>=<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"sum"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"submit"</span>&gt;</span>计算<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="二-基于Ajax进行登录验证"><a href="#二-基于Ajax进行登录验证" class="headerlink" title="二 基于Ajax进行登录验证"></a>二 基于Ajax进行登录验证</h3><p>用户在表单输入用户名与密码，通过Ajax提交给服务器，服务器验证后返回响应信息，客户端通过响应信息确定是否登录成功，成功，则跳转到首页，否则，在页面上显示相应的错误信息</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">auth</span><span class="params">(request)</span>:</span></span><br><span class="line">    back_dic=&#123;<span class="string">'user'</span>:<span class="literal">None</span>,<span class="string">'message'</span>:<span class="literal">None</span>&#125;</span><br><span class="line">    name=request.POST.get(<span class="string">'user'</span>)</span><br><span class="line">    password=request.POST.get(<span class="string">'password'</span>)</span><br><span class="line">    print(name)</span><br><span class="line">    print(password)</span><br><span class="line">    user=models.user.objects.filter(name=name,password=password).first()</span><br><span class="line">    print(user)</span><br><span class="line">    <span class="comment"># print(user.query)</span></span><br><span class="line">    <span class="keyword">if</span> user:</span><br><span class="line">        back_dic[<span class="string">'user'</span>]=user.name</span><br><span class="line">        back_dic[<span class="string">'message'</span>]=<span class="string">'成功'</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        back_dic[<span class="string">'message'</span>]=<span class="string">'用户名或密码错误'</span></span><br><span class="line">    <span class="keyword">import</span> json</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(json.dumps(back_dic))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#submit3"</span>).click(function () &#123;</span><br><span class="line">        $.ajax(&#123;</span><br><span class="line">            url: <span class="string">'/auth/'</span>,</span><br><span class="line">            type: <span class="string">'post'</span>,</span><br><span class="line">            data: &#123;</span><br><span class="line">                <span class="string">'user'</span>: $(<span class="string">"#id_name"</span>).val(),</span><br><span class="line">                <span class="string">'password'</span>: $(<span class="string">'#id_password'</span>).val()</span><br><span class="line">            &#125;,</span><br><span class="line"></span><br><span class="line">            success: function (data) &#123;</span><br><span class="line">                &#123;<span class="comment">#console.log(data)#&#125;</span></span><br><span class="line">                var data=JSON.parse(data)</span><br><span class="line">                <span class="keyword">if</span> (data.user)&#123;</span><br><span class="line">                    location.href=<span class="string">'https://www.baidu.com'</span></span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                    $(<span class="string">".error"</span>).html(data.message).css(&#123;<span class="string">'color'</span>:<span class="string">'red'</span>,<span class="string">'margin-left'</span>:<span class="string">'20px'</span>&#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>traditional:true—&gt;可以序列化一层列表，多层不行，要转成json格式上传</p>
+<h2 id="四-文件上传"><a href="#四-文件上传" class="headerlink" title="四 文件上传"></a>四 文件上传</h2><h3 id="请求头ContentType"><a href="#请求头ContentType" class="headerlink" title="请求头ContentType"></a>请求头ContentType</h3><h4 id="1-application-x-www-form-urlencoded"><a href="#1-application-x-www-form-urlencoded" class="headerlink" title="1 application/x-www-form-urlencoded"></a>1 application/x-www-form-urlencoded</h4><p>这应该是最常见的 POST 提交数据的方式了。浏览器的原生 <form> 表单，如果不设置 <code>enctype</code> 属性，那么最终就会以 application/x-www-form-urlencoded 方式提交数据。请求类似于下面这样（无关的请求头在本文中都省略掉了）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST http:&#x2F;&#x2F;www.example.com HTTP&#x2F;1.1</span><br><span class="line">Content-Type: application&#x2F;x-www-form-urlencoded;charset&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">user&#x3D;lqz&amp;age&#x3D;22</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-multipart-form-data"><a href="#2-multipart-form-data" class="headerlink" title="2 multipart/form-data"></a>2 multipart/form-data</h4><p>这又是一个常见的 POST 数据提交的方式。我们使用表单上传文件时，必须让 <form> 表单的 <code>enctype</code> 等于 multipart/form-data。直接来看一个请求示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST http:&#x2F;&#x2F;www.example.com HTTP&#x2F;1.1</span><br><span class="line">Content-Type:multipart&#x2F;form-data; boundary&#x3D;----WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;user&quot;</span><br><span class="line"></span><br><span class="line">yuan</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA</span><br><span class="line">Content-Disposition: form-data; name&#x3D;&quot;file&quot;; filename&#x3D;&quot;chrome.png&quot;</span><br><span class="line">Content-Type: image&#x2F;png</span><br><span class="line"></span><br><span class="line">PNG ... content of chrome.png ...</span><br><span class="line">------WebKitFormBoundaryrGKCBY7qhFd3TrwA--</span><br></pre></td></tr></table></figure>
+
+<p>这个例子稍微复杂点。首先生成了一个 boundary 用于分割不同的字段，为了避免与正文内容重复，boundary 很长很复杂。然后  Content-Type 里指明了数据是以 multipart/form-data 来编码，本次请求的 boundary  是什么内容。消息主体里按照字段个数又分为多个结构类似的部分，每部分都是以 <code>--boundary</code> 开始，紧接着是内容描述信息，然后是回车，最后是字段具体内容（文本或二进制）。如果传输的是文件，还要包含文件名和文件类型信息。消息主体最后以 <code>--boundary--</code> 标示结束。关于 multipart/form-data 的详细定义，请前往 <a href="http://www.ietf.org/rfc/rfc1867.txt" target="_blank" rel="noopener">rfc1867</a> 查看。</p>
+<p>这种方式一般用来上传文件，各大服务端语言对它也有着良好的支持。</p>
+<p>上面提到的这两种 POST 数据的方式，都是浏览器原生支持的，而且现阶段标准中原生 <form> 表单也<a href="http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4" target="_blank" rel="noopener">只支持这两种方式</a>（通过 <form> 元素的 <code>enctype</code> 属性指定，默认为 <code>application/x-www-form-urlencoded</code>。其实 <code>enctype</code> 还支持 <code>text/plain</code>，不过用得非常少）。</p>
+<p>随着越来越多的 Web 站点，尤其是 WebApp，全部使用 Ajax 进行数据交互之后，我们完全可以定义新的数据提交方式，给开发带来更多便利。</p>
+<h4 id="3-application-json"><a href="#3-application-json" class="headerlink" title="3 application/json"></a>3 application/json</h4><p>application/json 这个 Content-Type  作为响应头大家肯定不陌生。实际上，现在越来越多的人把它作为请求头，用来告诉服务端消息主体是序列化后的 JSON 字符串。由于 JSON  规范的流行，除了低版本 IE 之外的各大浏览器都原生支持 JSON.stringify，服务端语言也都有处理 JSON 的函数，使用 JSON  不会遇上什么麻烦。</p>
+<p>JSON 格式支持比键值对复杂得多的结构化数据，这一点也很有用。记得我几年前做一个项目时，需要提交的数据层次非常深，我就是把数据 JSON 序列化之后来提交的。不过当时我是把 JSON 字符串作为 val，仍然放在键值对里，以 x-www-form-urlencoded 方式提交。</p>
+<h3 id="基于Form表单上传文件"><a href="#基于Form表单上传文件" class="headerlink" title="基于Form表单上传文件"></a>基于Form表单上传文件</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/file_put/"</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">enctype</span>=<span class="string">"multipart/form-data"</span>&gt;</span></span><br><span class="line">    用户名：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"name"</span>&gt;</span></span><br><span class="line">    头像：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">name</span>=<span class="string">"avatar"</span> <span class="attr">id</span>=<span class="string">"avatar1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>必须指定 enctype=”multipart/form-data”</p>
+<p>视图函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">def file_put(request):</span><br><span class="line">    if request.method&#x3D;&#x3D;&#39;GET&#39;:</span><br><span class="line">        return render(request,&#39;file_put.html&#39;)</span><br><span class="line">    else:</span><br><span class="line">        # print(request.POST)</span><br><span class="line">        # print(request.POST)</span><br><span class="line">        print(request.body)  # 原始的请求体数据 </span><br><span class="line">        print(request.GET)  # GET请求数据 </span><br><span class="line">        print(request.POST)  # POST请求数据 </span><br><span class="line">        print(request.FILES)  # 上传的文件数据</span><br><span class="line">        # print(request.body.decode(&#39;utf-8&#39;))</span><br><span class="line">        print(request.body.decode(&#39;utf-8&#39;))</span><br><span class="line"></span><br><span class="line">        print(request.FILES)</span><br><span class="line">        file_obj&#x3D;request.FILES.get(&#39;avatar&#39;)</span><br><span class="line">        print(type(file_obj))</span><br><span class="line">        with open(file_obj.name,&#39;wb&#39;) as f:</span><br><span class="line">            for line in file_obj:</span><br><span class="line">                f.write(line)</span><br><span class="line">        return HttpResponse(&#39;ok&#39;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="基于Ajax上传文件"><a href="#基于Ajax上传文件" class="headerlink" title="基于Ajax上传文件"></a>基于Ajax上传文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$(&quot;#ajax_button&quot;).click(function () &#123;</span><br><span class="line">    var formdata&#x3D;new FormData()</span><br><span class="line">    formdata.append(&#39;name&#39;,$(&quot;#id_name2&quot;).val())</span><br><span class="line">    formdata.append(&#39;avatar&#39;,$(&quot;#avatar2&quot;)[0].files[0])</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">        url:&#39;&#39;,</span><br><span class="line">        type:&#39;post&#39;,</span><br><span class="line">        processData:false, &#x2F;&#x2F;告诉jQuery不要去处理发送的数据</span><br><span class="line">        contentType:false,&#x2F;&#x2F; 告诉jQuery不要去设置Content-Type请求头</span><br><span class="line">        data:formdata,</span><br><span class="line">        success:function (data) &#123;</span><br><span class="line">            console.log(data)</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>浏览器请求头为：</p>
+<p>Content-Type:</p>
+<p>multipart/form-data; boundary=—-WebKitFormBoundaryA5O53SvUXJaF11O2</p>
+<h2 id="五-Ajax提交json格式数据"><a href="#五-Ajax提交json格式数据" class="headerlink" title="五 Ajax提交json格式数据"></a>五 Ajax提交json格式数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$(&quot;#ajax_test&quot;).click(function () &#123;</span><br><span class="line">    var dic&#x3D;&#123;&#39;name&#39;:&#39;lqz&#39;,&#39;age&#39;:18&#125;</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">        url:&#39;&#39;,</span><br><span class="line">        type:&#39;post&#39;,</span><br><span class="line">        contentType:&#39;application&#x2F;json&#39;,  &#x2F;&#x2F;一定要指定格式 contentType: &#39;application&#x2F;json;charset&#x3D;utf-8&#39;,</span><br><span class="line">        data:JSON.stringify(dic),    &#x2F;&#x2F;转换成json字符串格式</span><br><span class="line">        success:function (data) &#123;</span><br><span class="line">            console.log(data)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>提交到服务器的数据都在 request.body 里，取出来自行处理</p>
+<h2 id="六-Django内置的serializers（把对象序列化成json字符串）"><a href="#六-Django内置的serializers（把对象序列化成json字符串）" class="headerlink" title="六 Django内置的serializers（把对象序列化成json字符串）"></a>六 Django内置的serializers（把对象序列化成json字符串）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.core <span class="keyword">import</span> serializers</span><br><span class="line"><span class="keyword">from</span> django.core <span class="keyword">import</span> serializers</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(request)</span>:</span></span><br><span class="line">    book_list = Book.objects.all()    </span><br><span class="line">    ret = serializers.serialize(<span class="string">"json"</span>, book_list)</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(ret)</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django%E6%A1%86%E6%9E%B6/17-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-Auth/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django框架/17-Django高级之-Auth
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django%E6%A1%86%E6%9E%B6/16-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+        
+          python/Django框架/16-Django高级之-中间件
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-什么是Ajax"><span class="toc-nav-text">*一 什么是Ajax *</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#优点："><span class="toc-nav-text">优点：</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-基于jquery的Ajax实现"><span class="toc-nav-text">二 基于jquery的Ajax实现</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Ajax—-gt-服务器——-gt-Ajax执行流程图"><span class="toc-nav-text">Ajax—-&gt;服务器——&gt;Ajax执行流程图</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-案例"><span class="toc-nav-text">三 案例</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#一-通过Ajax，实现前端输入两个数字，服务器做加法，返回到前端页面"><span class="toc-nav-text">一 通过Ajax，实现前端输入两个数字，服务器做加法，返回到前端页面</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#二-基于Ajax进行登录验证"><span class="toc-nav-text">二 基于Ajax进行登录验证</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-文件上传"><span class="toc-nav-text">四 文件上传</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#请求头ContentType"><span class="toc-nav-text">请求头ContentType</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-application-x-www-form-urlencoded"><span class="toc-nav-text">1 application&#x2F;x-www-form-urlencoded</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2-multipart-form-data"><span class="toc-nav-text">2 multipart&#x2F;form-data</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#3-application-json"><span class="toc-nav-text">3 application&#x2F;json</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基于Form表单上传文件"><span class="toc-nav-text">基于Form表单上传文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基于Ajax上传文件"><span class="toc-nav-text">基于Ajax上传文件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-Ajax提交json格式数据"><span class="toc-nav-text">五 Ajax提交json格式数据</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-Django内置的serializers（把对象序列化成json字符串）"><span class="toc-nav-text">六 Django内置的serializers（把对象序列化成json字符串）</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django框架/12-Django高级之-Django与Ajax/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django框架/12-Django高级之-Django与Ajax",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

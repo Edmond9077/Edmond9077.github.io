@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django框架/14-Django高级之-forms组件 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django框架/14-Django高级之-forms组件</h2>
+
+
+
+  <p class="post-date">2020-09-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1-校验字段功能"><a href="#1-校验字段功能" class="headerlink" title="*1 校验字段功能 *"></a>*<em>1 校验字段功能 *</em></h2><p> 针对一个实例：注册用户讲解。</p>
+<p> 模型：models.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserInfo</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    name=models.CharField(max_length=<span class="number">32</span>)</span><br><span class="line">    pwd=models.CharField(max_length=<span class="number">32</span>)</span><br><span class="line">    email=models.EmailField(</span><br></pre></td></tr></table></figure>
+<p>模版文件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    &#123;% csrf_token %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"user"</span>&gt;</span>用户名<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"name"</span> <span class="attr">id</span>=<span class="string">"name"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"pwd"</span>&gt;</span>密码<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">name</span>=<span class="string">"pwd"</span> <span class="attr">id</span>=<span class="string">"pwd"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"r_pwd"</span>&gt;</span>确认密码<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">name</span>=<span class="string">"r_pwd"</span> <span class="attr">id</span>=<span class="string">"r_pwd"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"email"</span>&gt;</span>邮箱<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"email"</span> <span class="attr">id</span>=<span class="string">"email"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>视图函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># forms组件</span></span><br><span class="line"><span class="keyword">from</span> django.forms <span class="keyword">import</span> widgets</span><br><span class="line"></span><br><span class="line">wid_01=widgets.TextInput(attrs=&#123;<span class="string">"class"</span>:<span class="string">"form-control"</span>&#125;)</span><br><span class="line">wid_02=widgets.PasswordInput(attrs=&#123;<span class="string">"class"</span>:<span class="string">"form-control"</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserForm</span><span class="params">(forms.Form)</span>:</span></span><br><span class="line">    name=forms.CharField(max_length=<span class="number">32</span>,</span><br><span class="line">                         widget=wid_01</span><br><span class="line">                         )</span><br><span class="line">    pwd=forms.CharField(max_length=<span class="number">32</span>,widget=wid_02)</span><br><span class="line">    r_pwd=forms.CharField(max_length=<span class="number">32</span>,widget=wid_02)</span><br><span class="line">    email=forms.EmailField(widget=wid_01)</span><br><span class="line">    tel=forms.CharField(max_length=<span class="number">32</span>,widget=wid_01)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">register</span><span class="params">(request)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> request.method==<span class="string">"POST"</span>:</span><br><span class="line">        form=UserForm(request.POST)</span><br><span class="line">        <span class="keyword">if</span> form.is_valid():</span><br><span class="line">            print(form.cleaned_data)       <span class="comment"># 所有干净的字段以及对应的值</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(form.cleaned_data)       <span class="comment">#</span></span><br><span class="line">            print(form.errors)             <span class="comment"># ErrorDict : &#123;"校验错误的字段":["错误信息",]&#125;</span></span><br><span class="line">            print(form.errors.get(<span class="string">"name"</span>)) <span class="comment"># ErrorList ["错误信息",]</span></span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">"OK"</span>)</span><br><span class="line">    form=UserForm()</span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">"register.html"</span>,locals())</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-渲染标签功能"><a href="#2-渲染标签功能" class="headerlink" title="2 渲染标签功能"></a>2 渲染标签功能</h2><h3 id="渲染方式1"><a href="#渲染方式1" class="headerlink" title="渲染方式1"></a>渲染方式1</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;/title&gt;</span><br><span class="line">   &lt;!-- 最新版本的 Bootstrap 核心 CSS 文件 --&gt;</span><br><span class="line">    &lt;link rel=<span class="string">"stylesheet"</span> href=<span class="string">"https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"</span> integrity=<span class="string">"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"</span> crossorigin=<span class="string">"anonymous"</span>&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h3&gt;注册页面&lt;/h3&gt;</span><br><span class="line">&lt;div class="container"&gt;</span><br><span class="line">    &lt;div class="row"&gt;</span><br><span class="line">        &lt;div class="col-md-6 col-lg-offset-3"&gt;</span><br><span class="line"></span><br><span class="line">                &lt;form action=<span class="string">""</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">                    &#123;% csrf_token %&#125;</span><br><span class="line">                    &lt;div&gt;</span><br><span class="line">                        &lt;label for=""&gt;用户名&lt;/label&gt;</span><br><span class="line">                        &#123;&#123; form.name &#125;&#125;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;div&gt;</span><br><span class="line">                        &lt;label for=""&gt;密码&lt;/label&gt;</span><br><span class="line">                        &#123;&#123; form.pwd &#125;&#125;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;div&gt;</span><br><span class="line">                        &lt;label for=""&gt;确认密码&lt;/label&gt;</span><br><span class="line">                        &#123;&#123; form.r_pwd &#125;&#125;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line">                    &lt;div&gt;</span><br><span class="line">                        &lt;label for=""&gt; 邮箱&lt;/label&gt;</span><br><span class="line">                        &#123;&#123; form.email &#125;&#125;</span><br><span class="line">                    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">                    &lt;input type="submit" class="btn btn-default pull-right"&gt;</span><br><span class="line">                &lt;/form&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="渲染方式2"><a href="#渲染方式2" class="headerlink" title="渲染方式2"></a>渲染方式2</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">                    &#123;% csrf_token %&#125;</span><br><span class="line">                    </span><br><span class="line">                    &#123;% for field in form %&#125;</span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">""</span>&gt;</span>&#123;&#123; field.label &#125;&#125;<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">                            &#123;&#123; field &#125;&#125;</span><br><span class="line">                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    &#123;% endfor %&#125;</span><br><span class="line">                    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">class</span>=<span class="string">"btn btn-default pull-right"</span>&gt;</span></span><br><span class="line">                </span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="渲染方式3"><a href="#渲染方式3" class="headerlink" title="渲染方式3"></a>渲染方式3</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=<span class="string">""</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">    &#123;% csrf_token %&#125;</span><br><span class="line">    </span><br><span class="line">    &#123;&#123; form.as_p &#125;&#125;</span><br><span class="line"></span><br><span class="line">    &lt;input type="submit" class="btn btn-default pull-right"&gt;</span><br><span class="line"></span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-渲染错误信息功能"><a href="#3-渲染错误信息功能" class="headerlink" title="3 渲染错误信息功能"></a>3 渲染错误信息功能</h2><h3 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">register</span><span class="params">(request)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> request.method==<span class="string">"POST"</span>:</span><br><span class="line">        form=UserForm(request.POST)</span><br><span class="line">        <span class="keyword">if</span> form.is_valid():</span><br><span class="line">            print(form.cleaned_data)       <span class="comment"># 所有干净的字段以及对应的值</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(form.cleaned_data)       <span class="comment">#</span></span><br><span class="line">            print(form.errors)             <span class="comment"># ErrorDict : &#123;"校验错误的字段":["错误信息",]&#125;</span></span><br><span class="line">            print(form.errors.get(<span class="string">"name"</span>)) <span class="comment"># ErrorList ["错误信息",]</span></span><br><span class="line">        <span class="keyword">return</span> render(request,<span class="string">"register.html"</span>,locals())</span><br><span class="line">    form=UserForm()</span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">"register.html"</span>,locals())</span><br></pre></td></tr></table></figure>
+
+<h3 id="模板"><a href="#模板" class="headerlink" title="模板"></a>模板</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=<span class="string">""</span> method=<span class="string">"post"</span> novalidate&gt;</span><br><span class="line">    &#123;% csrf_token %&#125;</span><br><span class="line">    </span><br><span class="line">    &#123;% <span class="keyword">for</span> field <span class="keyword">in</span> form %&#125;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;label for=""&gt;&#123;&#123; field.label &#125;&#125;&lt;/label&gt;</span><br><span class="line">            &#123;&#123; field &#125;&#125; &lt;span class="pull-right" style="color: red"&gt;&#123;&#123; field.errors.0 &#125;&#125;&lt;/span&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">    &lt;input type="submit" class="btn btn-default"&gt;</span><br><span class="line"></span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-组件的参数配置"><a href="#4-组件的参数配置" class="headerlink" title="4 组件的参数配置"></a>4 组件的参数配置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Ret</span><span class="params">(Form)</span>:</span></span><br><span class="line">    name = forms.CharField(max_length=<span class="number">10</span>, min_length=<span class="number">2</span>, label=<span class="string">'用户名'</span>,</span><br><span class="line">                           error_messages=&#123;<span class="string">'required'</span>: <span class="string">'该字段不能为空'</span>, <span class="string">'invalid'</span>: <span class="string">'格式错误'</span>, <span class="string">'max_length'</span>: <span class="string">'太长'</span>,</span><br><span class="line">                                           <span class="string">'min_length'</span>: <span class="string">'太短'</span>&#125;,</span><br><span class="line">                           widget=widgets.TextInput(attrs=&#123;<span class="string">'class'</span>:<span class="string">'form-control'</span>&#125;))</span><br><span class="line">    pwd = forms.CharField(max_length=<span class="number">10</span>, min_length=<span class="number">2</span>, widget=widgets.PasswordInput(attrs=&#123;<span class="string">'class'</span>:<span class="string">'form-control'</span>&#125;))</span><br><span class="line">    email = forms.EmailField(label=<span class="string">'邮箱'</span>, error_messages=&#123;<span class="string">'required'</span>: <span class="string">'该字段不能为空'</span>, <span class="string">'invalid'</span>: <span class="string">'格式错误'</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-局部钩子"><a href="#5-局部钩子" class="headerlink" title="5 局部钩子"></a>5 局部钩子</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.core.exceptions <span class="keyword">import</span> NON_FIELD_ERRORS, ValidationError</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clean_name</span><span class="params">(self)</span>:</span></span><br><span class="line"></span><br><span class="line">        val=self.cleaned_data.get(<span class="string">"name"</span>)</span><br><span class="line"></span><br><span class="line">        ret=UserInfo.objects.filter(name=val)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> ret:</span><br><span class="line">            <span class="keyword">return</span> val</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValidationError(<span class="string">"该用户已注册!"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">clean_tel</span><span class="params">(self)</span>:</span></span><br><span class="line"></span><br><span class="line">        val=self.cleaned_data.get(<span class="string">"tel"</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> len(val)==<span class="number">11</span>:</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> val</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span>  ValidationError(<span class="string">"手机号格式错误"</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-全局钩子"><a href="#6-全局钩子" class="headerlink" title="6 全局钩子"></a>6 全局钩子</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clean</span><span class="params">(self)</span>:</span></span><br><span class="line">    pwd=self.cleaned_data.get(<span class="string">'pwd'</span>)</span><br><span class="line">    r_pwd=self.cleaned_data.get(<span class="string">'r_pwd'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> pwd <span class="keyword">and</span> r_pwd:</span><br><span class="line">        <span class="keyword">if</span> pwd==r_pwd:</span><br><span class="line">            <span class="keyword">return</span> self.cleaned_data</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValidationError(<span class="string">'两次密码不一致'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.cleaned_data</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pwd_err=my_form.errors.get(<span class="string">'__all__'</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django <span class="keyword">import</span> forms</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.forms <span class="keyword">import</span> widgets</span><br><span class="line"><span class="keyword">from</span> app01.models <span class="keyword">import</span> UserInfo</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.exceptions <span class="keyword">import</span> NON_FIELD_ERRORS, ValidationError</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserForm</span><span class="params">(forms.Form)</span>:</span></span><br><span class="line">    name=forms.CharField(min_length=<span class="number">4</span>,label=<span class="string">"用户名"</span>,error_messages=&#123;<span class="string">"required"</span>:<span class="string">"该字段不能为空"</span>&#125;,</span><br><span class="line">                         widget=widgets.TextInput(attrs=&#123;<span class="string">"class"</span>:<span class="string">"form-control"</span>&#125;)</span><br><span class="line">                         )</span><br><span class="line">    pwd=forms.CharField(min_length=<span class="number">4</span>,label=<span class="string">"密码"</span>,</span><br><span class="line">                        widget=widgets.PasswordInput(attrs=&#123;<span class="string">"class"</span>:<span class="string">"form-control"</span>&#125;)</span><br><span class="line">                        )</span><br><span class="line">    r_pwd=forms.CharField(min_length=<span class="number">4</span>,label=<span class="string">"确认密码"</span>,error_messages=&#123;<span class="string">"required"</span>:<span class="string">"该字段不能为空"</span>&#125;,widget=widgets.TextInput(attrs=&#123;<span class="string">"class"</span>:<span class="string">"form-control"</span>&#125;))</span><br><span class="line">    email=forms.EmailField(label=<span class="string">"邮箱"</span>,error_messages=&#123;<span class="string">"required"</span>:<span class="string">"该字段不能为空"</span>,<span class="string">"invalid"</span>:<span class="string">"格式错误"</span>&#125;,widget=widgets.TextInput(attrs=&#123;<span class="string">"class"</span>:<span class="string">"form-control"</span>&#125;))</span><br><span class="line">    tel=forms.CharField(label=<span class="string">"手机号"</span>,widget=widgets.TextInput(attrs=&#123;<span class="string">"class"</span>:<span class="string">"form-control"</span>&#125;))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">clean_name</span><span class="params">(self)</span>:</span></span><br><span class="line"></span><br><span class="line">        val=self.cleaned_data.get(<span class="string">"name"</span>)</span><br><span class="line"></span><br><span class="line">        ret=UserInfo.objects.filter(name=val)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> ret:</span><br><span class="line">            <span class="keyword">return</span> val</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> ValidationError(<span class="string">"该用户已注册!"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">clean_tel</span><span class="params">(self)</span>:</span></span><br><span class="line"></span><br><span class="line">        val=self.cleaned_data.get(<span class="string">"tel"</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> len(val)==<span class="number">11</span>:</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> val</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span>  ValidationError(<span class="string">"手机号格式错误"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">clean</span><span class="params">(self)</span>:</span></span><br><span class="line">        pwd=self.cleaned_data.get(<span class="string">'pwd'</span>)</span><br><span class="line">        r_pwd=self.cleaned_data.get(<span class="string">'r_pwd'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> pwd <span class="keyword">and</span> r_pwd:</span><br><span class="line">            <span class="keyword">if</span> pwd==r_pwd:</span><br><span class="line">                <span class="keyword">return</span> self.cleaned_data</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">raise</span> ValidationError(<span class="string">'两次密码不一致'</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> self.cleaned_data</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render,HttpResponse</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> app01.myforms <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">reg</span><span class="params">(request)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> request.method==<span class="string">"POST"</span>:</span><br><span class="line"></span><br><span class="line">        print(request.POST)</span><br><span class="line"></span><br><span class="line">        <span class="comment">#form=UserForm(&#123;"name":"yu","email":"123@qq.com","xxxx":"alex"&#125;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        form=UserForm(request.POST) <span class="comment"># form表单的name属性值应该与forms组件字段名称一致</span></span><br><span class="line"></span><br><span class="line">        print(form.is_valid()) <span class="comment"># 返回布尔值</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> form.is_valid():</span><br><span class="line">            print(form.cleaned_data)  <span class="comment"># &#123;"name":"yuan","email":"123@qq.com"&#125;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(form.cleaned_data)  <span class="comment"># &#123;"email":"123@qq.com"&#125;</span></span><br><span class="line">            <span class="comment"># print(form.errors)        # &#123;"name":[".........."]&#125;</span></span><br><span class="line">            <span class="comment"># print(type(form.errors))  # ErrorDict</span></span><br><span class="line">            <span class="comment"># print(form.errors.get("name"))</span></span><br><span class="line">            <span class="comment"># print(type(form.errors.get("name")))    # ErrorList</span></span><br><span class="line">            <span class="comment"># print(form.errors.get("name")[0])</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="comment">#   全局钩子错误</span></span><br><span class="line">            <span class="comment">#print("error",form.errors.get("__all__")[0])</span></span><br><span class="line">            errors=form.errors.get(<span class="string">"__all__"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> render(request,<span class="string">"reg.html"</span>,locals())</span><br><span class="line"></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        form.is_valid()   :返回布尔值</span></span><br><span class="line"><span class="string">        form.cleaned_data :&#123;"name":"yuan","email":"123@qq.com"&#125;</span></span><br><span class="line"><span class="string">        form.errors       :&#123;"name":[".........."]&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    form=UserForm()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">"reg.html"</span>,locals())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.error</span>&#123;</span></span><br><span class="line">            color: red;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 最新版本的 Bootstrap 核心 CSS 文件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">integrity</span>=<span class="string">"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"</span> <span class="attr">crossorigin</span>=<span class="string">"anonymous"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-md-6 col-lg-offset-3"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            &#123;#<span class="tag">&lt;<span class="name">h3</span>&gt;</span>简单form<span class="tag">&lt;/<span class="name">h3</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#<span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">novalidate</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#    &#123;% csrf_token %&#125;#&#125;</span><br><span class="line">            &#123;#    <span class="tag">&lt;<span class="name">p</span>&gt;</span>用户名<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"name"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#    <span class="tag">&lt;<span class="name">p</span>&gt;</span>密码 <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"pwd"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#    <span class="tag">&lt;<span class="name">p</span>&gt;</span>确认密码 <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"r_pwd"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#    <span class="tag">&lt;<span class="name">p</span>&gt;</span>邮箱  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"email"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#    <span class="tag">&lt;<span class="name">p</span>&gt;</span>手机号 <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"tel"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#<span class="tag">&lt;/<span class="name">form</span>&gt;</span>#&#125;</span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span>&gt;</span>forms组件渲染方式1<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">novalidate</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                &#123;% csrf_token %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; form.name.label &#125;&#125;</span><br><span class="line">                    &#123;&#123; form.name &#125;&#125; <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"pull-right error"</span>&gt;</span>&#123;&#123; form.name.errors.0 &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; form.pwd.label &#125;&#125;</span><br><span class="line">                    &#123;&#123; form.pwd &#125;&#125; <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"pull-right error"</span>&gt;</span>&#123;&#123; form.pwd.errors.0 &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>确认密码</span><br><span class="line">                    &#123;&#123; form.r_pwd &#125;&#125; <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"pull-right error"</span>&gt;</span>&#123;&#123; form.r_pwd.errors.0 &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"pull-right error"</span>&gt;</span>&#123;&#123; errors.0 &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>邮箱 &#123;&#123; form.email &#125;&#125; <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"pull-right error"</span>&gt;</span>&#123;&#123; form.email.errors.0 &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>手机号 &#123;&#123; form.tel &#125;&#125; <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"pull-right error"</span>&gt;</span>&#123;&#123; form.tel.errors.0 &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            &#123;#<span class="tag">&lt;<span class="name">h3</span>&gt;</span>forms组件渲染方式2<span class="tag">&lt;/<span class="name">h3</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#<span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">novalidate</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#     &#123;% csrf_token %&#125;#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#    &#123;% for field in form %&#125;#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#        <span class="tag">&lt;<span class="name">div</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#            <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">""</span>&gt;</span>&#123;&#123; field.label &#125;&#125;<span class="tag">&lt;/<span class="name">label</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#            &#123;&#123; field &#125;&#125;#&#125;</span><br><span class="line">            &#123;#        <span class="tag">&lt;/<span class="name">div</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#    &#123;% endfor %&#125;#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#     <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#<span class="tag">&lt;/<span class="name">form</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#<span class="tag">&lt;<span class="name">h3</span>&gt;</span>forms组件渲染方式3<span class="tag">&lt;/<span class="name">h3</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#<span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#     &#123;% csrf_token %&#125;#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#     &#123;&#123; form.as_p &#125;&#125;#&#125;</span><br><span class="line">            &#123;##&#125;</span><br><span class="line">            &#123;#     <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span>#&#125;</span><br><span class="line">            &#123;#<span class="tag">&lt;/<span class="name">form</span>&gt;</span>#&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django%E6%A1%86%E6%9E%B6/15-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-cookie%E4%B8%8Esession/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django框架/15-Django高级之-cookie与session
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django%E6%A1%86%E6%9E%B6/1-Web%E5%BA%94%E7%94%A8/">
+        
+          python/Django框架/1-Web应用
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-校验字段功能"><span class="toc-nav-text">*1 校验字段功能 *</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-渲染标签功能"><span class="toc-nav-text">2 渲染标签功能</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#渲染方式1"><span class="toc-nav-text">渲染方式1</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#渲染方式2"><span class="toc-nav-text">渲染方式2</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#渲染方式3"><span class="toc-nav-text">渲染方式3</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-渲染错误信息功能"><span class="toc-nav-text">3 渲染错误信息功能</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#视图"><span class="toc-nav-text">视图</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#模板"><span class="toc-nav-text">模板</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-组件的参数配置"><span class="toc-nav-text">4 组件的参数配置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-局部钩子"><span class="toc-nav-text">5 局部钩子</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-全局钩子"><span class="toc-nav-text">6 全局钩子</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django框架/14-Django高级之-forms组件/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django框架/14-Django高级之-forms组件",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

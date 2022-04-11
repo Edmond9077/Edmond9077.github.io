@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      1-Python中的GIL | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>1-Python中的GIL</h2>
+
+
+
+  <p class="post-date">2020-03-25</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、进程池"><a href="#一、进程池" class="headerlink" title="一、进程池"></a>一、进程池</h1><p>为什么要有进程池？进程池的概念。</p>
+<p>在程序实际处理问题过程中，忙时会有成千上万的任务需要被执行，闲时可能只有零星任务。那么在成千上万个任务需要被执行的时候，我们就需要去创建成千上万个进程么？首先，创建进程需要消耗时间，销毁进程也需要消耗时间。第二即便开启了成千上万的进程，操作系统也不能让他们同时执行，这样反而会影响程序的效率。因此我们不能无限制的根据任务开启或者结束进程。那么我们要怎么做呢？</p>
+<p>在这里，要给大家介绍一个进程池的概念，定义一个池子，在里面放上固定数量的进程，有需求来了，就拿一个池中的进程来处理任务，等到处理完毕，进程并不关闭，而是将进程再放回进程池中继续等待任务。如果有很多任务需要执行，池中的进程数量不够，任务就要等待之前的进程执行任务完毕归来，拿到空闲进程才能继续执行。也就是说，池中进程的数量是固定的，那么同一时间最多有固定数量的进程在运行。这样不会增加操作系统的调度难度，还节省了开闭进程的时间，也一定程度上能够实现并发效果。</p>
+<h1 id="二、概念介绍——multiprocess-Pool"><a href="#二、概念介绍——multiprocess-Pool" class="headerlink" title="二、概念介绍——multiprocess.Pool"></a>二、概念介绍——multiprocess.Pool</h1><p><code>Pool([numprocess [,initializer [, initargs]]])</code>：创建进程池</p>
+<h1 id="三、参数用法"><a href="#三、参数用法" class="headerlink" title="三、参数用法"></a>三、参数用法</h1><ol>
+<li>numprocess：要创建的进程数，如果省略，将默认使用<code>cpu_count()</code>的值</li>
+<li>initializer：是每个工作进程启动时要执行的可调用对象，默认为None</li>
+<li>initargs：是要传给initializer的参数组</li>
+</ol>
+<h1 id="四、主要方法"><a href="#四、主要方法" class="headerlink" title="四、主要方法"></a>四、主要方法</h1><p><code>p.apply(func [, args [, kwargs]])</code>：在一个池工作进程中执行func(<em>args,*</em>kwargs),然后返回结果。需要强调的是：<strong>此操作并不会在所有池工作进程中并执行func函数。如果要通过不同参数并发地执行func函数，必须从不同线程调用<code>p.apply()</code>函数或者使用<code>p.apply_async()</code></strong></p>
+<p><code>p.apply_async(func [, args [, kwargs]])</code>：在一个池工作进程中执行func(<em>args,*</em>kwargs),然后返回结果。此方法的结果是AsyncResult类的实例，callback是可调用对象，接收输入参数。当func的结果变为可用时，将理解传递给callback。callback禁止执行任何阻塞操作，否则将接收其他异步操作中的结果。</p>
+<p><code>p.close()</code>：关闭进程池，防止进一步操作。如果所有操作持续挂起，它们将在工作进程终止前完成</p>
+<p><code>P.join()</code>：等待所有工作进程退出。此方法只能在<code>close()</code>或<code>teminate()</code>之后调用</p>
+<h1 id="五、其他方法-了解"><a href="#五、其他方法-了解" class="headerlink" title="五、其他方法(了解)"></a>五、其他方法(了解)</h1><p>方法<code>apply_async()</code>和<code>map_async()</code>的返回值是AsyncResul的实例obj。实例具有以下方法：</p>
+<p><code>obj.get()</code>：返回结果，如果有必要则等待结果到达。timeout是可选的。如果在指定时间内还没有到达，将引发一场。如果远程操作中引发了异常，它将在调用此方法时再次被引发。</p>
+<p><code>obj.ready()</code>：如果调用完成，返回True</p>
+<p><code>obj.successful()</code>：如果调用完成且没有引发异常，返回True，如果在结果就绪之前调用此方法，引发异常</p>
+<p><code>obj.wait([timeout])</code>：等待结果变为可用。</p>
+<p><code>obj.terminate()</code>：立即终止所有工作进程，同时不执行任何清理或结束任何挂起工作。如果p被垃圾回收，将自动调用此函数</p>
+<h1 id="六、代码实例——multiprocess-Pool"><a href="#六、代码实例——multiprocess-Pool" class="headerlink" title="六、代码实例——multiprocess.Pool"></a>六、代码实例——multiprocess.Pool</h1><h2 id="6-1-同步"><a href="#6-1-同步" class="headerlink" title="6.1 同步"></a>6.1 同步</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os,time</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span><span class="params">(n)</span>:</span></span><br><span class="line">    print(<span class="string">'%s run'</span> %os.getpid())</span><br><span class="line">    time.sleep(<span class="number">3</span>)</span><br><span class="line">    <span class="keyword">return</span> n**<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    p=Pool(<span class="number">3</span>) <span class="comment">#进程池中从无到有创建三个进程,以后一直是这三个进程在执行任务</span></span><br><span class="line">    res_l=[]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        res=p.apply(work,args=(i,)) <span class="comment"># 同步调用，直到本次任务执行完毕拿到res，等待任务work执行的过程中可能有阻塞也可能没有阻塞</span></span><br><span class="line">                                    <span class="comment"># 但不管该任务是否存在阻塞，同步调用都会在原地等着</span></span><br><span class="line">    print(res_l)</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-2-异步"><a href="#6-2-异步" class="headerlink" title="6.2 异步"></a>6.2 异步</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span><span class="params">(n)</span>:</span></span><br><span class="line">    print(<span class="string">'%s run'</span> %os.getpid())</span><br><span class="line">    time.sleep(random.random())</span><br><span class="line">    <span class="keyword">return</span> n**<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    p=Pool(<span class="number">3</span>) <span class="comment">#进程池中从无到有创建三个进程,以后一直是这三个进程在执行任务</span></span><br><span class="line">    res_l=[]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        res=p.apply_async(work,args=(i,)) <span class="comment"># 异步运行，根据进程池中有的进程数，每次最多3个子进程在异步执行</span></span><br><span class="line">                                          <span class="comment"># 返回结果之后，将结果放入列表，归还进程，之后再执行新的任务</span></span><br><span class="line">                                          <span class="comment"># 需要注意的是，进程池中的三个进程不会同时开启或者同时结束</span></span><br><span class="line">                                          <span class="comment"># 而是执行完一个就释放一个进程，这个进程就去接收新的任务。  </span></span><br><span class="line">        res_l.append(res)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 异步apply_async用法：如果使用异步提交的任务，主进程需要使用jion，等待进程池内任务都处理完，然后可以用get收集结果</span></span><br><span class="line">    <span class="comment"># 否则，主进程结束，进程池可能还没来得及执行，也就跟着一起结束了</span></span><br><span class="line">    p.close()</span><br><span class="line">    p.join()</span><br><span class="line">    <span class="keyword">for</span> res <span class="keyword">in</span> res_l:</span><br><span class="line">        print(res.get()) <span class="comment">#使用get来获取apply_aync的结果,如果是apply,则没有get方法,因为apply是同步执行,立刻获取结果,也根本无需get</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="七、进程池版socket并发聊天练习"><a href="#七、进程池版socket并发聊天练习" class="headerlink" title="七、进程池版socket并发聊天练习"></a>七、进程池版socket并发聊天练习</h1><h2 id="7-1-server"><a href="#7-1-server" class="headerlink" title="7.1 server"></a>7.1 server</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Pool内的进程数默认是cpu核数，假设为4（查看方法os.cpu_count()）</span></span><br><span class="line"><span class="comment">#开启6个客户端，会发现2个客户端处于等待状态</span></span><br><span class="line"><span class="comment">#在每个进程内查看pid，会发现pid使用为4个，即多个客户端公用4个进程</span></span><br><span class="line"><span class="keyword">from</span> socket <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">server=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">server.setsockopt(SOL_SOCKET,SO_REUSEADDR,<span class="number">1</span>)</span><br><span class="line">server.bind((<span class="string">'127.0.0.1'</span>,<span class="number">8080</span>))</span><br><span class="line">server.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">talk</span><span class="params">(conn)</span>:</span></span><br><span class="line">    print(<span class="string">'进程pid: %s'</span> %os.getpid())</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            msg=conn.recv(<span class="number">1024</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> msg:<span class="keyword">break</span></span><br><span class="line">            conn.send(msg.upper())</span><br><span class="line">        <span class="keyword">except</span> Exception:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    p=Pool(<span class="number">4</span>)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        conn,*_=server.accept()</span><br><span class="line">        p.apply_async(talk,args=(conn,))</span><br><span class="line">        <span class="comment"># p.apply(talk,args=(conn,client_addr)) #同步的话，则同一时间只有一个客户端能访问</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="7-2-client"><a href="#7-2-client" class="headerlink" title="7.2 client"></a>7.2 client</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> socket <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">client=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">client.connect((<span class="string">'127.0.0.1'</span>,<span class="number">8080</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    msg=input(<span class="string">'&gt;&gt;: '</span>).strip()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> msg:<span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    client.send(msg.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    msg=client.recv(<span class="number">1024</span>)</span><br><span class="line">    print(msg.decode(<span class="string">'utf-8'</span>))</span><br></pre></td></tr></table></figure>
+
+<p>发现：并发开启多个客户端，服务端同一时间只有4个不同的pid，只能结束一个客户端，另外一个客户端才会进来。</p>
+<h1 id="八、回调函数"><a href="#八、回调函数" class="headerlink" title="八、回调函数"></a>八、回调函数</h1><p>需要回调函数的场景：进程池中任何一个任务一旦处理完了，就立即告知主进程：我好了额，你可以处理我的结果了。主进程则调用一个函数去处理该结果，该函数即回调函数</p>
+<p>我们可以把耗时间（阻塞）的任务放到进程池中，然后指定回调函数（主进程负责执行），这样主进程在执行回调函数时就省去了I/O的过程，直接拿到的是任务的结果。</p>
+<h2 id="8-1-使用多进程请求多个url来减少网络等待浪费的时间"><a href="#8-1-使用多进程请求多个url来减少网络等待浪费的时间" class="headerlink" title="8.1 使用多进程请求多个url来减少网络等待浪费的时间"></a>8.1 使用多进程请求多个url来减少网络等待浪费的时间</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_page</span><span class="params">(url)</span>:</span></span><br><span class="line">    print(<span class="string">'&lt;进程%s&gt; get %s'</span> %(os.getpid(),url))</span><br><span class="line">    respone=requests.get(url)</span><br><span class="line">    <span class="keyword">if</span> respone.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">'url'</span>:url,<span class="string">'text'</span>:respone.text&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pasrse_page</span><span class="params">(res)</span>:</span></span><br><span class="line">    print(<span class="string">'&lt;进程%s&gt; parse %s'</span> %(os.getpid(),res[<span class="string">'url'</span>]))</span><br><span class="line">    parse_res=<span class="string">'url:&lt;%s&gt; size:[%s]\n'</span> %(res[<span class="string">'url'</span>],len(res[<span class="string">'text'</span>]))</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'db.txt'</span>,<span class="string">'a'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(parse_res)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    urls=[</span><br><span class="line">        <span class="string">'https://www.baidu.com'</span>,</span><br><span class="line">        <span class="string">'https://www.python.org'</span>,</span><br><span class="line">        <span class="string">'https://www.openstack.org'</span>,</span><br><span class="line">        <span class="string">'https://help.github.com/'</span>,</span><br><span class="line">        <span class="string">'http://www.sina.com.cn/'</span></span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    p=Pool(<span class="number">3</span>)</span><br><span class="line">    res_l=[]</span><br><span class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urls:</span><br><span class="line">        res=p.apply_async(get_page,args=(url,),callback=pasrse_page)</span><br><span class="line">        res_l.append(res)</span><br><span class="line"></span><br><span class="line">    p.close()</span><br><span class="line">    p.join()</span><br><span class="line">    print([res.get() <span class="keyword">for</span> res <span class="keyword">in</span> res_l]) <span class="comment">#拿到的是get_page的结果,其实完全没必要拿该结果,该结果已经传给回调函数处理了</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">打印结果:</span></span><br><span class="line"><span class="string">&lt;进程3388&gt; get https://www.baidu.com</span></span><br><span class="line"><span class="string">&lt;进程3389&gt; get https://www.python.org</span></span><br><span class="line"><span class="string">&lt;进程3390&gt; get https://www.openstack.org</span></span><br><span class="line"><span class="string">&lt;进程3388&gt; get https://help.github.com/</span></span><br><span class="line"><span class="string">&lt;进程3387&gt; parse https://www.baidu.com</span></span><br><span class="line"><span class="string">&lt;进程3389&gt; get http://www.sina.com.cn/</span></span><br><span class="line"><span class="string">&lt;进程3387&gt; parse https://www.python.org</span></span><br><span class="line"><span class="string">&lt;进程3387&gt; parse https://help.github.com/</span></span><br><span class="line"><span class="string">&lt;进程3387&gt; parse http://www.sina.com.cn/</span></span><br><span class="line"><span class="string">&lt;进程3387&gt; parse https://www.openstack.org</span></span><br><span class="line"><span class="string">[&#123;'url': 'https://www.baidu.com', 'text': '&lt;!DOCTYPE html&gt;\r\n...',...&#125;]</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="8-2-爬虫实例"><a href="#8-2-爬虫实例" class="headerlink" title="8.2 爬虫实例"></a>8.2 爬虫实例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_page</span><span class="params">(url,pattern)</span>:</span></span><br><span class="line">    response=urlopen(url).read().decode(<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="keyword">return</span> pattern,response</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_page</span><span class="params">(info)</span>:</span></span><br><span class="line">    pattern,page_content=info</span><br><span class="line">    res=re.findall(pattern,page_content)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> res:</span><br><span class="line">        dic=&#123;</span><br><span class="line">            <span class="string">'index'</span>:item[<span class="number">0</span>].strip(),</span><br><span class="line">            <span class="string">'title'</span>:item[<span class="number">1</span>].strip(),</span><br><span class="line">            <span class="string">'actor'</span>:item[<span class="number">2</span>].strip(),</span><br><span class="line">            <span class="string">'time'</span>:item[<span class="number">3</span>].strip(),</span><br><span class="line">        &#125;</span><br><span class="line">        print(dic)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    regex = <span class="string">r'&lt;dd&gt;.*?&lt;.*?class="board-index.*?&gt;(\d+)&lt;/i&gt;.*?title="(.*?)".*?class="movie-item-info".*?&lt;p class="star"&gt;(.*?)&lt;/p&gt;.*?&lt;p class="releasetime"&gt;(.*?)&lt;/p&gt;'</span></span><br><span class="line">    pattern1=re.compile(regex,re.S)</span><br><span class="line"></span><br><span class="line">    url_dic=&#123;</span><br><span class="line">        <span class="string">'http://maoyan.com/board/7'</span>:pattern1,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    p=Pool()</span><br><span class="line">    res_l=[]</span><br><span class="line">    <span class="keyword">for</span> url,pattern <span class="keyword">in</span> url_dic.items():</span><br><span class="line">        res=p.apply_async(get_page,args=(url,pattern),callback=parse_page)</span><br><span class="line">        res_l.append(res)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> res_l:</span><br><span class="line">        i.get()</span><br></pre></td></tr></table></figure>
+
+<h1 id="九、无需回调函数"><a href="#九、无需回调函数" class="headerlink" title="九、无需回调函数"></a>九、无需回调函数</h1><p>如果在主进程中等待进程池中所有任务都执行完毕后，再统一处理结果，则无需回调函数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</span><br><span class="line"><span class="keyword">import</span> time,random,os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">work</span><span class="params">(n)</span>:</span></span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> n**<span class="number">2</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    p=Pool()</span><br><span class="line"></span><br><span class="line">    res_l=[]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">        res=p.apply_async(work,args=(i,))</span><br><span class="line">        res_l.append(res)</span><br><span class="line"></span><br><span class="line">    p.close()</span><br><span class="line">    p.join() <span class="comment">#等待进程池中所有进程执行完毕</span></span><br><span class="line"></span><br><span class="line">    nums=[]</span><br><span class="line">    <span class="keyword">for</span> res <span class="keyword">in</span> res_l:</span><br><span class="line">        nums.append(res.get()) <span class="comment">#拿到所有结果</span></span><br><span class="line">    print(nums) <span class="comment">#主进程拿到所有的处理结果,可以在主进程中进行统一进行处理</span></span><br></pre></td></tr></table></figure>
+
+<p>进程池的其他实现方法：<a href="https://docs.python.org/dev/library/concurrent.futures.html" target="_blank" rel="noopener">https://docs.python.org/dev/library/concurrent.futures.html</a></p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/8-Python%E5%BC%82%E6%AD%A5%E5%BA%93%E4%B9%8Bgevent/">
+        <span class="nav-arrow">← </span>
+        
+          8-Python异步库之gevent
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/26-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%B0%8F%E7%BB%93/">
+        
+          1-Python中的GIL
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、进程池"><span class="toc-nav-text">一、进程池</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、概念介绍——multiprocess-Pool"><span class="toc-nav-text">二、概念介绍——multiprocess.Pool</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、参数用法"><span class="toc-nav-text">三、参数用法</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、主要方法"><span class="toc-nav-text">四、主要方法</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、其他方法-了解"><span class="toc-nav-text">五、其他方法(了解)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#六、代码实例——multiprocess-Pool"><span class="toc-nav-text">六、代码实例——multiprocess.Pool</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-1-同步"><span class="toc-nav-text">6.1 同步</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-2-异步"><span class="toc-nav-text">6.2 异步</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#七、进程池版socket并发聊天练习"><span class="toc-nav-text">七、进程池版socket并发聊天练习</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7-1-server"><span class="toc-nav-text">7.1 server</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7-2-client"><span class="toc-nav-text">7.2 client</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#八、回调函数"><span class="toc-nav-text">八、回调函数</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#8-1-使用多进程请求多个url来减少网络等待浪费的时间"><span class="toc-nav-text">8.1 使用多进程请求多个url来减少网络等待浪费的时间</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#8-2-爬虫实例"><span class="toc-nav-text">8.2 爬虫实例</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#九、无需回调函数"><span class="toc-nav-text">九、无需回调函数</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Python并发编程/11-进程池(multiprocess.Pool)/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "1-Python中的GIL",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

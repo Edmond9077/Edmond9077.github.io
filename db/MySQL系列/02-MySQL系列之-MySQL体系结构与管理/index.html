@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/MySQL系列/02-MySQL系列之-MySQL体系结构与管理 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/MySQL系列/02-MySQL系列之-MySQL体系结构与管理</h2>
+
+
+
+  <p class="post-date">2019-12-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一-体系结构"><a href="#一-体系结构" class="headerlink" title="一 体系结构"></a>一 体系结构</h1><h2 id="1-1-C-S-客户端-服务端-模型介绍"><a href="#1-1-C-S-客户端-服务端-模型介绍" class="headerlink" title="1.1 C/S(客户端/服务端)模型介绍"></a>1.1 C/S(客户端/服务端)模型介绍</h2><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg9w6og4j311m0jewrl.jpg" alt="image-20200812171707690" style="zoom:50%;" />
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TCP&#x2F;IP方式（远程、本地）：</span><br><span class="line">mysql -uroot -poldboy123 -h 10.0.0.51 -P3306</span><br><span class="line">Socket方式(仅本地)：</span><br><span class="line">mysql -uroot -poldboy123 -S &#x2F;tmp&#x2F;mysql.sock</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-实例介绍"><a href="#1-2-实例介绍" class="headerlink" title="1.2 实例介绍"></a>1.2 实例介绍</h2><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicga18msgj31bc0t0tih.jpg" alt="image-20200812172639836" style="zoom:50%;" />
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">实例&#x3D;mysqld后台守护进程+Master Thread +干活的Thread+预分配的内存</span><br><span class="line">公司&#x3D;老板+经理+员工+办公室</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-3-mysqld程序运行原理"><a href="#1-3-mysqld程序运行原理" class="headerlink" title="1.3 mysqld程序运行原理"></a>1.3 mysqld程序运行原理</h2><h3 id="1-3-1-mysqld程序结构"><a href="#1-3-1-mysqld程序结构" class="headerlink" title="1.3.1 mysqld程序结构"></a>1.3.1 mysqld程序结构</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cd /app/database/mysql/bin 路径下的mysqld程序</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicga53ekxj30z40n2aia.jpg" alt="image-20200812171734246" style="zoom:50%;" />
+
+<h3 id="1-3-2-一条SQL语句的执行过程"><a href="#1-3-2-一条SQL语句的执行过程" class="headerlink" title="1.3.2 一条SQL语句的执行过程"></a>1.3.2 一条SQL语句的执行过程</h3><h4 id="1-3-2-1-连接层"><a href="#1-3-2-1-连接层" class="headerlink" title="1.3.2.1 连接层"></a>1.3.2.1 连接层</h4><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">（<span class="number">1</span>）提供连接协议：TCP/IP 、SOCKET</span><br><span class="line">（<span class="number">2</span>）提供验证：用户、密码，IP，SOCKET</span><br><span class="line">（<span class="number">3</span>）提供专用连接线程：接收用户SQL，返回结果</span><br><span class="line">通过以下语句可以查看到连接线程基本情况</span><br><span class="line">mysql&gt; show processlist;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-2-2-SQL层-（重点）"><a href="#1-3-2-2-SQL层-（重点）" class="headerlink" title="1.3.2.2 SQL层 （重点）"></a>1.3.2.2 SQL层 （重点）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">（1）接收上层传送的SQL语句</span><br><span class="line">（2）语法验证模块：验证语句语法,是否满足SQL_MODE</span><br><span class="line">（3）语义检查：判断SQL语句的类型</span><br><span class="line">  DDL ：数据定义语言</span><br><span class="line">  DCL ：数据控制语言</span><br><span class="line">  DML ：数据操作语言</span><br><span class="line">  DQL： 数据查询语言</span><br><span class="line">  ...</span><br><span class="line">（4）权限检查：用户对库表有没有权限</span><br><span class="line">（5）解析器：对语句执行前,进行预处理，生成解析树(执行计划),说白了就是生成多种执行方案.</span><br><span class="line">（6）优化器：根据解析器得出的多种执行计划，进行判断，选择最优的执行计划</span><br><span class="line">        代价模型：资源（CPU IO MEM）的耗损评估性能好坏</span><br><span class="line">（7）执行器：根据最优执行计划，执行SQL语句，产生执行结果</span><br><span class="line">	执行结果：在磁盘的xxxx位置上</span><br><span class="line">（8）提供查询缓存（默认是没开启的），一般不用，会使用redis替代查询缓存功能</span><br><span class="line">（9）提供日志记录（日志管理章节）：binlog，默认是没开启的。</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-2-3-存储引擎层（类似于Linux中的文件系统）"><a href="#1-3-2-3-存储引擎层（类似于Linux中的文件系统）" class="headerlink" title="1.3.2.3 存储引擎层（类似于Linux中的文件系统）"></a>1.3.2.3 存储引擎层（类似于Linux中的文件系统）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">负责根据SQL层执行的结果，从磁盘上拿数据。</span><br><span class="line">将16进制的磁盘数据，交由SQL结构化化成表，</span><br><span class="line">连接层的专用线程返回给用户。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicga98x59j31000u07pw.jpg" alt="image-20200812175045993"></p>
+<h2 id="1-4-逻辑结构"><a href="#1-4-逻辑结构" class="headerlink" title="1.4 逻辑结构"></a>1.4 逻辑结构</h2><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicgakmaecj30s20kwn3y.jpg" alt="image-20200812171804012" style="zoom:50%;" />
+
+<h3 id="1-4-1-库（类似于目录）"><a href="#1-4-1-库（类似于目录）" class="headerlink" title="1.4.1 库（类似于目录）"></a>1.4.1 库（类似于目录）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">库名，库属性</span><br><span class="line"><span class="comment"># show databases;</span></span><br><span class="line"><span class="comment"># use mysql</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-2-表（类似于文件）"><a href="#1-4-2-表（类似于文件）" class="headerlink" title="1.4.2 表（类似于文件）"></a>1.4.2 表（类似于文件）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">表名</span><br><span class="line">属性</span><br><span class="line">列:列名(字段),列属性(数据类型,约束等)</span><br><span class="line">数据行(记录)</span><br><span class="line"><span class="comment"># show tables;</span></span><br><span class="line"><span class="comment"># desc user;  # 查看表列的情况</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-5-物理存储结构引入"><a href="#1-5-物理存储结构引入" class="headerlink" title="1.5 物理存储结构引入"></a>1.5 物理存储结构引入</h2><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicgaegqdnj311s0e845l.jpg" alt="image-20200812171823222" style="zoom:50%;" />
+
+<h3 id="1-5-1-库的物理存储结构"><a href="#1-5-1-库的物理存储结构" class="headerlink" title="1.5.1 库的物理存储结构"></a>1.5.1 库的物理存储结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用文件系统的目录来存储</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-2-表的物理存储结构"><a href="#1-5-2-表的物理存储结构" class="headerlink" title="1.5.2 表的物理存储结构"></a>1.5.2 表的物理存储结构</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">MyISAM</span>（一种引擎）的表：</span><br><span class="line"><span class="selector-tag">-rw-r-----</span> 1 <span class="selector-tag">mysql</span> <span class="selector-tag">mysql</span>   10816 <span class="selector-tag">Apr</span> 18 11<span class="selector-pseudo">:37</span> <span class="selector-tag">user</span><span class="selector-class">.frm</span></span><br><span class="line"><span class="selector-tag">-rw-r-----</span> 1 <span class="selector-tag">mysql</span> <span class="selector-tag">mysql</span>     396 <span class="selector-tag">Apr</span> 18 12<span class="selector-pseudo">:20</span>  <span class="selector-tag">user</span><span class="selector-class">.MYD</span></span><br><span class="line"><span class="selector-tag">-rw-r-----</span> 1 <span class="selector-tag">mysql</span> <span class="selector-tag">mysql</span>    4096 <span class="selector-tag">Apr</span> 18 14<span class="selector-pseudo">:48</span> <span class="selector-tag">user</span><span class="selector-class">.MYI</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">InnoDB</span>(默认的存储引擎)的表：</span><br><span class="line"><span class="selector-tag">-rw-r-----</span> 1 <span class="selector-tag">mysql</span> <span class="selector-tag">mysql</span>    8636 <span class="selector-tag">Apr</span> 18 11<span class="selector-pseudo">:37</span> <span class="selector-tag">time_zone</span><span class="selector-class">.frm</span></span><br><span class="line"><span class="selector-tag">-rw-r-----</span> 1 <span class="selector-tag">mysql</span> <span class="selector-tag">mysql</span>   98304 <span class="selector-tag">Apr</span> 18 11<span class="selector-pseudo">:37</span> <span class="selector-tag">time_zone</span><span class="selector-class">.ibd</span></span><br><span class="line"><span class="selector-tag">time_zone</span><span class="selector-class">.frm</span>：存储列相关信息</span><br><span class="line"><span class="selector-tag">time_zone</span><span class="selector-class">.ibd</span>：数据行+索引</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-3-表的段、区、页（16k）（了解）"><a href="#1-5-3-表的段、区、页（16k）（了解）" class="headerlink" title="1.5.3 表的段、区、页（16k）（了解）"></a>1.5.3 表的段、区、页（16k）（了解）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">段：一个表就是一个段，可以由一个或者多个区构成</span><br><span class="line">区&#x2F;簇：一个区（簇），默认1M，连续的64个页（pages）</span><br><span class="line">页：一个页，默认16k，连续的4个os的block，最小的存储单元</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicgap5r20j314l0u0x2y.jpg" alt="image-20200812181944720"></p>
+<h1 id="二-基础管理"><a href="#二-基础管理" class="headerlink" title="二  基础管理"></a>二  基础管理</h1><h2 id="2-1-用户、权限管理"><a href="#2-1-用户、权限管理" class="headerlink" title="2.1 用户、权限管理"></a>2.1 用户、权限管理</h2><h3 id="2-1-1-用户"><a href="#2-1-1-用户" class="headerlink" title="2.1.1 用户"></a>2.1.1 用户</h3><p>作用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">登录，管理数据库逻辑对象</span><br></pre></td></tr></table></figure>
+
+<p>定义：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">用户名@<span class="string">'白名单'</span></span><br><span class="line">白名单支持的方式？</span><br><span class="line">wordpress@<span class="string">'10.0.0.%'</span> <span class="comment"># wordpress用户可以通过10.0.0地址段的ip登陆   </span></span><br><span class="line">wordpress@<span class="string">'%'</span> <span class="comment"># wordpress用户可以通过所有ip登陆</span></span><br><span class="line">wordpress@<span class="string">'10.0.0.200'</span> <span class="comment"># wordpress用户只能通过10.0.0.200ip登陆</span></span><br><span class="line">wordpress@<span class="string">'localhost'</span><span class="comment"># 本地</span></span><br><span class="line">wordpress@<span class="string">'db02'</span>  <span class="comment"># 通过主机名db02登陆</span></span><br><span class="line">wordpress@<span class="string">'10.0.0.5%'</span> <span class="comment">#wordpress用户可以通过50--59的ip登陆</span></span><br><span class="line">wordpress@<span class="string">'10.0.0.0/255.255.254.0'</span> <span class="comment"># 地址段</span></span><br></pre></td></tr></table></figure>
+
+<p>管理操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mysql库下user表，存储用户和授权信息</span></span><br><span class="line"><span class="comment"># 增：</span></span><br><span class="line">create user lqz@<span class="string">'localhost'</span>;</span><br><span class="line">create user lqz@<span class="string">'%'</span> identified by <span class="string">'123'</span>;</span><br><span class="line"><span class="comment"># 查：</span></span><br><span class="line">desc mysql.user;    ----&gt;  authentication_string</span><br><span class="line">select user ,host ,authentication_string <span class="keyword">from</span> mysql.user</span><br><span class="line"><span class="comment"># 改:</span></span><br><span class="line">alter user lqz@<span class="string">'%'</span> identified by <span class="string">'456'</span>;</span><br><span class="line"><span class="comment"># 删：</span></span><br><span class="line">drop user lqz@<span class="string">'%'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意：8.0以前，可以通过grant命令，建立用户+授权，8.0以后不再支持，必须先建用户设置密码，再授权</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-2-权限"><a href="#2-1-2-权限" class="headerlink" title="2.1.2 权限"></a>2.1.2 权限</h3><p>针对用户设置权限，权限是用户的属性</p>
+<p>权限管理操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 8.0以前</span></span><br><span class="line"><span class="comment"># grant 权限 on 对象 to 用户 identified by '密码'；</span></span><br><span class="line"><span class="comment"># 8.0以后</span></span><br><span class="line"><span class="comment"># create user 用户 identified by '密码'；</span></span><br><span class="line"><span class="comment"># grant 权限 on 对象 to 用户；</span></span><br></pre></td></tr></table></figure>
+
+<p>常用权限介绍:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">show privileges; <span class="comment"># 查看所有权限</span></span><br><span class="line">ALL: </span><br><span class="line">SELECT,INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, SHUTDOWN, PROCESS, FILE, REFERENCES, INDEX, ALTER, SHOW DATABASES, SUPER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER, CRE ATE TABLESPACE</span><br><span class="line">ALL : 以上所有权限，一般是普通管理员拥有的</span><br><span class="line"><span class="keyword">with</span> grant option：超级管理员才具备的，给别的用户授权的功能</span><br><span class="line"></span><br><span class="line"><span class="comment">###################权限：</span></span><br><span class="line">ALL</span><br><span class="line">SELECT,INSERT,UPDATE,DELETE</span><br><span class="line">grant option</span><br><span class="line"><span class="comment">## 例子</span></span><br><span class="line">grant all on wordpress.* to wordpress@<span class="string">'10.0.0.%'</span> identified  by <span class="string">'123'</span>;</span><br><span class="line">grant SELECT,INSERT,UPDATE,DELETE on wordpress.* to wordpress@<span class="string">'10.0.0.%'</span> identified  by <span class="string">'123'</span>;</span><br><span class="line"><span class="comment"># all权限不包含grant option，需要单独设置。给其他用户授权</span></span><br><span class="line">grant all on wordpress.* to wordpress@<span class="string">'10.0.0.%'</span> <span class="keyword">with</span> grant option;</span><br></pre></td></tr></table></figure>
+
+<p>权限作用范围:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 对象：库，表</span></span><br><span class="line">*.*           <span class="comment"># 所有库，所有表（管理员）</span></span><br><span class="line">lqz.*         <span class="comment"># lqz库下的所有表（用的多）</span></span><br><span class="line">lqz.article   <span class="comment"># lqz库下的article表</span></span><br></pre></td></tr></table></figure>
+
+<p>需求1：windows机器的navicat登录到linux中的MySQL，管理员用户。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">mysql</span>&gt; <span class="selector-tag">grant</span> <span class="selector-tag">all</span> <span class="selector-tag">on</span> *.* <span class="selector-tag">to</span> <span class="selector-tag">root</span>@'10.0.0.%' identified by <span class="string">'123'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>需求2：创建一个应用用户app用户，能从windows上登录mysql，并能操作app库</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; grant <span class="keyword">select</span> ,update,insert,delete <span class="keyword">on</span> app.* to app@<span class="string">'10.0.0.%'</span> identified <span class="keyword">by</span> <span class="string">'123'</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-3-开发人员用户授权流程"><a href="#2-1-3-开发人员用户授权流程" class="headerlink" title="2.1.3 开发人员用户授权流程"></a>2.1.3 开发人员用户授权流程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.权限</span><br><span class="line">2.对谁操作</span><br><span class="line">3.你从哪来</span><br><span class="line">4.密码要求</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-4-提示：8-0在grant命令添加新特性"><a href="#2-1-4-提示：8-0在grant命令添加新特性" class="headerlink" title="2.1.4 提示：8.0在grant命令添加新特性"></a>2.1.4 提示：8.0在grant命令添加新特性</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">建用户和授权分开了</span><br><span class="line">grant 不再支持自动创建用户了，不支持改密码</span><br><span class="line">授权之前，必须要提前创建用户。</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-5-查看授权"><a href="#2-1-5-查看授权" class="headerlink" title="2.1.5 查看授权"></a>2.1.5 查看授权</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">show grants <span class="keyword">for</span> app@<span class="string">'10.0.0.%'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看用户基本信息</span></span><br><span class="line">select * <span class="keyword">from</span> mysql.user\G; <span class="comment"># N和Y表示</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># mysql授权表mysql库下，每次数据库启动，会把数据加载到内存中</span></span><br><span class="line">user:          *.*范围，存放创建的用户密码包括全局实例级别管理权限</span><br><span class="line">db：           库级别范围  lqz.*</span><br><span class="line">tables_priv：  表级别范围 lqz.article</span><br><span class="line">columns_priv： 列范围，字段级别</span><br><span class="line">procs_priv:    存放存储过程的权限</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-6-回收权限"><a href="#2-1-6-回收权限" class="headerlink" title="2.1.6 回收权限"></a>2.1.6 回收权限</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 用户删了，权限也就没了</span></span><br><span class="line"><span class="comment"># oracle中删除用户，用户的表也没了，mysql删除用户只是权限没了，表和库还在</span></span><br><span class="line"><span class="comment"># 不能通过重复授权覆盖之前的权限，进行修改，只能回收权限，只回收某个权限，多次grants是叠加权限</span></span><br><span class="line">revoke  delete on app.*  <span class="keyword">from</span> app@<span class="string">'10.0.0.%'</span>；</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-7-本地管理员用户密码忘记"><a href="#2-1-7-本地管理员用户密码忘记" class="headerlink" title="2.1.7 本地管理员用户密码忘记."></a>2.1.7 本地管理员用户密码忘记.</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mysqld启动时，跳过授权表，跳过tcp/ip连接</span></span><br><span class="line">--skip-grant-tables  跳过授权表</span><br><span class="line">--skip-networking   跳过tcp/ip连接，不让远程用户登录，否则远程用户不用密码可以直接登录</span><br><span class="line"><span class="comment">#### ？ service mysqld start --skip-grant-tables --skip-networking</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@db01 ~]mysqld_safe --skip-grant-tables --skip-networking &amp;</span><br><span class="line"><span class="comment"># 手工把授权表加载到内存</span></span><br><span class="line">mysql&gt; flush privileges;</span><br><span class="line">mysql&gt;  alter user root@<span class="string">'localhost'</span> identified by <span class="string">'123456'</span>;</span><br><span class="line">[root@db01 ~]<span class="comment"># pkill mysqld</span></span><br><span class="line">[root@db01 ~]<span class="comment"># systemctl start  mysqld</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-连接管理"><a href="#2-2-连接管理" class="headerlink" title="2.2 连接管理"></a>2.2 连接管理</h2><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicgaxnra2j30yq0u0thq.jpg" alt="image-20200812200157223" style="zoom:30%;" />
+
+<h3 id="2-2-1-自带客户端命令"><a href="#2-2-1-自带客户端命令" class="headerlink" title="2.2.1 自带客户端命令"></a>2.2.1 自带客户端命令</h3><p>mysql  常用参数：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">-u                   用户</span><br><span class="line">-p                   密码</span><br><span class="line">-h                   IP</span><br><span class="line">-P                   端口</span><br><span class="line">-S                   socket文件</span><br><span class="line">-e                   免交互执行命令，做自动化运维，查询数据库用户，创建用户等等</span><br><span class="line">&lt;                    导入SQL脚本</span><br><span class="line"></span><br><span class="line">[root@db01 ~]<span class="comment"># mysql -uroot -p -h 10.0.0.51 -P3306</span></span><br><span class="line">Enter <span class="symbol">password:</span></span><br><span class="line">mysql&gt; select @@socket;</span><br><span class="line">+-----------------+</span><br><span class="line"><span class="params">| @@socket        |</span></span><br><span class="line">+-----------------+</span><br><span class="line"><span class="params">| /tmp/mysql.sock |</span></span><br><span class="line"><span class="comment"># 数据库中必须先授权 root@'localhost' 用户</span></span><br><span class="line">[root@db01 ~]<span class="comment"># mysql -uroot -p -S /tmp/mysql.sock</span></span><br><span class="line">Enter <span class="symbol">password:</span></span><br><span class="line">[root@db01 ~]<span class="comment"># mysql -uroot -p -e "select user,host from mysql.user;"</span></span><br><span class="line">Enter <span class="symbol">password:</span></span><br><span class="line">+---------------+-----------+</span><br><span class="line"><span class="params">| user          |</span> host      <span class="params">|</span></span><br><span class="line"><span class="params">+---------------+-----------+</span></span><br><span class="line"><span class="params">|</span> root          <span class="params">| 10.0.0.%  |</span></span><br><span class="line"><span class="params">| mysql.session |</span> localhost <span class="params">|</span></span><br><span class="line"><span class="params">|</span> mysql.sys    <span class="params">| localhost |</span></span><br><span class="line"><span class="params">| root          |</span> localhost <span class="params">|</span></span><br><span class="line"><span class="params">+---------------+-----------+</span></span><br><span class="line"><span class="params">[root@db01 ~]#</span></span><br><span class="line"><span class="params">[root@db01 ~]# mysql -uroot -p &lt;world.sql</span></span><br><span class="line"><span class="params">Enter password:</span></span><br><span class="line"><span class="params"></span></span><br><span class="line"><span class="params"></span></span><br><span class="line"><span class="params"># 查看客户端连接情况，区分哪个是远程连接过来，哪个是本地连接过来</span></span><br><span class="line"><span class="params">show processlist;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-多种启动方式介绍"><a href="#2-3-多种启动方式介绍" class="headerlink" title="2.3 多种启动方式介绍"></a>2.3 多种启动方式介绍</h2><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicgb38lnhj311s0heajs.jpg" alt="image-20200812171903857" style="zoom:50%;" />
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicgb6ge7vj31qq0igajq.jpg" alt="image-20200812211358893" style="zoom:30%;" />
+
+<p>提示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">以上多种方式，都可以单独启动MySQL服务</span><br><span class="line">mysqld_safe和mysqld一般是在临时维护时使用。</span><br><span class="line">另外，从Centos 7系统开始，支持systemd直接调用mysqld的方式进行启动数据库</span><br><span class="line"></span><br><span class="line">方式三四，可以客户端连进去，输入 shutdown关闭服务端</span><br><span class="line">或者 mysqladmin -uroot -p123 shutdown</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-4-初始化配置"><a href="#2-4-初始化配置" class="headerlink" title="2.4 初始化配置"></a>2.4 初始化配置</h2><h3 id="2-4-0-作用"><a href="#2-4-0-作用" class="headerlink" title="2.4.0 作用"></a>2.4.0 作用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">控制MySQL的启动</span><br><span class="line">影响到客户端的连接</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-1-初始化配置的方法"><a href="#2-4-1-初始化配置的方法" class="headerlink" title="2.4.1 初始化配置的方法"></a>2.4.1 初始化配置的方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">预编译</span><br><span class="line">**配置文件(所有启动方式)**</span><br><span class="line">命令行参数 (仅限于 mysqld_safe mysqld)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-2-初始配置文件"><a href="#2-4-2-初始配置文件" class="headerlink" title="2.4.2 初始配置文件"></a>2.4.2 初始配置文件</h3><p>初始化配置文件的默认读取路径</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@db01 ~]<span class="comment"># mysqld --help --verbose |grep my.cnf</span></span><br><span class="line">/etc/my.cnf /etc/mysql/my.cnf /usr/local/mysql/etc/my.cnf ~/.my.cnf</span><br><span class="line">注:</span><br><span class="line">默认情况下，MySQL启动时，会依次读取以上配置文件，如果有重复选项，会以最后一个文件设置的为准。</span><br><span class="line"><span class="comment"># 手动指定使用哪个配置文件启动，指定默认文件位置点</span></span><br><span class="line">但是，如果启动时加入了--defaults-file=xxxx时，以上的所有文件都不会读取.</span><br></pre></td></tr></table></figure>
+
+<p>配置文件的书写方式:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[标签]</span><br><span class="line">配置项=xxxx</span><br><span class="line"></span><br><span class="line">标签类型：</span><br><span class="line">  服务端：影响数据库服务端运行</span><br><span class="line">  客户端：只影响本地客户端连接，不影响远程</span><br><span class="line">服务器端标签：</span><br><span class="line">[mysqld]</span><br><span class="line">[mysqld_safe]</span><br><span class="line">[server] 代表所有客户端</span><br><span class="line"></span><br><span class="line">客户端标签：</span><br><span class="line">[mysql]</span><br><span class="line">[mysqldump]</span><br><span class="line">[client]  代表所有客户端</span><br><span class="line"></span><br><span class="line">配置文件的示例展示：</span><br><span class="line">[root@db01 ~]<span class="comment"># cat /etc/my.cnf</span></span><br><span class="line">[mysqld]</span><br><span class="line">user=mysql  <span class="comment"># 负责数据库管理的用户</span></span><br><span class="line">basedir=/app/mysql   <span class="comment">#软件位置</span></span><br><span class="line">datadir=/data/mysql  <span class="comment">#数据位置</span></span><br><span class="line">socket=/tmp/mysql.sock  <span class="comment">#套接在文件</span></span><br><span class="line">server_id=<span class="number">6</span>  <span class="comment">#标识节点的编号，主从复制会用</span></span><br><span class="line">port=<span class="number">3306</span>   <span class="comment">#当前节点端口号</span></span><br><span class="line">log_error=/data/mysql/mysql.log  <span class="comment"># 日志文件位置</span></span><br><span class="line">[mysql]  <span class="comment"># 客户端标签</span></span><br><span class="line">socket=/tmp/mysql.sock</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-5-多实例的应用"><a href="#2-5-多实例的应用" class="headerlink" title="2.5 多实例的应用"></a>2.5 多实例的应用</h2><h3 id="2-5-1-准备多个目录"><a href="#2-5-1-准备多个目录" class="headerlink" title="2.5.1 准备多个目录"></a>2.5.1 准备多个目录</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /<span class="keyword">data</span>/<span class="number">330</span>&#123;<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;/<span class="keyword">data</span></span><br><span class="line">mkdir -p /binlog/<span class="number">330</span>&#123;<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-2-准备配置文件"><a href="#2-5-2-准备配置文件" class="headerlink" title="2.5.2 准备配置文件"></a>2.5.2 准备配置文件</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">cat &gt; <span class="regexp">/data/</span><span class="number">3307</span>/my.cnf &lt;&lt;EOF</span><br><span class="line">[mysqld]</span><br><span class="line">basedir=<span class="regexp">/app/</span>database/mysql</span><br><span class="line">datadir=<span class="regexp">/data/</span><span class="number">3307</span>/data</span><br><span class="line">socket=<span class="regexp">/tmp/my</span>sql3307.sock</span><br><span class="line">log_error=<span class="regexp">/data/</span><span class="number">3307</span>/mysql.log</span><br><span class="line">port=<span class="number">3307</span></span><br><span class="line">server_id=<span class="number">7</span></span><br><span class="line">log_bin=<span class="regexp">/data/</span><span class="number">3307</span>/mysql-bin</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt; <span class="regexp">/data/</span><span class="number">3308</span>/my.cnf &lt;&lt;EOF</span><br><span class="line">[mysqld]</span><br><span class="line">basedir=<span class="regexp">/app/</span>database/mysql</span><br><span class="line">datadir=<span class="regexp">/data/</span><span class="number">3308</span>/data</span><br><span class="line">socket=<span class="regexp">/tmp/my</span>sql3308.sock</span><br><span class="line">log_error=<span class="regexp">/data/</span><span class="number">3308</span>/mysql.log</span><br><span class="line">port=<span class="number">3308</span></span><br><span class="line">server_id=<span class="number">8</span></span><br><span class="line">log_bin=<span class="regexp">/data/</span><span class="number">3308</span>/mysql-bin</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt; <span class="regexp">/data/</span><span class="number">3309</span>/my.cnf &lt;&lt;EOF</span><br><span class="line">[mysqld]</span><br><span class="line">basedir=<span class="regexp">/app/</span>database/mysql</span><br><span class="line">datadir=<span class="regexp">/data/</span><span class="number">3309</span>/data</span><br><span class="line">socket=<span class="regexp">/tmp/my</span>sql3309.sock</span><br><span class="line">log_error=<span class="regexp">/data/</span><span class="number">3309</span>/mysql.log</span><br><span class="line">port=<span class="number">3309</span></span><br><span class="line">server_id=<span class="number">9</span></span><br><span class="line">log_bin=<span class="regexp">/data/</span><span class="number">3309</span>/mysql-bin</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-3-初始化三套数据"><a href="#2-5-3-初始化三套数据" class="headerlink" title="2.5.3 初始化三套数据"></a>2.5.3 初始化三套数据</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chown -R mysql.mysql /data /binlog</span><br><span class="line">mv /etc/my.cnf /etc/my.cnf.bak</span><br><span class="line">mysqld --initialize-insecure  --user=mysql --datadir=<span class="regexp">/data/</span><span class="number">3307</span>/data --basedir=<span class="regexp">/app/</span>database/mysql</span><br><span class="line">mysqld --initialize-insecure  --user=mysql --datadir=<span class="regexp">/data/</span><span class="number">3308</span>/data --basedir=<span class="regexp">/app/</span>database/mysql</span><br><span class="line">mysqld --initialize-insecure  --user=mysql --datadir=<span class="regexp">/data/</span><span class="number">3309</span>/data --basedir=<span class="regexp">/app/</span>database/mysql</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-4-systemd管理多实例"><a href="#2-5-4-systemd管理多实例" class="headerlink" title="2.5.4 systemd管理多实例"></a>2.5.4 systemd管理多实例</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/systemd/system</span><br><span class="line">cp mysqld.service mysqld3307.service</span><br><span class="line">cp mysqld.service mysqld3308.service</span><br><span class="line">cp mysqld.service mysqld3309.service</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 脚本介绍</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=MySQL Server  <span class="comment"># 描述服务</span></span><br><span class="line">Documentation=<span class="symbol">man:</span>mysqld(<span class="number">8</span>)</span><br><span class="line">Documentation=<span class="symbol">http:</span>/<span class="regexp">/dev.mysql.com/doc</span><span class="regexp">/refman/en</span><span class="regexp">/using-systemd.html</span></span><br><span class="line"><span class="regexp">After=network.target  # 描述服务类别</span></span><br><span class="line"><span class="regexp">After=syslog.target</span></span><br><span class="line"><span class="regexp">[Install]</span></span><br><span class="line"><span class="regexp">WantedBy=multi-user.target</span></span><br><span class="line"><span class="regexp">[Service]  # 服务运行参数设置</span></span><br><span class="line"><span class="regexp">User=mysql</span></span><br><span class="line"><span class="regexp">Group=mysql</span></span><br><span class="line"><span class="regexp">ExecStart=/app</span><span class="regexp">/mysql/bin</span><span class="regexp">/mysqld  --defaults-file=/data</span><span class="regexp">/3307/my</span>.cnf</span><br><span class="line">LimitNOFILE = <span class="number">5000</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt;<span class="regexp">/etc/systemd</span><span class="regexp">/system/mysqld</span>3307.service  &lt;&lt;EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=MySQL Server</span><br><span class="line">Documentation=<span class="symbol">man:</span>mysqld(<span class="number">8</span>)</span><br><span class="line">Documentation=<span class="symbol">http:</span>/<span class="regexp">/dev.mysql.com/doc</span><span class="regexp">/refman/en</span><span class="regexp">/using-systemd.html</span></span><br><span class="line"><span class="regexp">After=network.target</span></span><br><span class="line"><span class="regexp">After=syslog.target</span></span><br><span class="line"><span class="regexp">[Install]</span></span><br><span class="line"><span class="regexp">WantedBy=multi-user.target</span></span><br><span class="line"><span class="regexp">[Service]</span></span><br><span class="line"><span class="regexp">User=mysql</span></span><br><span class="line"><span class="regexp">Group=mysql</span></span><br><span class="line"><span class="regexp">ExecStart=/app</span><span class="regexp">/database/mysql</span><span class="regexp">/bin/mysqld</span>  --defaults-file=<span class="regexp">/data/</span><span class="number">3307</span>/my.cnf</span><br><span class="line">LimitNOFILE = <span class="number">5000</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt;<span class="regexp">/etc/systemd</span><span class="regexp">/system/mysqld</span>3308.service  &lt;&lt;EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=MySQL Server</span><br><span class="line">Documentation=<span class="symbol">man:</span>mysqld(<span class="number">8</span>)</span><br><span class="line">Documentation=<span class="symbol">http:</span>/<span class="regexp">/dev.mysql.com/doc</span><span class="regexp">/refman/en</span><span class="regexp">/using-systemd.html</span></span><br><span class="line"><span class="regexp">After=network.target</span></span><br><span class="line"><span class="regexp">After=syslog.target</span></span><br><span class="line"><span class="regexp">[Install]</span></span><br><span class="line"><span class="regexp">WantedBy=multi-user.target</span></span><br><span class="line"><span class="regexp">[Service]</span></span><br><span class="line"><span class="regexp">User=mysql</span></span><br><span class="line"><span class="regexp">Group=mysql</span></span><br><span class="line"><span class="regexp">ExecStart=/app</span><span class="regexp">/database/mysql</span><span class="regexp">/bin/mysqld</span>  --defaults-file=<span class="regexp">/data/</span><span class="number">3308</span>/my.cnf</span><br><span class="line">LimitNOFILE = <span class="number">5000</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt;<span class="regexp">/etc/systemd</span><span class="regexp">/system/mysqld</span>3309.service  &lt;&lt;EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=MySQL Server</span><br><span class="line">Documentation=<span class="symbol">man:</span>mysqld(<span class="number">8</span>)</span><br><span class="line">Documentation=<span class="symbol">http:</span>/<span class="regexp">/dev.mysql.com/doc</span><span class="regexp">/refman/en</span><span class="regexp">/using-systemd.html</span></span><br><span class="line"><span class="regexp">After=network.target</span></span><br><span class="line"><span class="regexp">After=syslog.target</span></span><br><span class="line"><span class="regexp">[Install]</span></span><br><span class="line"><span class="regexp">WantedBy=multi-user.target</span></span><br><span class="line"><span class="regexp">[Service]</span></span><br><span class="line"><span class="regexp">User=mysql</span></span><br><span class="line"><span class="regexp">Group=mysql</span></span><br><span class="line"><span class="regexp">ExecStart=/app</span><span class="regexp">/database/mysql</span><span class="regexp">/bin/mysqld</span>  --defaults-file=<span class="regexp">/data/</span><span class="number">3309</span>/my.cnf</span><br><span class="line">LimitNOFILE = <span class="number">5000</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-5-授权"><a href="#2-5-5-授权" class="headerlink" title="2.5.5 授权"></a>2.5.5 授权</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R mysql.mysql /<span class="keyword">data</span><span class="comment">/*</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-6-启动"><a href="#2-5-6-启动" class="headerlink" title="2.5.6 启动"></a>2.5.6 启动</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">systemctl</span> <span class="selector-tag">start</span> <span class="selector-tag">mysqld3307</span><span class="selector-class">.service</span></span><br><span class="line"><span class="selector-tag">systemctl</span> <span class="selector-tag">start</span> <span class="selector-tag">mysqld3308</span><span class="selector-class">.service</span></span><br><span class="line"><span class="selector-tag">systemctl</span> <span class="selector-tag">start</span> <span class="selector-tag">mysqld3309</span><span class="selector-class">.service</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-7-验证多实例"><a href="#2-5-7-验证多实例" class="headerlink" title="2.5.7 验证多实例"></a>2.5.7 验证多实例</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">netstat -lnp|grep <span class="number">330</span></span><br><span class="line">mysql -S /<span class="keyword">data</span>/<span class="number">3307</span>/mysql.sock -e <span class="string">"select @@server_id"</span></span><br><span class="line">mysql -S /<span class="keyword">data</span>/<span class="number">3308</span>/mysql.sock -e <span class="string">"select @@server_id"</span></span><br><span class="line">mysql -S /<span class="keyword">data</span>/<span class="number">3309</span>/mysql.sock -e <span class="string">"select @@server_id"</span></span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/MySQL%E7%B3%BB%E5%88%97/01-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-MySQL%E4%BB%8B%E7%BB%8D%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">
+        <span class="nav-arrow">← </span>
+        
+          db/MySQL系列/01-MySQL系列之-MySQL介绍安装配置
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/MySQL%E7%B3%BB%E5%88%97/08-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%9F%BA%E7%A1%80/">
+        
+          db/MySQL系列/08-MySQL系列之-主从复制基础
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-体系结构"><span class="toc-nav-text">一 体系结构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-C-S-客户端-服务端-模型介绍"><span class="toc-nav-text">1.1 C&#x2F;S(客户端&#x2F;服务端)模型介绍</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-实例介绍"><span class="toc-nav-text">1.2 实例介绍</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-3-mysqld程序运行原理"><span class="toc-nav-text">1.3 mysqld程序运行原理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-1-mysqld程序结构"><span class="toc-nav-text">1.3.1 mysqld程序结构</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-2-一条SQL语句的执行过程"><span class="toc-nav-text">1.3.2 一条SQL语句的执行过程</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-2-1-连接层"><span class="toc-nav-text">1.3.2.1 连接层</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-2-2-SQL层-（重点）"><span class="toc-nav-text">1.3.2.2 SQL层 （重点）</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-2-3-存储引擎层（类似于Linux中的文件系统）"><span class="toc-nav-text">1.3.2.3 存储引擎层（类似于Linux中的文件系统）</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-4-逻辑结构"><span class="toc-nav-text">1.4 逻辑结构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-1-库（类似于目录）"><span class="toc-nav-text">1.4.1 库（类似于目录）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-2-表（类似于文件）"><span class="toc-nav-text">1.4.2 表（类似于文件）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-5-物理存储结构引入"><span class="toc-nav-text">1.5 物理存储结构引入</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-5-1-库的物理存储结构"><span class="toc-nav-text">1.5.1 库的物理存储结构</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-5-2-表的物理存储结构"><span class="toc-nav-text">1.5.2 表的物理存储结构</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-5-3-表的段、区、页（16k）（了解）"><span class="toc-nav-text">1.5.3 表的段、区、页（16k）（了解）</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二-基础管理"><span class="toc-nav-text">二  基础管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-用户、权限管理"><span class="toc-nav-text">2.1 用户、权限管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-1-用户"><span class="toc-nav-text">2.1.1 用户</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-2-权限"><span class="toc-nav-text">2.1.2 权限</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-3-开发人员用户授权流程"><span class="toc-nav-text">2.1.3 开发人员用户授权流程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-4-提示：8-0在grant命令添加新特性"><span class="toc-nav-text">2.1.4 提示：8.0在grant命令添加新特性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-5-查看授权"><span class="toc-nav-text">2.1.5 查看授权</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-6-回收权限"><span class="toc-nav-text">2.1.6 回收权限</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-7-本地管理员用户密码忘记"><span class="toc-nav-text">2.1.7 本地管理员用户密码忘记.</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-连接管理"><span class="toc-nav-text">2.2 连接管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-1-自带客户端命令"><span class="toc-nav-text">2.2.1 自带客户端命令</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-3-多种启动方式介绍"><span class="toc-nav-text">2.3 多种启动方式介绍</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-4-初始化配置"><span class="toc-nav-text">2.4 初始化配置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-4-0-作用"><span class="toc-nav-text">2.4.0 作用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-4-1-初始化配置的方法"><span class="toc-nav-text">2.4.1 初始化配置的方法</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-4-2-初始配置文件"><span class="toc-nav-text">2.4.2 初始配置文件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-5-多实例的应用"><span class="toc-nav-text">2.5 多实例的应用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-1-准备多个目录"><span class="toc-nav-text">2.5.1 准备多个目录</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-2-准备配置文件"><span class="toc-nav-text">2.5.2 准备配置文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-3-初始化三套数据"><span class="toc-nav-text">2.5.3 初始化三套数据</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-4-systemd管理多实例"><span class="toc-nav-text">2.5.4 systemd管理多实例</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-5-授权"><span class="toc-nav-text">2.5.5 授权</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-6-启动"><span class="toc-nav-text">2.5.6 启动</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-7-验证多实例"><span class="toc-nav-text">2.5.7 验证多实例</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/MySQL系列/02-MySQL系列之-MySQL体系结构与管理/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/MySQL系列/02-MySQL系列之-MySQL体系结构与管理",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

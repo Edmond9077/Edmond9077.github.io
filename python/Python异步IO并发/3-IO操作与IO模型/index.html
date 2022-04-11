@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      3-IO操作与IO模型 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>3-IO操作与IO模型</h2>
+
+
+
+  <p class="post-date">2020-03-25</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-IO操作本质"><a href="#一-IO操作本质" class="headerlink" title="一 IO操作本质"></a>一 IO操作本质</h2><p>数据复制的过程中不会消耗CPU</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 内存分为内核缓冲区和用户缓冲区</span></span><br><span class="line"><span class="comment"># 2 用户的应用程序不能直接操作内核缓冲区，需要将数据从内核拷贝到用户才能使用</span></span><br><span class="line"><span class="comment"># 3 而IO操作、网络请求加载到内存的数据一开始是放在内核缓冲区的</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://tva1.sinaimg.cn/large/00831rSTly1gd8rw1pqm5j31700m2tdf.jpg" alt="image-20200325231658991" style="zoom:50%;" />
+
+<h2 id="二-IO模型"><a href="#二-IO模型" class="headerlink" title="二 IO模型"></a>二 IO模型</h2><h3 id="1-BIO-–-阻塞模式I-O"><a href="#1-BIO-–-阻塞模式I-O" class="headerlink" title="1. BIO – 阻塞模式I/O"></a><strong>1. BIO – 阻塞模式I/O</strong></h3><p>用户进程从发起请求，到最终拿到数据前，一直挂起等待； 数据会由用户进程完成拷贝</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">举个例子：一个人去 商店买一把菜刀，</span></span><br><span class="line"><span class="string">他到商店问老板有没有菜刀（发起系统调用）</span></span><br><span class="line"><span class="string">如果有（表示在内核缓冲区有需要的数据）</span></span><br><span class="line"><span class="string">老板直接把菜刀给买家（从内核缓冲区拷贝到用户缓冲区）</span></span><br><span class="line"><span class="string">这个过程买家一直在等待</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">如果没有，商店老板会向工厂下订单（IO操作，等待数据准备好）</span></span><br><span class="line"><span class="string">工厂把菜刀运给老板（进入到内核缓冲区）</span></span><br><span class="line"><span class="string">老板把菜刀给买家（从内核缓冲区拷贝到用户缓冲区）</span></span><br><span class="line"><span class="string">这个过程买家一直在等待</span></span><br><span class="line"><span class="string">是同步io</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://tva1.sinaimg.cn/large/00831rSTly1gd8rw5x47nj318s0nwq9b.jpg" alt="image-20200325231903075" style="zoom:50%;" />
+
+<h3 id="2-NIO-–-非阻塞模式I-O"><a href="#2-NIO-–-非阻塞模式I-O" class="headerlink" title="2. NIO – 非阻塞模式I/O"></a><strong>2. NIO – 非阻塞模式I/O</strong></h3><p>用户进程发起请求，如果数据没有准备好，那么立刻告知用户进程未准备好；此时用户进程可选择继续发起请求、或者先去做其他事情，稍后再回来继续发请求，直到被告知数据准备完毕，可以开始接收为止； 数据会由用户进程完成拷贝</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">举个例子：一个人去 商店买一把菜刀，</span></span><br><span class="line"><span class="string">他到商店问老板有没有菜刀（发起系统调用）</span></span><br><span class="line"><span class="string">老板说没有，在向工厂进货（返回状态）</span></span><br><span class="line"><span class="string">买家去别地方玩了会，又回来问，菜刀到了么（发起系统调用）</span></span><br><span class="line"><span class="string">老板说还没有（返回状态）</span></span><br><span class="line"><span class="string">买家又去玩了会（不断轮询）</span></span><br><span class="line"><span class="string">最后一次再问，菜刀有了（数据准备好了）</span></span><br><span class="line"><span class="string">老板把菜刀递给买家（从内核缓冲区拷贝到用户缓冲区）</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">整个过程轮询+等待：轮询时没有等待，可以做其他事，从内核缓冲区拷贝到用户缓冲区需要等待</span></span><br><span class="line"><span class="string">是同步io</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">同一个线程，同一时刻只能监听一个socket，造成浪费，引入io多路复用，同时监听读个socket</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+
+
+<img src="https://tva1.sinaimg.cn/large/00831rSTly1gd8rw9zwy9j317i0o6473.jpg" alt="image-20200325232410816" style="zoom:50%;" />
+
+<h3 id="3-IO-Multiplexing-I-O多路复用模型"><a href="#3-IO-Multiplexing-I-O多路复用模型" class="headerlink" title="3. IO Multiplexing - I/O多路复用模型"></a><strong>3. IO Multiplexing - I/O多路复用模型</strong></h3><p>类似BIO，只不过找了一个代理，来挂起等待，并能同时监听多个请求； 数据会由用户进程完成拷贝</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">举个例子：多个人去 一个商店买菜刀，</span></span><br><span class="line"><span class="string">多个人给老板打电话，说我要买菜刀（发起系统调用）</span></span><br><span class="line"><span class="string">老板把每个人都记录下来（放到select中）</span></span><br><span class="line"><span class="string">老板去工厂进货（IO操作）</span></span><br><span class="line"><span class="string">有货了，再挨个通知买到的人，来取刀（通知/返回可读条件）</span></span><br><span class="line"><span class="string">买家来到商店等待，老板把到给买家（从内核缓冲区拷贝到用户缓冲区）</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">多路复用：老板可以同时接受很多请求（select模型最大1024个，epoll模型），</span></span><br><span class="line"><span class="string">但是老板把到给买家这个过程，还需要等待，</span></span><br><span class="line"><span class="string">是同步io</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+
+
+<img src="https://tva1.sinaimg.cn/large/00831rSTly1gd8rwe9ouij31740nkwll.jpg" alt="image-20200325232430850" style="zoom:50%;" />
+
+<h3 id="4-AIO-–-异步I-O模型"><a href="#4-AIO-–-异步I-O模型" class="headerlink" title="4. AIO – 异步I/O模型"></a><strong>4. AIO – 异步I/O模型</strong></h3><p>发起请求立刻得到回复，不用挂起等待； 数据会由内核进程主动完成拷贝</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">举个例子：还是买菜刀</span></span><br><span class="line"><span class="string">现在是网上下单到商店（系统调用）</span></span><br><span class="line"><span class="string">商店确认（返回）</span></span><br><span class="line"><span class="string">商店去进货（io操作）</span></span><br><span class="line"><span class="string">商店收到货把货发个卖家（从内核缓冲区拷贝到用户缓冲区）</span></span><br><span class="line"><span class="string">买家收到货（指定信号）</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">整个过程无等待</span></span><br><span class="line"><span class="string">异步io</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">AIO框架在windows下使用windows IOCP技术，在Linux下使用epoll多路复用IO技术模拟异步IO</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">市面上多数的高并发框架，都没有使用异步io而是用的io多路复用，因为io多路复用技术很成熟且稳定，并且在实际的使用过程中，异步io并没有比io多路复用性能提升很多，没有达到很明显的程度</span></span><br><span class="line"><span class="string">并且，真正的AIO编码难度比io多路复用高很多</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+
+
+<img src="https://tva1.sinaimg.cn/large/00831rSTly1gd8rwiz5grj318c0pgn3u.jpg" alt="image-20200325232454769" style="zoom:50%;" />
+
+<h3 id="5-select-poll-和epoll"><a href="#5-select-poll-和epoll" class="headerlink" title="5 select poll 和epoll"></a>5 select poll 和epoll</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#  1 select poll 和epoll都是io多路复用技术</span></span><br><span class="line">select, poll , epoN都是io多路复用的机制。I/O多路复用就是通过一种机 制个进程可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。但select, poll , epoll本质上都是同步I/O ,因为他们都需要在读写事件就绪后自己负责进行读写， 也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异 步I/O的实现会负责把数据从内核拷贝到用户空间。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 select</span></span><br><span class="line">select函数监视的文件描述符分<span class="number">3</span>类，分别是writefds、readfds、和 exceptfds。调用后select函数会阻塞，直到有描述副就绪（有数据可读、 可写、或者有<span class="keyword">except</span>）,或者超时（timeout指定等待时间，如果立即返回 设为null即可），函数返回。当select函数返回后，可以通过遍历fdset,来 找到就绪的描述符。</span><br><span class="line">select目前几乎在所有的平台上支持，其良好跨平台支持也是它的一个 优点。select的一个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，在Linux上一般为<span class="number">1024</span> ,可以通过修改宏定义甚至重新编译内核的 方式提升这一限制，但是这样也会造成效率的降低。</span><br><span class="line"><span class="comment"># 3 poll</span></span><br><span class="line">不同于select使用三个位图来表示三个fdset的方式，poll使用一个 pollfd的指针实现。</span><br><span class="line">pollfd结构包含了要监视的event和发生的event,不再使用select <span class="string">'参数-值'</span>传递的方式。同时，pollfd并没有最大数量限制（但是数量过大后 性能也是会下降）。和select函数一样，poll返回后，需要轮询pollfd来获取就绪的描述符。</span><br><span class="line">从上面看，select和poll都需要在返回后，通过遍历文件描述符来获取 已经就绪的socket。事实上，同时连接的大量客户端在一时刻可能只有很少的处于就绪状态，因此随着监视的描述符数量的增长，其效率也会线性下降</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4 epoll</span></span><br><span class="line">epoll是在linux2<span class="number">.6</span>内核中提出的，是之前的select和poll的增强版本。相对 于select和poll来说，epoll更加灵活，没有描述符限制。epoll使用一个文 件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5 更好的例子理解</span></span><br><span class="line">老师检查同学作业，一班<span class="number">50</span>个人，一个一个问，同学，作业写完了没？select，poll</span><br><span class="line">老师检查同学作业，一班<span class="number">50</span>个人，同学写完了主动举手告诉老师，老师去检查 epoll</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6 总结</span></span><br><span class="line">在并发高的情况下，连接活跃度不高，epoll比select好，网站http的请求，连了就断掉</span><br><span class="line">并发性不高，同时连接很活跃，select比epoll好，websocket的连接，长连接，游戏开发</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三-同步I-O与异步I-O"><a href="#三-同步I-O与异步I-O" class="headerlink" title="三 同步I/O与异步I/O"></a>三 同步I/O与异步I/O</h2><ul>
+<li>同步I/O<ul>
+<li>概念：导致请求进程阻塞的I/O操作，直到I/O操作任务完成</li>
+<li>类型：BIO、NIO、IO Multiplexing</li>
+</ul>
+</li>
+<li>异步I/O<ul>
+<li>概念：不导致进程阻塞的I/O操作</li>
+<li>类型：AIO</li>
+</ul>
+</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>同步I/O与异步I/O判断依据是，是否会导致用户进程阻塞</li>
+<li>BIO中socket直接阻塞等待（用户进程主动等待，并在拷贝时也等待）</li>
+<li>NIO中将数据从内核空间拷贝到用户空间时阻塞（用户进程主动询问，并在拷贝时等待）</li>
+<li>IO Multiplexing中select等函数为阻塞、拷贝数据时也阻塞（用户进程主动等待，并在拷贝时也等待）</li>
+<li>AIO中从始至终用户进程都没有阻塞（用户进程是被动的）</li>
+</ul>
+<h2 id="四-并发-并行-同步-异步-阻塞-非阻塞"><a href="#四-并发-并行-同步-异步-阻塞-非阻塞" class="headerlink" title="四 并发-并行-同步-异步-阻塞-非阻塞"></a>四 并发-并行-同步-异步-阻塞-非阻塞</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 并发</span></span><br><span class="line">并发是指一个时间段内，有几个程序在同一个cpu上执行，但是同一时刻，只有一个程序在cpu上运行</span><br><span class="line">跑步，鞋带开了，停下跑步，系鞋带</span><br><span class="line"><span class="comment"># 2 并行</span></span><br><span class="line">指任意时刻点上，有多个程序同时运行在多个cpu上</span><br><span class="line">跑步，边跑步边听音乐</span><br><span class="line"><span class="comment"># 3 同步：</span></span><br><span class="line">指代码调用io操作时，必须等待io操作完成才返回的调用方式</span><br><span class="line"><span class="comment"># 4 异步</span></span><br><span class="line">异步是指代码调用io操作时，不必等io操作完成就返回调用方式</span><br><span class="line"><span class="comment"># 6 阻塞</span></span><br><span class="line">指调用函数时候，当前线程别挂起</span><br><span class="line"><span class="comment"># 6 非阻塞</span></span><br><span class="line">指调用函数时候，当前线程不会被挂起，而是立即返回</span><br><span class="line"></span><br><span class="line"><span class="comment"># 区别：</span></span><br><span class="line">同步和异步是消息通讯的机制</span><br><span class="line">阻塞和非阻塞是函数调用机制</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="五-IO设计模式"><a href="#五-IO设计模式" class="headerlink" title="五 IO设计模式"></a>五 IO设计模式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> Reactor模式，基于同步I&#x2F;O实现</span><br><span class="line">- Proactor模式，基于异步I&#x2F;O实现</span><br></pre></td></tr></table></figure>
+
+<p>Reactor模式通常采用IO多路复用机制进行具体实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- kqueue、epoll、poll、select等机制</span><br></pre></td></tr></table></figure>
+
+<p>Proactor模式通常采用OS Asynchronous IO(AIO)的异步机制进行实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- 前提是对应操作系统支持AIO，比如支持异步IO的linux(不太成熟)、具备IOCP的windows server(非常成熟)</span><br></pre></td></tr></table></figure>
+
+<p>Reactor模式和Proactor模式都是事件驱动，主要实现步骤：</p>
+<ol>
+<li>事件注册：将事件与事件处理器进行分离。将事件注册到事件循环中，将事件处理器单独管理起来，记录其与事件的对应关系。</li>
+<li>事件监听：启动事件循环，一旦事件已经就绪/完成，就立刻通知事件处理器</li>
+<li>事件分发：当收到事件就绪/完成的信号，便立刻激活与之对应的事件处理器</li>
+<li>事件处理：在进程/线程/协程中执行事件处理器</li>
+</ol>
+<p>使用过程中，用户通常只负责<strong>定义事件和事件处理器</strong>并将其注册以及一开始的<strong>事件循环的启动</strong>，这个过程就会是以异步的形式执行任务。</p>
+<h3 id="Reactor模式"><a href="#Reactor模式" class="headerlink" title="Reactor模式"></a>Reactor模式</h3><img src="https://tva1.sinaimg.cn/large/00831rSTly1gd8rwn55tej31620u0ti4.jpg" alt="image-20200325235039094" style="zoom:50%;" />
+
+<h3 id="Proactor模式"><a href="#Proactor模式" class="headerlink" title="Proactor模式"></a>Proactor模式</h3><img src="https://tva1.sinaimg.cn/large/00831rSTly1gd8rwqdfvnj315x0u047e.jpg" alt="image-20200325235058486" style="zoom:50%;" />
+
+<h3 id="对比分析"><a href="#对比分析" class="headerlink" title="对比分析"></a>对比分析</h3><p>Reactor模型处理耗时长的操作会造成事件分发的阻塞，影响到后续事件的处理；</p>
+<p>Proactor模型实现逻辑复杂；依赖操作系统对异步的支持，目前实现了纯异步操作的操作系统少，实现优秀的如windows IOCP，但由于其windows系统用于服务器的局限性，目前应用范围较小；而Unix/Linux系统对纯异步的支持有限，因而应用事件驱动的主流还是基于select/epoll等实现的reactor模式</p>
+<p>Python中：如asyncio、gevent、tornado、twisted等异步模块都是依据事件驱动模型设计，更多的都是使用reactor模型，其中部分也支持proactor模式，当然需要根据当前运行的操作系统环境来进行手动配置</p>
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/19-%E9%94%81-%E4%BF%A1%E5%8F%B7%E9%87%8F-Event%E4%BA%8B%E4%BB%B6/">
+        <span class="nav-arrow">← </span>
+        
+          1-Python中的GIL
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/7-%E5%BC%80%E5%90%AF%E5%A4%9A%E8%BF%9B%E7%A8%8B(multiprocess.process)/">
+        
+          1-Python中的GIL
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-IO操作本质"><span class="toc-nav-text">一 IO操作本质</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-IO模型"><span class="toc-nav-text">二 IO模型</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-BIO-–-阻塞模式I-O"><span class="toc-nav-text">1. BIO – 阻塞模式I&#x2F;O</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-NIO-–-非阻塞模式I-O"><span class="toc-nav-text">2. NIO – 非阻塞模式I&#x2F;O</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-IO-Multiplexing-I-O多路复用模型"><span class="toc-nav-text">3. IO Multiplexing - I&#x2F;O多路复用模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-AIO-–-异步I-O模型"><span class="toc-nav-text">4. AIO – 异步I&#x2F;O模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-select-poll-和epoll"><span class="toc-nav-text">5 select poll 和epoll</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-同步I-O与异步I-O"><span class="toc-nav-text">三 同步I&#x2F;O与异步I&#x2F;O</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-并发-并行-同步-异步-阻塞-非阻塞"><span class="toc-nav-text">四 并发-并行-同步-异步-阻塞-非阻塞</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-IO设计模式"><span class="toc-nav-text">五 IO设计模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Reactor模式"><span class="toc-nav-text">Reactor模式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Proactor模式"><span class="toc-nav-text">Proactor模式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#对比分析"><span class="toc-nav-text">对比分析</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Python异步IO并发/3-IO操作与IO模型/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "3-IO操作与IO模型",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

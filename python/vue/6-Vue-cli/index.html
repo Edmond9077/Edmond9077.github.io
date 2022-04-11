@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/vue/6-Vue-cli | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/vue/6-Vue-cli</h2>
+
+
+
+  <p class="post-date">2020-12-13</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Vue-CLI-项目搭建"><a href="#Vue-CLI-项目搭建" class="headerlink" title="Vue-CLI 项目搭建"></a>Vue-CLI 项目搭建</h1><h2 id="1-单文件组件"><a href="#1-单文件组件" class="headerlink" title="1 单文件组件"></a>1 单文件组件</h2><blockquote>
+<p><a href="https://cn.vuejs.org/v2/guide/single-file-components.html#ad" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/single-file-components.html#ad</a></p>
+</blockquote>
+<h2 id="2-Vue-CLI-项目搭建"><a href="#2-Vue-CLI-项目搭建" class="headerlink" title="2 Vue-CLI 项目搭建"></a>2 Vue-CLI 项目搭建</h2><h3 id="2-1-环境搭建"><a href="#2-1-环境搭建" class="headerlink" title="2.1 环境搭建"></a>2.1 环境搭建</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 安装node</span><br><span class="line"></span><br><span class="line">官网下载安装包，傻瓜式安装：https://nodejs.org/zh-cn/</span><br><span class="line"></span><br><span class="line">- 安装cnpm</span><br><span class="line"></span><br><span class="line">npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line">- 安装脚手架</span><br><span class="line"></span><br><span class="line">cnpm install -g @vue/cli</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- 清空缓存处理</span><br><span class="line"></span><br><span class="line">npm cache clean --force</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-2-项目的创建"><a href="#2-2-项目的创建" class="headerlink" title="2.2 项目的创建"></a>2.2 项目的创建</h3><h4 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vue create 项目名</span><br><span class="line"><span class="comment">// 要提前进入目标目录(项目应该创建在哪个目录下)</span></span><br><span class="line"><span class="comment">// 选择自定义方式创建项目，选取Router, Vuex插件</span></span><br><span class="line"><span class="comment">//标准eslint，自动修复（ESlint+Standard config--》lint on save+Lint and fix on commit）</span></span><br><span class="line">vue ui 使用图形界面创建项目</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="启动-停止项目"><a href="#启动-停止项目" class="headerlink" title="启动/停止项目"></a>启动/停止项目</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm run serve / ctrl+c</span><br><span class="line"><span class="comment">// 要提前进入项目根目录</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="打包项目"><a href="#打包项目" class="headerlink" title="打包项目"></a>打包项目</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br><span class="line"><span class="comment">// 要在项目根目录下进行打包操作</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="package-json中"><a href="#package-json中" class="headerlink" title="package.json中"></a>package.json中</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"serve"</span>: <span class="string">"vue-cli-service serve"</span>,  <span class="comment"># 运行项目</span></span><br><span class="line">    <span class="string">"build"</span>: <span class="string">"vue-cli-service build"</span>,  <span class="comment"># 编译项目成html，css，js</span></span><br><span class="line">    <span class="string">"lint"</span>: <span class="string">"vue-cli-service lint"</span>     <span class="comment"># 代码格式化</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-3-认识项目"><a href="#2-3-认识项目" class="headerlink" title="2.3 认识项目"></a>2.3 认识项目</h3><h4 id="项目目录"><a href="#项目目录" class="headerlink" title="项目目录"></a>项目目录</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dist: 打包的项目目录(打包后会生成)</span><br><span class="line">node_modules: 项目依赖(删掉，不上传git，使用npm install重新安装)</span><br><span class="line">public: 共用资源</span><br><span class="line">	--favicon.ico</span><br><span class="line">	--index.html:项目入口页面，单页面</span><br><span class="line">src: 项目目标,书写代码的地方</span><br><span class="line">	-- assets:资源</span><br><span class="line">	-- components:组件</span><br><span class="line">	-- views:视图组件</span><br><span class="line">	-- App.vue:根组件</span><br><span class="line">	-- main.js: 入口js</span><br><span class="line">	-- router.js: 路由文件</span><br><span class="line">	-- store.js: 状态库文件</span><br><span class="line">vue.config.js: 项目配置文件(没有可以自己新建)</span><br><span class="line">package.json：项目配置依赖（等同于python项目的reqirement.txt）</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="配置文件：vue-config-js"><a href="#配置文件：vue-config-js" class="headerlink" title="配置文件：vue.config.js"></a>配置文件：vue.config.js</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//https://cli.vuejs.org/zh/config/ 配置参考</span></span><br><span class="line"><span class="built_in">module</span>.exports=&#123;</span><br><span class="line">	devServer: &#123;</span><br><span class="line">		port: <span class="number">8888</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 修改端口,选做</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="main-js-整个项目入口文件"><a href="#main-js-整个项目入口文件" class="headerlink" title="main.js 整个项目入口文件"></a>main.js 整个项目入口文件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//es6 模块导入规范，等同于python导包</span></span><br><span class="line"><span class="comment">//commonJs的导入规范：var Vue=require('vue')</span></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App.vue'</span>  <span class="comment">//根组件</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">'./router'</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./store'</span></span><br><span class="line"></span><br><span class="line">Vue.config.productionTip = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  router,</span><br><span class="line">  store,</span><br><span class="line">  render: <span class="function"><span class="params">h</span> =&gt;</span> h(App)</span><br><span class="line">&#125;).$mount(<span class="string">'#app'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">new Vue(&#123;</span></span><br><span class="line"><span class="comment">	el:'#app' //原来是用el:'#app'，现在是new出Vue对象，挂载到#app上---》.$mount('#app')</span></span><br><span class="line"><span class="comment">  render: h =&gt; h(App) //原来是在页面上div中写样式，现在组件化开发 把根组件（import App from './App.vue'），通过render渲染上，渲染组件的方式</span></span><br><span class="line"><span class="comment">&#125;).$mount('#app')</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="vue文件"><a href="#vue文件" class="headerlink" title="vue文件"></a>vue文件</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;!-- 模板区域 --&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    /</span><span class="regexp">/ 逻辑代码区域</span></span><br><span class="line"><span class="regexp">    /</span><span class="regexp">/ 该语法和script绑定出现</span></span><br><span class="line"><span class="regexp">  	/</span><span class="regexp">/export default--&gt;es6的默认导出（导出一个对象），模拟commonJS的导出方式制定的</span></span><br><span class="line"><span class="regexp">    export default &#123;</span></span><br><span class="line"><span class="regexp">        </span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">    <span class="comment">/* 样式区域 */</span></span><br><span class="line">    <span class="comment">/* scoped表示这里的样式只适用于组件内部, scoped与style绑定出现 */</span></span><br><span class="line">&lt;<span class="regexp">/style&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="定义组件"><a href="#定义组件" class="headerlink" title="定义组件"></a>定义组件</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1 新建xx.vue</span></span><br><span class="line">components--&gt;HelloWorld.vue</span><br><span class="line"><span class="comment">#2 引入使用</span></span><br><span class="line">&lt;script&gt;</span><br><span class="line">	<span class="comment"># es6的引入import from </span></span><br><span class="line">  <span class="keyword">import</span> HelloWorld <span class="keyword">from</span> <span class="string">'@/components/HelloWorld.vue'</span></span><br><span class="line">  <span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line">  Vue.component(<span class="string">'HelloWorld'</span>,HelloWorld) <span class="comment"># 全局组件</span></span><br><span class="line">  export default &#123;</span><br><span class="line">     components: &#123; <span class="comment"># 局部组件</span></span><br><span class="line">   		 HelloWorld:HelloWorld</span><br><span class="line">  		&#125;,</span><br><span class="line">        </span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="ESLint"><a href="#ESLint" class="headerlink" title="ESLint"></a>ESLint</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ESLint 是一个开源的 JavaScript 代码检查工具，由 Nicholas C. Zakas 于<span class="number">2013</span>年<span class="number">6</span>月创建。代码检查是一种静态的分析，常用于寻找有问题的模式或者代码，并且不依赖于具体的编码风格。对大多数编程语言来说都会有代码检查，一般来说编译程序会内置检查工具。</span><br><span class="line"></span><br><span class="line">JavaScript 是一个动态的弱类型语言，在开发中比较容易出错。因为没有编译程序，为了寻找 JavaScript 代码错误通常需要在执行过程中不断调试。像 ESLint 这样的可以让程序员在编码的过程中发现问题而不是在执行的过程中。</span><br><span class="line"></span><br><span class="line">ESLint 的初衷是为了让程序员可以创建自己的检测规则。ESLint 的所有规则都被设计成可插入的。ESLint 的默认规则与其他的插件并没有什么区别，规则本身和测试可以依赖于同样的模式。为了便于人们使用，ESLint 内置了一些规则，当然，你可以在使用过程中自定义规则。</span><br><span class="line"></span><br><span class="line">ESLint 使用 Node.js 编写，这样既可以有一个快速的运行环境的同时也便于安装</span><br><span class="line">js语法规范性检查，类似于PEP8规范</span><br><span class="line">官网</span><br><span class="line">https://eslint.bootcss.com/docs/about/</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1、使用vue-cli："><a href="#1、使用vue-cli：" class="headerlink" title="1、使用vue-cli："></a>1、使用vue-cli：</h3><p>在vue-cli在init初始化时会询问是否需要添加ESLint，确认之后在创建的项目中就会出现.eslintignore和.eslintrc.js两个文件。</p>
+<blockquote>
+<p> .eslintignore类似Git的.gitignore用来忽略一些文件不使用ESLint检查。<br> .eslintrc.js是ESLint配置文件，用来设置插件、自定义规则、解析器等配置。</p>
+<p> 执行：npm run lint 会自动修复代码</p>
+</blockquote>
+<h3 id="2、配置ESLint："><a href="#2、配置ESLint：" class="headerlink" title="2、配置ESLint："></a>2、配置ESLint：</h3><p>Vue的项目配置eslint还是很简单的。它属于依赖插件中的一种，可以像安装其他插件一样在命令行用npm install eslint -g安装，也可以修改package.json文件去更新项目的依赖包，重新跑一遍npm install就可以了。 eslint常用的依赖有很多，我贴出我用的一些。在package.jsonde 的dependencies或者devDependencies中添加下列属性即可： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&quot;babel-eslint&quot;: &quot;^7.1.1&quot;,  </span><br><span class="line">&quot;eslint-config-standard&quot;: &quot;^6.2.1&quot;,  </span><br><span class="line">&quot;eslint-friendly-formatter&quot;: &quot;^2.0.7&quot;,  </span><br><span class="line">&quot;eslint-loader&quot;: &quot;^1.6.1&quot;,  </span><br><span class="line">&quot;eslint-plugin-html&quot;: &quot;^2.0.0&quot;,  </span><br><span class="line">&quot;eslint-plugin-promise&quot;: &quot;^3.4.0&quot;,  </span><br><span class="line">&quot;eslint-plugin-standard&quot;: &quot;^2.0.1&quot;,</span><br></pre></td></tr></table></figure>
+
+<p>但是有可能项目没有生成 eslintrc.js，码友可以去网上搜eslintrc.js然后放在项目根目录下即可。</p>
+<h3 id="3-vue项目中关闭ESLint"><a href="#3-vue项目中关闭ESLint" class="headerlink" title="3 vue项目中关闭ESLint"></a>3 vue项目中关闭ESLint</h3><p>时候会被ESLint的报错阻止程序的运行，这时候我们就想关闭这个ESLint了。在vue项目中关闭ESLint方法：</p>
+<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1glran2ptj3j315k0r642h.jpg" alt="image-20201217235753547" style="zoom: 33%;" />
+
+<h3 id="4-配置示例"><a href="#4-配置示例" class="headerlink" title="4 配置示例"></a>4 配置示例</h3><p>在package.json中通过eslintConfig配置，示例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"eslintConfig"</span>: &#123;</span><br><span class="line">    <span class="string">"root"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">"env"</span>: &#123;</span><br><span class="line">      <span class="string">"node"</span>: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"extends"</span>: [</span><br><span class="line">      <span class="string">"plugin:vue/essential"</span>,</span><br><span class="line">      <span class="string">"@vue/standard"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"rules"</span>: &#123;</span><br><span class="line">      <span class="string">"eol-last"</span>: [<span class="number">0</span>],</span><br><span class="line">      <span class="string">"semi"</span>: [<span class="number">2</span>, <span class="string">"always"</span>], <span class="comment">// 强制语句分号结尾</span></span><br><span class="line">      <span class="string">"indent"</span>: [<span class="number">2</span>, <span class="number">4</span>], <span class="comment">// 强制缩进4 spaces</span></span><br><span class="line">      <span class="string">"no-new"</span>: [<span class="number">0</span>], <span class="comment">// 不允许new一个实例后不赋值或不比较</span></span><br><span class="line">      <span class="string">"no-debugger"</span>: [<span class="number">0</span>], <span class="comment">// 不允许出现debugger语句</span></span><br><span class="line">      <span class="string">"camelcase"</span>: [<span class="number">0</span>, &#123;<span class="string">"properties"</span>: <span class="string">"never"</span>&#125;] <span class="comment">// 关闭驼峰命名规则</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"parserOptions"</span>: &#123;</span><br><span class="line">      <span class="string">"parser"</span>: <span class="string">"babel-eslint"</span></span><br><span class="line">    &#125;</span><br><span class="line"> &#125;,</span><br><span class="line"> <span class="string">"eslintIgnore"</span>: [</span><br><span class="line">    <span class="string">"dist/*"</span>,</span><br><span class="line">    <span class="string">"node_modules/*"</span>,</span><br><span class="line">    <span class="string">"build/*"</span>,</span><br><span class="line">    <span class="string">"*.md"</span></span><br><span class="line"> ],</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/vue/7-Vue%E6%8F%92%E4%BB%B6/">
+        <span class="nav-arrow">← </span>
+        
+          python/vue/7-Vue插件
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/vue/1-Vue%E4%BB%8B%E7%BB%8D/">
+        
+          python/vue/1-Vue介绍
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Vue-CLI-项目搭建"><span class="toc-nav-text">Vue-CLI 项目搭建</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-单文件组件"><span class="toc-nav-text">1 单文件组件</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-Vue-CLI-项目搭建"><span class="toc-nav-text">2 Vue-CLI 项目搭建</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-环境搭建"><span class="toc-nav-text">2.1 环境搭建</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-项目的创建"><span class="toc-nav-text">2.2 项目的创建</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#创建项目"><span class="toc-nav-text">创建项目</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#启动-停止项目"><span class="toc-nav-text">启动&#x2F;停止项目</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#打包项目"><span class="toc-nav-text">打包项目</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#package-json中"><span class="toc-nav-text">package.json中</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-3-认识项目"><span class="toc-nav-text">2.3 认识项目</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#项目目录"><span class="toc-nav-text">项目目录</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#配置文件：vue-config-js"><span class="toc-nav-text">配置文件：vue.config.js</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#main-js-整个项目入口文件"><span class="toc-nav-text">main.js 整个项目入口文件</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#vue文件"><span class="toc-nav-text">vue文件</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#定义组件"><span class="toc-nav-text">定义组件</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#ESLint"><span class="toc-nav-text">ESLint</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1、使用vue-cli："><span class="toc-nav-text">1、使用vue-cli：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2、配置ESLint："><span class="toc-nav-text">2、配置ESLint：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-vue项目中关闭ESLint"><span class="toc-nav-text">3 vue项目中关闭ESLint</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-配置示例"><span class="toc-nav-text">4 配置示例</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/vue/6-Vue-cli/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/vue/6-Vue-cli",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

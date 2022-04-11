@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django-rest-framework框架/1-drf-drf入门规范 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django-rest-framework框架/1-drf-drf入门规范</h2>
+
+
+
+  <p class="post-date">2020-06-28</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-Web应用模式"><a href="#一-Web应用模式" class="headerlink" title="一  Web应用模式"></a>一  Web应用模式</h2><p>在开发Web应用中，有两种应用模式：</p>
+<h3 id="1-1-前后端不分离"><a href="#1-1-前后端不分离" class="headerlink" title="1.1 前后端不分离"></a>1.1 前后端不分离</h3><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gggfnzeg2xj31k80smjv1.jpg" alt="前后端不分离"></p>
+<h3 id="1-2-前后端分离"><a href="#1-2-前后端分离" class="headerlink" title="1.2 前后端分离"></a>1.2 前后端分离</h3><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gggfo3sdg9j31aw0u0jxr.jpg" alt="前后端分离"></p>
+<h2 id="二-API接口"><a href="#二-API接口" class="headerlink" title="二 API接口"></a>二 API接口</h2><p>为了在团队内部形成共识、防止个人习惯差异引起的混乱，我们需要找到一种大家都觉得很好的接口实现规范，而且这种规范能够让后端写的接口，用途一目了然，减少双方之间的合作成本。</p>
+<p>通过网络，规定了前后台信息交互规则的url链接，也就是前后台信息交互的<strong>媒介</strong></p>
+<p>Web API接口和一般的url链接还是有区别的，Web API接口简单概括有下面四大特点</p>
+<ul>
+<li><p>url：长得像返回数据的url链接</p>
+<ul>
+<li><a href="https://api.map.baidu.com/place/v2/search" target="_blank" rel="noopener">https://api.map.baidu.com/place/v2/search</a></li>
+</ul>
+</li>
+<li><p>请求方式：get、post、put、patch、delete</p>
+<ul>
+<li>采用get方式请求上方接口</li>
+</ul>
+</li>
+<li><p>请求参数：json或xml格式的key-value类型数据</p>
+<ul>
+<li>ak：6E823f587c95f0148c19993539b99295</li>
+<li>region：上海</li>
+<li>query：肯德基</li>
+<li>output：json</li>
+</ul>
+</li>
+<li><p>响应结果：json或xml格式的数据</p>
+<ul>
+<li><p>上方请求参数的output参数值决定了响应数据的格式</p>
+</li>
+<li><p>数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># xml格式</span></span><br><span class="line">https://api.map.baidu.com/place/v2/search?ak=6E823f587c95f0148c19993539b99295&amp;region=%E4%B8%8A%E6%B5%B7&amp;query=%E8%82%AF%E5%BE%B7%E5%9F%BA&amp;output=xml</span><br><span class="line"><span class="comment">#json格式</span></span><br><span class="line">https://api.map.baidu.com/place/v2/search?ak=6E823f587c95f0148c19993539b99295&amp;region=%E4%B8%8A%E6%B5%B7&amp;query=%E8%82%AF%E5%BE%B7%E5%9F%BA&amp;output=json</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"status"</span>:<span class="number">0</span>,</span><br><span class="line">  	<span class="string">"message"</span>:<span class="string">"ok"</span>,</span><br><span class="line">    <span class="string">"results"</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"name"</span>:<span class="string">"肯德基(罗餐厅)"</span>,</span><br><span class="line">            <span class="string">"location"</span>:&#123;</span><br><span class="line">                <span class="string">"lat"</span>:<span class="number">31.415354</span>,</span><br><span class="line">                <span class="string">"lng"</span>:<span class="number">121.357339</span></span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="string">"address"</span>:<span class="string">"月罗路2380号"</span>,</span><br><span class="line">            <span class="string">"province"</span>:<span class="string">"上海市"</span>,</span><br><span class="line">            <span class="string">"city"</span>:<span class="string">"上海市"</span>,</span><br><span class="line">            <span class="string">"area"</span>:<span class="string">"宝山区"</span>,</span><br><span class="line">            <span class="string">"street_id"</span>:<span class="string">"339ed41ae1d6dc320a5cb37c"</span>,</span><br><span class="line">            <span class="string">"telephone"</span>:<span class="string">"(021)56761006"</span>,</span><br><span class="line">            <span class="string">"detail"</span>:<span class="number">1</span>,</span><br><span class="line">            <span class="string">"uid"</span>:<span class="string">"339ed41ae1d6dc320a5cb37c"</span></span><br><span class="line">        &#125;</span><br><span class="line">      	...</span><br><span class="line">		]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="三-接口测试工具：Postman"><a href="#三-接口测试工具：Postman" class="headerlink" title="三 接口测试工具：Postman"></a>三 接口测试工具：Postman</h2><p>Postman是一款接口调试工具，是一款免费的可视化软件，同时支持各种操作系统平台，是测试接口的首选工具。</p>
+<p>Postman可以直接从<a href="https://www.getpostman.com/downloads/" target="_blank" rel="noopener">官网：https://www.getpostman.com/downloads/</a>下载获得，然后进行傻瓜式安装。</p>
+<ul>
+<li>工作面板</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gghkqmyw0hj31c00u0q86.jpg" alt="img"></p>
+<ul>
+<li>简易的get请求</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gghkqqjxuyj31c00u0jyr.jpg" alt="img"></p>
+<ul>
+<li>简易的post请求</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gghkqtwl29j31c00u0ahe.jpg" alt="img"></p>
+<ul>
+<li>案例：请求百度地图接口</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gghkqxuagsj31c00u0qcu.jpg" alt="img"></p>
+<h2 id="四-RESTful-API规范"><a href="#四-RESTful-API规范" class="headerlink" title="四 RESTful API规范"></a>四 RESTful API规范</h2><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gggfoaosexg30io08xaae.gif" alt="restful"></p>
+<p>REST全称是Representational State Transfer，中文意思是表述（编者注：通常译为表征性状态转移）。 它首次出现在2000年Roy Fielding的博士论文中。</p>
+<p>RESTful是一种定义Web API接口的设计风格，尤其适用于前后端分离的应用模式中。</p>
+<p>这种风格的理念认为后端开发任务就是提供数据的，对外提供的是数据资源的访问接口，所以在定义接口时，客户端访问的URL路径就表示这种要操作的数据资源。</p>
+<p>事实上，我们可以使用任何一个框架都可以实现符合restful规范的API接口。</p>
+<h3 id="4-1-数据的安全保障"><a href="#4-1-数据的安全保障" class="headerlink" title="4.1 数据的安全保障"></a>4.1 数据的安全保障</h3><ul>
+<li><p>url链接一般都采用https协议进行传输</p>
+<p>注：采用https协议，可以提高数据交互过程中的安全性</p>
+</li>
+</ul>
+<h3 id="4-2-接口特征表现"><a href="#4-2-接口特征表现" class="headerlink" title="4.2 接口特征表现"></a>4.2 接口特征表现</h3><ul>
+<li><p>用api关键字标识接口url：</p>
+<ul>
+<li><a href="https://api.baidu.com/" target="_blank" rel="noopener">https://api.baidu.com</a></li>
+<li><a href="https://www.baidu.com/api" target="_blank" rel="noopener">https://www.baidu.com/api</a></li>
+</ul>
+<p>注：看到api字眼，就代表该请求url链接是完成前后台数据交互的</p>
+</li>
+</ul>
+<h3 id="4-3-多数据版本共存"><a href="#4-3-多数据版本共存" class="headerlink" title="4.3 多数据版本共存"></a>4.3 多数据版本共存</h3><ul>
+<li><p>在url链接中标识数据版本</p>
+<ul>
+<li><a href="https://api.baidu.com/v1" target="_blank" rel="noopener">https://api.baidu.com/v1</a></li>
+<li><a href="https://api.baidu.com/v2" target="_blank" rel="noopener">https://api.baidu.com/v2</a></li>
+</ul>
+<p>注：url链接中的v1、v2就是不同数据版本的体现（只有在一种数据资源有多版本情况下）</p>
+</li>
+</ul>
+<h3 id="4-4-数据即是资源，均使用名词（可复数）"><a href="#4-4-数据即是资源，均使用名词（可复数）" class="headerlink" title="4.4 数据即是资源，均使用名词（可复数）"></a>4.4 数据即是资源，均使用名词（可复数）</h3><ul>
+<li><p>接口一般都是完成前后台数据的交互，交互的数据我们称之为资源</p>
+<ul>
+<li><a href="https://api.baidu.com/users" target="_blank" rel="noopener">https://api.baidu.com/users</a></li>
+<li><a href="https://api.baidu.com/books" target="_blank" rel="noopener">https://api.baidu.com/books</a></li>
+<li><a href="https://api.baidu.com/book" target="_blank" rel="noopener">https://api.baidu.com/book</a></li>
+</ul>
+<p>注：一般提倡用资源的复数形式，在url链接中奖励不要出现操作资源的动词，错误示范：<a href="https://api.baidu.com/delete-user" target="_blank" rel="noopener">https://api.baidu.com/delete-user</a></p>
+</li>
+<li><p>特殊的接口可以出现动词，因为这些接口一般没有一个明确的资源，或是动词就是接口的核心含义</p>
+<ul>
+<li><a href="https://api.baidu.com/place/search" target="_blank" rel="noopener">https://api.baidu.com/place/search</a></li>
+<li><a href="https://api.baidu.com/login" target="_blank" rel="noopener">https://api.baidu.com/login</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-5-资源操作由请求方式决定（method）"><a href="#4-5-资源操作由请求方式决定（method）" class="headerlink" title="4.5 资源操作由请求方式决定（method）"></a>4.5 资源操作由请求方式决定（method）</h3><ul>
+<li>操作资源一般都会涉及到增删改查，我们提供请求方式来标识增删改查动作<ul>
+<li><a href="https://api.baidu.com/books" target="_blank" rel="noopener">https://api.baidu.com/books</a> - get请求：获取所有书</li>
+<li><a href="https://api.baidu.com/books/1" target="_blank" rel="noopener">https://api.baidu.com/books/1</a> - get请求：获取主键为1的书</li>
+<li><a href="https://api.baidu.com/books" target="_blank" rel="noopener">https://api.baidu.com/books</a> - post请求：新增一本书书</li>
+<li><a href="https://api.baidu.com/books/1" target="_blank" rel="noopener">https://api.baidu.com/books/1</a> - put请求：整体修改主键为1的书</li>
+<li><a href="https://api.baidu.com/books/1" target="_blank" rel="noopener">https://api.baidu.com/books/1</a> - patch请求：局部修改主键为1的书</li>
+<li><a href="https://api.baidu.com/books/1" target="_blank" rel="noopener">https://api.baidu.com/books/1</a> - delete请求：删除主键为1的书</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-6-过滤，通过在url上传参的形式传递搜索条件"><a href="#4-6-过滤，通过在url上传参的形式传递搜索条件" class="headerlink" title="4.6 过滤，通过在url上传参的形式传递搜索条件"></a>4.6 过滤，通过在url上传参的形式传递搜索条件</h3><ul>
+<li><a href="https://api.example.com/v1/zoos?limit=10：指定返回记录的数量" target="_blank" rel="noopener">https://api.example.com/v1/zoos?limit=10：指定返回记录的数量</a></li>
+<li><a href="https://api.example.com/v1/zoos?offset=10：指定返回记录的开始位置" target="_blank" rel="noopener">https://api.example.com/v1/zoos?offset=10：指定返回记录的开始位置</a></li>
+<li><a href="https://api.example.com/v1/zoos?page=2&amp;per_page=100：指定第几页，以及每页的记录数" target="_blank" rel="noopener">https://api.example.com/v1/zoos?page=2&amp;per_page=100：指定第几页，以及每页的记录数</a></li>
+<li><a href="https://api.example.com/v1/zoos?sortby=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序" target="_blank" rel="noopener">https://api.example.com/v1/zoos?sortby=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序</a></li>
+<li><a href="https://api.example.com/v1/zoos?animal_type_id=1：指定筛选条件" target="_blank" rel="noopener">https://api.example.com/v1/zoos?animal_type_id=1：指定筛选条件</a></li>
+</ul>
+<h3 id="4-7-响应状态码"><a href="#4-7-响应状态码" class="headerlink" title="4.7 响应状态码"></a>4.7 响应状态码</h3><h4 id="4-7-1-正常响应"><a href="#4-7-1-正常响应" class="headerlink" title="4.7.1 正常响应"></a>4.7.1 正常响应</h4><ul>
+<li>响应状态码2xx<ul>
+<li>200：常规请求</li>
+<li>201：创建成功</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-7-2-重定向响应"><a href="#4-7-2-重定向响应" class="headerlink" title="4.7.2 重定向响应"></a>4.7.2 重定向响应</h4><ul>
+<li>响应状态码3xx<ul>
+<li>301：永久重定向</li>
+<li>302：暂时重定向</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-7-3-客户端异常"><a href="#4-7-3-客户端异常" class="headerlink" title="4.7.3 客户端异常"></a>4.7.3 客户端异常</h4><ul>
+<li>响应状态码4xx<ul>
+<li>403：请求无权限</li>
+<li>404：请求路径不存在</li>
+<li>405：请求方法不存在</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-7-4-服务器异常"><a href="#4-7-4-服务器异常" class="headerlink" title="4.7.4 服务器异常"></a>4.7.4 服务器异常</h4><ul>
+<li>响应状态码5xx<ul>
+<li>500：服务器异常</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-8-错误处理，应返回错误信息，error当做key"><a href="#4-8-错误处理，应返回错误信息，error当做key" class="headerlink" title="4.8 错误处理，应返回错误信息，error当做key"></a>4.8 错误处理，应返回错误信息，error当做key</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    error: <span class="string">"无权限操作"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-9-返回结果，针对不同操作，服务器向用户返回的结果应该符合以下规范"><a href="#4-9-返回结果，针对不同操作，服务器向用户返回的结果应该符合以下规范" class="headerlink" title="4.9 返回结果，针对不同操作，服务器向用户返回的结果应该符合以下规范"></a>4.9 返回结果，针对不同操作，服务器向用户返回的结果应该符合以下规范</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET /collection：返回资源对象的列表（数组）</span><br><span class="line">GET /collection/resource：返回单个资源对象</span><br><span class="line">POST /collection：返回新生成的资源对象</span><br><span class="line">PUT /collection/resource：返回完整的资源对象</span><br><span class="line">PATCH /collection/resource：返回完整的资源对象</span><br><span class="line">DELETE /collection/resource：返回一个空文档</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-10-需要url请求的资源需要访问资源的请求链接"><a href="#4-10-需要url请求的资源需要访问资源的请求链接" class="headerlink" title="4.10 需要url请求的资源需要访问资源的请求链接"></a>4.10 需要url请求的资源需要访问资源的请求链接</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># Hypermedia API，RESTful API最好做到Hypermedia，即返回结果中提供链接，连向其他API方法，使得用户不查文档，也知道下一步应该做什么</span><br><span class="line">&#123;</span><br><span class="line">  	<span class="attr">"status"</span>: <span class="number">0</span>,</span><br><span class="line">  	<span class="attr">"msg"</span>: <span class="string">"ok"</span>,</span><br><span class="line">  	<span class="attr">"results"</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>:<span class="string">"肯德基(罗餐厅)"</span>,</span><br><span class="line">            <span class="attr">"img"</span>: <span class="string">"https://image.baidu.com/kfc/001.png"</span></span><br><span class="line">        &#125;</span><br><span class="line">      	...</span><br><span class="line">		]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比较好的接口返回</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 响应数据要有状态码、状态信息以及数据本身</span><br><span class="line">&#123;</span><br><span class="line">  	<span class="attr">"status"</span>: <span class="number">0</span>,</span><br><span class="line">  	<span class="attr">"msg"</span>: <span class="string">"ok"</span>,</span><br><span class="line">  	<span class="attr">"results"</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>:<span class="string">"肯德基(罗餐厅)"</span>,</span><br><span class="line">            <span class="attr">"location"</span>:&#123;</span><br><span class="line">                <span class="attr">"lat"</span>:<span class="number">31.415354</span>,</span><br><span class="line">                <span class="attr">"lng"</span>:<span class="number">121.357339</span></span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="attr">"address"</span>:<span class="string">"月罗路2380号"</span>,</span><br><span class="line">            <span class="attr">"province"</span>:<span class="string">"上海市"</span>,</span><br><span class="line">            <span class="attr">"city"</span>:<span class="string">"上海市"</span>,</span><br><span class="line">            <span class="attr">"area"</span>:<span class="string">"宝山区"</span>,</span><br><span class="line">            <span class="attr">"street_id"</span>:<span class="string">"339ed41ae1d6dc320a5cb37c"</span>,</span><br><span class="line">            <span class="attr">"telephone"</span>:<span class="string">"(021)56761006"</span>,</span><br><span class="line">            <span class="attr">"detail"</span>:<span class="number">1</span>,</span><br><span class="line">            <span class="attr">"uid"</span>:<span class="string">"339ed41ae1d6dc320a5cb37c"</span></span><br><span class="line">        &#125;</span><br><span class="line">      	...</span><br><span class="line">		]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="四-序列化"><a href="#四-序列化" class="headerlink" title="四 序列化"></a>四 序列化</h2><p>api接口开发，最核心最常见的一个过程就是序列化，所谓序列化就是把<strong>数据转换格式</strong>，序列化可以分两个阶段：</p>
+<p><strong>序列化</strong>： 把我们识别的数据转换成指定的格式提供给别人。</p>
+<p>例如：我们在django中获取到的数据默认是模型对象，但是模型对象数据无法直接提供给前端或别的平台使用，所以我们需要把数据进行序列化，变成字符串或者json数据，提供给别人。</p>
+<p><strong>反序列化</strong>：把别人提供的数据转换/还原成我们需要的格式。</p>
+<p>例如：前端js提供过来的json数据，对于python而言就是字符串，我们需要进行反序列化换成模型类对象，这样我们才能把数据保存到数据库中。</p>
+<h2 id="五-Django-Rest-Framework"><a href="#五-Django-Rest-Framework" class="headerlink" title="五 Django Rest_Framework"></a>五 Django Rest_Framework</h2><p>核心思想: 缩减编写api接口的代码</p>
+<p>Django REST framework是一个建立在Django基础之上的Web 应用开发框架，可以快速的开发REST API接口应用。在REST framework中，提供了序列化器Serialzier的定义，可以帮助我们简化序列化与反序列化的过程，不仅如此，还提供丰富的类视图、扩展类、视图集来简化视图的编写工作。REST framework还提供了认证、权限、限流、过滤、分页、接口文档等功能支持。REST framework提供了一个API 的Web可视化界面来方便查看测试接口。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggn3x4saj31fi0g4gph.jpg" alt="drf_logo"></p>
+<p>官方文档：<a href="https://www.django-rest-framework.org/" target="_blank" rel="noopener">https://www.django-rest-framework.org/</a></p>
+<p>github: <a href="https://github.com/encode/django-rest-framework/tree/master" target="_blank" rel="noopener">https://github.com/encode/django-rest-framework/tree/master</a></p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>提供了定义序列化器Serializer的方法，可以快速根据 Django ORM 或者其它库自动序列化/反序列化；</li>
+<li>提供了丰富的类视图、Mixin扩展类，简化视图的编写；</li>
+<li>丰富的定制层级：函数视图、类视图、视图集合到自动生成 API，满足各种需要；</li>
+<li>多种身份认证和权限认证方式的支持；[jwt]</li>
+<li>内置了限流系统；</li>
+<li>直观的 API web 界面；</li>
+<li>可扩展性，插件丰富</li>
+</ul>
+<h2 id="六-环境安装与配置"><a href="#六-环境安装与配置" class="headerlink" title="六 环境安装与配置"></a>六 环境安装与配置</h2><p>DRF需要以下依赖：</p>
+<ul>
+<li>Python (2.7, 3.2, 3.3, 3.4, 3.5, 3.6)</li>
+<li>Django (1.10, 1.11, 2.0)</li>
+</ul>
+<p><strong>DRF是以Django扩展应用的方式提供的，所以我们可以直接利用已有的Django环境而无需从新创建。（若没有Django环境，需要先创建环境安装Django）</strong></p>
+<h3 id="6-1-安装DRF"><a href="#6-1-安装DRF" class="headerlink" title="6.1 安装DRF"></a>6.1 安装DRF</h3><p>前提是已经安装了django，建议安装在虚拟环境</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkvirtualenv drfdemo -p python3</span></span><br><span class="line"><span class="comment"># pip install django</span></span><br><span class="line"></span><br><span class="line">pip install djangorestframework</span><br><span class="line">pip install pymysql</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="6-1-1-创建django项目"><a href="#6-1-1-创建django项目" class="headerlink" title="6.1.1 创建django项目"></a>6.1.1 创建django项目</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~&#x2F;Desktop</span><br><span class="line">django-admin startproject drfdemo</span><br></pre></td></tr></table></figure>
+
+<p>使用pycharm打开项目，设置虚拟环境的解析器，并修改manage.py中的后缀参数。</p>
+<h3 id="6-2-添加rest-framework应用"><a href="#6-2-添加rest-framework应用" class="headerlink" title="6.2 添加rest_framework应用"></a>6.2 添加rest_framework应用</h3><p>在<strong>settings.py</strong>的<strong>INSTALLED_APPS</strong>中添加’rest_framework’。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS = [</span><br><span class="line">    ...</span><br><span class="line">    <span class="string">'rest_framework'</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>接下来就可以使用DRF提供的功能进行api接口开发了。在项目中如果使用rest_framework框架实现API接口，主要有以下三个步骤：</p>
+<ul>
+<li>将请求的数据（如JSON格式）转换为模型类对象</li>
+<li>操作数据库</li>
+<li>将模型类对象转换为响应的数据（如JSON格式）</li>
+</ul>
+<p>接下来，我们快速体验下四天后我们学习完成drf以后的开发代码。接下来代码不需要理解，看步骤。</p>
+<h3 id="6-3-体验drf完全简写代码的过程（了解）"><a href="#6-3-体验drf完全简写代码的过程（了解）" class="headerlink" title="6.3 体验drf完全简写代码的过程（了解）"></a>6.3 体验drf完全简写代码的过程（了解）</h3><h4 id="6-3-1-创建模型操作类"><a href="#6-3-1-创建模型操作类" class="headerlink" title="6.3.1. 创建模型操作类"></a>6.3.1. 创建模型操作类</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    <span class="comment"># 模型字段</span></span><br><span class="line">    name = models.CharField(max_length=<span class="number">100</span>,verbose_name=<span class="string">"姓名"</span>)</span><br><span class="line">    sex = models.BooleanField(default=<span class="number">1</span>,verbose_name=<span class="string">"性别"</span>)</span><br><span class="line">    age = models.IntegerField(verbose_name=<span class="string">"年龄"</span>)</span><br><span class="line">    class_null = models.CharField(max_length=<span class="number">5</span>,verbose_name=<span class="string">"班级编号"</span>)</span><br><span class="line">    description = models.TextField(max_length=<span class="number">1000</span>,verbose_name=<span class="string">"个性签名"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        db_table=<span class="string">"tb_student"</span></span><br><span class="line">        verbose_name = <span class="string">"学生"</span></span><br><span class="line">        verbose_name_plural = verbose_name</span><br></pre></td></tr></table></figure>
+
+<p>为了方便测试，所以我们可以先创建一个数据库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create database students charset&#x3D;utf8;</span><br></pre></td></tr></table></figure>
+
+<h5 id="6-3-1-1-执行数据迁移"><a href="#6-3-1-1-执行数据迁移" class="headerlink" title="6.3.1.1 执行数据迁移"></a>6.3.1.1 执行数据迁移</h5><p>把students子应用添加到INSTALL_APPS中</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggnfes9gj30na07pq50.jpg" alt="1557023819604"></p>
+<p>初始化数据库连接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">安装pymysql</span><br><span class="line">pip install pymysql</span><br></pre></td></tr></table></figure>
+
+<p>主引用中<code>__init__.py</code>设置使用pymysql作为数据库驱动</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"></span><br><span class="line">pymysql.install_as_MySQLdb()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>settings.py配置文件中设置mysql的账号密码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="comment"># 'default': &#123;</span></span><br><span class="line">    <span class="comment">#     'ENGINE': 'django.db.backends.sqlite3',</span></span><br><span class="line">    <span class="comment">#     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),</span></span><br><span class="line">    <span class="comment"># &#125;,</span></span><br><span class="line">    <span class="string">'default'</span>: &#123;</span><br><span class="line">        <span class="string">'ENGINE'</span>: <span class="string">'django.db.backends.mysql'</span>,</span><br><span class="line">        <span class="string">'NAME'</span>: <span class="string">"students"</span>,</span><br><span class="line">        <span class="string">"HOST"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">        <span class="string">"PORT"</span>: <span class="number">3306</span>,</span><br><span class="line">        <span class="string">"USER"</span>: <span class="string">"root"</span>,</span><br><span class="line">        <span class="string">"PASSWORD"</span>:<span class="string">"123"</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>终端下，执行数据迁移。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python manage.py makemigrations</span><br><span class="line">python manage.py migrate</span><br></pre></td></tr></table></figure>
+
+
+
+<p>错误列表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行数据迁移 python manage.py makemigrations 报错如下：</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggnmwcygj30ro08j0xb.jpg" alt="1557024349366"></p>
+<p>解决方案：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注释掉 backends/mysql/base.py中的<span class="number">35</span>和<span class="number">36</span>行代码。</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggnrlrh4j30ri040abp.jpg" alt="1557025991751"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 执行数据迁移发生以下错误：</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggnvurajj30rc07v41a.jpg" alt="1557026113769"></p>
+<p>解决方法：</p>
+<p>backends/mysql/operations.py146行里面新增一个行代码：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggnzzyggj30s704rmz0.jpg" alt="1557026224431"></p>
+<h4 id="6-3-2-创建序列化器"><a href="#6-3-2-创建序列化器" class="headerlink" title="6.3.2. 创建序列化器"></a>6.3.2. 创建序列化器</h4><p>例如，在django项目中创建学生子应用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py startapp students</span><br></pre></td></tr></table></figure>
+
+<p>在syudents应用目录中新建serializers.py用于保存该应用的序列化器。</p>
+<p>创建一个StudentModelSerializer用于序列化与反序列化。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建序列化器类，回头会在试图中被调用</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentModelSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = Student</span><br><span class="line">        fields = <span class="string">"__all__"</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>model</strong> 指明该序列化器处理的数据字段从模型类BookInfo参考生成</li>
+<li><strong>fields</strong> 指明该序列化器包含模型类中的哪些字段，’<strong>all</strong>‘指明包含所有字段</li>
+</ul>
+<h4 id="6-3-3-编写视图"><a href="#6-3-3-编写视图" class="headerlink" title="6.3.3. 编写视图"></a>6.3.3. 编写视图</h4><p>在students应用的views.py中创建视图StudentViewSet，这是一个视图集合。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.viewsets <span class="keyword">import</span> ModelViewSet</span><br><span class="line"><span class="keyword">from</span> .models <span class="keyword">import</span> Student</span><br><span class="line"><span class="keyword">from</span> .serializers <span class="keyword">import</span> StudentModelSerializer</span><br><span class="line"><span class="comment"># Create your views here.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentViewSet</span><span class="params">(ModelViewSet)</span>:</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line">    serializer_class = StudentModelSerializer</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>queryset</strong> 指明该视图集在查询数据时使用的查询集</li>
+<li><strong>serializer_class</strong> 指明该视图在进行序列化或反序列化时使用的序列化器</li>
+</ul>
+<h4 id="6-3-4-定义路由"><a href="#6-3-4-定义路由" class="headerlink" title="6.3.4. 定义路由"></a>6.3.4. 定义路由</h4><p>在students应用的urls.py中定义路由信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> views</span><br><span class="line"><span class="keyword">from</span> rest_framework.routers <span class="keyword">import</span> DefaultRouter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 路由列表</span></span><br><span class="line">urlpatterns = []</span><br><span class="line"></span><br><span class="line">router = DefaultRouter()  <span class="comment"># 可以处理视图的路由器</span></span><br><span class="line">router.register(<span class="string">'students'</span>, views.StudentViewSet)  <span class="comment"># 向路由器中注册视图集</span></span><br><span class="line"></span><br><span class="line">urlpatterns += router.urls  <span class="comment"># 将路由器中的所以路由信息追到到django的路由列表中</span></span><br></pre></td></tr></table></figure>
+
+<p>最后把students子应用中的路由文件加载到总路由文件中.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,include</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">'admin/'</span>, admin.site.urls),</span><br><span class="line">    path(<span class="string">"stu/"</span>,include(<span class="string">"students.urls"</span>)),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="6-3-5-运行测试"><a href="#6-3-5-运行测试" class="headerlink" title="6.3.5. 运行测试"></a>6.3.5. 运行测试</h4><p>运行当前程序（与运行Django一样）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py runserver</span><br></pre></td></tr></table></figure>
+
+<p>在浏览器中输入网址127.0.0.1:8000，可以看到DRF提供的API Web浏览页面：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggo7yztej30zl0c7gmg.jpg" alt="1557027948031"></p>
+<p>1）点击链接127.0.0.1:8000/stu/students 可以访问<strong>获取所有数据的接口</strong>，呈现如下页面：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggobtfhkj30zf0i20u0.jpg" alt="1557027878963"></p>
+<p>2）在页面底下表单部分填写学生信息，可以访问<strong>添加新学生的接口</strong>，保存学生信息：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggog4ptxj30yq0hgt9h.jpg" alt="1557027999506"></p>
+<p>点击POST后，返回如下页面信息：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggojnhflj30z70ekjsd.jpg" alt="1557028072470"></p>
+<p>3）在浏览器中输入网址127.0.0.1:8000/stu/students/5/，可以访问<strong>获取单一学生信息的接口</strong>（id为5的学生），呈现如下页面：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggooinxwj30z80hdabb.jpg" alt="1557028115925"></p>
+<p>4）在页面底部表单中填写学生信息，可以访问<strong>修改学生的接口</strong>：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggoujf51j30w50awwet.jpg" alt="1557028168350"></p>
+<p>点击PUT，返回如下页面信息：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggoza9rbj30x20bx752.jpg" alt="1557028208243"></p>
+<p>5）点击DELETE按钮，可以访问<strong>删除学生的接口</strong>：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggp3eceqj30zt08tt9o.jpg" alt="1557028242637"></p>
+<p>返回，如下页面：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggp74kyuj30ze0al3zd.jpg" alt="1557028266190"></p>
+<h2 id="七-CBV源码分析"><a href="#七-CBV源码分析" class="headerlink" title="七 CBV源码分析"></a>七 CBV源码分析</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 视图层</span></span><br><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render, HttpResponse</span><br><span class="line"><span class="keyword">from</span> django.views <span class="keyword">import</span> View</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CBVTest</span><span class="params">(View)</span>:</span></span><br><span class="line">    <span class="comment"># 通过调度(dispatch)分发请求</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">dispatch</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">        super().dispatch(request, *args, **kwargs)</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> render(request, <span class="string">'cbv.html'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">'cbv post method'</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 模板层 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/cbv/"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">    &#123;% csrf_token %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"usr"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">"submit"</span>&gt;</span>提交<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 路由层</span></span><br><span class="line"><span class="keyword">from</span> app <span class="keyword">import</span> views</span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^cbv/'</span>, views.CBVTest.as_view()),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="八-drf基本使用及request源码分析"><a href="#八-drf基本使用及request源码分析" class="headerlink" title="八 drf基本使用及request源码分析"></a>八 drf基本使用及request源码分析</h2><h3 id="8-1-APIView的使用"><a href="#8-1-APIView的使用" class="headerlink" title="8.1 APIView的使用"></a>8.1 APIView的使用</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1）安装drf：pip3 install djangorestframework</span></span><br><span class="line"><span class="comment"># 2）settings.py注册app：INSTALLED_APPS = [..., 'rest_framework']</span></span><br><span class="line"><span class="comment"># 3）基于cbv完成满足RSSTful规范的接口</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 视图层</span></span><br><span class="line"><span class="keyword">from</span> rest_framework.views <span class="keyword">import</span> APIView</span><br><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line">user_list = [&#123;<span class="string">'id'</span>: <span class="number">1</span>, <span class="string">'name'</span>: <span class="string">'Bob'</span>&#125;, &#123;<span class="string">'id'</span>: <span class="number">2</span>, <span class="string">'name'</span>: <span class="string">'Tom'</span>&#125;]</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Users</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> Response(&#123;</span><br><span class="line">            <span class="string">'status'</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">'msg'</span>: <span class="string">'ok'</span>,</span><br><span class="line">            <span class="string">'results'</span>: user_list</span><br><span class="line">        &#125;)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="comment"># request对formdata，urlencoded，json三个格式参数均能解析</span></span><br><span class="line">        name = request.data.get(<span class="string">'name'</span>)</span><br><span class="line">        id = len(user_list) + <span class="number">1</span></span><br><span class="line">        user = &#123;<span class="string">'id'</span>: id, <span class="string">'name'</span>: name&#125;</span><br><span class="line">        user_list.append(user)</span><br><span class="line">        <span class="keyword">return</span> Response(&#123;</span><br><span class="line">            <span class="string">'status'</span>: <span class="string">'0'</span>,</span><br><span class="line">            <span class="string">'msg'</span>: <span class="string">'ok'</span>,</span><br><span class="line">            <span class="string">'results'</span>: user</span><br><span class="line">        &#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 路由层</span></span><br><span class="line"><span class="keyword">from</span> app <span class="keyword">import</span> views</span><br><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^users/'</span>, views.Users.as_view()),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="8-2-APIView和Request对象源码分析"><a href="#8-2-APIView和Request对象源码分析" class="headerlink" title="8.2 APIView和Request对象源码分析"></a>8.2 APIView和Request对象源码分析</h2><h4 id="8-2-1-APIView"><a href="#8-2-1-APIView" class="headerlink" title="8.2.1 APIView"></a>8.2.1 APIView</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># as_view()</span></span><br><span class="line">	<span class="comment"># 核心走了父类as_view</span></span><br><span class="line">	view = super(APIView, cls).as_view(**initkwargs)</span><br><span class="line">    <span class="comment"># 返回的是局部禁用csrf认证的view视图函数</span></span><br><span class="line">    <span class="keyword">return</span> csrf_exempt(view)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># dispatch(self, request, *args, **kwargs)</span></span><br><span class="line">	<span class="comment"># 二次封装request对象</span></span><br><span class="line">	request = self.initialize_request(request, *args, **kwargs)</span><br><span class="line">    <span class="comment"># 自定义request规则</span></span><br><span class="line">    self.initial(request, *args, **kwargs)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># initialize_request(self, request, *args, **kwargs)</span></span><br><span class="line">	<span class="comment"># 原生request封装在request._request</span></span><br><span class="line">    </span><br><span class="line"><span class="comment"># initial(self, request, *args, **kwargs)</span></span><br><span class="line">	<span class="comment"># 认证</span></span><br><span class="line">	self.perform_authentication(request)</span><br><span class="line">    <span class="comment"># 权限</span></span><br><span class="line">    self.check_permissions(request)</span><br><span class="line">    <span class="comment"># 频率</span></span><br><span class="line">    self.check_throttles(request)</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-2-2-Request对象"><a href="#8-2-2-Request对象" class="headerlink" title="8.2.2 Request对象"></a>8.2.2 Request对象</h4><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggggzi3mjxj30hc0t0aga.jpg" alt="image-20200705223439308" style="zoom:33%;" /></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django-rest-framework%E6%A1%86%E6%9E%B6/3-drf-%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django-rest-framework框架/3-drf-请求与响应
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django-rest-framework%E6%A1%86%E6%9E%B6/2-drf-%E5%BA%8F%E5%88%97%E5%8C%96%E7%BB%84%E4%BB%B6/">
+        
+          python/Django-rest-framework框架/2-drf-序列化组件
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-Web应用模式"><span class="toc-nav-text">一  Web应用模式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-前后端不分离"><span class="toc-nav-text">1.1 前后端不分离</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-前后端分离"><span class="toc-nav-text">1.2 前后端分离</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-API接口"><span class="toc-nav-text">二 API接口</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-接口测试工具：Postman"><span class="toc-nav-text">三 接口测试工具：Postman</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-RESTful-API规范"><span class="toc-nav-text">四 RESTful API规范</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-1-数据的安全保障"><span class="toc-nav-text">4.1 数据的安全保障</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-2-接口特征表现"><span class="toc-nav-text">4.2 接口特征表现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-3-多数据版本共存"><span class="toc-nav-text">4.3 多数据版本共存</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-4-数据即是资源，均使用名词（可复数）"><span class="toc-nav-text">4.4 数据即是资源，均使用名词（可复数）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-5-资源操作由请求方式决定（method）"><span class="toc-nav-text">4.5 资源操作由请求方式决定（method）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-6-过滤，通过在url上传参的形式传递搜索条件"><span class="toc-nav-text">4.6 过滤，通过在url上传参的形式传递搜索条件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-7-响应状态码"><span class="toc-nav-text">4.7 响应状态码</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4-7-1-正常响应"><span class="toc-nav-text">4.7.1 正常响应</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4-7-2-重定向响应"><span class="toc-nav-text">4.7.2 重定向响应</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4-7-3-客户端异常"><span class="toc-nav-text">4.7.3 客户端异常</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4-7-4-服务器异常"><span class="toc-nav-text">4.7.4 服务器异常</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-8-错误处理，应返回错误信息，error当做key"><span class="toc-nav-text">4.8 错误处理，应返回错误信息，error当做key</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-9-返回结果，针对不同操作，服务器向用户返回的结果应该符合以下规范"><span class="toc-nav-text">4.9 返回结果，针对不同操作，服务器向用户返回的结果应该符合以下规范</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-10-需要url请求的资源需要访问资源的请求链接"><span class="toc-nav-text">4.10 需要url请求的资源需要访问资源的请求链接</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-序列化"><span class="toc-nav-text">四 序列化</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-Django-Rest-Framework"><span class="toc-nav-text">五 Django Rest_Framework</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#特点"><span class="toc-nav-text">特点</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-环境安装与配置"><span class="toc-nav-text">六 环境安装与配置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-1-安装DRF"><span class="toc-nav-text">6.1 安装DRF</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#6-1-1-创建django项目"><span class="toc-nav-text">6.1.1 创建django项目</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-2-添加rest-framework应用"><span class="toc-nav-text">6.2 添加rest_framework应用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-3-体验drf完全简写代码的过程（了解）"><span class="toc-nav-text">6.3 体验drf完全简写代码的过程（了解）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#6-3-1-创建模型操作类"><span class="toc-nav-text">6.3.1. 创建模型操作类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#6-3-1-1-执行数据迁移"><span class="toc-nav-text">6.3.1.1 执行数据迁移</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#6-3-2-创建序列化器"><span class="toc-nav-text">6.3.2. 创建序列化器</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#6-3-3-编写视图"><span class="toc-nav-text">6.3.3. 编写视图</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#6-3-4-定义路由"><span class="toc-nav-text">6.3.4. 定义路由</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#6-3-5-运行测试"><span class="toc-nav-text">6.3.5. 运行测试</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#七-CBV源码分析"><span class="toc-nav-text">七 CBV源码分析</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#八-drf基本使用及request源码分析"><span class="toc-nav-text">八 drf基本使用及request源码分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#8-1-APIView的使用"><span class="toc-nav-text">8.1 APIView的使用</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#8-2-APIView和Request对象源码分析"><span class="toc-nav-text">8.2 APIView和Request对象源码分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#8-2-1-APIView"><span class="toc-nav-text">8.2.1 APIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#8-2-2-Request对象"><span class="toc-nav-text">8.2.2 Request对象</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django-rest-framework框架/1-drf-drf入门规范/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django-rest-framework框架/1-drf-drf入门规范",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/1-项目基础/4-luffy后台配置 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/1-项目基础/4-luffy后台配置</h2>
+
+
+
+  <p class="post-date">2020-02-26</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h2><h5 id="dev-py"><a href="#dev-py" class="headerlink" title="dev.py"></a>dev.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 环境变量操作：小luffyapiBASE_DIR与apps文件夹都要添加到环境变量</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.insert(<span class="number">0</span>, BASE_DIR)</span><br><span class="line">APPS_DIR = os.path.join(BASE_DIR, <span class="string">'apps'</span>)</span><br><span class="line">sys.path.insert(<span class="number">1</span>, APPS_DIR)</span><br></pre></td></tr></table></figure>
+
+<h5 id="在写项目直接导入utils文件夹也不’’错误提示’’"><a href="#在写项目直接导入utils文件夹也不’’错误提示’’" class="headerlink" title="在写项目直接导入utils文件夹也不’’错误提示’’"></a>在写项目直接导入utils文件夹也不’’错误提示’’</h5><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggqvpjods4j30vh0epacd.jpg"  />
+
+
+
+
+
+<h2 id="封装logger"><a href="#封装logger" class="headerlink" title="封装logger"></a>封装logger</h2><h5 id="dev-py-1"><a href="#dev-py-1" class="headerlink" title="dev.py"></a>dev.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 真实项目上线后，日志文件打印级别不能过低，因为一次日志记录就是一次文件io操作</span></span><br><span class="line">LOGGING = &#123;</span><br><span class="line">    <span class="string">'version'</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">'disable_existing_loggers'</span>: <span class="literal">False</span>,</span><br><span class="line">    <span class="string">'formatters'</span>: &#123;</span><br><span class="line">        <span class="string">'verbose'</span>: &#123;</span><br><span class="line">            <span class="string">'format'</span>: <span class="string">'%(levelname)s %(asctime)s %(module)s %(lineno)d %(message)s'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">'simple'</span>: &#123;</span><br><span class="line">            <span class="string">'format'</span>: <span class="string">'%(levelname)s %(module)s %(lineno)d %(message)s'</span></span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'filters'</span>: &#123;</span><br><span class="line">        <span class="string">'require_debug_true'</span>: &#123;</span><br><span class="line">            <span class="string">'()'</span>: <span class="string">'django.utils.log.RequireDebugTrue'</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'handlers'</span>: &#123;</span><br><span class="line">        <span class="string">'console'</span>: &#123;</span><br><span class="line">            <span class="comment"># 实际开发建议使用WARNING</span></span><br><span class="line">            <span class="string">'level'</span>: <span class="string">'DEBUG'</span>,</span><br><span class="line">            <span class="string">'filters'</span>: [<span class="string">'require_debug_true'</span>],</span><br><span class="line">            <span class="string">'class'</span>: <span class="string">'logging.StreamHandler'</span>,</span><br><span class="line">            <span class="string">'formatter'</span>: <span class="string">'simple'</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">'file'</span>: &#123;</span><br><span class="line">            <span class="comment"># 实际开发建议使用ERROR</span></span><br><span class="line">            <span class="string">'level'</span>: <span class="string">'INFO'</span>,</span><br><span class="line">            <span class="string">'class'</span>: <span class="string">'logging.handlers.RotatingFileHandler'</span>,</span><br><span class="line">            <span class="comment"># 日志位置,日志文件名,日志保存目录必须手动创建，注：这里的文件路径要注意BASE_DIR代表的是小luffyapi</span></span><br><span class="line">            <span class="string">'filename'</span>: os.path.join(os.path.dirname(BASE_DIR), <span class="string">"logs"</span>, <span class="string">"luffy.log"</span>),</span><br><span class="line">            <span class="comment"># 日志文件的最大值,这里我们设置300M</span></span><br><span class="line">            <span class="string">'maxBytes'</span>: <span class="number">300</span> * <span class="number">1024</span> * <span class="number">1024</span>,</span><br><span class="line">            <span class="comment"># 日志文件的数量,设置最大日志数量为10</span></span><br><span class="line">            <span class="string">'backupCount'</span>: <span class="number">10</span>,</span><br><span class="line">            <span class="comment"># 日志格式:详细格式</span></span><br><span class="line">            <span class="string">'formatter'</span>: <span class="string">'verbose'</span>,</span><br><span class="line">            <span class="comment"># 文件内容编码</span></span><br><span class="line">            <span class="string">'encoding'</span>: <span class="string">'utf-8'</span></span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment"># 日志对象</span></span><br><span class="line">    <span class="string">'loggers'</span>: &#123;</span><br><span class="line">        <span class="string">'django'</span>: &#123;</span><br><span class="line">            <span class="string">'handlers'</span>: [<span class="string">'console'</span>, <span class="string">'file'</span>],</span><br><span class="line">            <span class="string">'propagate'</span>: <span class="literal">True</span>, <span class="comment"># 是否让日志信息继续冒泡给其他的日志处理系统</span></span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="utils-logging-py"><a href="#utils-logging-py" class="headerlink" title="utils/logging.py"></a>utils/logging.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> logging</span><br><span class="line">logger = logging.getLogger(<span class="string">'django'</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="封装项目异常处理"><a href="#封装项目异常处理" class="headerlink" title="封装项目异常处理"></a>封装项目异常处理</h2><h5 id="utils-exception-py"><a href="#utils-exception-py" class="headerlink" title="utils/exception.py"></a>utils/exception.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.views <span class="keyword">import</span> exception_handler <span class="keyword">as</span> drf_exception_handler</span><br><span class="line"><span class="keyword">from</span> rest_framework.views <span class="keyword">import</span> Response</span><br><span class="line"><span class="keyword">from</span> rest_framework <span class="keyword">import</span> status</span><br><span class="line"><span class="keyword">from</span> utils.logging <span class="keyword">import</span> logger</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line">logging.getLogger(<span class="string">'django'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exception_handler</span><span class="params">(exc, context)</span>:</span></span><br><span class="line">    response = drf_exception_handler(exc, context)</span><br><span class="line">    <span class="keyword">if</span> response <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 记录服务器异常</span></span><br><span class="line">        logger.critical(<span class="string">'%s'</span> % exc)</span><br><span class="line">        response = Response(&#123;<span class="string">'detail'</span>: <span class="string">'服务器异常，请重试...'</span>&#125;, status=status.HTTP_500_INTERNAL_SERVER_ERROR)</span><br><span class="line">    <span class="keyword">return</span> response</span><br></pre></td></tr></table></figure>
+
+<h5 id="settings-py"><a href="#settings-py" class="headerlink" title="settings.py"></a>settings.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    <span class="string">'EXCEPTION_HANDLER'</span>: <span class="string">'utils.exception.exception_handler'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="二次封装Response模块"><a href="#二次封装Response模块" class="headerlink" title="二次封装Response模块"></a>二次封装Response模块</h2><h5 id="utils-response-py"><a href="#utils-response-py" class="headerlink" title="utils/response.py"></a>utils/response.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">APIResponse</span><span class="params">(Response)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, status=<span class="number">0</span>, msg=<span class="string">'ok'</span>, http_status=None, headers=None, exception=False, **kwargs)</span>:</span></span><br><span class="line">        data = &#123;</span><br><span class="line">            <span class="string">'status'</span>: status,</span><br><span class="line">            <span class="string">'msg'</span>: msg,</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> kwargs:</span><br><span class="line">            data.update(kwargs)</span><br><span class="line">        super().__init__(data=data, status=http_status, headers=headers, exception=exception)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="路由组件配置"><a href="#路由组件配置" class="headerlink" title="路由组件配置"></a>路由组件配置</h2><h5 id="utils-router-py"><a href="#utils-router-py" class="headerlink" title="utils/router.py"></a>utils/router.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.routers <span class="keyword">import</span> Route, DynamicRoute, SimpleRouter <span class="keyword">as</span> DRFSimpleRouter</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimpleRouter</span><span class="params">(DRFSimpleRouter)</span>:</span></span><br><span class="line">    routes = [</span><br><span class="line">        <span class="comment"># List route.  /资源s/</span></span><br><span class="line">        Route(</span><br><span class="line">            url=<span class="string">r'^&#123;prefix&#125;&#123;trailing_slash&#125;$'</span>,</span><br><span class="line">            mapping=&#123;</span><br><span class="line">                <span class="string">'get'</span>: <span class="string">'list'</span>,  <span class="comment"># 群查</span></span><br><span class="line">                <span class="string">'post'</span>: <span class="string">'create'</span>,  <span class="comment"># 单增、群增</span></span><br><span class="line">                <span class="string">'put'</span>: <span class="string">'multiple_update'</span>,  <span class="comment"># 群整改</span></span><br><span class="line">                <span class="string">'patch'</span>: <span class="string">'multiple_partial_update'</span>,  <span class="comment"># 群局改</span></span><br><span class="line">                <span class="string">'delete'</span>: <span class="string">'multiple_destroy'</span>,  <span class="comment"># 群删</span></span><br><span class="line">            &#125;,</span><br><span class="line">            name=<span class="string">'&#123;basename&#125;-list'</span>,</span><br><span class="line">            detail=<span class="literal">False</span>,</span><br><span class="line">            initkwargs=&#123;<span class="string">'suffix'</span>: <span class="string">'List'</span>&#125;</span><br><span class="line">        ),</span><br><span class="line">        <span class="comment"># Dynamically generated list routes. Generated using</span></span><br><span class="line">        <span class="comment"># @action(detail=False) decorator on methods of the viewset.</span></span><br><span class="line">        DynamicRoute(</span><br><span class="line">            url=<span class="string">r'^&#123;prefix&#125;/&#123;url_path&#125;&#123;trailing_slash&#125;$'</span>,</span><br><span class="line">            name=<span class="string">'&#123;basename&#125;-&#123;url_name&#125;'</span>,</span><br><span class="line">            detail=<span class="literal">False</span>,</span><br><span class="line">            initkwargs=&#123;&#125;</span><br><span class="line">        ),</span><br><span class="line">        <span class="comment"># Detail route.  /资源s/(pk)/</span></span><br><span class="line">        Route(</span><br><span class="line">            url=<span class="string">r'^&#123;prefix&#125;/&#123;lookup&#125;&#123;trailing_slash&#125;$'</span>,</span><br><span class="line">            mapping=&#123;</span><br><span class="line">                <span class="string">'get'</span>: <span class="string">'retrieve'</span>,  <span class="comment"># 单查</span></span><br><span class="line">                <span class="string">'put'</span>: <span class="string">'update'</span>,  <span class="comment"># 单整改</span></span><br><span class="line">                <span class="string">'patch'</span>: <span class="string">'partial_update'</span>,  <span class="comment"># 单局改</span></span><br><span class="line">                <span class="string">'delete'</span>: <span class="string">'destroy'</span>  <span class="comment"># 单删</span></span><br><span class="line">            &#125;,</span><br><span class="line">            name=<span class="string">'&#123;basename&#125;-detail'</span>,</span><br><span class="line">            detail=<span class="literal">True</span>,</span><br><span class="line">            initkwargs=&#123;<span class="string">'suffix'</span>: <span class="string">'Instance'</span>&#125;</span><br><span class="line">        ),</span><br><span class="line">        <span class="comment"># Dynamically generated detail routes. Generated using</span></span><br><span class="line">        <span class="comment"># @action(detail=True) decorator on methods of the viewset.</span></span><br><span class="line">        DynamicRoute(</span><br><span class="line">            url=<span class="string">r'^&#123;prefix&#125;/&#123;lookup&#125;/&#123;url_path&#125;&#123;trailing_slash&#125;$'</span>,</span><br><span class="line">            name=<span class="string">'&#123;basename&#125;-&#123;url_name&#125;'</span>,</span><br><span class="line">            detail=<span class="literal">True</span>,</span><br><span class="line">            initkwargs=&#123;&#125;</span><br><span class="line">        ),</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对外提供十大接口的router对象</span></span><br><span class="line">router = SimpleRouter()</span><br><span class="line"><span class="comment"># eg: router.register('users', UserModelViewSet, basename='user')</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">/users/</span></span><br><span class="line"><span class="string">'get': 'list',  # 群查</span></span><br><span class="line"><span class="string">'post': 'create',  # 单增、群增</span></span><br><span class="line"><span class="string">'put': 'multiple_update',  # 群整改</span></span><br><span class="line"><span class="string">'patch': 'multiple_partial_update',  # 群局改</span></span><br><span class="line"><span class="string">'delete': 'multiple_destroy',  # 群删</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">/users/(pk)/</span></span><br><span class="line"><span class="string">'get': 'retrieve',  # 单查</span></span><br><span class="line"><span class="string">'put': 'update',  # 单整改</span></span><br><span class="line"><span class="string">'patch': 'partial_update',  # 单局改</span></span><br><span class="line"><span class="string">'delete': 'destroy'  # 单删</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/1-%E9%A1%B9%E7%9B%AE%E5%9F%BA%E7%A1%80/3-luffy%E5%90%8E%E5%8F%B0/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/1-项目基础/3-luffy后台
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/1-%E9%A1%B9%E7%9B%AE%E5%9F%BA%E7%A1%80/5-luffy%E6%95%B0%E6%8D%AE%E5%BA%93/">
+        
+          python/路飞项目/1-项目基础/5-luffy数据库
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#环境变量"><span class="toc-nav-text">环境变量</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#dev-py"><span class="toc-nav-text">dev.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#在写项目直接导入utils文件夹也不’’错误提示’’"><span class="toc-nav-text">在写项目直接导入utils文件夹也不’’错误提示’’</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#封装logger"><span class="toc-nav-text">封装logger</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#dev-py-1"><span class="toc-nav-text">dev.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#utils-logging-py"><span class="toc-nav-text">utils&#x2F;logging.py</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#封装项目异常处理"><span class="toc-nav-text">封装项目异常处理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#utils-exception-py"><span class="toc-nav-text">utils&#x2F;exception.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#settings-py"><span class="toc-nav-text">settings.py</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二次封装Response模块"><span class="toc-nav-text">二次封装Response模块</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#utils-response-py"><span class="toc-nav-text">utils&#x2F;response.py</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#路由组件配置"><span class="toc-nav-text">路由组件配置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#utils-router-py"><span class="toc-nav-text">utils&#x2F;router.py</span></a></li></ol></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/1-项目基础/4-luffy后台配置/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/1-项目基础/4-luffy后台配置",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

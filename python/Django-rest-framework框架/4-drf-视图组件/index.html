@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django-rest-framework框架/4-drf-视图组件 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django-rest-framework框架/4-drf-视图组件</h2>
+
+
+
+  <p class="post-date">2020-06-28</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一-视图"><a href="#一-视图" class="headerlink" title="一 视图"></a>一 视图</h1><p>Django REST framwork 提供的视图的主要作用：</p>
+<ul>
+<li>控制序列化器的执行（检验、保存、转换数据）</li>
+<li>控制数据库查询的执行</li>
+</ul>
+<h2 id="1-1-视图继承关系"><a href="#1-1-视图继承关系" class="headerlink" title="1.1 视图继承关系"></a>1.1 视图继承关系</h2><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggipvctuxcj31wc0goq89.jpg" alt="image-20200707211311713"></p>
+<p>视图的方法与属性：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggipulq6d5j30xu0u07mf.jpg" alt="通用视图的继承关系_含方法和属性"></p>
+<h2 id="1-2-视图"><a href="#1-2-视图" class="headerlink" title="1.2 视图"></a>1.2 视图</h2><p>REST framework 提供了众多的通用视图基类与扩展类，以简化视图的编写。</p>
+<h3 id="1-2-1-2个视图基类"><a href="#1-2-1-2个视图基类" class="headerlink" title="1.2.1 2个视图基类"></a>1.2.1 2个视图基类</h3><h4 id="1-2-1-1-APIView"><a href="#1-2-1-1-APIView" class="headerlink" title="1.2.1.1 APIView"></a>1.2.1.1 APIView</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rest_framework.views.APIView</span><br></pre></td></tr></table></figure>
+
+<p><code>APIView</code>是REST framework提供的所有视图的基类，继承自Django的<code>View</code>父类。</p>
+<p><code>APIView</code>与<code>View</code>的不同之处在于：</p>
+<ul>
+<li>传入到视图方法中的是REST framework的<code>Request</code>对象，而不是Django的<code>HttpRequeset</code>对象；</li>
+<li>视图方法可以返回REST framework的<code>Response</code>对象，视图会为响应数据设置（render）符合前端要求的格式；</li>
+<li>任何<code>APIException</code>异常都会被捕获到，并且处理成合适的响应信息；</li>
+<li>在进行dispatch()分发前，会对请求进行身份认证、权限检查、流量控制。</li>
+</ul>
+<p>支持定义的类属性</p>
+<ul>
+<li><strong>authentication_classes</strong> 列表或元祖，身份认证类</li>
+<li><strong>permissoin_classes</strong> 列表或元祖，权限检查类</li>
+<li><strong>throttle_classes</strong> 列表或元祖，流量控制类</li>
+</ul>
+<p>在<code>APIView</code>中仍以常规的类视图定义方法来实现get() 、post() 或者其他请求方式的方法。</p>
+<p>举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.views <span class="keyword">import</span> APIView</span><br><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line"></span><br><span class="line"><span class="comment"># url(r'^students/$', views.StudentsAPIView.as_view()),</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentsAPIView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">  	</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        data_list = Student.objects.all()</span><br><span class="line">        serializer = StudentModelSerializer(instance=data_list, many=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-1-2-GenericAPIView-通用视图类"><a href="#2-2-1-2-GenericAPIView-通用视图类" class="headerlink" title="2.2.1.2 GenericAPIView[通用视图类]"></a>2.2.1.2 GenericAPIView[通用视图类]</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rest_framework.generics.GenericAPIView</span><br></pre></td></tr></table></figure>
+
+<p>继承自<code>APIVIew</code>，<strong>主要增加了操作序列化器和数据库查询的方法，作用是为下面Mixin扩展类的执行提供方法支持。通常在使用时，可搭配一个或多个Mixin扩展类。</strong></p>
+<p>提供的关于序列化器使用的属性与方法</p>
+<ul>
+<li><p>属性：</p>
+<ul>
+<li><strong>serializer_class</strong> 指明视图使用的序列化器</li>
+</ul>
+</li>
+<li><p>方法：</p>
+<ul>
+<li><p><strong>get_serializer_class(self)</strong></p>
+<p>当出现一个视图类中调用多个序列化器时,那么可以通过条件判断在get_serializer_class方法中通过返回不同的序列化器类名就可以让视图方法执行不同的序列化器对象了。</p>
+<p>返回序列化器类，默认返回<code>serializer_class</code>，可以重写，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_serializer_class</span><span class="params">(self)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> self.request.user.is_staff:</span><br><span class="line">        <span class="keyword">return</span> FullAccountSerializer</span><br><span class="line">    <span class="keyword">return</span> BasicAccountSerializer</span><br></pre></td></tr></table></figure>
+</li>
+<li><h5 id="get-serializer-self-args-kwargs"><a href="#get-serializer-self-args-kwargs" class="headerlink" title="get_serializer(self, args, *kwargs)"></a>get_serializer(self, <em>args, *</em>kwargs)</h5><p>返回序列化器对象，主要用来提供给Mixin扩展类使用，如果我们在视图中想要获取序列化器对象，也可以直接调用此方法。</p>
+<p><strong>注意，该方法在提供序列化器对象的时候，会向序列化器对象的context属性补充三个数据：request、format、view，这三个数据对象可以在定义序列化器时使用。</strong></p>
+<ul>
+<li><strong>request</strong> 当前视图的请求对象</li>
+<li><strong>view</strong> 当前请求的类视图对象</li>
+<li>format 当前请求期望返回的数据格式</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>提供的关于数据库查询的属性与方法</p>
+<ul>
+<li><p>属性：</p>
+<ul>
+<li><strong>queryset</strong> 指明使用的数据查询集</li>
+</ul>
+</li>
+<li><p>方法：</p>
+<ul>
+<li><p><strong>get_queryset(self)</strong></p>
+<p>返回视图使用的查询集，主要用来提供给Mixin扩展类使用，是列表视图与详情视图获取数据的基础，默认返回<code>queryset</code>属性，可以重写，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_queryset</span><span class="params">(self)</span>:</span></span><br><span class="line">    user = self.request.user</span><br><span class="line">    <span class="keyword">return</span> user.accounts.all()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>get_object(self)</strong></p>
+<p>返回详情视图所需的模型类数据对象，主要用来提供给Mixin扩展类使用。</p>
+<p>在试图中可以调用该方法获取详情信息的模型类对象。</p>
+<p><strong>若详情访问的模型类对象不存在，会返回404。</strong></p>
+<p>该方法会默认使用APIView提供的check_object_permissions方法检查当前对象是否有权限被访问。</p>
+<p>举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># url(r'^books/(?P&lt;pk&gt;\d+)/$', views.BookDetailView.as_view()),</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookDetailView</span><span class="params">(GenericAPIView)</span>:</span></span><br><span class="line">    queryset = BookInfo.objects.all()</span><br><span class="line">    serializer_class = BookInfoSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request, pk)</span>:</span></span><br><span class="line">        book = self.get_object() <span class="comment"># get_object()方法根据pk参数查找queryset中的数据对象</span></span><br><span class="line">        serializer = self.get_serializer(book)</span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<p>其他可以设置的属性</p>
+<ul>
+<li><strong>pagination_class</strong> 指明分页控制类</li>
+<li><strong>filter_backends</strong> 指明过滤控制后端</li>
+</ul>
+<p>为了方便学习上面的GenericAPIView通用视图类，我们新建一个子应用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py startapp gen</span><br></pre></td></tr></table></figure>
+
+<p>代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.generics <span class="keyword">import</span> GenericAPIView</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> students.models <span class="keyword">import</span> Student</span><br><span class="line"><span class="keyword">from</span> .serializers <span class="keyword">import</span> StudentModelSerializer, StudentModel2Serializer</span><br><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentsGenericAPIView</span><span class="params">(GenericAPIView)</span>:</span></span><br><span class="line">    <span class="comment"># 本次视图类中要操作的数据[必填]</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line">    <span class="comment"># 本次视图类中要调用的默认序列化器[玄天]</span></span><br><span class="line">    serializer_class = StudentModelSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        <span class="string">"""获取所有学生信息"""</span></span><br><span class="line">        serializer = self.get_serializer(instance=self.get_queryset(), many=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self,request)</span>:</span></span><br><span class="line"></span><br><span class="line">        data = request.data</span><br><span class="line"></span><br><span class="line">        serializer = self.get_serializer(data=data)</span><br><span class="line"></span><br><span class="line">        serializer.is_valid(raise_exception=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        instance = serializer.save()</span><br><span class="line"></span><br><span class="line">        serializer = self.get_serializer(instance=instance)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentGenericAPIView</span><span class="params">(GenericAPIView)</span>:</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line"></span><br><span class="line">    serializer_class = StudentModelSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_serializer_class</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""重写获取序列化器类的方法"""</span></span><br><span class="line">        <span class="keyword">if</span> self.request.method == <span class="string">"GET"</span>:</span><br><span class="line">            <span class="keyword">return</span> StudentModel2Serializer</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> StudentModelSerializer</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 在使用GenericAPIView视图获取或操作单个数据时,视图方法中的代表主键的参数最好是pk</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        <span class="string">"""获取一条数据"""</span></span><br><span class="line">        serializer = self.get_serializer(instance=self.get_object())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line"></span><br><span class="line">        data = request.data</span><br><span class="line"></span><br><span class="line">        serializer = self.get_serializer(instance=self.get_object(),data=data)</span><br><span class="line"></span><br><span class="line">        serializer.is_valid(raise_exception=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">        serializer.save()</span><br><span class="line"></span><br><span class="line">        serializer = self.get_serializer(instance=self.get_object())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br></pre></td></tr></table></figure>
+
+<p>序列化器类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework <span class="keyword">import</span> serializers</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> students.models <span class="keyword">import</span> Student</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentModelSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model= Student</span><br><span class="line">        fields = <span class="string">"__all__"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentModel2Serializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model= Student</span><br><span class="line">        fields = (<span class="string">"name"</span>,<span class="string">"class_null"</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="1-2-2-5个视图扩展类"><a href="#1-2-2-5个视图扩展类" class="headerlink" title="1.2.2 5个视图扩展类"></a>1.2.2 5个视图扩展类</h3><p>作用：</p>
+<p>提供了几种后端视图（对数据资源进行曾删改查）处理流程的实现，如果需要编写的视图属于这五种，则视图可以通过继承相应的扩展类来复用代码，减少自己编写的代码量。</p>
+<p>这五个扩展类需要搭配GenericAPIView父类，因为五个扩展类的实现需要调用GenericAPIView提供的序列化器与数据库查询的方法。</p>
+<h4 id="1）ListModelMixin"><a href="#1）ListModelMixin" class="headerlink" title="1）ListModelMixin"></a>1）ListModelMixin</h4><p>列表视图扩展类，提供<code>list(request, *args, **kwargs)</code>方法快速实现列表视图，返回200状态码。</p>
+<p>该Mixin的list方法会对数据进行过滤和分页。</p>
+<p>源代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ListModelMixin</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    List a queryset.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">list</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="comment"># 过滤</span></span><br><span class="line">        queryset = self.filter_queryset(self.get_queryset())</span><br><span class="line">        <span class="comment"># 分页</span></span><br><span class="line">        page = self.paginate_queryset(queryset)</span><br><span class="line">        <span class="keyword">if</span> page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            serializer = self.get_serializer(page, many=<span class="literal">True</span>)</span><br><span class="line">            <span class="keyword">return</span> self.get_paginated_response(serializer.data)</span><br><span class="line">        <span class="comment"># 序列化</span></span><br><span class="line">        serializer = self.get_serializer(queryset, many=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br></pre></td></tr></table></figure>
+
+<p>举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.mixins <span class="keyword">import</span> ListModelMixin</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookListView</span><span class="params">(ListModelMixin, GenericAPIView)</span>:</span></span><br><span class="line">    queryset = BookInfo.objects.all()</span><br><span class="line">    serializer_class = BookInfoSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.list(request)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2）CreateModelMixin"><a href="#2）CreateModelMixin" class="headerlink" title="2）CreateModelMixin"></a>2）CreateModelMixin</h4><p>创建视图扩展类，提供<code>create(request, *args, **kwargs)</code>方法快速实现创建资源的视图，成功返回201状态码。</p>
+<p>如果序列化器对前端发送的数据验证失败，返回400错误。</p>
+<p>源代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CreateModelMixin</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Create a model instance.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="comment"># 获取序列化器</span></span><br><span class="line">        serializer = self.get_serializer(data=request.data)</span><br><span class="line">        <span class="comment"># 验证</span></span><br><span class="line">        serializer.is_valid(raise_exception=<span class="literal">True</span>)</span><br><span class="line">        <span class="comment"># 保存</span></span><br><span class="line">        self.perform_create(serializer)</span><br><span class="line">        headers = self.get_success_headers(serializer.data)</span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">perform_create</span><span class="params">(self, serializer)</span>:</span></span><br><span class="line">        serializer.save()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_success_headers</span><span class="params">(self, data)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="string">'Location'</span>: str(data[api_settings.URL_FIELD_NAME])&#125;</span><br><span class="line">        <span class="keyword">except</span> (TypeError, KeyError):</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="3）RetrieveModelMixin"><a href="#3）RetrieveModelMixin" class="headerlink" title="3）RetrieveModelMixin"></a>3）RetrieveModelMixin</h4><p>详情视图扩展类，提供<code>retrieve(request, *args, **kwargs)</code>方法，可以快速实现返回一个存在的数据对象。</p>
+<p>如果存在，返回200， 否则返回404。</p>
+<p>源代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RetrieveModelMixin</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Retrieve a model instance.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">retrieve</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="comment"># 获取对象，会检查对象的权限</span></span><br><span class="line">        instance = self.get_object()</span><br><span class="line">        <span class="comment"># 序列化</span></span><br><span class="line">        serializer = self.get_serializer(instance)</span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br></pre></td></tr></table></figure>
+
+<p>举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookDetailView</span><span class="params">(RetrieveModelMixin, GenericAPIView)</span>:</span></span><br><span class="line">    queryset = BookInfo.objects.all()</span><br><span class="line">    serializer_class = BookInfoSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request, pk)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.retrieve(request)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="4）UpdateModelMixin"><a href="#4）UpdateModelMixin" class="headerlink" title="4）UpdateModelMixin"></a>4）UpdateModelMixin</h4><p>更新视图扩展类，提供<code>update(request, *args, **kwargs)</code>方法，可以快速实现更新一个存在的数据对象。</p>
+<p>同时也提供<code>partial_update(request, *args, **kwargs)</code>方法，可以实现局部更新。</p>
+<p>成功返回200，序列化器校验数据失败时，返回400错误。</p>
+<p>源代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UpdateModelMixin</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Update a model instance.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        partial = kwargs.pop(<span class="string">'partial'</span>, <span class="literal">False</span>)</span><br><span class="line">        instance = self.get_object()</span><br><span class="line">        serializer = self.get_serializer(instance, data=request.data, partial=partial)</span><br><span class="line">        serializer.is_valid(raise_exception=<span class="literal">True</span>)</span><br><span class="line">        self.perform_update(serializer)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> getattr(instance, <span class="string">'_prefetched_objects_cache'</span>, <span class="literal">None</span>):</span><br><span class="line">            <span class="comment"># If 'prefetch_related' has been applied to a queryset, we need to</span></span><br><span class="line">            <span class="comment"># forcibly invalidate the prefetch cache on the instance.</span></span><br><span class="line">            instance._prefetched_objects_cache = &#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">perform_update</span><span class="params">(self, serializer)</span>:</span></span><br><span class="line">        serializer.save()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">partial_update</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        kwargs[<span class="string">'partial'</span>] = <span class="literal">True</span></span><br><span class="line">        <span class="keyword">return</span> self.update(request, *args, **kwargs)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="5）DestroyModelMixin"><a href="#5）DestroyModelMixin" class="headerlink" title="5）DestroyModelMixin"></a>5）DestroyModelMixin</h4><p>删除视图扩展类，提供<code>destroy(request, *args, **kwargs)</code>方法，可以快速实现删除一个存在的数据对象。</p>
+<p>成功返回204，不存在返回404。</p>
+<p>源代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DestroyModelMixin</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Destroy a model instance.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">destroy</span><span class="params">(self, request, *args, **kwargs)</span>:</span></span><br><span class="line">        instance = self.get_object()</span><br><span class="line">        self.perform_destroy(instance)</span><br><span class="line">        <span class="keyword">return</span> Response(status=status.HTTP_204_NO_CONTENT)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">perform_destroy</span><span class="params">(self, instance)</span>:</span></span><br><span class="line">        instance.delete()</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用GenericAPIView和视图扩展类，实现api接口，代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""GenericAPIView结合视图扩展类实现api接口"""</span></span><br><span class="line"><span class="keyword">from</span> rest_framework.mixins <span class="keyword">import</span> ListModelMixin,CreateModelMixin</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Students2GenericAPIView</span><span class="params">(GenericAPIView,ListModelMixin,CreateModelMixin)</span>:</span></span><br><span class="line">    <span class="comment"># 本次视图类中要操作的数据[必填]</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line">    <span class="comment"># 本次视图类中要调用的默认序列化器[玄天]</span></span><br><span class="line">    serializer_class = StudentModelSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        <span class="string">"""获取多个学生信息"""</span></span><br><span class="line">        <span class="keyword">return</span> self.list(request)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self,request)</span>:</span></span><br><span class="line">        <span class="string">"""添加学生信息"""</span></span><br><span class="line">        <span class="keyword">return</span> self.create(request)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> rest_framework.mixins <span class="keyword">import</span> RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student2GenericAPIView</span><span class="params">(GenericAPIView,RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin)</span>:</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line"></span><br><span class="line">    serializer_class = StudentModelSerializer</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 在使用GenericAPIView视图获取或操作单个数据时,视图方法中的代表主键的参数最好是pk</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        <span class="string">"""获取一条数据"""</span></span><br><span class="line">        <span class="keyword">return</span> self.retrieve(request,pk)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        <span class="string">"""更新一条数据"""</span></span><br><span class="line">        <span class="keyword">return</span> self.update(request,pk)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        <span class="string">"""删除一条数据"""</span></span><br><span class="line">        <span class="keyword">return</span> self.destroy(request,pk)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-2-3-GenericAPIView的视图子类"><a href="#1-2-3-GenericAPIView的视图子类" class="headerlink" title="1.2.3 GenericAPIView的视图子类"></a>1.2.3 GenericAPIView的视图子类</h3><h4 id="1）CreateAPIView"><a href="#1）CreateAPIView" class="headerlink" title="1）CreateAPIView"></a>1）CreateAPIView</h4><p>提供 post 方法</p>
+<p>继承自： GenericAPIView、CreateModelMixin</p>
+<h4 id="2）ListAPIView"><a href="#2）ListAPIView" class="headerlink" title="2）ListAPIView"></a>2）ListAPIView</h4><p>提供 get 方法</p>
+<p>继承自：GenericAPIView、ListModelMixin</p>
+<h4 id="3）RetrieveAPIView"><a href="#3）RetrieveAPIView" class="headerlink" title="3）RetrieveAPIView"></a>3）RetrieveAPIView</h4><p>提供 get 方法</p>
+<p>继承自: GenericAPIView、RetrieveModelMixin</p>
+<h4 id="4）DestoryAPIView"><a href="#4）DestoryAPIView" class="headerlink" title="4）DestoryAPIView"></a>4）DestoryAPIView</h4><p>提供 delete 方法</p>
+<p>继承自：GenericAPIView、DestoryModelMixin</p>
+<h4 id="5）UpdateAPIView"><a href="#5）UpdateAPIView" class="headerlink" title="5）UpdateAPIView"></a>5）UpdateAPIView</h4><p>提供 put 和 patch 方法</p>
+<p>继承自：GenericAPIView、UpdateModelMixin</p>
+<h4 id="6）RetrieveUpdateAPIView"><a href="#6）RetrieveUpdateAPIView" class="headerlink" title="6）RetrieveUpdateAPIView"></a>6）RetrieveUpdateAPIView</h4><p>提供 get、put、patch方法</p>
+<p>继承自： GenericAPIView、RetrieveModelMixin、UpdateModelMixin</p>
+<h4 id="7）RetrieveUpdateDestoryAPIView"><a href="#7）RetrieveUpdateDestoryAPIView" class="headerlink" title="7）RetrieveUpdateDestoryAPIView"></a>7）RetrieveUpdateDestoryAPIView</h4><p>提供 get、put、patch、delete方法</p>
+<p>继承自：GenericAPIView、RetrieveModelMixin、UpdateModelMixin、DestoryModelMixin</p>
+<h2 id="1-3-视图集ViewSet"><a href="#1-3-视图集ViewSet" class="headerlink" title="1.3 视图集ViewSet"></a>1.3 视图集ViewSet</h2><p>使用视图集ViewSet，可以将一系列逻辑相关的动作放到一个类中：</p>
+<ul>
+<li>list() 提供一组数据</li>
+<li>retrieve() 提供单个数据</li>
+<li>create() 创建数据</li>
+<li>update() 保存数据</li>
+<li>destory() 删除数据</li>
+</ul>
+<p>ViewSet视图集类不再实现get()、post()等方法，而是实现动作 <strong>action</strong> 如 list() 、create() 等。</p>
+<p>视图集只在使用as_view()方法的时候，才会将<strong>action</strong>动作与具体请求方式对应上。如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoViewSet</span><span class="params">(viewsets.ViewSet)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">list</span><span class="params">(self, request)</span>:</span></span><br><span class="line">        books = BookInfo.objects.all()</span><br><span class="line">        serializer = BookInfoSerializer(books, many=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">retrieve</span><span class="params">(self, request, pk=None)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            books = BookInfo.objects.get(id=pk)</span><br><span class="line">        <span class="keyword">except</span> BookInfo.DoesNotExist:</span><br><span class="line">            <span class="keyword">return</span> Response(status=status.HTTP_404_NOT_FOUND)</span><br><span class="line">        serializer = BookInfoSerializer(books)</span><br><span class="line">        <span class="keyword">return</span> Response(serializer.data)</span><br></pre></td></tr></table></figure>
+
+<p>在设置路由时，我们可以如下操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    url(<span class="string">r'^books/$'</span>, BookInfoViewSet.as_view(&#123;<span class="string">'get'</span>:<span class="string">'list'</span>&#125;),</span><br><span class="line">    url(<span class="string">r'^books/(?P&lt;pk&gt;\d+)/$'</span>, BookInfoViewSet.as_view(&#123;<span class="string">'get'</span>: <span class="string">'retrieve'</span>&#125;)</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-1-常用视图集父类"><a href="#1-3-1-常用视图集父类" class="headerlink" title="1.3.1 常用视图集父类"></a>1.3.1 常用视图集父类</h3><h4 id="1）-ViewSet"><a href="#1）-ViewSet" class="headerlink" title="1） ViewSet"></a>1） ViewSet</h4><p>继承自<code>APIView</code>与<code>ViewSetMixin</code>，作用也与APIView基本类似，提供了身份认证、权限校验、流量管理等。</p>
+<p><strong>ViewSet主要通过继承ViewSetMixin来实现在调用as_view()时传入字典（如{‘get’:’list’}）的映射处理工作。</strong></p>
+<p>在ViewSet中，没有提供任何动作action方法，需要我们自己实现action方法。</p>
+<h4 id="2）GenericViewSet"><a href="#2）GenericViewSet" class="headerlink" title="2）GenericViewSet"></a>2）GenericViewSet</h4><p>使用ViewSet通常并不方便，因为list、retrieve、create、update、destory等方法都需要自己编写，而这些方法与前面讲过的Mixin扩展类提供的方法同名，所以我们可以通过继承Mixin扩展类来复用这些方法而无需自己编写。但是Mixin扩展类依赖与<code>GenericAPIView</code>，所以还需要继承<code>GenericAPIView</code>。</p>
+<p><strong>GenericViewSet</strong>就帮助我们完成了这样的继承工作，继承自<code>GenericAPIView</code>与<code>ViewSetMixin</code>，在实现了调用as_view()时传入字典（如<code>{&#39;get&#39;:&#39;list&#39;}</code>）的映射处理工作的同时，还提供了<code>GenericAPIView</code>提供的基础方法，可以直接搭配Mixin扩展类使用。</p>
+<p>举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.viewsets <span class="keyword">import</span> GenericViewSet</span><br><span class="line"><span class="keyword">from</span> rest_framework.mixins <span class="keyword">import</span> ListModelMixin,CreateModelMixin,RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student4ViewSet</span><span class="params">(GenericViewSet,ListModelMixin,CreateModelMixin,RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin)</span>:</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line">    serializer_class = StudentModelSerializer</span><br></pre></td></tr></table></figure>
+
+<p>url的定义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">"students7/"</span>, views.Student4ViewSet.as_view(&#123;<span class="string">"get"</span>: <span class="string">"list"</span>, <span class="string">"post"</span>: <span class="string">"create"</span>&#125;)),</span><br><span class="line">    re_path(<span class="string">"students7/(?P&lt;pk&gt;\d+)/"</span>, views.Student4ViewSet.as_view(&#123;<span class="string">"get"</span>: <span class="string">"retrieve"</span>,<span class="string">"put"</span>:<span class="string">"update"</span>,<span class="string">"delete"</span>:<span class="string">"destroy"</span>&#125;)),</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h4 id="3）ModelViewSet"><a href="#3）ModelViewSet" class="headerlink" title="3）ModelViewSet"></a>3）ModelViewSet</h4><p>继承自<code>GenericViewSet</code>，同时包括了ListModelMixin、RetrieveModelMixin、CreateModelMixin、UpdateModelMixin、DestoryModelMixin。</p>
+<h4 id="4）ReadOnlyModelViewSet"><a href="#4）ReadOnlyModelViewSet" class="headerlink" title="4）ReadOnlyModelViewSet"></a>4）ReadOnlyModelViewSet</h4><p>继承自<code>GenericViewSet</code>，同时包括了ListModelMixin、RetrieveModelMixin。</p>
+<h3 id="1-3-2-视图集中定义附加action动作"><a href="#1-3-2-视图集中定义附加action动作" class="headerlink" title="1.3.2 视图集中定义附加action动作"></a>1.3.2 视图集中定义附加action动作</h3><p>在视图集中，除了上述默认的方法动作外，还可以添加自定义动作。</p>
+<p>举例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.viewsets <span class="keyword">import</span> ModelViewSet,ReadOnlyModelViewSet</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentModelViewSet</span><span class="params">(ModelViewSet)</span>:</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line">    serializer_class = StudentModelSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self,request)</span>:</span></span><br><span class="line">        <span class="string">"""学生登录功能"""</span></span><br><span class="line">        <span class="keyword">return</span> Response(&#123;<span class="string">"message"</span>:<span class="string">"登录成功"</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>url的定义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">"students8/"</span>, views.StudentModelViewSet.as_view(&#123;<span class="string">"get"</span>: <span class="string">"list"</span>, <span class="string">"post"</span>: <span class="string">"create"</span>&#125;)),</span><br><span class="line">    re_path(<span class="string">"students8/(?P&lt;pk&gt;\d+)/"</span>,</span><br><span class="line">            views.StudentModelViewSet.as_view(&#123;<span class="string">"get"</span>: <span class="string">"retrieve"</span>, <span class="string">"put"</span>: <span class="string">"update"</span>, <span class="string">"delete"</span>: <span class="string">"destroy"</span>&#125;)),</span><br><span class="line"></span><br><span class="line">    path(<span class="string">"stu/login/"</span>,views.StudentModelViewSet.as_view(&#123;<span class="string">"get"</span>:<span class="string">"login"</span>&#125;))</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-3-3-action属性"><a href="#1-3-3-action属性" class="headerlink" title="1.3.3 action属性"></a>1.3.3 action属性</h3><p>在视图集中，我们可以通过action对象属性来获取当前请求视图集时的action动作是哪个。</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.viewsets <span class="keyword">import</span> ModelViewSet</span><br><span class="line"><span class="keyword">from</span> students.models <span class="keyword">import</span> Student</span><br><span class="line"><span class="keyword">from</span> .serializers <span class="keyword">import</span> StudentModelSerializer</span><br><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentModelViewSet</span><span class="params">(ModelViewSet)</span>:</span></span><br><span class="line">    queryset = Student.objects.all()</span><br><span class="line">    serializer_class = StudentModelSerializer</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_new_5</span><span class="params">(self,request)</span>:</span></span><br><span class="line">        <span class="string">"""获取最近添加的5个学生信息"""</span></span><br><span class="line">        <span class="comment"># 操作数据库</span></span><br><span class="line">        print(self.action) <span class="comment"># 获取本次请求的视图方法名</span></span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">通过路由访问到当前方法中.可以看到本次的action就是请求的方法名</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-4-总结"><a href="#1-4-总结" class="headerlink" title="1.4 总结"></a>1.4 总结</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#两个基类</span></span><br><span class="line">APIView</span><br><span class="line">GenericAPIView：有关数据库操作，queryset 和serializer_class</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#5个视图扩展类(rest_framework.mixins)</span></span><br><span class="line">CreateModelMixin：create方法创建一条</span><br><span class="line">DestroyModelMixin：destory方法删除一条</span><br><span class="line">ListModelMixin：list方法获取所有</span><br><span class="line">RetrieveModelMixin：retrieve获取一条</span><br><span class="line">UpdateModelMixin：update修改一条</span><br><span class="line"></span><br><span class="line"><span class="comment">#9个子类视图(rest_framework.generics)</span></span><br><span class="line">CreateAPIView:继承CreateModelMixin,GenericAPIView，有post方法，新增数据</span><br><span class="line">DestroyAPIView：继承DestroyModelMixin,GenericAPIView，有delete方法，删除数据</span><br><span class="line">ListAPIView：继承ListModelMixin,GenericAPIView,有get方法获取所有</span><br><span class="line">UpdateAPIView：继承UpdateModelMixin,GenericAPIView，有put和patch方法，修改数据</span><br><span class="line">RetrieveAPIView：继承RetrieveModelMixin,GenericAPIView，有get方法，获取一条</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ListCreateAPIView：继承ListModelMixin,CreateModelMixin,GenericAPIView，有get获取所有，post方法新增</span><br><span class="line">RetrieveDestroyAPIView：继承RetrieveModelMixin,DestroyModelMixin,GenericAPIView，有get方法获取一条，delete方法删除</span><br><span class="line">RetrieveUpdateAPIView：继承RetrieveModelMixin,UpdateModelMixin,GenericAPIView，有get获取一条，put，patch修改</span><br><span class="line">RetrieveUpdateDestroyAPIView：继承RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin,GenericAPIView，有get获取一条，put，patch修改，delete删除</span><br><span class="line"></span><br><span class="line"><span class="comment">#视图集</span></span><br><span class="line">ViewSetMixin：重写了as_view </span><br><span class="line">ViewSet：     继承ViewSetMixin和APIView</span><br><span class="line"></span><br><span class="line">GenericViewSet：继承ViewSetMixin, generics.GenericAPIView</span><br><span class="line">ModelViewSet：继承mixins.CreateModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,mixins.ListModelMixin,GenericViewSet</span><br><span class="line">ReadOnlyModelViewSet：继承mixins.RetrieveModelMixin,mixins.ListModelMixin,GenericViewSet</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/linux/%E5%85%B6%E4%BB%96/03-DevOps%E5%AE%9E%E6%88%98/">
+        <span class="nav-arrow">← </span>
+        
+          linux/其他/03-DevOps实战
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django-rest-framework%E6%A1%86%E6%9E%B6/5-drf-%E8%B7%AF%E7%94%B1%E7%BB%84%E4%BB%B6/">
+        
+          python/Django-rest-framework框架/5-drf-路由组件
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-视图"><span class="toc-nav-text">一 视图</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-视图继承关系"><span class="toc-nav-text">1.1 视图继承关系</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-视图"><span class="toc-nav-text">1.2 视图</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-1-2个视图基类"><span class="toc-nav-text">1.2.1 2个视图基类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-2-1-1-APIView"><span class="toc-nav-text">1.2.1.1 APIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2-2-1-2-GenericAPIView-通用视图类"><span class="toc-nav-text">2.2.1.2 GenericAPIView[通用视图类]</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#get-serializer-self-args-kwargs"><span class="toc-nav-text">get_serializer(self, args, *kwargs)</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-2-5个视图扩展类"><span class="toc-nav-text">1.2.2 5个视图扩展类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1）ListModelMixin"><span class="toc-nav-text">1）ListModelMixin</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2）CreateModelMixin"><span class="toc-nav-text">2）CreateModelMixin</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#3）RetrieveModelMixin"><span class="toc-nav-text">3）RetrieveModelMixin</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4）UpdateModelMixin"><span class="toc-nav-text">4）UpdateModelMixin</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#5）DestroyModelMixin"><span class="toc-nav-text">5）DestroyModelMixin</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-3-GenericAPIView的视图子类"><span class="toc-nav-text">1.2.3 GenericAPIView的视图子类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1）CreateAPIView"><span class="toc-nav-text">1）CreateAPIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2）ListAPIView"><span class="toc-nav-text">2）ListAPIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#3）RetrieveAPIView"><span class="toc-nav-text">3）RetrieveAPIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4）DestoryAPIView"><span class="toc-nav-text">4）DestoryAPIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#5）UpdateAPIView"><span class="toc-nav-text">5）UpdateAPIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#6）RetrieveUpdateAPIView"><span class="toc-nav-text">6）RetrieveUpdateAPIView</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#7）RetrieveUpdateDestoryAPIView"><span class="toc-nav-text">7）RetrieveUpdateDestoryAPIView</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-3-视图集ViewSet"><span class="toc-nav-text">1.3 视图集ViewSet</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-1-常用视图集父类"><span class="toc-nav-text">1.3.1 常用视图集父类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1）-ViewSet"><span class="toc-nav-text">1） ViewSet</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#2）GenericViewSet"><span class="toc-nav-text">2）GenericViewSet</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#3）ModelViewSet"><span class="toc-nav-text">3）ModelViewSet</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#4）ReadOnlyModelViewSet"><span class="toc-nav-text">4）ReadOnlyModelViewSet</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-2-视图集中定义附加action动作"><span class="toc-nav-text">1.3.2 视图集中定义附加action动作</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-3-action属性"><span class="toc-nav-text">1.3.3 action属性</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-4-总结"><span class="toc-nav-text">1.4 总结</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django-rest-framework框架/4-drf-视图组件/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django-rest-framework框架/4-drf-视图组件",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

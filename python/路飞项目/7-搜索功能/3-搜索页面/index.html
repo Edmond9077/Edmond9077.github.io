@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/7-搜索功能/3-搜索页面 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/7-搜索功能/3-搜索页面</h2>
+
+
+
+  <p class="post-date">2020-03-06</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="SearchCourse搜索页面"><a href="#SearchCourse搜索页面" class="headerlink" title="SearchCourse搜索页面"></a>SearchCourse搜索页面</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;search-course course&quot;&gt;</span><br><span class="line">        &lt;Header&#x2F;&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 课程列表 --&gt;</span><br><span class="line">        &lt;div class&#x3D;&quot;main&quot;&gt;</span><br><span class="line">            &lt;div v-if&#x3D;&quot;course_list.length &gt; 0&quot; class&#x3D;&quot;course-list&quot;&gt;</span><br><span class="line">                &lt;div class&#x3D;&quot;course-item&quot; v-for&#x3D;&quot;course in course_list&quot; :key&#x3D;&quot;course.name&quot;&gt;</span><br><span class="line">                    &lt;div class&#x3D;&quot;course-image&quot;&gt;</span><br><span class="line">                        &lt;img :src&#x3D;&quot;course.course_img&quot; alt&#x3D;&quot;&quot;&gt;</span><br><span class="line">                    &lt;&#x2F;div&gt;</span><br><span class="line">                    &lt;div class&#x3D;&quot;course-info&quot;&gt;</span><br><span class="line">                        &lt;h3&gt;</span><br><span class="line">                            &lt;router-link :to&#x3D;&quot;&#39;&#x2F;free&#x2F;detail&#x2F;&#39;+course.id&quot;&gt;&#123;&#123;course.name&#125;&#125;&lt;&#x2F;router-link&gt;</span><br><span class="line">                            &lt;span&gt;&lt;img src&#x3D;&quot;@&#x2F;assets&#x2F;img&#x2F;avatar1.svg&quot; alt&#x3D;&quot;&quot;&gt;&#123;&#123;course.students&#125;&#125;人已加入学习&lt;&#x2F;span&gt;&lt;&#x2F;h3&gt;</span><br><span class="line">                        &lt;p class&#x3D;&quot;teather-info&quot;&gt;</span><br><span class="line">                            &#123;&#123;course.teacher.name&#125;&#125; &#123;&#123;course.teacher.title&#125;&#125; &#123;&#123;course.teacher.signature&#125;&#125;</span><br><span class="line">                            &lt;span v-if&#x3D;&quot;course.sections&gt;course.pub_sections&quot;&gt;共&#123;&#123;course.sections&#125;&#125;课时&#x2F;已更新&#123;&#123;course.pub_sections&#125;&#125;课时&lt;&#x2F;span&gt;</span><br><span class="line">                            &lt;span v-else&gt;共&#123;&#123;course.sections&#125;&#125;课时&#x2F;更新完成&lt;&#x2F;span&gt;</span><br><span class="line">                        &lt;&#x2F;p&gt;</span><br><span class="line">                        &lt;ul class&#x3D;&quot;section-list&quot;&gt;</span><br><span class="line">                            &lt;li v-for&#x3D;&quot;(section, key) in course.section_list&quot; :key&#x3D;&quot;section.name&quot;&gt;&lt;span</span><br><span class="line">                                    class&#x3D;&quot;section-title&quot;&gt;0&#123;&#123;key+1&#125;&#125;  |  &#123;&#123;section.name&#125;&#125;&lt;&#x2F;span&gt;</span><br><span class="line">                                &lt;span class&#x3D;&quot;free&quot; v-if&#x3D;&quot;section.free_trail&quot;&gt;免费&lt;&#x2F;span&gt;&lt;&#x2F;li&gt;</span><br><span class="line">                        &lt;&#x2F;ul&gt;</span><br><span class="line">                        &lt;div class&#x3D;&quot;pay-box&quot;&gt;</span><br><span class="line">                            &lt;div v-if&#x3D;&quot;course.discount_type&quot;&gt;</span><br><span class="line">                                &lt;span class&#x3D;&quot;discount-type&quot;&gt;&#123;&#123;course.discount_type&#125;&#125;&lt;&#x2F;span&gt;</span><br><span class="line">                                &lt;span class&#x3D;&quot;discount-price&quot;&gt;￥&#123;&#123;course.real_price&#125;&#125;元&lt;&#x2F;span&gt;</span><br><span class="line">                                &lt;span class&#x3D;&quot;original-price&quot;&gt;原价：&#123;&#123;course.price&#125;&#125;元&lt;&#x2F;span&gt;</span><br><span class="line">                            &lt;&#x2F;div&gt;</span><br><span class="line">                            &lt;span v-else class&#x3D;&quot;discount-price&quot;&gt;￥&#123;&#123;course.price&#125;&#125;元&lt;&#x2F;span&gt;</span><br><span class="line">                            &lt;span class&#x3D;&quot;buy-now&quot;&gt;立即购买&lt;&#x2F;span&gt;</span><br><span class="line">                        &lt;&#x2F;div&gt;</span><br><span class="line">                    &lt;&#x2F;div&gt;</span><br><span class="line">                &lt;&#x2F;div&gt;</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">            &lt;div v-else style&#x3D;&quot;text-align: center; line-height: 60px&quot;&gt;</span><br><span class="line">                没有搜索结果</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">            &lt;div class&#x3D;&quot;course_pagination block&quot;&gt;</span><br><span class="line">                &lt;el-pagination</span><br><span class="line">                        @size-change&#x3D;&quot;handleSizeChange&quot;</span><br><span class="line">                        @current-change&#x3D;&quot;handleCurrentChange&quot;</span><br><span class="line">                        :current-page.sync&#x3D;&quot;filter.page&quot;</span><br><span class="line">                        :page-sizes&#x3D;&quot;[2, 3, 5, 10]&quot;</span><br><span class="line">                        :page-size&#x3D;&quot;filter.page_size&quot;</span><br><span class="line">                        layout&#x3D;&quot;sizes, prev, pager, next&quot;</span><br><span class="line">                        :total&#x3D;&quot;course_total&quot;&gt;</span><br><span class="line">                &lt;&#x2F;el-pagination&gt;</span><br><span class="line">            &lt;&#x2F;div&gt;</span><br><span class="line">        &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    import Header from &#39;..&#x2F;components&#x2F;Header&#39;</span><br><span class="line"></span><br><span class="line">    export default &#123;</span><br><span class="line">        name: &quot;SearchCourse&quot;,</span><br><span class="line">        components: &#123;</span><br><span class="line">            Header,</span><br><span class="line">        &#125;,</span><br><span class="line">        data() &#123;</span><br><span class="line">            return &#123;</span><br><span class="line">                course_list: [],</span><br><span class="line">                course_total: 0,</span><br><span class="line">                filter: &#123;</span><br><span class="line">                    page_size: 10,</span><br><span class="line">                    page: 1,</span><br><span class="line">                    search: &#39;&#39;,</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        created() &#123;</span><br><span class="line">            this.get_course()</span><br><span class="line">        &#125;,</span><br><span class="line">        watch: &#123;</span><br><span class="line">            &#39;$route.query&#39; () &#123;</span><br><span class="line">                this.get_course()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        methods: &#123;</span><br><span class="line">            handleSizeChange(val) &#123;</span><br><span class="line">                &#x2F;&#x2F; 每页数据量发生变化时执行的方法</span><br><span class="line">                this.filter.page &#x3D; 1;</span><br><span class="line">                this.filter.page_size &#x3D; val;</span><br><span class="line">            &#125;,</span><br><span class="line">            handleCurrentChange(val) &#123;</span><br><span class="line">                &#x2F;&#x2F; 页码发生变化时执行的方法</span><br><span class="line">                this.filter.page &#x3D; val;</span><br><span class="line">            &#125;,</span><br><span class="line">            get_course() &#123;</span><br><span class="line">                &#x2F;&#x2F; 获取搜索的关键字</span><br><span class="line">                this.filter.search &#x3D; this.$route.query.word || this.$route.query.wd;</span><br><span class="line"></span><br><span class="line">                &#x2F;&#x2F; 获取课程列表信息</span><br><span class="line">                this.$axios.get(&#96;$&#123;this.$settings.base_url&#125;&#x2F;course&#x2F;search&#x2F;&#96;, &#123;</span><br><span class="line">                    params: this.filter</span><br><span class="line">                &#125;).then(response &#x3D;&gt; &#123;</span><br><span class="line">                    &#x2F;&#x2F; 如果后台不分页，数据在response.data中；如果后台分页，数据在response.data.results中</span><br><span class="line">                    this.course_list &#x3D; response.data.results;</span><br><span class="line">                    this.course_total &#x3D; response.data.count;</span><br><span class="line">                &#125;).catch(() &#x3D;&gt; &#123;</span><br><span class="line">                    this.$message(&#123;</span><br><span class="line">                        message: &quot;获取课程信息有误，请联系客服工作人员&quot;</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line">    .course &#123;</span><br><span class="line">        background: #f6f6f6;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .main &#123;</span><br><span class="line">        width: 1100px;</span><br><span class="line">        margin: 35px auto 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .condition &#123;</span><br><span class="line">        margin-bottom: 35px;</span><br><span class="line">        padding: 25px 30px 25px 20px;</span><br><span class="line">        background: #fff;</span><br><span class="line">        border-radius: 4px;</span><br><span class="line">        box-shadow: 0 2px 4px 0 #f0f0f0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .cate-list &#123;</span><br><span class="line">        border-bottom: 1px solid #333;</span><br><span class="line">        border-bottom-color: rgba(51, 51, 51, .05);</span><br><span class="line">        padding-bottom: 18px;</span><br><span class="line">        margin-bottom: 17px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .cate-list::after &#123;</span><br><span class="line">        content: &quot;&quot;;</span><br><span class="line">        display: block;</span><br><span class="line">        clear: both;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .cate-list li &#123;</span><br><span class="line">        float: left;</span><br><span class="line">        font-size: 16px;</span><br><span class="line">        padding: 6px 15px;</span><br><span class="line">        line-height: 16px;</span><br><span class="line">        margin-left: 14px;</span><br><span class="line">        position: relative;</span><br><span class="line">        transition: all .3s ease;</span><br><span class="line">        cursor: pointer;</span><br><span class="line">        color: #4a4a4a;</span><br><span class="line">        border: 1px solid transparent; &#x2F;* transparent 透明 *&#x2F;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .cate-list .title &#123;</span><br><span class="line">        color: #888;</span><br><span class="line">        margin-left: 0;</span><br><span class="line">        letter-spacing: .36px;</span><br><span class="line">        padding: 0;</span><br><span class="line">        line-height: 28px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .cate-list .this &#123;</span><br><span class="line">        color: #ffc210;</span><br><span class="line">        border: 1px solid #ffc210 !important;</span><br><span class="line">        border-radius: 30px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering::after &#123;</span><br><span class="line">        content: &quot;&quot;;</span><br><span class="line">        display: block;</span><br><span class="line">        clear: both;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering ul &#123;</span><br><span class="line">        float: left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering ul::after &#123;</span><br><span class="line">        content: &quot;&quot;;</span><br><span class="line">        display: block;</span><br><span class="line">        clear: both;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .condition-result &#123;</span><br><span class="line">        float: right;</span><br><span class="line">        font-size: 14px;</span><br><span class="line">        color: #9b9b9b;</span><br><span class="line">        line-height: 28px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering ul li &#123;</span><br><span class="line">        float: left;</span><br><span class="line">        padding: 6px 15px;</span><br><span class="line">        line-height: 16px;</span><br><span class="line">        margin-left: 14px;</span><br><span class="line">        position: relative;</span><br><span class="line">        transition: all .3s ease;</span><br><span class="line">        cursor: pointer;</span><br><span class="line">        color: #4a4a4a;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .title &#123;</span><br><span class="line">        font-size: 16px;</span><br><span class="line">        color: #888;</span><br><span class="line">        letter-spacing: .36px;</span><br><span class="line">        margin-left: 0;</span><br><span class="line">        padding: 0;</span><br><span class="line">        line-height: 28px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .this &#123;</span><br><span class="line">        color: #ffc210;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .price &#123;</span><br><span class="line">        position: relative;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .price::before,</span><br><span class="line">    .course .ordering .price::after &#123;</span><br><span class="line">        cursor: pointer;</span><br><span class="line">        content: &quot;&quot;;</span><br><span class="line">        display: block;</span><br><span class="line">        width: 0px;</span><br><span class="line">        height: 0px;</span><br><span class="line">        border: 5px solid transparent;</span><br><span class="line">        position: absolute;</span><br><span class="line">        right: 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .price::before &#123;</span><br><span class="line">        border-bottom: 5px solid #aaa;</span><br><span class="line">        margin-bottom: 2px;</span><br><span class="line">        top: 2px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .price::after &#123;</span><br><span class="line">        border-top: 5px solid #aaa;</span><br><span class="line">        bottom: 2px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .price_up::before &#123;</span><br><span class="line">        border-bottom-color: #ffc210;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .ordering .price_down::after &#123;</span><br><span class="line">        border-top-color: #ffc210;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .course-item:hover &#123;</span><br><span class="line">        box-shadow: 4px 6px 16px rgba(0, 0, 0, .5);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .course-item &#123;</span><br><span class="line">        width: 1100px;</span><br><span class="line">        background: #fff;</span><br><span class="line">        padding: 20px 30px 20px 20px;</span><br><span class="line">        margin-bottom: 35px;</span><br><span class="line">        border-radius: 2px;</span><br><span class="line">        cursor: pointer;</span><br><span class="line">        box-shadow: 2px 3px 16px rgba(0, 0, 0, .1);</span><br><span class="line">        &#x2F;* css3.0 过渡动画 hover 事件操作 *&#x2F;</span><br><span class="line">        transition: all .2s ease;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .course-item::after &#123;</span><br><span class="line">        content: &quot;&quot;;</span><br><span class="line">        display: block;</span><br><span class="line">        clear: both;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;* 顶级元素 父级元素  当前元素&#123;&#125; *&#x2F;</span><br><span class="line">    .course .course-item .course-image &#123;</span><br><span class="line">        float: left;</span><br><span class="line">        width: 423px;</span><br><span class="line">        height: 210px;</span><br><span class="line">        margin-right: 30px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .course-item .course-image img &#123;</span><br><span class="line">        max-width: 100%;</span><br><span class="line">        max-height: 210px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .course-item .course-info &#123;</span><br><span class="line">        float: left;</span><br><span class="line">        width: 596px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .course-info h3 a &#123;</span><br><span class="line">        font-size: 26px;</span><br><span class="line">        color: #333;</span><br><span class="line">        font-weight: normal;</span><br><span class="line">        margin-bottom: 8px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .course-info h3 span &#123;</span><br><span class="line">        font-size: 14px;</span><br><span class="line">        color: #9b9b9b;</span><br><span class="line">        float: right;</span><br><span class="line">        margin-top: 14px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .course-info h3 span img &#123;</span><br><span class="line">        width: 11px;</span><br><span class="line">        height: auto;</span><br><span class="line">        margin-right: 7px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .course-info .teather-info &#123;</span><br><span class="line">        font-size: 14px;</span><br><span class="line">        color: #9b9b9b;</span><br><span class="line">        margin-bottom: 14px;</span><br><span class="line">        padding-bottom: 14px;</span><br><span class="line">        border-bottom: 1px solid #333;</span><br><span class="line">        border-bottom-color: rgba(51, 51, 51, .05);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .course-info .teather-info span &#123;</span><br><span class="line">        float: right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .section-list::after &#123;</span><br><span class="line">        content: &quot;&quot;;</span><br><span class="line">        display: block;</span><br><span class="line">        clear: both;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .section-list li &#123;</span><br><span class="line">        float: left;</span><br><span class="line">        width: 44%;</span><br><span class="line">        font-size: 14px;</span><br><span class="line">        color: #666;</span><br><span class="line">        padding-left: 22px;</span><br><span class="line">        &#x2F;* background: url(&quot;路径&quot;) 是否平铺 x轴位置 y轴位置 *&#x2F;</span><br><span class="line">        background: url(&quot;&#x2F;src&#x2F;assets&#x2F;img&#x2F;play-icon-gray.svg&quot;) no-repeat left 4px;</span><br><span class="line">        margin-bottom: 15px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .section-list li .section-title &#123;</span><br><span class="line">        &#x2F;* 以下3句，文本内容过多，会自动隐藏，并显示省略符号 *&#x2F;</span><br><span class="line">        text-overflow: ellipsis;</span><br><span class="line">        overflow: hidden;</span><br><span class="line">        white-space: nowrap;</span><br><span class="line">        display: inline-block;</span><br><span class="line">        max-width: 200px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .section-list li:hover &#123;</span><br><span class="line">        background-image: url(&quot;&#x2F;src&#x2F;assets&#x2F;img&#x2F;play-icon-yellow.svg&quot;);</span><br><span class="line">        color: #ffc210;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .section-list li .free &#123;</span><br><span class="line">        width: 34px;</span><br><span class="line">        height: 20px;</span><br><span class="line">        color: #fd7b4d;</span><br><span class="line">        vertical-align: super;</span><br><span class="line">        margin-left: 10px;</span><br><span class="line">        border: 1px solid #fd7b4d;</span><br><span class="line">        border-radius: 2px;</span><br><span class="line">        text-align: center;</span><br><span class="line">        font-size: 13px;</span><br><span class="line">        white-space: nowrap;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .section-list li:hover .free &#123;</span><br><span class="line">        color: #ffc210;</span><br><span class="line">        border-color: #ffc210;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item &#123;</span><br><span class="line">        position: relative;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .pay-box &#123;</span><br><span class="line">        position: absolute;</span><br><span class="line">        bottom: 20px;</span><br><span class="line">        width: 600px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .pay-box::after &#123;</span><br><span class="line">        content: &quot;&quot;;</span><br><span class="line">        display: block;</span><br><span class="line">        clear: both;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .pay-box .discount-type &#123;</span><br><span class="line">        padding: 6px 10px;</span><br><span class="line">        font-size: 16px;</span><br><span class="line">        color: #fff;</span><br><span class="line">        text-align: center;</span><br><span class="line">        margin-right: 8px;</span><br><span class="line">        background: #fa6240;</span><br><span class="line">        border: 1px solid #fa6240;</span><br><span class="line">        border-radius: 10px 0 10px 0;</span><br><span class="line">        float: left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .pay-box .discount-price &#123;</span><br><span class="line">        font-size: 24px;</span><br><span class="line">        color: #fa6240;</span><br><span class="line">        float: left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .pay-box .original-price &#123;</span><br><span class="line">        text-decoration: line-through;</span><br><span class="line">        font-size: 14px;</span><br><span class="line">        color: #9b9b9b;</span><br><span class="line">        margin-left: 10px;</span><br><span class="line">        float: left;</span><br><span class="line">        margin-top: 10px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .pay-box .buy-now &#123;</span><br><span class="line">        width: 120px;</span><br><span class="line">        height: 38px;</span><br><span class="line">        background: transparent;</span><br><span class="line">        color: #fa6240;</span><br><span class="line">        font-size: 16px;</span><br><span class="line">        border: 1px solid #fd7b4d;</span><br><span class="line">        border-radius: 3px;</span><br><span class="line">        transition: all .2s ease-in-out;</span><br><span class="line">        float: right;</span><br><span class="line">        text-align: center;</span><br><span class="line">        line-height: 38px;</span><br><span class="line">        position: absolute;</span><br><span class="line">        right: 0;</span><br><span class="line">        bottom: 5px;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course-item .pay-box .buy-now:hover &#123;</span><br><span class="line">        color: #fff;</span><br><span class="line">        background: #ffc210;</span><br><span class="line">        border: 1px solid #ffc210;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    .course .course_pagination &#123;</span><br><span class="line">        margin-bottom: 60px;</span><br><span class="line">        text-align: center;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/7-%E6%90%9C%E7%B4%A2%E5%8A%9F%E8%83%BD/1-%E6%90%9C%E7%B4%A2%E5%AF%BC%E8%88%AA%E6%A0%8F/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/7-搜索功能/1-搜索导航栏
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/6-%E8%AF%BE%E7%A8%8B%E6%A8%A1%E5%9D%97/7-%E8%AF%BE%E7%A8%8B%E8%AF%A6%E6%83%85%E9%A1%B5%E4%B9%8B%E5%90%8E%E5%8F%B0/">
+        
+          python/路飞项目/6-课程模块/7-课程详情页之后台
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#SearchCourse搜索页面"><span class="toc-nav-text">SearchCourse搜索页面</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/7-搜索功能/3-搜索页面/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/7-搜索功能/3-搜索页面",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

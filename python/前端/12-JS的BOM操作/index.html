@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/前端/12-JS的BOM操作 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/前端/12-JS的BOM操作</h2>
+
+
+
+  <p class="post-date">2020-11-03</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h2><p>到目前为止，我们已经学过了JavaScript的一些简单的语法。但是这些简单的语法，并没有和浏览器有任何交互。</p>
+<p>也就是我们还不能制作一些我们经常看到的网页的一些交互，我们需要继续学习BOM和DOM相关知识。</p>
+<p>JavaScript分为 ECMAScript，DOM，BOM。</p>
+<p>BOM（Browser Object Model）是指浏览器对象模型，它使 JavaScript 有能力与浏览器进行“对话”。</p>
+<p>DOM （Document Object Model）是指文档对象模型，通过它，可以访问HTML文档的所有元素。</p>
+<p>Window对象是客户端JavaScript最高层对象之一，由于window对象是其它大部分对象的共同祖先，在调用window对象的方法和属性时，可以省略window对象的引用。例如：window.document.write()可以简写成：document.write()。</p>
+<h2 id="2、window对象"><a href="#2、window对象" class="headerlink" title="2、window对象"></a>2、window对象</h2><p>所有浏览器都支持 window 对象。它表示浏览器窗口。</p>
+<p><em>*如果文档包含框架（frame 或 iframe 标签），浏览器会为 HTML 文档创建一个 window 对象，并为每个框架创建一个额外的 window 对象。</em></p>
+<p><em>*没有应用于 window 对象的公开标准，不过所有浏览器都支持该对象。</em></p>
+<p>所有 JavaScript 全局对象、函数以及变量均自动成为 window 对象的成员。</p>
+<p>全局变量是 window 对象的属性。全局函数是 window 对象的方法。</p>
+<p>接下来要讲的HTML DOM 的 document 也是 window 对象的属性之一。</p>
+<p>一些常用的Window方法：</p>
+<ul>
+<li>window.innerHeight - 浏览器窗口的内部高度</li>
+<li>window.innerWidth - 浏览器窗口的内部宽度</li>
+<li>window.open() - 打开新窗口</li>
+<li>window.close() - 关闭当前窗口</li>
+</ul>
+<h3 id="2-1-代码"><a href="#2-1-代码" class="headerlink" title="2-1 代码"></a>2-1 代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># window对象</span><br><span class="line"><span class="built_in">window</span>对象指代的就是浏览器窗口</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.innerHeight  浏览器窗口的高度</span><br><span class="line"><span class="number">900</span></span><br><span class="line"><span class="built_in">window</span>.innerWidth   浏览器窗口的宽度</span><br><span class="line"><span class="number">1680</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.open(<span class="string">'https://www.mzitu.com/'</span>,<span class="string">''</span>,<span class="string">'height=400px,width=400px,top=400px,left=400px'</span>)</span><br><span class="line"># 新建窗口打开页面 第二个参数写空即可 第三个参数写新建的窗口的大小和位置</span><br><span class="line"># 扩展父子页面通信window.opener()  了解</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.close()  关闭当前页面</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3、window的子对象"><a href="#3、window的子对象" class="headerlink" title="3、window的子对象"></a>3、window的子对象</h2><h3 id="3-1-navigator对象（了解即可）"><a href="#3-1-navigator对象（了解即可）" class="headerlink" title="3-1 navigator对象（了解即可）"></a>3-1 navigator对象（了解即可）</h3><p>浏览器对象，通过这个对象可以判定用户所使用的浏览器，包含了浏览器相关信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">navigator.appName　　&#x2F;&#x2F; Web浏览器全称</span><br><span class="line">navigator.appVersion　　&#x2F;&#x2F; Web浏览器厂商和版本的详细字符串</span><br><span class="line">navigator.userAgent　　&#x2F;&#x2F; 客户端绝大部分信息</span><br><span class="line">navigator.platform　　　&#x2F;&#x2F; 浏览器运行所在的操作系统</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.navigator.appName</span><br><span class="line"><span class="string">"Netscape"</span></span><br><span class="line"><span class="built_in">window</span>.navigator.appVersion</span><br><span class="line"><span class="string">"5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"</span></span><br><span class="line"></span><br><span class="line">window.navigator.userAgent		掌握  # 用来表示当前是否是一个浏览器</span><br><span class="line"><span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"</span></span><br><span class="line"></span><br><span class="line"><span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">扩展:仿爬措施</span></span><br><span class="line"><span class="string">	1.最简单最常用的一个就是校验当前请求的发起者是否是一个浏览器</span></span><br><span class="line"><span class="string">		userAgent</span></span><br><span class="line"><span class="string">		user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36</span></span><br><span class="line"><span class="string">	如何破解该措施</span></span><br><span class="line"><span class="string">		在你的代码中加上上面的user-agent配置即可</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.navigator.platform</span><br><span class="line"><span class="string">"MacIntel"</span></span><br><span class="line"></span><br><span class="line"># 如果是window的子对象 那么window可以省略不写</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-2-screen对象（了解即可）"><a href="#3-2-screen对象（了解即可）" class="headerlink" title="3-2 screen对象（了解即可）"></a>3-2 screen对象（了解即可）</h3><p>屏幕对象，不常用。</p>
+<p>一些属性：</p>
+<ul>
+<li>screen.availWidth - 可用的屏幕宽度</li>
+<li>screen.availHeight - 可用的屏幕高度</li>
+</ul>
+<h3 id="3-3-history对象（了解即可）"><a href="#3-3-history对象（了解即可）" class="headerlink" title="3-3 history对象（了解即可）"></a>3-3 history对象（了解即可）</h3><p>window.history 对象包含浏览器的历史。</p>
+<p>浏览历史对象，包含了用户对当前页面的浏览历史，但我们无法查看具体的地址，可以简单的用来前进或后退一个页面。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">history.forward()  &#x2F;&#x2F; 前进一页</span><br><span class="line">history.back()  &#x2F;&#x2F; 后退一页</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-location对象"><a href="#3-4-location对象" class="headerlink" title="3-4 location对象"></a>3-4 location对象</h3><p>window.location 对象用于获得当前页面的地址 (URL)，并把浏览器重定向到新的页面。</p>
+<p>常用属性和方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location.href  获取URL</span><br><span class="line">location.href&#x3D;&quot;URL&quot; &#x2F;&#x2F; 跳转到指定页面</span><br><span class="line">location.reload() 重新加载页面</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-弹出框"><a href="#3-5-弹出框" class="headerlink" title="3-5 弹出框"></a>3-5 弹出框</h3><p>可以在 JavaScript 中创建三种消息框：警告框、确认框、提示框。</p>
+<p><strong>警告框</strong></p>
+<p>警告框经常用于确保用户可以得到某些信息。</p>
+<p>当警告框出现后，用户需要点击确定按钮才能继续进行操作。</p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alert(&quot;你看到了吗？&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>确认框（了解即可）</strong></p>
+<p>确认框用于使用户可以验证或者接受某些信息。</p>
+<p>当确认框出现后，用户需要点击确定或者取消按钮才能继续进行操作。</p>
+<p>如果用户点击确认，那么返回值为 true。如果用户点击取消，那么返回值为 false。</p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">confirm(&quot;你确定吗？&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>提示框（了解即可）</strong></p>
+<p>提示框经常用于提示用户在进入页面前输入某个值。</p>
+<p>当提示框出现后，用户需要输入某个值，然后点击确认或取消按钮才能继续操纵。</p>
+<p>如果用户点击确认，那么返回值为输入的值。如果用户点击取消，那么返回值为 null。</p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prompt(&quot;请在下方输入&quot;,&quot;你的答案&quot;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-6-计时相关"><a href="#3-6-计时相关" class="headerlink" title="3-6 计时相关"></a>3-6 计时相关</h3><p>通过使用 JavaScript，我们可以在一定时间间隔之后来执行代码，而不是在函数被调用后立即执行。我们称之为计时事件。</p>
+<p><strong>setTimeout()</strong></p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var t&#x3D;setTimeout(&quot;JS语句&quot;,毫秒)</span><br></pre></td></tr></table></figure>
+
+<p>setTimeout() 方法会返回某个值。在上面的语句中，值被储存在名为 t 的变量中。假如你希望取消这个 setTimeout()，你可以使用这个变量名来指定它。</p>
+<p>setTimeout() 的第一个参数是含有 JavaScript 语句的字符串。这个语句可能诸如 “alert(‘5 seconds!’)”，或者对函数的调用，诸如 alertMsg()”。</p>
+<p>第二个参数指示从当前起多少毫秒后执行第一个参数（1000 毫秒等于一秒）。</p>
+<p><strong>clearTimeout()</strong></p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clearTimeout(setTimeout_variable)</span><br></pre></td></tr></table></figure>
+
+<p>举个例子<strong>：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 在指定时间之后执行一次相应函数</span><br><span class="line">var timer &#x3D; setTimeout(function()&#123;alert(123);&#125;, 3000)</span><br><span class="line">&#x2F;&#x2F; 取消setTimeout设置</span><br><span class="line">clearTimeout(timer);</span><br></pre></td></tr></table></figure>
+
+<p><strong>setInterval()</strong></p>
+<p>setInterval() 方法可按照指定的周期（以毫秒计）来调用函数或计算表达式。</p>
+<p>setInterval() 方法会不停地调用函数，直到 clearInterval() 被调用或窗口被关闭。由 setInterval() 返回的 ID 值可用作 clearInterval() 方法的参数。</p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setInterval(&quot;JS语句&quot;,时间间隔)</span><br></pre></td></tr></table></figure>
+
+<p>返回值</p>
+<p>一个可以传递给 Window.clearInterval() 从而取消对 code 的周期性执行的值。</p>
+<p><strong>clearInterval()</strong></p>
+<p>clearInterval() 方法可取消由 setInterval() 设置的 timeout。</p>
+<p>clearInterval() 方法的参数必须是由 setInterval() 返回的 ID 值。</p>
+<p>语法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clearInterval(setinterval返回的ID值)</span><br></pre></td></tr></table></figure>
+
+<p>举个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 每隔一段时间就执行一次相应函数</span><br><span class="line">var timer &#x3D; setInterval(function()&#123;console.log(123);&#125;, 3000)</span><br><span class="line">&#x2F;&#x2F; 取消setInterval设置</span><br><span class="line">clearInterval(timer);</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-7-案例"><a href="#3-7-案例" class="headerlink" title="3-7 案例"></a>3-7 案例</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">func1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        alert(<span class="number">123</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> t = setTimeout(func1,<span class="number">3000</span>);  <span class="comment">// 毫秒为单位 3秒之后自动执行func1函数</span></span><br><span class="line"></span><br><span class="line">    clearTimeout(t)      <span class="comment">// 取消定时任务  如果你想要清除定时任务 需要日前用变量指代定时任务</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">func2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        alert(<span class="number">123</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">show</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">let</span> t = setInterval(func2,<span class="number">3000</span>);  <span class="comment">// 每隔3秒执行一次</span></span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">inner</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            clearInterval(t)  <span class="comment">// 清除定时器</span></span><br><span class="line">        &#125;</span><br><span class="line">        setTimeout(inner,<span class="number">9000</span>)  <span class="comment">// 9秒中之后触发</span></span><br><span class="line">    &#125;</span><br><span class="line">    show()</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%89%8D%E7%AB%AF/1-HTML5%E5%9F%BA%E7%A1%80/">
+        <span class="nav-arrow">← </span>
+        
+          python/前端/1-HTML5基础
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%89%8D%E7%AB%AF/4-CSS3%E9%80%89%E6%8B%A9%E5%99%A8/">
+        
+          python/前端/4-CSS3选择器
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1、介绍"><span class="toc-nav-text">1、介绍</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2、window对象"><span class="toc-nav-text">2、window对象</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-代码"><span class="toc-nav-text">2-1 代码</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3、window的子对象"><span class="toc-nav-text">3、window的子对象</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-1-navigator对象（了解即可）"><span class="toc-nav-text">3-1 navigator对象（了解即可）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-screen对象（了解即可）"><span class="toc-nav-text">3-2 screen对象（了解即可）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-3-history对象（了解即可）"><span class="toc-nav-text">3-3 history对象（了解即可）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-4-location对象"><span class="toc-nav-text">3-4 location对象</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-5-弹出框"><span class="toc-nav-text">3-5 弹出框</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-6-计时相关"><span class="toc-nav-text">3-6 计时相关</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-7-案例"><span class="toc-nav-text">3-7 案例</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/前端/12-JS的BOM操作/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/前端/12-JS的BOM操作",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

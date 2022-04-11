@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/前端/9-JavaScript基本数据类型 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/前端/9-JavaScript基本数据类型</h2>
+
+
+
+  <p class="post-date">2020-11-03</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1、变量的定义"><a href="#1、变量的定义" class="headerlink" title="1、变量的定义"></a>1、变量的定义</h2><p>JS中定义变量，不同于Python，我们需要像Python定义函数那样，也需要用特定的关键词来定义变量：</p>
+<p>ES5语法，我们采用var关键词定义变量，并且没有常量的概念</p>
+<p>ES6语法，我们采用let关键词定义变量，用const关键词定义常量</p>
+<p>注：我们不需要像Python那样切换解释器版本来区别到底该书写什么版本语法的代码，在一个JS文件中我们可以同时书写两种语法的JS代码，浏览器都可以自动帮我们解析并运行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ES5定义变量：var是关键词、num是变量名、=为赋值符、10为变量值、;为JS语言语句的结束标识符</span></span><br><span class="line"><span class="keyword">var</span> num = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ES6定义变量</span></span><br><span class="line"><span class="keyword">let</span> count = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> PI = <span class="number">3.14</span>;</span><br><span class="line"></span><br><span class="line"># var与let的区别</span><br><span class="line">n = <span class="number">10</span></span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">  print(n)</span><br><span class="line">print(n)  </span><br><span class="line"># var 5		let 10</span><br><span class="line"></span><br><span class="line"><span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">var在for循环里面定义也会影响到全局</span></span><br><span class="line"><span class="string">let在局部定义只会在局部生效</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2、变量的命名规范"><a href="#2、变量的命名规范" class="headerlink" title="2、变量的命名规范"></a>2、变量的命名规范</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">1. 由字母，数字，_，$组成，不能以数字开头（可以包含中文字符）</span></span><br><span class="line"><span class="comment">2. 区分大小写</span></span><br><span class="line"><span class="comment">3. 不能出现关键字及保留字</span></span><br><span class="line"><span class="comment">4. 推荐使用下划线 </span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>abstract</td>
+<td>arguments</td>
+<td>boolean</td>
+<td>break</td>
+<td>byte</td>
+</tr>
+<tr>
+<td>case</td>
+<td>catch</td>
+<td>char</td>
+<td>class*</td>
+<td>const</td>
+</tr>
+<tr>
+<td>continue</td>
+<td>debugger</td>
+<td>default</td>
+<td>delete</td>
+<td>do</td>
+</tr>
+<tr>
+<td>double</td>
+<td>else</td>
+<td>enum*</td>
+<td>eval</td>
+<td>export*</td>
+</tr>
+<tr>
+<td>extends*</td>
+<td>false</td>
+<td>final</td>
+<td>finally</td>
+<td>float</td>
+</tr>
+<tr>
+<td>for</td>
+<td>function</td>
+<td>goto</td>
+<td>if</td>
+<td>implements</td>
+</tr>
+<tr>
+<td>import*</td>
+<td>in</td>
+<td>instanceof</td>
+<td>int</td>
+<td>interface</td>
+</tr>
+<tr>
+<td>let</td>
+<td>long</td>
+<td>native</td>
+<td>new</td>
+<td>null</td>
+</tr>
+<tr>
+<td>package</td>
+<td>private</td>
+<td>protected</td>
+<td>public</td>
+<td>return</td>
+</tr>
+<tr>
+<td>short</td>
+<td>static</td>
+<td>super*</td>
+<td>switch</td>
+<td>synchronized</td>
+</tr>
+<tr>
+<td>this</td>
+<td>throw</td>
+<td>throws</td>
+<td>transient</td>
+<td>true</td>
+</tr>
+<tr>
+<td>try</td>
+<td>typeof</td>
+<td>var</td>
+<td>void</td>
+<td>volatile</td>
+</tr>
+<tr>
+<td>while</td>
+<td>with</td>
+<td>yield</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="3、基本数据类型"><a href="#3、基本数据类型" class="headerlink" title="3、基本数据类型"></a>3、基本数据类型</h2><p>JS语言中基本数据类型分值类型与引用类型两部分。</p>
+<h3 id="3-1-值类型"><a href="#3-1-值类型" class="headerlink" title="3-1 值类型"></a>3-1 值类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 数字类型：number</span></span><br><span class="line"><span class="keyword">var</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">const</span> PI = <span class="number">3.14</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(num), num);  <span class="comment">// 结果：number  10</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">"123"</span>)  <span class="comment">// 返回123</span></span><br><span class="line"><span class="built_in">parseInt</span>(<span class="string">"ABC"</span>)  <span class="comment">// 返回NaN,NaN属性是代表非数字值的特殊值。该属性用于指示某个值不是数字。</span></span><br><span class="line"><span class="built_in">parseFloat</span>(<span class="string">"123.456"</span>)  <span class="comment">// 返回123.456</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 字符串类型：string</span></span><br><span class="line"><span class="keyword">var</span> s1 = <span class="string">"双引号可以表示字符串"</span>;</span><br><span class="line"><span class="keyword">var</span> s2 = <span class="string">'单引号可以表示字符串'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(s1), s1);  <span class="comment">// 结果：string  双引号可以表示字符串</span></span><br><span class="line"><span class="comment">// 模版字符串,可以字符串拼接</span></span><br><span class="line"><span class="comment">// 模版字符串除了可以定义多行文本之外还可以实现格式化字符串操作</span></span><br><span class="line"><span class="comment">// 书写$&#123;&#125; 会自动去前面找大括号里面的变量名对应的值 如果没有定义直接报错</span></span><br><span class="line"><span class="keyword">var</span> s3 = <span class="string">`</span></span><br><span class="line"><span class="string">asdkajsd</span></span><br><span class="line"><span class="string">sdjkladj</span></span><br><span class="line"><span class="string">asdjlajdkl</span></span><br><span class="line"><span class="string">`</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 布尔类型：boolean</span></span><br><span class="line"><span class="keyword">var</span> b1 = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">var</span> b2 = <span class="literal">false</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(b1), b1);  <span class="comment">// 结果：string  双引号可以表示字符串</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 未定义类型：undefined</span></span><br><span class="line"><span class="keyword">var</span> u1;</span><br><span class="line"><span class="keyword">var</span> u2 = <span class="literal">undefined</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(u1), u1);  <span class="comment">// 结果：undefined  undefined</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">null</span></span><br><span class="line"><span class="comment">	表示值为空 一般都是指定或者清空一个变量时使用</span></span><br><span class="line"><span class="comment">		name = 'jason'</span></span><br><span class="line"><span class="comment">		name = null</span></span><br><span class="line"><span class="comment">undefined</span></span><br><span class="line"><span class="comment">	表示声明了一个变量 但是没有做初始化操作(没有给值)</span></span><br><span class="line"><span class="comment">	函数没有指定返回值的时候 返回的也是undefined</span></span><br><span class="line"><span class="comment">	</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-引用类型"><a href="#3-2-引用类型" class="headerlink" title="3-2 引用类型"></a>3-2 引用类型</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数类型：function</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="keyword">var</span> fn2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(fn1), fn1);  <span class="comment">// 结果：function  ƒ fn1() &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 对象类型：object</span></span><br><span class="line"><span class="keyword">var</span> obj1 = &#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(obj1), obj1);  <span class="comment">// 结果：function  &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Array对象类型：</span></span><br><span class="line"><span class="keyword">var</span> arr1 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span>(arr1), arr1);  <span class="comment">// 结果：object  (5) [1, 2, 3, 4, 5]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4、运算符"><a href="#4、运算符" class="headerlink" title="4、运算符"></a>4、运算符</h2><h3 id="4-1-算数运算符"><a href="#4-1-算数运算符" class="headerlink" title="4-1 算数运算符"></a>4-1 算数运算符</h3><p>前提：n = 5</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+<th>例子</th>
+<th>x结果</th>
+<th>n结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>加法</td>
+<td>x=n+2</td>
+<td>7</td>
+<td>5</td>
+</tr>
+<tr>
+<td>-</td>
+<td>减法</td>
+<td>x=n-2</td>
+<td>3</td>
+<td>5</td>
+</tr>
+<tr>
+<td>*</td>
+<td>乘法</td>
+<td>x=n*2</td>
+<td>10</td>
+<td>5</td>
+</tr>
+<tr>
+<td>/</td>
+<td>除法</td>
+<td>x=n/2</td>
+<td>2.5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>%</td>
+<td>取模(余数)</td>
+<td>x=n/2</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr>
+<td>++</td>
+<td>自增</td>
+<td>x=++n</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr>
+<td>x=n++</td>
+<td>5</td>
+<td>6</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>–</td>
+<td>自减</td>
+<td>x=–n</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>x=n–</td>
+<td>5</td>
+<td>4</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="4-2-赋值运算符"><a href="#4-2-赋值运算符" class="headerlink" title="4-2 赋值运算符"></a>4-2 赋值运算符</h3><p>前提：x=5，y=5</p>
+<table>
+<thead>
+<tr>
+<th align="left">运算符</th>
+<th align="left">例子</th>
+<th>等同于</th>
+<th>运算结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">=</td>
+<td align="left">x=y</td>
+<td></td>
+<td>5</td>
+</tr>
+<tr>
+<td align="left">+=</td>
+<td align="left">x+=y</td>
+<td>x=x+y</td>
+<td>10</td>
+</tr>
+<tr>
+<td align="left">-=</td>
+<td align="left">x-=y</td>
+<td>x=x-y</td>
+<td>0</td>
+</tr>
+<tr>
+<td align="left">*=</td>
+<td align="left">x*=y</td>
+<td>x=x*y</td>
+<td>25</td>
+</tr>
+<tr>
+<td align="left">/=</td>
+<td align="left">x/=y</td>
+<td>x=x/y</td>
+<td>1</td>
+</tr>
+<tr>
+<td align="left">%=</td>
+<td align="left">x%=y</td>
+<td>x=x%y</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<h3 id="4-3-比较运算符"><a href="#4-3-比较运算符" class="headerlink" title="4-3 比较运算符"></a>4-3 比较运算符</h3><p>前提：x=5</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+<th>比较</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>==</td>
+<td>等于</td>
+<td>x==”5”</td>
+<td>true</td>
+</tr>
+<tr>
+<td>===</td>
+<td>绝对等于</td>
+<td>x===”5”</td>
+<td>false</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>不等于</td>
+<td>x!=”5”</td>
+<td>fales</td>
+</tr>
+<tr>
+<td>!==</td>
+<td>不绝对等于</td>
+<td>x!==”5”</td>
+<td>true</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>大于</td>
+<td>x&gt;5</td>
+<td>false</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+<td>x&lt;5</td>
+<td>false</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>大于等于</td>
+<td>x&gt;=5</td>
+<td>true</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>小于等于</td>
+<td>x&lt;=5</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<h3 id="4-4-逻辑运算符"><a href="#4-4-逻辑运算符" class="headerlink" title="4-4 逻辑运算符"></a>4-4 逻辑运算符</h3><p>前提：n=5</p>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+<th>例子</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp;&amp;</td>
+<td>与</td>
+<td>x=n&gt;10&amp;&amp;++n</td>
+<td>x=false,n=5（短路）</td>
+</tr>
+<tr>
+<td>||</td>
+<td>或</td>
+<td>x=n&lt;10||n–</td>
+<td>x=true,n=5（短路）</td>
+</tr>
+<tr>
+<td>!</td>
+<td>非</td>
+<td>x=!n</td>
+<td>x=false,x=5</td>
+</tr>
+</tbody></table>
+<h3 id="4-5-三目运算符"><a href="#4-5-三目运算符" class="headerlink" title="4-5 三目运算符"></a>4-5 三目运算符</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 结果 = 条件表达式 ? 结果1 : 结果2;</span></span><br><span class="line"><span class="comment">// 语法规则：条件表达式成立，将结果1赋值给结果，反正赋值结果2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 案例：</span></span><br><span class="line"><span class="keyword">var</span> weather = prompt(<span class="string">"天气(晴|雨)"</span>);  <span class="comment">// 文本输入弹出框</span></span><br><span class="line"><span class="keyword">var</span> res = tq == <span class="string">'晴'</span> ? <span class="string">"今天天气挺好"</span> : <span class="string">"请假回家收衣服"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(res);  <span class="comment">// 今天天气挺好</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-流程控制"><a href="#5-流程控制" class="headerlink" title="5 流程控制"></a>5 流程控制</h2><h3 id="5-1-if判断"><a href="#5-1-if判断" class="headerlink" title="5-1 if判断"></a>5-1 if判断</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> age = <span class="number">28</span>;</span><br><span class="line"># if(条件)&#123;条件成立之后指向的代码块&#125;</span><br><span class="line"><span class="keyword">if</span> (age&gt;<span class="number">18</span>)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'来啊 来啊'</span>)</span><br><span class="line">&#125;</span><br><span class="line"># if-else</span><br><span class="line"><span class="keyword">if</span> (age&gt;<span class="number">18</span>)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'来啊 来啊'</span>)</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'没钱 滚蛋'</span>)</span><br><span class="line">&#125;</span><br><span class="line"># if-else if else</span><br><span class="line"><span class="keyword">if</span> (age&lt;<span class="number">18</span>)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"培养一下"</span>)</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(age&lt;<span class="number">24</span>)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'小姐姐你好 我是你的粉丝'</span>)</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'你是个好人'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">在js中代码是没有缩进的 只不过我们处于python书写习惯人为的加上了而已</span></span><br><span class="line"><span class="string">()条件</span></span><br><span class="line"><span class="string">&#123;&#125;代码块</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-switch"><a href="#5-2-switch" class="headerlink" title="5-2 switch"></a>5-2 switch</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"># switch语法</span><br><span class="line"><span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">提前列举好可能出现的条件和解决方式</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line"><span class="keyword">var</span> num = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">switch</span>(num)&#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">  	<span class="built_in">console</span>.log(<span class="string">'喝酒'</span>);</span><br><span class="line">  	break;  # 不加break 匹配到一个之后 就一直往下执行</span><br><span class="line">  <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">  	<span class="built_in">console</span>.log(<span class="string">'唱歌'</span>);</span><br><span class="line">  	<span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">  	<span class="built_in">console</span>.log(<span class="string">'洗脚'</span>);</span><br><span class="line">  	<span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">  	<span class="built_in">console</span>.log(<span class="string">'按摩'</span>);</span><br><span class="line">  	<span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">  	<span class="built_in">console</span>.log(<span class="string">'营养快线'</span>);</span><br><span class="line">  	<span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">  	<span class="built_in">console</span>.log(<span class="string">'老板慢走 欢迎下次光临'</span>);</span><br><span class="line">  	<span class="keyword">break</span>;</span><br><span class="line">  <span class="keyword">default</span>:</span><br><span class="line">  	<span class="built_in">console</span>.log(<span class="string">'条件都没有匹配上 默认走的流程'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-for-循环"><a href="#5-3-for-循环" class="headerlink" title="5-3 for 循环"></a>5-3 for 循环</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># for循环</span><br><span class="line"># 打印0-9数字</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br><span class="line"># 题目1  循环打印出数组里面的每一个元素</span><br><span class="line"><span class="keyword">var</span> l1 = [<span class="number">111</span>,<span class="number">222</span>,<span class="number">333</span>,<span class="number">444</span>,<span class="number">555</span>,<span class="number">666</span>]</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;l1.length;i++)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(l1[i])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-while循环"><a href="#5-4-while循环" class="headerlink" title="5-4 while循环"></a>5-4 while循环</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># while循环</span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span>(i&lt;<span class="number">100</span>)&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(i)</span><br><span class="line">  i++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-5-三元运算符"><a href="#5-5-三元运算符" class="headerlink" title="5-5 三元运算符"></a>5-5 三元运算符</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 三元运算符</span><br><span class="line"># python中三元运算符 res = 1 if 1&gt;2 else 3</span><br><span class="line"># JS中三元运算  res = 1&gt;2?1:3 </span><br><span class="line">条件成立取问好后面的<span class="number">1</span> 不成立取冒号后面的<span class="number">3</span></span><br><span class="line">var res = 2&gt;5?8:10 # 10</span><br><span class="line">var res = 2&gt;5?8:(8&gt;5?666:444)  # 666</span><br><span class="line"><span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">三元运算符不要写的过于复杂 </span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%89%8D%E7%AB%AF/23-BootStrap%E6%8F%92%E4%BB%B6/">
+        <span class="nav-arrow">← </span>
+        
+          python/前端/23-BootStrap插件
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%89%8D%E7%AB%AF/8-JavaScript%E5%9F%BA%E7%A1%80/">
+        
+          python/前端/8-JavaScript基础
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1、变量的定义"><span class="toc-nav-text">1、变量的定义</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2、变量的命名规范"><span class="toc-nav-text">2、变量的命名规范</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3、基本数据类型"><span class="toc-nav-text">3、基本数据类型</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-1-值类型"><span class="toc-nav-text">3-1 值类型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-引用类型"><span class="toc-nav-text">3-2 引用类型</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4、运算符"><span class="toc-nav-text">4、运算符</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-1-算数运算符"><span class="toc-nav-text">4-1 算数运算符</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-2-赋值运算符"><span class="toc-nav-text">4-2 赋值运算符</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-3-比较运算符"><span class="toc-nav-text">4-3 比较运算符</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-4-逻辑运算符"><span class="toc-nav-text">4-4 逻辑运算符</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-5-三目运算符"><span class="toc-nav-text">4-5 三目运算符</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-流程控制"><span class="toc-nav-text">5 流程控制</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-1-if判断"><span class="toc-nav-text">5-1 if判断</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-2-switch"><span class="toc-nav-text">5-2 switch</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-3-for-循环"><span class="toc-nav-text">5-3 for 循环</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-4-while循环"><span class="toc-nav-text">5-4 while循环</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-5-三元运算符"><span class="toc-nav-text">5-5 三元运算符</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/前端/9-JavaScript基本数据类型/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/前端/9-JavaScript基本数据类型",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

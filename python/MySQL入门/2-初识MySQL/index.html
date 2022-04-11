@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/MySQL入门/2-初识MySQL | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/MySQL入门/2-初识MySQL</h2>
+
+
+
+  <p class="post-date">2020-10-22</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、MySQL简介"><a href="#一、MySQL简介" class="headerlink" title="一、MySQL简介"></a>一、MySQL简介</h1><h2 id="1-1-数据库管理软件分类"><a href="#1-1-数据库管理软件分类" class="headerlink" title="1.1 数据库管理软件分类"></a>1.1 数据库管理软件分类</h2><p>管理数据的工具有很多种，不止MySQL一个。关于分类其实可以从各个纬度来进行划分，但是我们最常使用的分类还是根据他们存取数据的特点来划分的，主要分为关系型和非关系型。</p>
+<p>可以简单的理解为，关系型数据库需要有表结构，非关系型数据库是key-value存储的，没有表结构。</p>
+<p>关系型：如sqllite，db2，oracle，access，sql server，MySQL，注意：sql语句通用。</p>
+<p>非关系型：mongodb，redis，memcache</p>
+<h2 id="1-2-MySQL"><a href="#1-2-MySQL" class="headerlink" title="1.2 MySQL"></a>1.2 MySQL</h2><p>MySQL是一个关系型<a href="https://baike.baidu.com/item/关系数据库管理系统/11032386?fromtitle=关系型数据库管理系统&fromid=696511" target="_blank" rel="noopener">数据库管理系统</a> ，由瑞典MySQL AB 公司开发，目前属于 <a href="https://baike.baidu.com/item/甲骨文公司/430115?fromtitle=Oracle&fromid=301207" target="_blank" rel="noopener">Oracle</a> 旗下产品。MySQL 是最流行的关系型数据库管理系统之一，在 WEB 应用方面，MySQL是最好的 <a href="https://baike.baidu.com/item/RDBMS/1048260" target="_blank" rel="noopener">RDBMS (Relational Database Management System，关系数据库管理系统) </a>应用软件。</p>
+<p>MySQL是一种关系数据库管理系统，关系数据库将数据保存在不同的表中，而不是将所有数据放在一个大仓库内，这样就增加了速度并提高了灵活性。</p>
+<p>MySQL所使用的 SQL 语言是用于访问数据库的最常用标准化语言。MySQL 软件采用了双授权政策，分为社区版和商业版，由于其体积小、速度快、总体拥有成本低，尤其是<a href="https://baike.baidu.com/item/开放源代码/114160?fromtitle=开放源码&fromid=7176422" target="_blank" rel="noopener">开放源码</a> 这一特点，一般中小型网站的开发都选择 MySQL 作为网站数据库。</p>
+<h1 id="二、下载和安装"><a href="#二、下载和安装" class="headerlink" title="二、下载和安装"></a>二、下载和安装</h1><p>MySQL为我们提供开源的安装在各个操作系统上的安装包，包括mac，linux，windows。</p>
+<h2 id="2-1-Windows版本"><a href="#2-1-Windows版本" class="headerlink" title="2.1 Windows版本"></a>2.1 Windows版本</h2><p>mysql的安装、启动和基础配置 —— Windows版本：3-Windows安装MySQL</p>
+<h2 id="2-2-Linux版本"><a href="#2-2-Linux版本" class="headerlink" title="2.2 Linux版本"></a>2.2 Linux版本</h2><p>mysql的安装、启动和基础配置 —— Linux版本：4-Linux安装MySQL</p>
+<h2 id="2-3-Mac版本"><a href="#2-3-Mac版本" class="headerlink" title="2.3 Mac版本"></a>2.3 Mac版本</h2><p>mysql的安装、启动和基础配置 —— Mac版本：5-Mac安装MySQL</p>
+<h1 id="三、初识sql语句"><a href="#三、初识sql语句" class="headerlink" title="三、初识sql语句"></a>三、初识sql语句</h1><h1 id="四、MySQL的账号操作"><a href="#四、MySQL的账号操作" class="headerlink" title="四、MySQL的账号操作"></a>四、MySQL的账号操作</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#进入MySQL客户端</span></span><br><span class="line">$MySQL</span><br><span class="line">MySQL&gt; select user();  <span class="comment">#查看当前用户</span></span><br><span class="line">MySQL&gt; exit     <span class="comment"># 也可以用\q quit退出</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认用户登陆之后并没有实际操作的权限</span></span><br><span class="line"><span class="comment"># 需要使用管理员root用户登陆</span></span><br><span class="line">$ MySQL -uroot -p   <span class="comment"># MySQL5.6默认是没有密码的</span></span><br><span class="line"><span class="comment">#遇到password直接按回车键</span></span><br><span class="line">MySQL&gt; set password = password(<span class="string">'root'</span>); <span class="comment"># 给当前数据库设置密码</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建账号</span></span><br><span class="line">MySQL&gt; create user <span class="string">'lqz'</span>@<span class="string">'192.168.10.%'</span>   IDENTIFIED BY <span class="string">'123'</span>;<span class="comment"># 指示网段</span></span><br><span class="line">MySQL&gt; create user <span class="string">'lqz'</span>@<span class="string">'192.168.10.5'</span>   <span class="comment"># 指示某机器可以连接</span></span><br><span class="line">MySQL&gt; create user <span class="string">'lqz'</span>@<span class="string">'%'</span>                    <span class="comment">#指示所有机器都可以连接  </span></span><br><span class="line">MySQL&gt; show grants <span class="keyword">for</span> <span class="string">'lqz'</span>@<span class="string">'192.168.10.5'</span>;查看某个用户的权限 </span><br><span class="line"><span class="comment"># 远程登陆</span></span><br><span class="line">$ MySQL -uroot -p123 -h <span class="number">192.168</span><span class="number">.10</span><span class="number">.3</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 给账号授权</span></span><br><span class="line">MySQL&gt; grant all on *.* to <span class="string">'lqz'</span>@<span class="string">'%'</span>;</span><br><span class="line">MySQL&gt; flush privileges;    <span class="comment"># 刷新使授权立即生效</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建账号并授权</span></span><br><span class="line">MySQL&gt; grant all on *.* to <span class="string">'lqz'</span>@<span class="string">'%'</span> identified by <span class="string">'123'</span></span><br></pre></td></tr></table></figure>
+
+<p>设想一下，当我们想要从文件中存取数据的时候，是一个非常繁琐的过程，主要是因为文件中所有的内容对我们来说是连续的，没有规则的。如果我们将数据按照规则存在一个文件中，在设计一种规则可以拼凑组合成我们需要的操作，并通过这些指示在文件中存取数据，那么操作数据是不是能够变得更加简单快速呢？这串规则就被我们成为SQL。</p>
+<p>SQL: 结构化查询语言(Structured Query Language)简称SQL(发音：/ˈes kjuː ˈel/ “S-Q-L”)，是一种特殊目的的编程语言，是一种数据库查询和程序设计语言，用于存取数据以及查询、更新和管理关系数据库系统。</p>
+<p>SQL语言主要用于存取数据、查询数据、更新数据和管理关系数据库系统,SQL语言由IBM开发。SQL语言分为3种类型：</p>
+<ol>
+<li>DDL语句 数据库定义语言： 数据库、表、视图、索引、存储过程，例如CREATE DROP ALTER</li>
+<li>DML语句 数据库操纵语言： 插入数据INSERT、删除数据DELETE、更新数据UPDATE、查询数据SELECT</li>
+<li>DCL语句 数据库控制语言： 例如控制用户的访问权限GRANT、REVOKE</li>
+</ol>
+<h2 id="4-1-操作文件夹（库）"><a href="#4-1-操作文件夹（库）" class="headerlink" title="4.1 操作文件夹（库）"></a>4.1 操作文件夹（库）</h2><p>增：`create database db1 charset utf8;``</p>
+<p>查：<code>show databases;</code></p>
+<p>改：<code>alter database db1 charset latin1;</code></p>
+<p>删除: <code>drop database db1;</code></p>
+<h2 id="4-2-操作文件（表）"><a href="#4-2-操作文件（表）" class="headerlink" title="4.2 操作文件（表）"></a>4.2 操作文件（表）</h2><p>先切换到文件夹下：<code>use db1;</code></p>
+<p>增：<code>create table t1(id int,name char);</code></p>
+<p>查：<code>show tables;</code></p>
+<p>改（1）：<code>alter table t1 modify name char(3);</code></p>
+<p>改（2）：<code>alter table t1 change name name1 char(2);</code></p>
+<p>删：<code>drop table t1;</code></p>
+<h2 id="4-3-操作文件中的内容（记录）"><a href="#4-3-操作文件中的内容（记录）" class="headerlink" title="4.3 操作文件中的内容（记录）"></a>4.3 操作文件中的内容（记录）</h2><p>增：<code>insert into t1 values(1,&#39;egon1&#39;),(2,&#39;egon2&#39;),(3,&#39;egon3&#39;);</code></p>
+<p>查：<code>select * from t1;</code></p>
+<p>改：<code>update t1 set name=&#39;sb&#39; where id=2;</code></p>
+<p>删：<code>delete from t1 where id=1;</code></p>
+<h2 id="4-4-清空表"><a href="#4-4-清空表" class="headerlink" title="4.4 清空表"></a>4.4 清空表</h2><p><code>delete from t1;</code> # 如果有自增id，新增的数据，仍然是以删除前的最后一样作为起始。</p>
+<p><code>truncate table t1;</code> # 数据量大，删除速度比上一条快，且直接从零开始。</p>
+<ul>
+<li>auto_increment 表示：自增</li>
+<li>primary key 表示：约束（不能重复且不能为空）；加速查找</li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/MySQL%E5%85%A5%E9%97%A8/3-Windows%E5%AE%89%E8%A3%85MySQL/">
+        <span class="nav-arrow">← </span>
+        
+          python/MySQL入门/3-Windows安装MySQL
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/MySQL%E5%85%A5%E9%97%A8/4-Linux%E5%AE%89%E8%A3%85MySQL/">
+        
+          python/MySQL入门/4-Linux安装MySQL
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、MySQL简介"><span class="toc-nav-text">一、MySQL简介</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-数据库管理软件分类"><span class="toc-nav-text">1.1 数据库管理软件分类</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-MySQL"><span class="toc-nav-text">1.2 MySQL</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、下载和安装"><span class="toc-nav-text">二、下载和安装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-Windows版本"><span class="toc-nav-text">2.1 Windows版本</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-Linux版本"><span class="toc-nav-text">2.2 Linux版本</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-3-Mac版本"><span class="toc-nav-text">2.3 Mac版本</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、初识sql语句"><span class="toc-nav-text">三、初识sql语句</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、MySQL的账号操作"><span class="toc-nav-text">四、MySQL的账号操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-1-操作文件夹（库）"><span class="toc-nav-text">4.1 操作文件夹（库）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-2-操作文件（表）"><span class="toc-nav-text">4.2 操作文件（表）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-3-操作文件中的内容（记录）"><span class="toc-nav-text">4.3 操作文件中的内容（记录）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-4-清空表"><span class="toc-nav-text">4.4 清空表</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/MySQL入门/2-初识MySQL/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/MySQL入门/2-初识MySQL",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

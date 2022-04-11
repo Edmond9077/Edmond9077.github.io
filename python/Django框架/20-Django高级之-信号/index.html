@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django框架/20-Django高级之-信号 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django框架/20-Django高级之-信号</h2>
+
+
+
+  <p class="post-date">2020-09-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-信号简介"><a href="#一-信号简介" class="headerlink" title="一 信号简介"></a>一 信号简介</h2><p>Django提供一种信号机制。其实就是观察者模式，又叫发布-订阅(Publish/Subscribe) 。当发生一些动作的时候，发出信号，然后监听了这个信号的函数就会执行。</p>
+<p>通俗来讲，就是一些动作发生的时候，信号允许特定的发送者去提醒一些接受者。用于在框架执行操作时解耦。</p>
+<h2 id="二-Django内置信号"><a href="#二-Django内置信号" class="headerlink" title="二 Django内置信号"></a>二 Django内置信号</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Model signals</span><br><span class="line">    pre_init                    # django的modal执行其构造方法前，自动触发</span><br><span class="line">    post_init                   # django的modal执行其构造方法后，自动触发</span><br><span class="line">    pre_save                    # django的modal对象保存前，自动触发</span><br><span class="line">    post_save                   # django的modal对象保存后，自动触发</span><br><span class="line">    pre_delete                  # django的modal对象删除前，自动触发</span><br><span class="line">    post_delete                 # django的modal对象删除后，自动触发</span><br><span class="line">    m2m_changed                 # django的modal中使用m2m字段操作第三张表（add,remove,clear）前后，自动触发</span><br><span class="line">    class_prepared              # 程序启动时，检测已注册的app中modal类，对于每一个类，自动触发</span><br><span class="line">Management signals</span><br><span class="line">    pre_migrate                 # 执行migrate命令前，自动触发</span><br><span class="line">    post_migrate                # 执行migrate命令后，自动触发</span><br><span class="line">Request&#x2F;response signals</span><br><span class="line">    request_started             # 请求到来前，自动触发</span><br><span class="line">    request_finished            # 请求结束后，自动触发</span><br><span class="line">    got_request_exception       # 请求异常后，自动触发</span><br><span class="line">Test signals</span><br><span class="line">    setting_changed             # 使用test测试修改配置文件时，自动触发</span><br><span class="line">    template_rendered           # 使用test测试渲染模板时，自动触发</span><br><span class="line">Database Wrappers</span><br><span class="line">    connection_created          # 创建数据库连接时，自动触发</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Django 提供了一系列的内建信号，允许用户的代码获得DJango的特定操作的通知。这包含一些有用的通知：</span><br><span class="line">django.db.models.signals.pre_save &amp; django.db.models.signals.post_save</span><br><span class="line"></span><br><span class="line">在模型 save()方法调用之前或之后发送。</span><br><span class="line">django.db.models.signals.pre_delete &amp; django.db.models.signals.post_delete</span><br><span class="line"></span><br><span class="line">在模型delete()方法或查询集的delete() 方法调用之前或之后发送。</span><br><span class="line">django.db.models.signals.m2m_changed</span><br><span class="line"></span><br><span class="line">模型上的 ManyToManyField 修改时发送。</span><br><span class="line">django.core.signals.request_started &amp; django.core.signals.request_finished</span><br><span class="line"></span><br><span class="line">Django建立或关闭HTTP 请求时发送。</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="三-内置信号的使用"><a href="#三-内置信号的使用" class="headerlink" title="三 内置信号的使用"></a>三 内置信号的使用</h2><p>对于Django内置的信号，仅需注册指定信号，当程序执行相应操作时，自动触发注册函数：</p>
+<p><strong>方式1:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from django.core.signals import request_finished</span><br><span class="line">from django.core.signals import request_started</span><br><span class="line">from django.core.signals import got_request_exception</span><br><span class="line">from django.db.models.signals import class_prepared</span><br><span class="line">from django.db.models.signals import pre_init, post_init</span><br><span class="line">from django.db.models.signals import pre_save, post_save</span><br><span class="line">from django.db.models.signals import pre_delete, post_delete</span><br><span class="line">from django.db.models.signals import m2m_changed</span><br><span class="line">from django.db.models.signals import pre_migrate, post_migrate</span><br><span class="line">from django.test.signals import setting_changed</span><br><span class="line">from django.test.signals import template_rendered</span><br><span class="line">from django.db.backends.signals import connection_created</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>方式一：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#放到__init__里</span><br><span class="line">from django.db.models.signals import pre_save</span><br><span class="line">import logging</span><br><span class="line">def callBack(sender, **kwargs):</span><br><span class="line">    print(sender)</span><br><span class="line">    print(kwargs)</span><br><span class="line">    # 创建对象写日志</span><br><span class="line">    logging.basicConfig(level&#x3D;logging.DEBUG)</span><br><span class="line">    # logging.error(&#39;%s创建了一个%s对象&#39;%(sender._meta.db_table,kwargs.get(&#39;instance&#39;).title))</span><br><span class="line">    logging.debug(&#39;%s创建了一个%s对象&#39;%(sender._meta.model_name,kwargs.get(&#39;instance&#39;).title))</span><br><span class="line"></span><br><span class="line">pre_save.connect(callBack)</span><br></pre></td></tr></table></figure>
+
+<p><strong>方式二：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from django.db.models.signals import pre_save</span><br><span class="line">from django.dispatch import receiver</span><br><span class="line">@receiver(pre_save)</span><br><span class="line">def my_callback(sender, **kwargs):</span><br><span class="line">    print(&quot;对象创建成功&quot;)</span><br><span class="line">    print(sender)</span><br><span class="line">    print(kwargs)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="四-自定义信号"><a href="#四-自定义信号" class="headerlink" title="四 自定义信号"></a>四 自定义信号</h2><p>a. 定义信号（一般创建一个py文件）（toppings，size 是接受的参数）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import django.dispatch</span><br><span class="line">pizza_done &#x3D; django.dispatch.Signal(providing_args&#x3D;[&quot;toppings&quot;, &quot;size&quot;])</span><br></pre></td></tr></table></figure>
+
+<p>b. 注册信号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">def callback(sender, **kwargs):</span><br><span class="line">    print(&quot;callback&quot;)</span><br><span class="line">    print(sender,kwargs)</span><br><span class="line">  </span><br><span class="line">pizza_done.connect(callback)</span><br></pre></td></tr></table></figure>
+
+<p>c. 触发信号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from 路径 import pizza_done</span><br><span class="line">  </span><br><span class="line">pizza_done.send(sender&#x3D;&#39;seven&#39;,toppings&#x3D;123, size&#x3D;456)</span><br></pre></td></tr></table></figure>
+
+<p>由于内置信号的触发者已经集成到Django中，所以其会自动调用，而对于自定义信号则需要开发者在任意位置触发。 </p>
+<p>练习：数据库添加一条记录时生成一个日志记录。</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django%E6%A1%86%E6%9E%B6/18-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-ContentType/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django框架/18-Django高级之-ContentType
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django%E6%A1%86%E6%9E%B6/23-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-cookie-session-token/">
+        
+          python/Django框架/23-Django高级之-cookie-session-token
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-信号简介"><span class="toc-nav-text">一 信号简介</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-Django内置信号"><span class="toc-nav-text">二 Django内置信号</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-内置信号的使用"><span class="toc-nav-text">三 内置信号的使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-自定义信号"><span class="toc-nav-text">四 自定义信号</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django框架/20-Django高级之-信号/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django框架/20-Django高级之-信号",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

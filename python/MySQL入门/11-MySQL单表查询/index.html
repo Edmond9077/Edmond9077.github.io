@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/MySQL入门/11-MySQL单表查询 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/MySQL入门/11-MySQL单表查询</h2>
+
+
+
+  <p class="post-date">2020-10-22</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、单表查询的语法及关键字执行的优先级"><a href="#一、单表查询的语法及关键字执行的优先级" class="headerlink" title="一、单表查询的语法及关键字执行的优先级"></a>一、单表查询的语法及关键字执行的优先级</h1><h2 id="1-1-单表查询语法"><a href="#1-1-单表查询语法" class="headerlink" title="1.1 单表查询语法"></a>1.1 单表查询语法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SELECT DISTINCT 字段<span class="number">1</span>,字段<span class="number">2.</span>.. FROM 表名</span><br><span class="line">                              WHERE 条件</span><br><span class="line">                              GROUP BY field</span><br><span class="line">                              HAVING 筛选</span><br><span class="line">                              ORDER BY field</span><br><span class="line">                              LIMIT 限制条数</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-关键字执行的优先级"><a href="#1-2-关键字执行的优先级" class="headerlink" title="1.2 关键字执行的优先级"></a>1.2 关键字执行的优先级</h2><ol>
+<li>from：找到表</li>
+<li>where：拿着where指定的约束条件，去文件/表中取出一条条记录</li>
+<li>group by：将取出的一条条记录进行分组group by，如果没有group by，则整体作为一组</li>
+<li>select：执行select</li>
+<li>distinct：去重</li>
+<li>having：将分组的结果进行having过滤</li>
+<li>order by：将结果按条件排序：order by</li>
+<li>limit：限制结果的显示条数</li>
+</ol>
+<h1 id="二、简单查询"><a href="#二、简单查询" class="headerlink" title="二、简单查询"></a>二、简单查询</h1><h2 id="2-1-建表和数据准备"><a href="#2-1-建表和数据准备" class="headerlink" title="2.1 建表和数据准备"></a>2.1 建表和数据准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">company.employee</span><br><span class="line">    员工id      id                  int             </span><br><span class="line">    姓名        emp_name            varchar</span><br><span class="line">    性别        sex                 enum</span><br><span class="line">    年龄        age                 int</span><br><span class="line">    入职日期     hire_date           date</span><br><span class="line">    岗位        post                varchar</span><br><span class="line">    职位描述     post_comment        varchar</span><br><span class="line">    薪水        salary              double</span><br><span class="line">    办公室       office              int</span><br><span class="line">    部门编号     depart_id           int</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建表</span></span><br><span class="line">create table employee(</span><br><span class="line">id int <span class="keyword">not</span> null unique auto_increment,</span><br><span class="line">emp_name varchar(<span class="number">20</span>) <span class="keyword">not</span> null,</span><br><span class="line">sex enum(<span class="string">'male'</span>,<span class="string">'female'</span>) <span class="keyword">not</span> null default <span class="string">'male'</span>,  <span class="comment">#  大部分是男的</span></span><br><span class="line">age int(<span class="number">3</span>) unsigned <span class="keyword">not</span> null default <span class="number">28</span>,</span><br><span class="line">hire_date date <span class="keyword">not</span> null,</span><br><span class="line">post varchar(<span class="number">50</span>),</span><br><span class="line">post_comment varchar(<span class="number">100</span>),</span><br><span class="line">salary double(<span class="number">15</span>,<span class="number">2</span>),</span><br><span class="line">office int,  <span class="comment">#  一个部门一个屋子</span></span><br><span class="line">depart_id int</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看表结构</span></span><br><span class="line">mysql&gt; desc employee;</span><br><span class="line">+--------------+-----------------------+------+-----+---------+----------------+</span><br><span class="line">| Field        | Type                  | Null | Key | Default | Extra          |</span><br><span class="line">+--------------+-----------------------+------+-----+---------+----------------+</span><br><span class="line">| id           | int(<span class="number">11</span>)               | NO   | PRI | NULL    | auto_increment |</span><br><span class="line">| emp_name     | varchar(<span class="number">20</span>)           | NO   |     | NULL    |                |</span><br><span class="line">| sex          | enum(<span class="string">'male'</span>,<span class="string">'female'</span>) | NO   |     | male    |                |</span><br><span class="line">| age          | int(<span class="number">3</span>) unsigned       | NO   |     | <span class="number">28</span>      |                |</span><br><span class="line">| hire_date    | date                  | NO   |     | NULL    |                |</span><br><span class="line">| post         | varchar(<span class="number">50</span>)           | YES  |     | NULL    |                |</span><br><span class="line">| post_comment | varchar(<span class="number">100</span>)          | YES  |     | NULL    |                |</span><br><span class="line">| salary       | double(<span class="number">15</span>,<span class="number">2</span>)          | YES  |     | NULL    |                |</span><br><span class="line">| office       | int(<span class="number">11</span>)               | YES  |     | NULL    |                |</span><br><span class="line">| depart_id    | int(<span class="number">11</span>)               | YES  |     | NULL    |                |</span><br><span class="line">+--------------+-----------------------+------+-----+---------+----------------+</span><br><span class="line"></span><br><span class="line"><span class="comment"># 插入记录</span></span><br><span class="line"><span class="comment"># 三个部门：教学，销售，运营</span></span><br><span class="line">insert into employee(emp_name,sex,age,hire_date,post,salary,office,depart_id) values</span><br><span class="line">(<span class="string">'lqz'</span>,<span class="string">'male'</span>,<span class="number">18</span>,<span class="string">'20170301'</span>,<span class="string">'老男孩驻上海虹桥最帅'</span>,<span class="number">7300.33</span>,<span class="number">401</span>,<span class="number">1</span>),  <span class="comment">#  以下是教学部</span></span><br><span class="line">(<span class="string">'jason'</span>,<span class="string">'male'</span>,<span class="number">78</span>,<span class="string">'20150302'</span>,<span class="string">'teacher'</span>,<span class="number">1000000.31</span>,<span class="number">401</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="string">'sean'</span>,<span class="string">'male'</span>,<span class="number">81</span>,<span class="string">'20130305'</span>,<span class="string">'teacher'</span>,<span class="number">8300</span>,<span class="number">401</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="string">'tank'</span>,<span class="string">'male'</span>,<span class="number">73</span>,<span class="string">'20140701'</span>,<span class="string">'teacher'</span>,<span class="number">3500</span>,<span class="number">401</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="string">'oscar'</span>,<span class="string">'male'</span>,<span class="number">28</span>,<span class="string">'20121101'</span>,<span class="string">'teacher'</span>,<span class="number">2100</span>,<span class="number">401</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="string">'mac'</span>,<span class="string">'female'</span>,<span class="number">18</span>,<span class="string">'20110211'</span>,<span class="string">'teacher'</span>,<span class="number">9000</span>,<span class="number">401</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="string">'rocky'</span>,<span class="string">'male'</span>,<span class="number">18</span>,<span class="string">'19000301'</span>,<span class="string">'teacher'</span>,<span class="number">30000</span>,<span class="number">401</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="string">'成龙'</span>,<span class="string">'male'</span>,<span class="number">48</span>,<span class="string">'20101111'</span>,<span class="string">'teacher'</span>,<span class="number">10000</span>,<span class="number">401</span>,<span class="number">1</span>),</span><br><span class="line"></span><br><span class="line">(<span class="string">'歪歪'</span>,<span class="string">'female'</span>,<span class="number">48</span>,<span class="string">'20150311'</span>,<span class="string">'sale'</span>,<span class="number">3000.13</span>,<span class="number">402</span>,<span class="number">2</span>),   <span class="comment">#  以下是销售部门</span></span><br><span class="line">(<span class="string">'丫丫'</span>,<span class="string">'female'</span>,<span class="number">38</span>,<span class="string">'20101101'</span>,<span class="string">'sale'</span>,<span class="number">2000.35</span>,<span class="number">402</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="string">'丁丁'</span>,<span class="string">'female'</span>,<span class="number">18</span>,<span class="string">'20110312'</span>,<span class="string">'sale'</span>,<span class="number">1000.37</span>,<span class="number">402</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="string">'星星'</span>,<span class="string">'female'</span>,<span class="number">18</span>,<span class="string">'20160513'</span>,<span class="string">'sale'</span>,<span class="number">3000.29</span>,<span class="number">402</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="string">'格格'</span>,<span class="string">'female'</span>,<span class="number">28</span>,<span class="string">'20170127'</span>,<span class="string">'sale'</span>,<span class="number">4000.33</span>,<span class="number">402</span>,<span class="number">2</span>),</span><br><span class="line"></span><br><span class="line">(<span class="string">'张野'</span>,<span class="string">'male'</span>,<span class="number">28</span>,<span class="string">'20160311'</span>,<span class="string">'operation'</span>,<span class="number">10000.13</span>,<span class="number">403</span>,<span class="number">3</span>),  <span class="comment">#  以下是运营部门</span></span><br><span class="line">(<span class="string">'程咬金'</span>,<span class="string">'male'</span>,<span class="number">18</span>,<span class="string">'19970312'</span>,<span class="string">'operation'</span>,<span class="number">20000</span>,<span class="number">403</span>,<span class="number">3</span>),</span><br><span class="line">(<span class="string">'程咬银'</span>,<span class="string">'female'</span>,<span class="number">18</span>,<span class="string">'20130311'</span>,<span class="string">'operation'</span>,<span class="number">19000</span>,<span class="number">403</span>,<span class="number">3</span>),</span><br><span class="line">(<span class="string">'程咬铜'</span>,<span class="string">'male'</span>,<span class="number">18</span>,<span class="string">'20150411'</span>,<span class="string">'operation'</span>,<span class="number">18000</span>,<span class="number">403</span>,<span class="number">3</span>),</span><br><span class="line">(<span class="string">'程咬铁'</span>,<span class="string">'female'</span>,<span class="number">18</span>,<span class="string">'20140512'</span>,<span class="string">'operation'</span>,<span class="number">17000</span>,<span class="number">403</span>,<span class="number">3</span>)</span><br><span class="line">;</span><br><span class="line"></span><br><span class="line"><span class="comment">#  ps：如果在windows系统中，插入中文字符，select的结果为空白，可以将所有字符编码统一设置成gbk</span></span><br><span class="line"><span class="comment"># 简单查询</span></span><br><span class="line">    SELECT id,emp_name,sex,age,hire_date,post,post_comment,salary,office,depart_id </span><br><span class="line">    FROM employee;</span><br><span class="line"></span><br><span class="line">    SELECT * FROM employee;</span><br><span class="line"></span><br><span class="line">    SELECT emp_name,salary FROM employee;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 避免重复DISTINCT</span></span><br><span class="line">    SELECT DISTINCT post FROM employee;    </span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过四则运算查询</span></span><br><span class="line">    SELECT emp_name, salary*<span class="number">12</span> FROM employee;</span><br><span class="line">    SELECT emp_name, salary*<span class="number">12</span> AS Annual_salary FROM employee;</span><br><span class="line">    SELECT emp_name, salary*<span class="number">12</span> Annual_salary FROM employee;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义显示格式</span></span><br><span class="line">   CONCAT() 函数用于连接字符串</span><br><span class="line">   SELECT CONCAT(<span class="string">'姓名: '</span>,emp_name,<span class="string">'  年薪: '</span>, salary*<span class="number">12</span>)  AS Annual_salary </span><br><span class="line">   FROM employee;</span><br><span class="line">   </span><br><span class="line">   CONCAT_WS() 第一个参数为分隔符</span><br><span class="line">   SELECT CONCAT_WS(<span class="string">':'</span>,emp_name,salary*<span class="number">12</span>)  AS Annual_salary </span><br><span class="line">   FROM employee;</span><br><span class="line"></span><br><span class="line">   结合CASE语句：</span><br><span class="line">   SELECT</span><br><span class="line">       (</span><br><span class="line">           CASE</span><br><span class="line">           WHEN emp_name = <span class="string">'mac'</span> THEN</span><br><span class="line">               emp_name</span><br><span class="line">           WHEN emp_name = <span class="string">'jason'</span> THEN</span><br><span class="line">               CONCAT(emp_name,<span class="string">'_BIGSB'</span>)</span><br><span class="line">           ELSE</span><br><span class="line">               concat(emp_name, <span class="string">'SB'</span>)</span><br><span class="line">           END</span><br><span class="line">       ) <span class="keyword">as</span> new_name</span><br><span class="line">   FROM</span><br><span class="line">       employee;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-练习"><a href="#2-2-练习" class="headerlink" title="2.2 练习"></a>2.2 练习</h2><ol>
+<li>查出所有员工的名字，薪资，格式为<code>&lt;名字:lqz&gt; &lt;薪资:3000&gt;</code></li>
+<li>查出所有的岗位（去掉重复）</li>
+<li>查出所有员工名字，以及他们的年薪，年薪的字段名为annual_year</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select concat(<span class="string">'&lt;名字:'</span>,emp_name,<span class="string">'&gt;    '</span>,<span class="string">'&lt;薪资:'</span>,salary,<span class="string">'&gt;'</span>) <span class="keyword">from</span> employee;</span><br><span class="line">select distinct depart_id <span class="keyword">from</span> employee;</span><br><span class="line">select emp_name,salary*<span class="number">12</span> annual_salary <span class="keyword">from</span> employee;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、约束条件（where）"><a href="#三、约束条件（where）" class="headerlink" title="三、约束条件（where）"></a>三、约束条件（where）</h1><p>where子句中可以使用：</p>
+<ol>
+<li>比较运算符：&gt; &lt; &gt;= &lt;= &lt;&gt; !=</li>
+<li>between 80 and 100 值在80到100之间</li>
+<li>in(80,90,100) 值是80或90或100</li>
+<li>like ‘n%’<ul>
+<li>通配符可以是%或_，<ul>
+<li>%表示任意多字符</li>
+<li>_表示一个字符</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>逻辑运算符：在多个条件直接可以使用逻辑运算符 and or not</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> 单条件查询</span><br><span class="line">    SELECT emp_name FROM employee</span><br><span class="line">        WHERE post=<span class="string">'sale'</span>;</span><br><span class="line">        </span><br><span class="line"><span class="number">2.</span> 多条件查询</span><br><span class="line">    SELECT emp_name,salary FROM employee</span><br><span class="line">        WHERE post=<span class="string">'teacher'</span> AND salary&gt;<span class="number">10000</span>;</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span> 关键字BETWEEN AND</span><br><span class="line">    SELECT emp_name,salary FROM employee </span><br><span class="line">        WHERE salary BETWEEN <span class="number">10000</span> AND <span class="number">20000</span>;</span><br><span class="line"></span><br><span class="line">    SELECT emp_name,salary FROM employee </span><br><span class="line">        WHERE salary NOT BETWEEN <span class="number">10000</span> AND <span class="number">20000</span>;</span><br><span class="line">    </span><br><span class="line"><span class="number">4.</span> 关键字IS NULL(判断某个字段是否为NULL不能用等号，需要用IS)</span><br><span class="line">    SELECT emp_name,post_comment FROM employee </span><br><span class="line">        WHERE post_comment IS NULL;</span><br><span class="line"></span><br><span class="line">    SELECT emp_name,post_comment FROM employee </span><br><span class="line">        WHERE post_comment IS NOT NULL;</span><br><span class="line">        </span><br><span class="line">    SELECT emp_name,post_comment FROM employee </span><br><span class="line">        WHERE post_comment=<span class="string">''</span>; 注意<span class="string">''</span>是空字符串，不是null</span><br><span class="line">    ps：</span><br><span class="line">        执行</span><br><span class="line">        update employee set post_comment=<span class="string">''</span> where id=<span class="number">2</span>;</span><br><span class="line">        再用上条查看，就会有结果了</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span> 关键字IN集合查询</span><br><span class="line">    SELECT emp_name,salary FROM employee </span><br><span class="line">        WHERE salary=<span class="number">3000</span> OR salary=<span class="number">3500</span> OR salary=<span class="number">4000</span> OR salary=<span class="number">9000</span> ;</span><br><span class="line">    </span><br><span class="line">    SELECT emp_name,salary FROM employee </span><br><span class="line">        WHERE salary IN (<span class="number">3000</span>,<span class="number">3500</span>,<span class="number">4000</span>,<span class="number">9000</span>) ;</span><br><span class="line"></span><br><span class="line">    SELECT emp_name,salary FROM employee </span><br><span class="line">        WHERE salary NOT IN (<span class="number">3000</span>,<span class="number">3500</span>,<span class="number">4000</span>,<span class="number">9000</span>) ;</span><br><span class="line"></span><br><span class="line"><span class="number">6.</span> 关键字LIKE模糊查询</span><br><span class="line">    通配符’%’</span><br><span class="line">    SELECT * FROM employee </span><br><span class="line">            WHERE emp_name LIKE <span class="string">'ni%'</span>;</span><br><span class="line"></span><br><span class="line">    通配符’_’</span><br><span class="line">    SELECT * FROM employee </span><br><span class="line">            WHERE emp_name LIKE <span class="string">'ja__'</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-1-练习"><a href="#3-1-练习" class="headerlink" title="3.1 练习"></a>3.1 练习</h2><ol>
+<li>查看岗位是teacher的员工姓名、年龄</li>
+<li>查看岗位是teacher且年龄大于30岁的员工姓名、年龄</li>
+<li>查看岗位是teacher且薪资在9000-1000范围内的员工姓名、年龄、薪资</li>
+<li>查看岗位描述不为NULL的员工信息</li>
+<li>查看岗位是teacher且薪资是10000或9000或30000的员工姓名、年龄、薪资</li>
+<li>查看岗位是teacher且薪资不是10000或9000或30000的员工姓名、年龄、薪资</li>
+<li>查看岗位是teacher且名字是jin开头的员工姓名、年薪</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select emp_name,age <span class="keyword">from</span> employee where post = <span class="string">'teacher'</span>;</span><br><span class="line">select emp_name,age <span class="keyword">from</span> employee where post=<span class="string">'teacher'</span> <span class="keyword">and</span> age &gt; <span class="number">30</span>; </span><br><span class="line">select emp_name,age,salary <span class="keyword">from</span> employee where post=<span class="string">'teacher'</span> <span class="keyword">and</span> salary between <span class="number">9000</span> <span class="keyword">and</span> <span class="number">10000</span>;</span><br><span class="line">select * <span class="keyword">from</span> employee where post_comment <span class="keyword">is</span> <span class="keyword">not</span> null;</span><br><span class="line">select emp_name,age,salary <span class="keyword">from</span> employee where post=<span class="string">'teacher'</span> <span class="keyword">and</span> salary <span class="keyword">in</span> (<span class="number">10000</span>,<span class="number">9000</span>,<span class="number">30000</span>);</span><br><span class="line">select emp_name,age,salary <span class="keyword">from</span> employee where post=<span class="string">'teacher'</span> <span class="keyword">and</span> salary <span class="keyword">not</span> <span class="keyword">in</span> (<span class="number">10000</span>,<span class="number">9000</span>,<span class="number">30000</span>);</span><br><span class="line">select emp_name,salary*<span class="number">12</span> <span class="keyword">from</span> employee where post=<span class="string">'teacher'</span> <span class="keyword">and</span> emp_name like <span class="string">'mac%'</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、分组（group-by）"><a href="#四、分组（group-by）" class="headerlink" title="四、分组（group by）"></a>四、分组（group by）</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">单独使用GROUP BY关键字分组</span><br><span class="line">    SELECT post FROM employee GROUP BY post;</span><br><span class="line">    注意：我们按照post字段分组，那么select查询的字段只能是post，想要获取组内的其他相关信息，需要借助函数</span><br><span class="line"></span><br><span class="line">GROUP BY关键字和GROUP_CONCAT()函数一起使用</span><br><span class="line">    SELECT post,GROUP_CONCAT(emp_name) FROM employee GROUP BY post;  <span class="comment"># 按照岗位分组，并查看组内成员名</span></span><br><span class="line">    SELECT post,GROUP_CONCAT(emp_name) <span class="keyword">as</span> emp_members FROM employee GROUP BY post;</span><br><span class="line"></span><br><span class="line">GROUP BY与聚合函数一起使用</span><br><span class="line">    select post,count(id) <span class="keyword">as</span> count <span class="keyword">from</span> employee group by post;  <span class="comment">#  按照岗位分组，并查看每个组有多少人</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：<strong>如果我们用unique的字段作为分组的依据，则每一条记录自成一组，这种分组没有意义；多条记录之间的某个字段值相同，该字段通常用来作为分组的依据。</strong></p>
+<h1 id="五、聚合函数"><a href="#五、聚合函数" class="headerlink" title="五、聚合函数"></a>五、聚合函数</h1><p>强调：<strong>聚合函数聚合的是组的内容，若是没有分组，则默认一组。</strong></p>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SELECT COUNT(*) FROM employee;</span><br><span class="line">SELECT COUNT(*) FROM employee WHERE depart_id=<span class="number">1</span>;</span><br><span class="line">SELECT MAX(salary) FROM employee;</span><br><span class="line">SELECT MIN(salary) FROM employee;</span><br><span class="line">SELECT AVG(salary) FROM employee;</span><br><span class="line">SELECT SUM(salary) FROM employee;</span><br><span class="line">SELECT SUM(salary) FROM employee WHERE depart_id=<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-1-练习"><a href="#5-1-练习" class="headerlink" title="5.1 练习"></a>5.1 练习</h2><ol>
+<li>查询岗位名以及岗位包含的所有员工名字</li>
+<li>查询岗位名以及各岗位内包含的员工个数</li>
+<li>查询公司内男员工和女员工的个数</li>
+<li>查询岗位名以及各岗位的平均薪资</li>
+<li>查询岗位名以及各岗位的最高薪资</li>
+<li>查询岗位名以及各岗位的最低薪资</li>
+<li>查询男员工与男员工的平均薪资，女员工与女员工的平均薪资</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">题目<span class="number">1</span></span><br><span class="line">mysql&gt; select post,group_concat(emp_name) <span class="keyword">from</span> employee group by post;</span><br><span class="line">+-----------------------------------------+---------------------------------------------------------+</span><br><span class="line">| post                                    | group_concat(emp_name)                                      |</span><br><span class="line">+-----------------------------------------+---------------------------------------------------------+</span><br><span class="line">| operation                               | 张野,程咬金,程咬银,程咬铜,程咬铁                        |</span><br><span class="line">| sale                                    | 歪歪,丫丫,丁丁,星星,格格                                |</span><br><span class="line">| teacher                                 | jason,sean,tank,oscar,mac,rocky,成龙   |</span><br><span class="line">| 老男孩驻上海虹桥最帅              | lqz                                                    |</span><br><span class="line">+-----------------------------------------+---------------------------------------------------------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">题目<span class="number">2</span></span><br><span class="line">mysql&gt; select post,count(id) <span class="keyword">from</span> employee group by post;</span><br><span class="line">+-----------------------------------------+-----------+</span><br><span class="line">| post                                    | count(id) |</span><br><span class="line">+-----------------------------------------+-----------+</span><br><span class="line">| operation                               |         <span class="number">5</span> |</span><br><span class="line">| sale                                    |         <span class="number">5</span> |</span><br><span class="line">| teacher                                 |         <span class="number">7</span> |</span><br><span class="line">| 老男孩驻上海虹桥最帅              |         <span class="number">1</span> |</span><br><span class="line">+-----------------------------------------+-----------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">题目<span class="number">3</span></span><br><span class="line">mysql&gt; select sex,count(id) <span class="keyword">from</span> employee group by sex;</span><br><span class="line">+--------+-----------+</span><br><span class="line">| sex    | count(id) |</span><br><span class="line">+--------+-----------+</span><br><span class="line">| male   |        <span class="number">10</span> |</span><br><span class="line">| female |         <span class="number">8</span> |</span><br><span class="line">+--------+-----------+</span><br><span class="line"></span><br><span class="line">题目<span class="number">4</span></span><br><span class="line">mysql&gt; select post,avg(salary) <span class="keyword">from</span> employee group by post;</span><br><span class="line">+-----------------------------------------+---------------+</span><br><span class="line">| post                                    | avg(salary)   |</span><br><span class="line">+-----------------------------------------+---------------+</span><br><span class="line">| operation                               |  <span class="number">16800.026000</span> |</span><br><span class="line">| sale                                    |   <span class="number">2600.294000</span> |</span><br><span class="line">| teacher                                 | <span class="number">151842.901429</span> |</span><br><span class="line">| 老男孩驻上海虹桥最帅              |   <span class="number">7300.330000</span> |</span><br><span class="line">+-----------------------------------------+---------------+</span><br><span class="line"></span><br><span class="line">题目<span class="number">5</span></span><br><span class="line">mysql&gt; select post,max(salary) <span class="keyword">from</span> employee group by post;</span><br><span class="line">+-----------------------------------------+-------------+</span><br><span class="line">| post                                    | max(salary) |</span><br><span class="line">+-----------------------------------------+-------------+</span><br><span class="line">| operation                               |    <span class="number">20000.00</span> |</span><br><span class="line">| sale                                    |     <span class="number">4000.33</span> |</span><br><span class="line">| teacher                                 |  <span class="number">1000000.31</span> |</span><br><span class="line">| 老男孩驻上海虹桥最帅              |     <span class="number">7300.33</span> |</span><br><span class="line">+-----------------------------------------+-------------+</span><br><span class="line"></span><br><span class="line">题目<span class="number">6</span></span><br><span class="line">mysql&gt; select post,min(salary) <span class="keyword">from</span> employee group by post;</span><br><span class="line">+-----------------------------------------+-------------+</span><br><span class="line">| post                                    | min(salary) |</span><br><span class="line">+-----------------------------------------+-------------+</span><br><span class="line">| operation                               |    <span class="number">10000.13</span> |</span><br><span class="line">| sale                                    |     <span class="number">1000.37</span> |</span><br><span class="line">| teacher                                 |     <span class="number">2100.00</span> |</span><br><span class="line">| 老男孩驻上海虹桥最帅              |     <span class="number">7300.33</span> |</span><br><span class="line">+-----------------------------------------+-------------+</span><br><span class="line"></span><br><span class="line">题目<span class="number">7</span></span><br><span class="line">mysql&gt; select sex,avg(salary) <span class="keyword">from</span> employee group by sex;</span><br><span class="line">+--------+---------------+</span><br><span class="line">| sex    | avg(salary)   |</span><br><span class="line">+--------+---------------+</span><br><span class="line">| male   | <span class="number">110920.077000</span> |</span><br><span class="line">| female |   <span class="number">7250.183750</span> |</span><br><span class="line">+--------+---------------+</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、过滤（having）"><a href="#六、过滤（having）" class="headerlink" title="六、过滤（having）"></a>六、过滤（having）</h1><h2 id="6-1-where和having的区别"><a href="#6-1-where和having的区别" class="headerlink" title="6.1 where和having的区别"></a>6.1 where和having的区别</h2><p>执行优先级从高到低：where &gt; group by &gt; having</p>
+<ol>
+<li>Where 发生在分组group by之前，因而Where中可以有任意字段，但是绝对不能使用聚合函数。</li>
+<li>Having发生在分组group by之后，因而Having中可以使用分组的字段，无法直接取到其他字段,可以使用聚合函数</li>
+</ol>
+<h3 id="6-1-1-验证"><a href="#6-1-1-验证" class="headerlink" title="6.1.1 验证"></a>6.1.1 验证</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select @@sql_mode;</span><br><span class="line">+--------------------+</span><br><span class="line">| @@sql_mode         |</span><br><span class="line">+--------------------+</span><br><span class="line">| ONLY_FULL_GROUP_BY |</span><br><span class="line">+--------------------+</span><br><span class="line">row <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> emp where salary &gt; <span class="number">100000</span>;</span><br><span class="line">+----+------+------+-----+------------+---------+--------------+------------+--------+-----------+</span><br><span class="line">| id | emp_name | sex  | age | hire_date  | post    | post_comment | salary     | office | depart_id |</span><br><span class="line">+----+------+------+-----+------------+---------+--------------+------------+--------+-----------+</span><br><span class="line">|  <span class="number">2</span> | jason | male |  <span class="number">78</span> | <span class="number">2015</span><span class="number">-03</span><span class="number">-02</span> | teacher | NULL         | <span class="number">1000000.31</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">+----+------+------+-----+------------+---------+--------------+------------+--------+-----------+</span><br><span class="line">row <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select post,group_concat(emp_name) <span class="keyword">from</span> emp group by post having salary &gt; <span class="number">10000</span>;<span class="comment">#错误，分组后无法直接取到salary字段</span></span><br><span class="line">ERROR <span class="number">1054</span> (<span class="number">42</span>S22): Unknown column <span class="string">'salary'</span> <span class="keyword">in</span> <span class="string">'having clause'</span></span><br><span class="line">mysql&gt; select post,group_concat(emp_name) <span class="keyword">from</span> emp group by post having avg(salary) &gt; <span class="number">10000</span>;</span><br><span class="line">+-----------+-------------------------------------------------------+</span><br><span class="line">| post | group_concat(emp_name) |</span><br><span class="line">+-----------+-------------------------------------------------------+</span><br><span class="line">| operation | 程咬铁,程咬铜,程咬银,程咬金,张野 |</span><br><span class="line">| teacher | 成龙,rocky,mac,oscar,tank,sean,jason |</span><br><span class="line">+-----------+-------------------------------------------------------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-2-练习"><a href="#6-2-练习" class="headerlink" title="6.2 练习"></a>6.2 练习</h2><ol>
+<li>查询各岗位内包含的员工个数小于2的岗位名、岗位内包含员工名字、个数</li>
+<li>查询各岗位平均薪资大于10000的岗位名、平均工资</li>
+<li>查询各岗位平均薪资大于10000且小于20000的岗位名、平均工资</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">题目<span class="number">1</span></span><br><span class="line">mysql&gt; select post,group_concat(emp_name),count(id) <span class="keyword">from</span> employee group by post having count(id) &lt; <span class="number">2</span>;</span><br><span class="line">+-----------------------------------------+--------------------+-----------+</span><br><span class="line">| post                                    | group_concat(emp_name) | count(id) |</span><br><span class="line">+-----------------------------------------+--------------------+-----------+</span><br><span class="line">| 老男孩驻上海虹桥最帅              | lqz               |         <span class="number">1</span> |</span><br><span class="line">+-----------------------------------------+--------------------+-----------+</span><br><span class="line"></span><br><span class="line">题目<span class="number">2</span></span><br><span class="line">mysql&gt; select post,avg(salary) <span class="keyword">from</span> employee group by post having avg(salary) &gt; <span class="number">10000</span>;</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| post      | avg(salary)   |</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| operation |  <span class="number">16800.026000</span> |</span><br><span class="line">| teacher   | <span class="number">151842.901429</span> |</span><br><span class="line">+-----------+---------------+</span><br><span class="line"></span><br><span class="line">题目<span class="number">3</span></span><br><span class="line">mysql&gt; select post,avg(salary) <span class="keyword">from</span> employee group by post having avg(salary) &gt; <span class="number">10000</span> <span class="keyword">and</span> avg(salary) &lt;<span class="number">20000</span>;</span><br><span class="line">+-----------+--------------+</span><br><span class="line">| post      | avg(salary)  |</span><br><span class="line">+-----------+--------------+</span><br><span class="line">| operation | <span class="number">16800.026000</span> |</span><br><span class="line">+-----------+--------------+</span><br></pre></td></tr></table></figure>
+
+<h1 id="七、查询排序（order-by）"><a href="#七、查询排序（order-by）" class="headerlink" title="七、查询排序（order by）"></a>七、查询排序（order by）</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">按单列排序</span><br><span class="line">    SELECT * FROM employee ORDER BY salary;</span><br><span class="line">    SELECT * FROM employee ORDER BY salary ASC;</span><br><span class="line">    SELECT * FROM employee ORDER BY salary DESC;</span><br><span class="line"></span><br><span class="line">按多列排序:先按照age排序，如果年纪相同，则按照薪资排序</span><br><span class="line">    SELECT * <span class="keyword">from</span> employee</span><br><span class="line">        ORDER BY age,</span><br><span class="line">        salary DESC;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-1-练习"><a href="#7-1-练习" class="headerlink" title="7.1 练习"></a>7.1 练习</h2><ol>
+<li>查询所有员工信息，先按照age升序排序，如果age相同则按照hire_date降序排序</li>
+<li>查询各岗位平均薪资大于10000的岗位名、平均工资,结果按平均薪资升序排列</li>
+<li>查询各岗位平均薪资大于10000的岗位名、平均工资,结果按平均薪资降序排列</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">题目<span class="number">1</span></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> employee ORDER BY age asc,hire_date desc;</span><br><span class="line"></span><br><span class="line">题目<span class="number">2</span></span><br><span class="line">mysql&gt; select post,avg(salary) <span class="keyword">from</span> employee group by post having avg(salary) &gt; <span class="number">10000</span> order by avg(salary) asc;</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| post      | avg(salary)   |</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| operation |  <span class="number">16800.026000</span> |</span><br><span class="line">| teacher   | <span class="number">151842.901429</span> |</span><br><span class="line">+-----------+---------------+</span><br><span class="line"></span><br><span class="line">题目<span class="number">3</span></span><br><span class="line">mysql&gt; select post,avg(salary) <span class="keyword">from</span> employee group by post having avg(salary) &gt; <span class="number">10000</span> order by avg(salary) desc;</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| post      | avg(salary)   |</span><br><span class="line">+-----------+---------------+</span><br><span class="line">| teacher   | <span class="number">151842.901429</span> |</span><br><span class="line">| operation |  <span class="number">16800.026000</span> |</span><br><span class="line">+-----------+---------------+</span><br></pre></td></tr></table></figure>
+
+<h1 id="八、限制查询的记录数（limit）"><a href="#八、限制查询的记录数（limit）" class="headerlink" title="八、限制查询的记录数（limit）"></a>八、限制查询的记录数（limit）</h1><p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> employee <span class="keyword">ORDER</span> <span class="keyword">BY</span> salary <span class="keyword">DESC</span> </span><br><span class="line">    <span class="keyword">LIMIT</span> <span class="number">3</span>;                    <span class="comment">#默认初始位置为0 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> employee <span class="keyword">ORDER</span> <span class="keyword">BY</span> salary <span class="keyword">DESC</span></span><br><span class="line">    <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">5</span>; <span class="comment">#从第0开始，即先出第一条，然后包含这一条在内往后查5条</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> employee <span class="keyword">ORDER</span> <span class="keyword">BY</span> salary <span class="keyword">DESC</span></span><br><span class="line">    <span class="keyword">LIMIT</span> <span class="number">5</span>,<span class="number">5</span>; <span class="comment">#从第5开始，即先出第6条，然后包含这一条在内往后查5条</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="8-1-练习"><a href="#8-1-练习" class="headerlink" title="8.1 练习"></a>8.1 练习</h2><ol>
+<li>分页显示，每页5条</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * <span class="keyword">from</span>  employee limit <span class="number">0</span>,<span class="number">5</span>;</span><br><span class="line">+----+-----------+------+-----+------------+-----------------------------------------+--------------+------------+--------+-----------+</span><br><span class="line">| id | emp_name      | sex  | age | hire_date  | post                                    | post_comment | salary     | office | depart_id |</span><br><span class="line">+----+-----------+------+-----+------------+-----------------------------------------+--------------+------------+--------+-----------+</span><br><span class="line">|  <span class="number">1</span> | lqz      | male |  <span class="number">18</span> | <span class="number">2017</span><span class="number">-03</span><span class="number">-01</span> | 老男孩驻上海虹桥最帅              | NULL         |    <span class="number">7300.33</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">|  <span class="number">2</span> | jason      | male |  <span class="number">78</span> | <span class="number">2015</span><span class="number">-03</span><span class="number">-02</span> | teacher                                 |              | <span class="number">1000000.31</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">|  <span class="number">3</span> | sean   | male |  <span class="number">81</span> | <span class="number">2013</span><span class="number">-03</span><span class="number">-05</span> | teacher                                 | NULL         |    <span class="number">8300.00</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">|  <span class="number">4</span> | tank   | male |  <span class="number">73</span> | <span class="number">2014</span><span class="number">-07</span><span class="number">-01</span> | teacher                                 | NULL         |    <span class="number">3500.00</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">|  <span class="number">5</span> | oscar | male |  <span class="number">28</span> | <span class="number">2012</span><span class="number">-11</span><span class="number">-01</span> | teacher                                 | NULL         |    <span class="number">2100.00</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">+----+-----------+------+-----+------------+-----------------------------------------+--------------+------------+--------+-----------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span>  employee limit <span class="number">5</span>,<span class="number">5</span>;</span><br><span class="line">+----+------------+--------+-----+------------+---------+--------------+----------+--------+-----------+</span><br><span class="line">| id | emp_name       | sex    | age | hire_date  | post    | post_comment | salary   | office | depart_id |</span><br><span class="line">+----+------------+--------+-----+------------+---------+--------------+----------+--------+-----------+</span><br><span class="line">|  <span class="number">6</span> | mac | female |  <span class="number">18</span> | <span class="number">2011</span><span class="number">-02</span><span class="number">-11</span> | teacher | NULL         |  <span class="number">9000.00</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">|  <span class="number">7</span> | rocky     | male   |  <span class="number">18</span> | <span class="number">1900</span><span class="number">-03</span><span class="number">-01</span> | teacher | NULL         | <span class="number">30000.00</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">|  <span class="number">8</span> | 成龙       | male   |  <span class="number">48</span> | <span class="number">2010</span><span class="number">-11</span><span class="number">-11</span> | teacher | NULL         | <span class="number">10000.00</span> |    <span class="number">401</span> |         <span class="number">1</span> |</span><br><span class="line">|  <span class="number">9</span> | 歪歪       | female |  <span class="number">48</span> | <span class="number">2015</span><span class="number">-03</span><span class="number">-11</span> | sale    | NULL         |  <span class="number">3000.13</span> |    <span class="number">402</span> |         <span class="number">2</span> |</span><br><span class="line">| <span class="number">10</span> | 丫丫       | female |  <span class="number">38</span> | <span class="number">2010</span><span class="number">-11</span><span class="number">-01</span> | sale    | NULL         |  <span class="number">2000.35</span> |    <span class="number">402</span> |         <span class="number">2</span> |</span><br><span class="line">+----+------------+--------+-----+------------+---------+--------------+----------+--------+-----------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span>  employee limit <span class="number">10</span>,<span class="number">5</span>;</span><br><span class="line">+----+-----------+--------+-----+------------+-----------+--------------+----------+--------+-----------+</span><br><span class="line">| id | emp_name      | sex    | age | hire_date  | post      | post_comment | salary   | office | depart_id |</span><br><span class="line">+----+-----------+--------+-----+------------+-----------+--------------+----------+--------+-----------+</span><br><span class="line">| <span class="number">11</span> | 丁丁      | female |  <span class="number">18</span> | <span class="number">2011</span><span class="number">-03</span><span class="number">-12</span> | sale      | NULL         |  <span class="number">1000.37</span> |    <span class="number">402</span> |         <span class="number">2</span> |</span><br><span class="line">| <span class="number">12</span> | 星星      | female |  <span class="number">18</span> | <span class="number">2016</span><span class="number">-05</span><span class="number">-13</span> | sale      | NULL         |  <span class="number">3000.29</span> |    <span class="number">402</span> |         <span class="number">2</span> |</span><br><span class="line">| <span class="number">13</span> | 格格      | female |  <span class="number">28</span> | <span class="number">2017</span><span class="number">-01</span><span class="number">-27</span> | sale      | NULL         |  <span class="number">4000.33</span> |    <span class="number">402</span> |         <span class="number">2</span> |</span><br><span class="line">| <span class="number">14</span> | 张野      | male   |  <span class="number">28</span> | <span class="number">2016</span><span class="number">-03</span><span class="number">-11</span> | operation | NULL         | <span class="number">10000.13</span> |    <span class="number">403</span> |         <span class="number">3</span> |</span><br><span class="line">| <span class="number">15</span> | 程咬金    | male   |  <span class="number">18</span> | <span class="number">1997</span><span class="number">-03</span><span class="number">-12</span> | operation | NULL         | <span class="number">20000.00</span> |    <span class="number">403</span> |         <span class="number">3</span> |</span><br><span class="line">+----+-----------+--------+-----+------------+-----------+--------------+----------+--------+-----------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h1 id="九、使用正则表达式查询"><a href="#九、使用正则表达式查询" class="headerlink" title="九、使用正则表达式查询"></a>九、使用正则表达式查询</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM employee WHERE emp_name REGEXP <span class="string">'^jas'</span>;</span><br><span class="line"></span><br><span class="line">SELECT * FROM employee WHERE emp_name REGEXP <span class="string">'on$'</span>;</span><br><span class="line"></span><br><span class="line">SELECT * FROM employee WHERE emp_name REGEXP <span class="string">'m&#123;2&#125;'</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">小结：对字符串匹配的方式</span><br><span class="line">WHERE emp_name = <span class="string">'lqz'</span>;</span><br><span class="line">WHERE emp_name LIKE <span class="string">'sea%'</span>;</span><br><span class="line">WHERE emp_name REGEXP <span class="string">'on$'</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-1-练习"><a href="#9-1-练习" class="headerlink" title="9.1 练习"></a>9.1 练习</h2><ol>
+<li>查看所有员工中名字是mac开头，n或者g结果的员工信息</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * <span class="keyword">from</span> employee where emp_name regexp <span class="string">'^mac.*[gn]$'</span>;</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/MySQL%E5%85%A5%E9%97%A8/15-MySQL%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-B+%E6%A0%91%E4%BB%8B%E7%BB%8D/">
+        <span class="nav-arrow">← </span>
+        
+          python/MySQL入门/15-MySQL索引的数据结构-B+树介绍
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/MySQL%E5%85%A5%E9%97%A8/8-MySQL%E6%94%AF%E6%8C%81%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+        
+          python/MySQL入门/8-MySQL支持的数据类型
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、单表查询的语法及关键字执行的优先级"><span class="toc-nav-text">一、单表查询的语法及关键字执行的优先级</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-单表查询语法"><span class="toc-nav-text">1.1 单表查询语法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-关键字执行的优先级"><span class="toc-nav-text">1.2 关键字执行的优先级</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、简单查询"><span class="toc-nav-text">二、简单查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-建表和数据准备"><span class="toc-nav-text">2.1 建表和数据准备</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-练习"><span class="toc-nav-text">2.2 练习</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、约束条件（where）"><span class="toc-nav-text">三、约束条件（where）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-练习"><span class="toc-nav-text">3.1 练习</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、分组（group-by）"><span class="toc-nav-text">四、分组（group by）</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、聚合函数"><span class="toc-nav-text">五、聚合函数</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-1-练习"><span class="toc-nav-text">5.1 练习</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#六、过滤（having）"><span class="toc-nav-text">六、过滤（having）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-1-where和having的区别"><span class="toc-nav-text">6.1 where和having的区别</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-1-1-验证"><span class="toc-nav-text">6.1.1 验证</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-2-练习"><span class="toc-nav-text">6.2 练习</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#七、查询排序（order-by）"><span class="toc-nav-text">七、查询排序（order by）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7-1-练习"><span class="toc-nav-text">7.1 练习</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#八、限制查询的记录数（limit）"><span class="toc-nav-text">八、限制查询的记录数（limit）</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#8-1-练习"><span class="toc-nav-text">8.1 练习</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#九、使用正则表达式查询"><span class="toc-nav-text">九、使用正则表达式查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#9-1-练习"><span class="toc-nav-text">9.1 练习</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/MySQL入门/11-MySQL单表查询/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/MySQL入门/11-MySQL单表查询",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

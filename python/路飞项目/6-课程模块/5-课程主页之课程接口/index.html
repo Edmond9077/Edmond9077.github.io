@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/6-课程模块/5-课程主页之课程接口 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/6-课程模块/5-课程主页之课程接口</h2>
+
+
+
+  <p class="post-date">2020-03-06</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h5 id="路由：course-urls-py"><a href="#路由：course-urls-py" class="headerlink" title="路由：course/urls.py"></a>路由：course/urls.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">router.register(<span class="string">'categories'</span>, views.CourseCategoryViewSet, <span class="string">'categories'</span>)  <span class="comment"># 分类</span></span><br><span class="line">router.register(<span class="string">'free'</span>, views.CourseViewSet, <span class="string">'free'</span>)  <span class="comment"># 课程</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="视图：course-views-py"><a href="#视图：course-views-py" class="headerlink" title="视图：course/views.py"></a>视图：course/views.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.viewsets <span class="keyword">import</span> GenericViewSet</span><br><span class="line"><span class="keyword">from</span> rest_framework.mixins <span class="keyword">import</span> ListModelMixin</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> models, serializers</span><br><span class="line"><span class="comment"># 课程分类群查</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CourseCategoryViewSet</span><span class="params">(GenericViewSet, ListModelMixin)</span>:</span></span><br><span class="line">    queryset = models.CourseCategory.objects.filter(is_delete=<span class="literal">False</span>, is_show=<span class="literal">True</span>).all()</span><br><span class="line">    serializer_class = serializers.CourseCategorySerializer</span><br><span class="line"></span><br><span class="line"><span class="comment"># 课程群查</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 分页组件：基础分页(采用)、偏移分页、游标分页(了解)</span></span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> pagination</span><br><span class="line"></span><br><span class="line"><span class="comment"># 过滤组件：搜索功能、排序功能</span></span><br><span class="line"><span class="keyword">from</span> rest_framework.filters <span class="keyword">import</span> SearchFilter, OrderingFilter</span><br><span class="line"></span><br><span class="line"><span class="comment"># django-filter插件：分类功能</span></span><br><span class="line"><span class="keyword">from</span> django_filters.rest_framework <span class="keyword">import</span> DjangoFilterBackend</span><br><span class="line"><span class="keyword">from</span> .filters <span class="keyword">import</span> CourseFilterSet</span><br><span class="line"></span><br><span class="line"><span class="comment"># 前台携带所有过滤规则的请求url：</span></span><br><span class="line"><span class="comment"># http://127.0.0.1:8000/course/free/?page=1&amp;page_size=10&amp;search=python&amp;ordering=-price&amp;min_price=30&amp;count=1</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CourseViewSet</span><span class="params">(GenericViewSet, ListModelMixin)</span>:</span></span><br><span class="line">    queryset = models.Course.objects.filter(is_delete=<span class="literal">False</span>, is_show=<span class="literal">True</span>).all()</span><br><span class="line">    serializer_class = serializers.CourseSerializer</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 分页组件</span></span><br><span class="line">    pagination_class = pagination.PageNumberPagination</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 过滤组件：实际开发，有多个过滤条件时，要把优先级高的放在前面</span></span><br><span class="line">    filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 参与搜索的字段</span></span><br><span class="line">    search_fields = [<span class="string">'name'</span>, <span class="string">'id'</span>, <span class="string">'brief'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 允许排序的字段</span></span><br><span class="line">    ordering_fields = [<span class="string">'id'</span>, <span class="string">'price'</span>, <span class="string">'students'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 过滤类：分类过滤、区间过滤</span></span><br><span class="line">    filter_class = CourseFilterSet</span><br></pre></td></tr></table></figure>
+
+<h5 id="分类区间过滤：filters-py"><a href="#分类区间过滤：filters-py" class="headerlink" title="分类区间过滤：filters.py"></a>分类区间过滤：filters.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># django-filter插件 过滤类</span></span><br><span class="line"><span class="keyword">from</span> django_filters.filterset <span class="keyword">import</span> FilterSet</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">from</span> django_filters <span class="keyword">import</span> filters</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CourseFilterSet</span><span class="params">(FilterSet)</span>:</span></span><br><span class="line">    <span class="comment"># 区间过滤：field_name关联的Model字段；lookup_expr设置规则；gt是大于，gte是大于等于；</span></span><br><span class="line">    min_price = filters.NumberFilter(field_name=<span class="string">'price'</span>, lookup_expr=<span class="string">'gte'</span>)</span><br><span class="line">    max_price = filters.NumberFilter(field_name=<span class="string">'price'</span>, lookup_expr=<span class="string">'lte'</span>)</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = models.Course</span><br><span class="line">        <span class="comment"># 如果过滤条件仅仅就是Model已有的字段，方式一更好</span></span><br><span class="line">        <span class="comment"># 但是方式二可以自定义过滤字段</span></span><br><span class="line">        fields = [<span class="string">'course_category'</span>, <span class="string">'min_price'</span>, <span class="string">'max_price'</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="分页：paginations-py"><a href="#分页：paginations-py" class="headerlink" title="分页：paginations.py"></a>分页：paginations.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework.pagination <span class="keyword">import</span> PageNumberPagination <span class="keyword">as</span> DrfPageNumberPagination</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PageNumberPagination</span><span class="params">(DrfPageNumberPagination)</span>:</span></span><br><span class="line">    <span class="comment"># 默认一页显示的条数</span></span><br><span class="line">    page_size = <span class="number">2</span></span><br><span class="line">    <span class="comment"># url中携带页码的key</span></span><br><span class="line">    page_query_param = <span class="string">'page'</span></span><br><span class="line">    <span class="comment"># url中用户携带自定义一页条数的key</span></span><br><span class="line">    page_size_query_param = <span class="string">'page_size'</span></span><br><span class="line">    <span class="comment"># 用户最大可自定义一页的条数</span></span><br><span class="line">    max_page_size = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="模型：course-models-py"><a href="#模型：course-models-py" class="headerlink" title="模型：course/models.py"></a>模型：course/models.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Course</span><span class="params">(BaseModel)</span>:</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">course_type_name</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.get_course_type_display()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">level_name</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.get_level_display()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">status_name</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.get_status_display()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 连表序列化字段</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">section_list</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 检索所以章节所以课时，返回前4课时，不足4课时全部返回</span></span><br><span class="line">        temp_section_list = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> chapter <span class="keyword">in</span> self.coursechapters.all():</span><br><span class="line">            <span class="keyword">for</span> section <span class="keyword">in</span> chapter.coursesections.all():</span><br><span class="line">                temp_section_list.append(&#123;</span><br><span class="line">                    <span class="string">'name'</span>: section.name,</span><br><span class="line">                    <span class="string">'section_link'</span>: section.section_link,</span><br><span class="line">                    <span class="string">'duration'</span>: section.duration,</span><br><span class="line">                    <span class="string">'free_trail'</span>: section.free_trail,</span><br><span class="line">                &#125;)</span><br><span class="line">                <span class="keyword">if</span> len(temp_section_list) &gt;= <span class="number">4</span>:</span><br><span class="line">                    <span class="keyword">return</span> temp_section_list  <span class="comment"># 最多4条</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> temp_section_list  <span class="comment"># 不足4条</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Teacher</span><span class="params">(BaseModel)</span>:</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">role_name</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.get_role_display()</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="序列化：course-serializers-py"><a href="#序列化：course-serializers-py" class="headerlink" title="序列化：course/serializers.py"></a>序列化：course/serializers.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework <span class="keyword">import</span> serializers</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> models</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CourseCategorySerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = models.CourseCategory</span><br><span class="line">        fields = (<span class="string">'id'</span>, <span class="string">'name'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 子序列化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TeacherSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = models.Teacher</span><br><span class="line">        fields = (<span class="string">'name'</span>, <span class="string">'role_name'</span>, <span class="string">'title'</span>, <span class="string">'signature'</span>, <span class="string">'image'</span>, <span class="string">'brief'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CourseSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    teacher = TeacherSerializer(many=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = models.Course</span><br><span class="line">        fields = (</span><br><span class="line">            <span class="string">'id'</span>,</span><br><span class="line">            <span class="string">'name'</span>,</span><br><span class="line">            <span class="string">'course_img'</span>,</span><br><span class="line">            <span class="string">'brief'</span>,</span><br><span class="line">            <span class="string">'attachment_path'</span>,</span><br><span class="line">            <span class="string">'pub_sections'</span>,</span><br><span class="line">            <span class="string">'price'</span>,</span><br><span class="line">            <span class="string">'students'</span>,</span><br><span class="line">            <span class="string">'period'</span>,</span><br><span class="line">            <span class="string">'sections'</span>,</span><br><span class="line">            <span class="string">'course_type_name'</span>,</span><br><span class="line">            <span class="string">'level_name'</span>,</span><br><span class="line">            <span class="string">'status_name'</span>,</span><br><span class="line">            <span class="string">'teacher'</span>,</span><br><span class="line">            <span class="string">'section_list'</span>,</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<h5 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">GenericAPIView：额外的两个属性两个方法</span></span><br><span class="line"><span class="string">filter_backends：配置过滤类们</span></span><br><span class="line"><span class="string">filter_queryset()：调用配置的过滤类完成过滤（都是在群查接口中完成，传入queryset，接收过滤后的queryset）</span></span><br><span class="line"><span class="string"># 源码使用</span></span><br><span class="line"><span class="string">queryset = self.filter_queryset(self.get_queryset())</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">pagination_class：配置分页类</span></span><br><span class="line"><span class="string">paginate_queryset()：调用配置的分页类完成分页（都是在群查接口中完成，传入queryset，接收分页滤后的分页对象）</span></span><br><span class="line"><span class="string"># 源码使用</span></span><br><span class="line"><span class="string">page = self.paginate_queryset(queryset)</span></span><br><span class="line"><span class="string">    if page is not None:</span></span><br><span class="line"><span class="string">        serializer = self.get_serializer(page, many=True)</span></span><br><span class="line"><span class="string">        return self.get_paginated_response(serializer.data)</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">搜索组件</span></span><br><span class="line"><span class="string">1）在视图文件views.py中导入drf的搜索组件</span></span><br><span class="line"><span class="string">from rest_framework.filters import SearchFilter</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）将搜索组件配置给群查接口视图类的filter_backends</span></span><br><span class="line"><span class="string">filter_backends = [SearchFilter]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）配置视图类关联的Model表参与搜索的字段</span></span><br><span class="line"><span class="string">search_fields = ['name', 'id']</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）前台访问该群查接口，采用拼接参数方式用search关键字将搜索目标提供给后台</span></span><br><span class="line"><span class="string">http://127.0.0.1:8000/course/free/?search=2  # id或name中包含2的所有结果</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">排序组件</span></span><br><span class="line"><span class="string">1）在视图文件views.py中导入drf的搜索组件</span></span><br><span class="line"><span class="string">from rest_framework.filters import OrderingFilter</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）将搜索组件配置给群查接口视图类的filter_backends</span></span><br><span class="line"><span class="string">filter_backends = [OrderingFilter]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）配置视图类关联的Model表允许排序的字段</span></span><br><span class="line"><span class="string">ordering_fields = ['id', 'price']</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）前台访问该群查接口，采用拼接参数方式用search关键字将搜索目标提供给后台</span></span><br><span class="line"><span class="string">http://127.0.0.1:8000/course/free/?ordering=price,-id  # 按price升序，如果price相同，再按id降序</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">django-filter插件：分类功能</span></span><br><span class="line"><span class="string">前提：安装django-filter插件</span></span><br><span class="line"><span class="string">&gt;: pip install django-filter</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">方式一</span></span><br><span class="line"><span class="string">1）在视图文件views.py中导入django-filter的功能组件</span></span><br><span class="line"><span class="string">from django_filters.rest_framework import DjangoFilterBackend</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）将搜索组件配置给群查接口视图类的filter_backends</span></span><br><span class="line"><span class="string">filter_backends = [DjangoFilterBackend]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）配置视图类关联的Model表可以分类的字段（通常是可以分组的字段）</span></span><br><span class="line"><span class="string">filter_fields = ['course_category']</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）前台访问该群查接口，采用拼接参数方式用分类course_category字段将分类条件提供给后台</span></span><br><span class="line"><span class="string">http://127.0.0.1:8000/course/free/?course_category=1  # 拿课程分类1下的所有课程</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">方式二</span></span><br><span class="line"><span class="string">1）自定义过滤类继承django-filter插件的FilterSet类，绑定Model表，并设置分类字段</span></span><br><span class="line"><span class="string">from django_filters.filterset import FilterSet</span></span><br><span class="line"><span class="string">from . import models</span></span><br><span class="line"><span class="string">class CourseFilterSet(FilterSet):</span></span><br><span class="line"><span class="string">    class Meta:</span></span><br><span class="line"><span class="string">        model = models.Course</span></span><br><span class="line"><span class="string">        fields = ['course_category']</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）在视图文件views.py中导入django-filter的功能组件及自定义的过滤类</span></span><br><span class="line"><span class="string">from django_filters.rest_framework import DjangoFilterBackend</span></span><br><span class="line"><span class="string">from .filters import CourseFilterSet</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">3）将搜索组件配置给群查接口视图类的filter_backends</span></span><br><span class="line"><span class="string">filter_backends = [DjangoFilterBackend]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）配置视图类关联的自定义过滤类</span></span><br><span class="line"><span class="string">filter_class = CourseFilterSet</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">5）前台访问该群查接口，采用拼接参数方式用分类course_category字段将分类条件提供给后台</span></span><br><span class="line"><span class="string">http://127.0.0.1:8000/course/free/?course_category=1  # 拿课程分类1下的所有课程</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">区间过滤</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">1）自定义过滤类继承django-filter插件的FilterSet类，绑定Model表，并设置自定义区间规则字段</span></span><br><span class="line"><span class="string">from django_filters.filterset import FilterSet</span></span><br><span class="line"><span class="string">from . import models</span></span><br><span class="line"><span class="string">class CourseFilterSet(FilterSet):</span></span><br><span class="line"><span class="string">    # 区间过滤：field_name关联的Model字段；lookup_expr设置规则；gt是大于，gte是大于等于；</span></span><br><span class="line"><span class="string">    min_price = filters.NumberFilter(field_name='price', lookup_expr='gte')</span></span><br><span class="line"><span class="string">    max_price = filters.NumberFilter(field_name='price', lookup_expr='lte')</span></span><br><span class="line"><span class="string">    class Meta:</span></span><br><span class="line"><span class="string">        model = models.Course</span></span><br><span class="line"><span class="string">        fields = ['min_price', 'max_price']</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）在视图文件views.py中导入django-filter的功能组件及自定义的过滤类</span></span><br><span class="line"><span class="string">from django_filters.rest_framework import DjangoFilterBackend</span></span><br><span class="line"><span class="string">from .filters import CourseFilterSet</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">3）将搜索组件配置给群查接口视图类的filter_backends</span></span><br><span class="line"><span class="string">filter_backends = [DjangoFilterBackend]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）配置视图类关联的自定义过滤类</span></span><br><span class="line"><span class="string">filter_class = CourseFilterSet</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">5）前台访问该群查接口，采用拼接参数方式用自定义区间规则字段将区间条件提供给后台</span></span><br><span class="line"><span class="string">http://127.0.0.1:8000/course/free/?min_price=30&amp;max_price=60  # 拿课程价格在30~60的所有课程</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/6-%E8%AF%BE%E7%A8%8B%E6%A8%A1%E5%9D%97/7-%E8%AF%BE%E7%A8%8B%E8%AF%A6%E6%83%85%E9%A1%B5%E4%B9%8B%E5%90%8E%E5%8F%B0/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/6-课程模块/7-课程详情页之后台
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/7-%E6%90%9C%E7%B4%A2%E5%8A%9F%E8%83%BD/2-%E6%90%9C%E7%B4%A2%E5%90%8E%E5%8F%B0%E6%8E%A5%E5%8F%A3/">
+        
+          python/路飞项目/7-搜索功能/2-搜索后台接口
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#路由：course-urls-py"><span class="toc-nav-text">路由：course&#x2F;urls.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#视图：course-views-py"><span class="toc-nav-text">视图：course&#x2F;views.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#分类区间过滤：filters-py"><span class="toc-nav-text">分类区间过滤：filters.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#分页：paginations-py"><span class="toc-nav-text">分页：paginations.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#模型：course-models-py"><span class="toc-nav-text">模型：course&#x2F;models.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#序列化：course-serializers-py"><span class="toc-nav-text">序列化：course&#x2F;serializers.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#补充"><span class="toc-nav-text">补充</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/6-课程模块/5-课程主页之课程接口/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/6-课程模块/5-课程主页之课程接口",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

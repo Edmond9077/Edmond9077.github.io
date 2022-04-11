@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/MySQL系列/01-MySQL系列之-MySQL介绍安装配置 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/MySQL系列/01-MySQL系列之-MySQL介绍安装配置</h2>
+
+
+
+  <p class="post-date">2019-12-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一-MySQL介绍和安装"><a href="#一-MySQL介绍和安装" class="headerlink" title="一 MySQL介绍和安装"></a>一 MySQL介绍和安装</h1><h2 id="1-1-什么是数据？"><a href="#1-1-什么是数据？" class="headerlink" title="1.1 什么是数据？"></a>1.1 什么是数据？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">数据：文字、图片、视频。。。人类认知的数据表现方式</span><br><span class="line">计算机：二进制、16进制的机器语言</span><br><span class="line">基于数据的重要性和复杂性的不同，我们可能有不同的管理方式。</span><br><span class="line"></span><br><span class="line">哪些数据是适合存储到数据库的呢？</span><br><span class="line">重要性比较高的</span><br><span class="line">关系较复杂的数据</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-什么是数据库管理系统（DBMS）？"><a href="#1-2-什么是数据库管理系统（DBMS）？" class="headerlink" title="1.2 什么是数据库管理系统（DBMS）？"></a>1.2 什么是数据库管理系统（DBMS）？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">RDBMS: 关系型数据库管理系统</span><br><span class="line">比较适合于,安全级别要求高的数据以及关系较复杂的数据</span><br><span class="line"></span><br><span class="line">NoSQL:非关系型数据库管理系统</span><br><span class="line">适合于高性能存取数据,一般是配合RDBMS进行使用的</span><br><span class="line">针对大数据处理分析,分布式架构更加擅长</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-3-数据库管理系统种类"><a href="#1-3-数据库管理系统种类" class="headerlink" title="1.3 数据库管理系统种类"></a>1.3 数据库管理系统种类</h2><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">RDBMS:Relational Database Management System,关系数据库管理系统</span><br><span class="line">MySQL 、Oracle、MSSQL（SQL Server）、PostgreSQL</span><br><span class="line"> </span><br><span class="line">NoSQL：Not Only SQL</span><br><span class="line">键-值（key-<span class="keyword">value</span>）：Redis, memcached</span><br><span class="line">文档（document）：Mongodb</span><br></pre></td></tr></table></figure>
+
+<h2 id="二-MySQL简介及产品线"><a href="#二-MySQL简介及产品线" class="headerlink" title="二 MySQL简介及产品线"></a>二 MySQL简介及产品线</h2><h3 id="2-1-MySQL行业主流版本"><a href="#2-1-MySQL行业主流版本" class="headerlink" title="2.1 MySQL行业主流版本"></a>2.1 MySQL行业主流版本</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5.5</span> ：企业基本不用了</span><br><span class="line"><span class="number">5.6</span> ：****：四星 <span class="number">5.6</span><span class="number">.36</span>  <span class="number">5.6</span><span class="number">.38</span> <span class="number">5.6</span><span class="number">.40</span> ..<span class="number">.5</span><span class="number">.6</span><span class="number">.46</span></span><br><span class="line"><span class="number">5.7</span> ：*****：五星 <span class="number">5.7</span><span class="number">.20</span> <span class="number">5.7</span><span class="number">.22</span> ...<span class="number">.5</span><span class="number">.7</span><span class="number">.28</span> <span class="number">5.7</span><span class="number">.30</span>(<span class="number">5.7</span>版本最新)</span><br><span class="line"><span class="number">8.0</span>(最新) ：**：两星 <span class="number">8.0</span><span class="number">.11</span> 开始，之前都是测试版 ..<span class="number">.8</span><span class="number">.0</span><span class="number">.20</span></span><br></pre></td></tr></table></figure>
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg8ngo5rj30io0yyqnr.jpg" alt="image-20200812123341051" style="zoom:30%;" />
+
+<h3 id="2-2-企业版本选择-MySQL分支版本"><a href="#2-2-企业版本选择-MySQL分支版本" class="headerlink" title="2.2 企业版本选择(MySQL分支版本)"></a>2.2 企业版本选择(MySQL分支版本)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分支</span></span><br><span class="line">Oracle:</span><br><span class="line">      MySQL官方版</span><br><span class="line">红帽  :</span><br><span class="line">      MariaDB：红帽维护的分支</span><br><span class="line">Percona:</span><br><span class="line">      PerconaDB：Percona公司维护的分支</span><br><span class="line"><span class="comment"># 版本</span></span><br><span class="line">企业版：收费</span><br><span class="line">社区版：开源免费</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-版本选择建议"><a href="#2-3-版本选择建议" class="headerlink" title="2.3 版本选择建议"></a>2.3 版本选择建议</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.一般选择官方主流版本:5.6,5.7 </span><br><span class="line">2.GA（稳定发布版）</span><br><span class="line">3.6-12月的产品版本</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-课程版本："><a href="#2-4-课程版本：" class="headerlink" title="2.4 课程版本："></a>2.4 课程版本：</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5<span class="selector-class">.7</span><span class="selector-class">.30</span>  二进制安装，其他安装方式自己扩展</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-下载（社区版源码安装）"><a href="#2-5-下载（社区版源码安装）" class="headerlink" title="2.5 下载（社区版源码安装）"></a>2.5 下载（社区版源码安装）</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">企业版：<span class="selector-tag">Enterprise</span> 互联网行业一般选择社区版</span><br><span class="line">源码包：<span class="selector-tag">source</span> <span class="selector-tag">code</span>    <span class="selector-class">.tar</span><span class="selector-class">.gz</span>   </span><br><span class="line">## 下载<span class="selector-tag">-</span>官网</span><br><span class="line">1 https://www.mysql.com/</span><br><span class="line">2 选择<span class="selector-tag">downloads</span></span><br><span class="line">  -https://www.mysql.com/downloads/</span><br><span class="line">3 底部选择：<span class="selector-tag">MySQL</span> <span class="selector-tag">Community</span> (<span class="selector-tag">GPL</span>) <span class="selector-tag">Downloads</span> »</span><br><span class="line">4 只能下到最新版：<span class="selector-tag">MySQL</span> <span class="selector-tag">Community</span> <span class="selector-tag">Server</span></span><br><span class="line">5 选择<span class="selector-tag">Download</span> <span class="selector-tag">Archives</span></span><br><span class="line">6 选择<span class="selector-tag">MySQL</span> <span class="selector-tag">Community</span> <span class="selector-tag">Server</span></span><br><span class="line">7 选择版本，平台下载即可</span><br></pre></td></tr></table></figure>
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg8su922j313u0ion0b.jpg" alt="image-20200812124134757" style="zoom:30%;" />
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg8w74ibj30ye0u0qef.jpg" alt="image-20200812124209859" style="zoom:25%;" />
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg928u5sj316r0u0dmp.jpg" alt="image-20200812124252353" style="zoom:30%;" />
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg984uzdj30w20jodj3.jpg" alt="image-20200812124328046" style="zoom:30%;" />
+
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg9b2ngij31rw0u0qd6.jpg" alt="image-20200812124506731" style="zoom:30%;" />
+
+<h3 id="2-6-安装方式"><a href="#2-6-安装方式" class="headerlink" title="2.6  安装方式"></a>2.6  安装方式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 源码安装：编译安装，非常慢，需要研究源码</span><br><span class="line"><span class="number">2</span> rmp，yum 安装：配置官方yum源，直接yum install </span><br><span class="line"><span class="number">3</span> 通用二进制版：解压即用，绿色版（企业用）</span><br></pre></td></tr></table></figure>
+
+<h4 id="源码安装"><a href="#源码安装" class="headerlink" title="源码安装"></a>源码安装</h4><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg9esjhvj321g0u0ahk.jpg" alt="image-20200812125826785" style="zoom:30%;" />
+
+<h4 id="rpm方式"><a href="#rpm方式" class="headerlink" title="rpm方式"></a>rpm方式</h4><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gicg9i4xatj31ek0u0ahv.jpg" alt="image-20200812125205098" style="zoom:30%;" />
+
+<h4 id="yum方式"><a href="#yum方式" class="headerlink" title="yum方式"></a>yum方式</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置源</span></span><br><span class="line"><span class="comment"># Enable to use MySQL 5.7</span></span><br><span class="line">[mysql57-community]</span><br><span class="line">name=MySQL <span class="number">5.7</span> Community Server</span><br><span class="line">baseurl=http://repo.mysql.com/yum/mysql<span class="number">-5.7</span>-community/el/<span class="number">6</span>/$basearch/</span><br><span class="line">enabled=<span class="number">1</span></span><br><span class="line">gpgcheck=<span class="number">1</span></span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br><span class="line">  </span><br><span class="line">[mysql80-community]</span><br><span class="line">name=MySQL <span class="number">8.0</span> Community Server</span><br><span class="line">baseurl=http://repo.mysql.com/yum/mysql<span class="number">-8.0</span>-community/el/<span class="number">6</span>/$basearch/</span><br><span class="line">enabled=<span class="number">1</span></span><br><span class="line">gpgcheck=<span class="number">1</span></span><br><span class="line">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql</span><br><span class="line">  </span><br><span class="line"><span class="comment"># sudo yum install mysql-community-server</span></span><br><span class="line"><span class="comment"># sudo systemctl start mysqld.service</span></span><br><span class="line"><span class="comment"># sudo systemctl status mysqld.service</span></span><br><span class="line"><span class="comment"># sudo grep 'temporary password' /var/log/mysqld.log</span></span><br><span class="line"><span class="comment"># mysql -uroot -p</span></span><br><span class="line"><span class="comment"># ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="通用二进制安装"><a href="#通用二进制安装" class="headerlink" title="通用二进制安装"></a>通用二进制安装</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 环境准备</span></span><br><span class="line">一台centos <span class="number">7.6</span>虚拟机，能上网，</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 清理一下环境 </span></span><br><span class="line">rpm -qa |grep mariadb  </span><br><span class="line">yum remove mariadb-libs</span><br><span class="line"><span class="comment"># 3 创建用户和组</span></span><br><span class="line">useradd mysql</span><br><span class="line">useradd mysql -s /sbin/nologin <span class="comment"># 不能登录，没有家目录</span></span><br><span class="line">id mysql</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4 创建相关目录（软件目录，数据目录）</span></span><br><span class="line"><span class="comment"># 软件目录</span></span><br><span class="line">mkdir -p /app/database/</span><br><span class="line"><span class="comment"># 数据目录</span></span><br><span class="line">mkdir -p /data/<span class="number">3306</span></span><br><span class="line"><span class="comment"># 日志目录</span></span><br><span class="line">mkdir -p /binlog/<span class="number">3306</span></span><br><span class="line"><span class="comment"># mkdir -p /app/database/ /data/3306/ /binlog/3306</span></span><br><span class="line"><span class="comment"># 生产建议：软件和数据和日志不要放在同一个地方，一般数据放在另一块磁盘上</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5 设置权限</span></span><br><span class="line">chown -R mysql.mysql /app/ /data/ /binlog</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6 上传并解压软件到 /app/databases/</span></span><br><span class="line">wget https://downloads.mysql.com/archives/get/p/<span class="number">23</span>/file/mysql<span class="number">-5.7</span><span class="number">.30</span>-linux-glibc2<span class="number">.12</span>-x86_64.tar.gz</span><br><span class="line">tar xzf mysql<span class="number">-5.7</span><span class="number">.30</span>-linux-glibc2<span class="number">.12</span>-x86_64.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 7 建立软连接</span></span><br><span class="line">ln -s mysql<span class="number">-5.7</span><span class="number">.30</span>-linux-glibc2<span class="number">.12</span>-x86_64 mysql</span><br><span class="line"></span><br><span class="line"><span class="comment"># 8 设置环境变量</span></span><br><span class="line">-bin <span class="comment"># mysql执行的命令</span></span><br><span class="line">-support-files <span class="comment"># 存放脚本</span></span><br><span class="line"><span class="comment"># 把bin目录设置到环境变量中</span></span><br><span class="line">vim /etc/profile</span><br><span class="line"><span class="comment">#添加一行</span></span><br><span class="line">export PATH=/app/database/mysql/bin:$PATH</span><br><span class="line"><span class="comment"># 生效配置</span></span><br><span class="line">source /etc/profile</span><br><span class="line"><span class="comment"># 验证</span></span><br><span class="line">mysql -V</span><br><span class="line"></span><br><span class="line"><span class="comment"># 9 初始化系统库表（系统数据，数据库要启动，必须依赖一些表，系统表）</span></span><br><span class="line">mysqld --initialize-insecure --user=mysql --basedir=/app/database/mysql --datadir=/data/<span class="number">3306</span>/</span><br><span class="line"><span class="comment">#会报错：</span></span><br><span class="line">mysqld: error <span class="keyword">while</span> loading shared libraries: libaio.so<span class="number">.1</span>: cannot open shared object file: No such file <span class="keyword">or</span> directory</span><br><span class="line">报错原因: Linux系统中缺少libaio-devel 软件包</span><br><span class="line"><span class="comment">#解决:</span></span><br><span class="line">yum install -y libaio-devel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果再执行一下上面的初始化命令，会报data目录不为空，需要删除数据目录再执行</span></span><br><span class="line"><span class="comment">#########补充：</span></span><br><span class="line"><span class="comment"># 1 初始化数据自带密码</span></span><br><span class="line"><span class="comment"># 5.7开始,MySQL加入了全新的 密码的安全机制:</span></span><br><span class="line"><span class="number">1.</span>初始化完成后,会生成临时密码(显示到屏幕上,并且会往日志中记一份)</span><br><span class="line">2.密码复杂度:长度:超过12位? 复杂度:字符混乱组合</span><br><span class="line"><span class="number">3.</span>密码过期时间<span class="number">180</span>天</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化数据，初始化管理员的临时密码</span></span><br><span class="line">mysqld --initialize  --user=mysql --basedir=/app/database/mysql --datadir=/data/<span class="number">3306</span>/</span><br><span class="line"><span class="comment"># 会打印出密码，记住，然后需要修改root密码后才能正常使用数据库</span></span><br><span class="line"><span class="comment"># S44GNgK!h.qg</span></span><br><span class="line"><span class="comment">#2 5.6初始化的区别</span></span><br><span class="line">./mysql/scripts/mysql_install_db  --user=mysql --basedir=/app/database/mysql --datadir=/data/<span class="number">3306</span>/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 10 编写默认配置文件</span></span><br><span class="line">vim /etc/my.cnf</span><br><span class="line">[mysqld]</span><br><span class="line">user=mysql</span><br><span class="line">basedir=/app/database/mysql</span><br><span class="line">datadir=/data/<span class="number">3306</span>/</span><br><span class="line">server_id=<span class="number">6</span></span><br><span class="line">port=<span class="number">3306</span></span><br><span class="line">socket=/tmp/mysql.sock</span><br><span class="line">[mysql]</span><br><span class="line">socket=/tmp/mysql.sock</span><br><span class="line"></span><br><span class="line"><span class="comment"># 11 配置启动脚本</span></span><br><span class="line">cd /app/database/mysql/support-files</span><br><span class="line">./mysql.server start</span><br><span class="line"><span class="comment"># copymysql的启动脚本至系统管理目录中</span></span><br><span class="line">cp mysql.server /etc/init.d/mysqld</span><br><span class="line"><span class="comment"># centos6中，使用service 启动</span></span><br><span class="line">service mysqld start</span><br><span class="line">service mysqld stop</span><br><span class="line">service mysqld restart</span><br><span class="line"><span class="comment"># centos7中：使用systemctl启动</span></span><br><span class="line">chkconfig --add mysqld <span class="comment"># 把mysqld的脚本添加到systemctl的管理中</span></span><br><span class="line">systemctl start mysqld</span><br><span class="line"><span class="comment">###至此，启动方式可以是</span></span><br><span class="line">service mysqld start</span><br><span class="line">systemctl start mysqld</span><br><span class="line">/etc/init.d/mysqld start</span><br><span class="line">/app/database/mysql/support-files/mysql.server start</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 12 在登陆前修改密码（使用mysqld --initialize 初始化的数据）</span></span><br><span class="line">mysqladmin -uroot -p password lqz1234.</span><br><span class="line">输入原始密码</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/MySQL%E7%B3%BB%E5%88%97/13-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-%E4%BC%98%E5%8C%96/">
+        <span class="nav-arrow">← </span>
+        
+          db/MySQL系列/13-MySQL系列之-优化
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/MySQL%E7%B3%BB%E5%88%97/02-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-MySQL%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%A1%E7%90%86/">
+        
+          db/MySQL系列/02-MySQL系列之-MySQL体系结构与管理
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-MySQL介绍和安装"><span class="toc-nav-text">一 MySQL介绍和安装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-什么是数据？"><span class="toc-nav-text">1.1 什么是数据？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-什么是数据库管理系统（DBMS）？"><span class="toc-nav-text">1.2 什么是数据库管理系统（DBMS）？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-3-数据库管理系统种类"><span class="toc-nav-text">1.3 数据库管理系统种类</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-MySQL简介及产品线"><span class="toc-nav-text">二 MySQL简介及产品线</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-MySQL行业主流版本"><span class="toc-nav-text">2.1 MySQL行业主流版本</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-企业版本选择-MySQL分支版本"><span class="toc-nav-text">2.2 企业版本选择(MySQL分支版本)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-3-版本选择建议"><span class="toc-nav-text">2.3 版本选择建议</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-4-课程版本："><span class="toc-nav-text">2.4 课程版本：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-下载（社区版源码安装）"><span class="toc-nav-text">2.5 下载（社区版源码安装）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-6-安装方式"><span class="toc-nav-text">2.6  安装方式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#源码安装"><span class="toc-nav-text">源码安装</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#rpm方式"><span class="toc-nav-text">rpm方式</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#yum方式"><span class="toc-nav-text">yum方式</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#通用二进制安装"><span class="toc-nav-text">通用二进制安装</span></a></li></ol></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/MySQL系列/01-MySQL系列之-MySQL介绍安装配置/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/MySQL系列/01-MySQL系列之-MySQL介绍安装配置",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

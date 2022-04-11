@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/面向对象高阶/5-描述符(__get__和__set__和__delete__) | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/面向对象高阶/5-描述符(__get__和__set__和__delete__)</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2qlwco4ag306l04lq3a.gif" alt="103-描述符(get,set,delete)-预警.gif"></p>
+<h1 id="一、描述符"><a href="#一、描述符" class="headerlink" title="一、描述符"></a>一、描述符</h1><ul>
+<li>描述符是什么：描述符本质就是一个新式类，在这个新式类中，至少实现了<strong>get</strong>()，<strong>set</strong>()，<strong>delete</strong>()中的一个，这也被称为描述符协议<ul>
+<li><strong>get</strong>()：调用一个属性时，触发</li>
+<li><strong>set</strong>()：为一个属性赋值时，触发</li>
+<li><strong>delete</strong>()：采用del删除属性时，触发</li>
+</ul>
+</li>
+<li>定义一个描述符</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Foo:  # 在python3中Foo是新式类，它实现了__get__()，__set__()，__delete__()中的一个三种方法的一个，这个类就被称作一个描述符</span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        pass</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、描述符的作用"><a href="#二、描述符的作用" class="headerlink" title="二、描述符的作用"></a>二、描述符的作用</h1><ul>
+<li>描述符是干什么的：描述符的作用是用来代理另外一个类的属性的，必须把描述符定义成这个类的类属性，不能定义到构造函数中</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;触发get&#39;)</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;触发set&#39;)</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;触发delete&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">f1 &#x3D; Foo()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>包含这三个方法的新式类称为描述符，由这个类产生的实例进行属性的调用/赋值/删除，并不会触发这三个方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f1.name &#x3D; &#39;lqz&#39;</span><br><span class="line">f1.name</span><br><span class="line">del f1.name</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-1-何时，何地，会触发这三个方法的执行"><a href="#2-1-何时，何地，会触发这三个方法的执行" class="headerlink" title="2.1 何时，何地，会触发这三个方法的执行"></a>2.1 何时，何地，会触发这三个方法的执行</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">class Str:</span><br><span class="line">    &quot;&quot;&quot;描述符Str&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;Str调用&#39;)</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;Str设置...&#39;)</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;Str删除...&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Int:</span><br><span class="line">    &quot;&quot;&quot;描述符Int&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;Int调用&#39;)</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;Int设置...&#39;)</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;Int删除...&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; Str()</span><br><span class="line">    age &#x3D; Int()</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):  # name被Str类代理，age被Int类代理</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 何地？：定义成另外一个类的类属性</span><br><span class="line"></span><br><span class="line"># 何时？：且看下列演示</span><br><span class="line"></span><br><span class="line">p1 &#x3D; People(&#39;alex&#39;, 18)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Str设置...</span><br><span class="line">Int设置...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>描述符Str的使用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p1.name</span><br><span class="line">p1.name &#x3D; &#39;lqz&#39;</span><br><span class="line">del p1.name</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Str调用</span><br><span class="line">Str设置...</span><br><span class="line">Str删除...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>描述符Int的使用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p1.age</span><br><span class="line">p1.age &#x3D; 18</span><br><span class="line">del p1.age</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Int调用</span><br><span class="line">Int设置...</span><br><span class="line">Int删除...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>我们来瞅瞅到底发生了什么</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(p1.__dict__)</span><br><span class="line">print(People.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#125;</span><br><span class="line">&#123;&#39;__module__&#39;: &#39;__main__&#39;, &#39;name&#39;: &lt;__main__.Str object at 0x107a86940&gt;, &#39;age&#39;: &lt;__main__.Int object at 0x107a863c8&gt;, &#39;__init__&#39;: &lt;function People.__init__ at 0x107ba2ae8&gt;, &#39;__dict__&#39;: &lt;attribute &#39;__dict__&#39; of &#39;People&#39; objects&gt;, &#39;__weakref__&#39;: &lt;attribute &#39;__weakref__&#39; of &#39;People&#39; objects&gt;, &#39;__doc__&#39;: None&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>补充</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(type(p1) &#x3D;&#x3D; People)  # type(obj)其实是查看obj是由哪个类实例化来的</span><br><span class="line">print(type(p1).__dict__ &#x3D;&#x3D; People.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">True</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、两种描述符"><a href="#三、两种描述符" class="headerlink" title="三、两种描述符"></a>三、两种描述符</h1><h2 id="3-1-数据描述符"><a href="#3-1-数据描述符" class="headerlink" title="3.1 数据描述符"></a>3.1 数据描述符</h2><ul>
+<li>至少实现了<strong>get</strong>()和<strong>set</strong>()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;set&#39;)</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get&#39;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-非数据描述符"><a href="#3-2-非数据描述符" class="headerlink" title="3.2 非数据描述符"></a>3.2 非数据描述符</h2><ul>
+<li>没有实现<strong>set</strong>()</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get&#39;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、描述符注意事项"><a href="#四、描述符注意事项" class="headerlink" title="四、描述符注意事项"></a>四、描述符注意事项</h1><p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2qmdn5b5g309m07iwfh.gif" alt="103-描述符(get,set,delete)-注意.jpg"></p>
+<ol>
+<li><p>描述符本身应该定义成新式类，被代理的类也应该是新式类</p>
+</li>
+<li><p>必须把描述符定义成这个类的类属性，不能为定义到构造函数中</p>
+</li>
+<li><p>要严格遵循该优先级，优先级由高到底分别是</p>
+<p>1.类属性</p>
+<p>2.数据描述符</p>
+<p>3.实例属性</p>
+<p>4.非数据描述符</p>
+<p>5.找不到的属性触发<strong>getattr</strong>()</p>
+</li>
+</ol>
+<h1 id="五、使用描述符"><a href="#五、使用描述符" class="headerlink" title="五、使用描述符"></a>五、使用描述符</h1><ul>
+<li>众所周知，python是弱类型语言，即参数的赋值没有类型限制，下面我们通过描述符机制来实现类型限制功能</li>
+</ul>
+<h2 id="5-1-牛刀小试"><a href="#5-1-牛刀小试" class="headerlink" title="5.1 牛刀小试"></a>5.1 牛刀小试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class Str:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get---&gt;&#39;, instance, owner)</span><br><span class="line">        return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;set---&gt;&#39;, instance, value)</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;delete---&gt;&#39;, instance)</span><br><span class="line">        instance.__dict__.pop(self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; Str(&#39;name&#39;)</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p1 &#x3D; People(&#39;lqz&#39;, 18, 3231.3)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set---&gt; &lt;__main__.People object at 0x107a86198&gt; lqz</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(p1.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;name&#39;: &#39;lqz&#39;, &#39;age&#39;: 18, &#39;salary&#39;: 3231.3&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(p1.name)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get---&gt; &lt;__main__.People object at 0x107a86198&gt; &lt;class &#39;__main__.People&#39;&gt;</span><br><span class="line">lqz</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>赋值</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(p1.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;name&#39;: &#39;lqz&#39;, &#39;age&#39;: 18, &#39;salary&#39;: 3231.3&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p1.name &#x3D; &#39;lqzlin&#39;</span><br><span class="line">print(p1.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set---&gt; &lt;__main__.People object at 0x107a86198&gt; lqzlin</span><br><span class="line">&#123;&#39;name&#39;: &#39;lqzlin&#39;, &#39;age&#39;: 18, &#39;salary&#39;: 3231.3&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(p1.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;name&#39;: &#39;lqzlin&#39;, &#39;age&#39;: 18, &#39;salary&#39;: 3231.3&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">del p1.name</span><br><span class="line">print(p1.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">delete---&gt; &lt;__main__.People object at 0x107a86198&gt;</span><br><span class="line">&#123;&#39;age&#39;: 18, &#39;salary&#39;: 3231.3&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-拔刀相助"><a href="#5-2-拔刀相助" class="headerlink" title="5.2 拔刀相助"></a>5.2 拔刀相助</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">class Str:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get---&gt;&#39;, instance, owner)</span><br><span class="line">        return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;set---&gt;&#39;, instance, value)</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;delete---&gt;&#39;, instance)</span><br><span class="line">        instance.__dict__.pop(self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; Str(&#39;name&#39;)</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 疑问：如果我用类名去操作属性呢</span><br><span class="line">try:</span><br><span class="line">    People.name  # 报错，错误的根源在于类去操作属性时，会把None传给instance</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get---&gt; None &lt;class &#39;__main__.People&#39;&gt;</span><br><span class="line">&#39;NoneType&#39; object has no attribute &#39;__dict__&#39;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修订<strong>get</strong>方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class Str:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get---&gt;&#39;, instance, owner)</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;set---&gt;&#39;, instance, value)</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;delete---&gt;&#39;, instance)</span><br><span class="line">        instance.__dict__.pop(self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; Str(&#39;name&#39;)</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(People.name)  # 完美，解决</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">get---&gt; None &lt;class &#39;__main__.People&#39;&gt;</span><br><span class="line">&lt;__main__.Str object at 0x107a86da0&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-3-磨刀霍霍"><a href="#5-3-磨刀霍霍" class="headerlink" title="5.3 磨刀霍霍"></a>5.3 磨刀霍霍</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">class Str:</span><br><span class="line">    def __init__(self, name, expected_type):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.expected_type &#x3D; expected_type</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get---&gt;&#39;, instance, owner)</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;set---&gt;&#39;, instance, value)</span><br><span class="line">        if not isinstance(value, self.expected_type):  # 如果不是期望的类型，则抛出异常</span><br><span class="line">            raise TypeError(&#39;Expected %s&#39; % str(self.expected_type))</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;delete---&gt;&#39;, instance)</span><br><span class="line">        instance.__dict__.pop(self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; Str(&#39;name&#39;, str)  # 新增类型限制str</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    p1 &#x3D; People(123, 18, 3333.3)  # 传入的name因不是字符串类型而抛出异常</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set---&gt; &lt;__main__.People object at 0x1084cd940&gt; 123</span><br><span class="line">Expected &lt;class &#39;str&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-4-大刀阔斧"><a href="#5-4-大刀阔斧" class="headerlink" title="5.4 大刀阔斧"></a>5.4 大刀阔斧</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">class Typed:</span><br><span class="line">    def __init__(self, name, expected_type):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.expected_type &#x3D; expected_type</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get---&gt;&#39;, instance, owner)</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;set---&gt;&#39;, instance, value)</span><br><span class="line">        if not isinstance(value, self.expected_type):</span><br><span class="line">            raise TypeError(&#39;Expected %s&#39; % str(self.expected_type))</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;delete---&gt;&#39;, instance)</span><br><span class="line">        instance.__dict__.pop(self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; Typed(&#39;name&#39;, str)</span><br><span class="line">    age &#x3D; Typed(&#39;name&#39;, int)</span><br><span class="line">    salary &#x3D; Typed(&#39;name&#39;, float)</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">try:</span><br><span class="line">    p1 &#x3D; People(123, 18, 3333.3)</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set---&gt; &lt;__main__.People object at 0x1082c7908&gt; 123</span><br><span class="line">Expected &lt;class &#39;str&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">    p1 &#x3D; People(&#39;lqz&#39;, &#39;18&#39;, 3333.3)</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set---&gt; &lt;__main__.People object at 0x1078dd438&gt; lqz</span><br><span class="line">set---&gt; &lt;__main__.People object at 0x1078dd438&gt; 18</span><br><span class="line">Expected &lt;class &#39;int&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p1 &#x3D; People(&#39;lqz&#39;, 18, 3333.3)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">set---&gt; &lt;__main__.People object at 0x1081b3da0&gt; lqz</span><br><span class="line">set---&gt; &lt;__main__.People object at 0x1081b3da0&gt; 18</span><br><span class="line">set---&gt; &lt;__main__.People object at 0x1081b3da0&gt; 3333.3</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>大刀阔斧之后我们已然能实现功能了，但是问题是，如果我们的类有很多属性，你仍然采用在定义一堆类属性的方式去实现，low，这时候我需要教你一招：独孤九剑</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2qmz3cm4j30ci09eglo.jpg" alt="103-描述符(get,set,delete)-独孤九剑.jpg"></p>
+<h3 id="5-4-1-类的装饰器-无参"><a href="#5-4-1-类的装饰器-无参" class="headerlink" title="5.4.1 类的装饰器:无参"></a>5.4.1 类的装饰器:无参</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">def decorate(cls):</span><br><span class="line">    print(&#39;类的装饰器开始运行啦------&gt;&#39;)</span><br><span class="line">    return cls</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@decorate  # 无参：People &#x3D; decorate(People)</span><br><span class="line">class People:</span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p1 &#x3D; People(&#39;lqz&#39;, 18, 3333.3)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类的装饰器开始运行啦------&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-2-类的装饰器-有参"><a href="#5-4-2-类的装饰器-有参" class="headerlink" title="5.4.2 类的装饰器:有参"></a>5.4.2 类的装饰器:有参</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">def typeassert(**kwargs):</span><br><span class="line">    def decorate(cls):</span><br><span class="line">        print(&#39;类的装饰器开始运行啦------&gt;&#39;, kwargs)</span><br><span class="line">        return cls</span><br><span class="line"></span><br><span class="line">    return decorate</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@typeassert(</span><br><span class="line">    name&#x3D;str, age&#x3D;int, salary&#x3D;float</span><br><span class="line">)  # 有参：1.运行typeassert(...)返回结果是decorate，此时参数都传给kwargs 2.People&#x3D;decorate(People)</span><br><span class="line">class People:</span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p1 &#x3D; People(&#39;lqz&#39;, 18, 3333.3)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类的装饰器开始运行啦------&gt; &#123;&#39;name&#39;: &lt;class &#39;str&#39;&gt;, &#39;age&#39;: &lt;class &#39;int&#39;&gt;, &#39;salary&#39;: &lt;class &#39;float&#39;&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-5-刀光剑影"><a href="#5-5-刀光剑影" class="headerlink" title="5.5 刀光剑影"></a>5.5 刀光剑影</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">class Typed:</span><br><span class="line">    def __init__(self, name, expected_type):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.expected_type &#x3D; expected_type</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;get---&gt;&#39;, instance, owner)</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        return instance.__dict__[self.name]</span><br><span class="line"></span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;set---&gt;&#39;, instance, value)</span><br><span class="line">        if not isinstance(value, self.expected_type):</span><br><span class="line">            raise TypeError(&#39;Expected %s&#39; % str(self.expected_type))</span><br><span class="line">        instance.__dict__[self.name] &#x3D; value</span><br><span class="line"></span><br><span class="line">    def __delete__(self, instance):</span><br><span class="line">        print(&#39;delete---&gt;&#39;, instance)</span><br><span class="line">        instance.__dict__.pop(self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def typeassert(**kwargs):</span><br><span class="line">    def decorate(cls):</span><br><span class="line">        print(&#39;类的装饰器开始运行啦------&gt;&#39;, kwargs)</span><br><span class="line">        for name, expected_type in kwargs.items():</span><br><span class="line">            setattr(cls, name, Typed(name, expected_type))</span><br><span class="line">        return cls</span><br><span class="line"></span><br><span class="line">    return decorate</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@typeassert(</span><br><span class="line">    name&#x3D;str, age&#x3D;int, salary&#x3D;float</span><br><span class="line">)  # 有参：1.运行typeassert(...)返回结果是decorate，此时参数都传给kwargs 2.People&#x3D;decorate(People)</span><br><span class="line">class People:</span><br><span class="line">    def __init__(self, name, age, salary):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.salary &#x3D; salary</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(People.__dict__)</span><br><span class="line">p1 &#x3D; People(&#39;lqz&#39;, 18, 3333.3)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">类的装饰器开始运行啦------&gt; &#123;&#39;name&#39;: &lt;class &#39;str&#39;&gt;, &#39;age&#39;: &lt;class &#39;int&#39;&gt;, &#39;salary&#39;: &lt;class &#39;float&#39;&gt;&#125;</span><br><span class="line">&#123;&#39;__module__&#39;: &#39;__main__&#39;, &#39;__init__&#39;: &lt;function People.__init__ at 0x10797a400&gt;, &#39;__dict__&#39;: &lt;attribute &#39;__dict__&#39; of &#39;People&#39; objects&gt;, &#39;__weakref__&#39;: &lt;attribute &#39;__weakref__&#39; of &#39;People&#39; objects&gt;, &#39;__doc__&#39;: None, &#39;name&#39;: &lt;__main__.Typed object at 0x1080b2a58&gt;, &#39;age&#39;: &lt;__main__.Typed object at 0x1080b2ef0&gt;, &#39;salary&#39;: &lt;__main__.Typed object at 0x1080b2c18&gt;&#125;</span><br><span class="line">set---&gt; &lt;__main__.People object at 0x1080b22e8&gt; lqz</span><br><span class="line">set---&gt; &lt;__main__.People object at 0x1080b22e8&gt; 18</span><br><span class="line">set---&gt; &lt;__main__.People object at 0x1080b22e8&gt; 3333.3</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、描述符总结"><a href="#六、描述符总结" class="headerlink" title="六、描述符总结"></a>六、描述符总结</h1><ul>
+<li>描述符是可以实现大部分python类特性中的底层魔法，包括@classmethod，@staticmethd，@property甚至是<strong>slots</strong>属性</li>
+<li>描述父是很多高级库和框架的重要工具之一，描述符通常是使用到装饰器或者元类的大型框架中的一个组件.</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2qovssrxj30j60900sy.jpg" alt="103-描述符(get,set,delete)-私人订制.jpg"></p>
+<h1 id="七、自定制-property"><a href="#七、自定制-property" class="headerlink" title="七、自定制@property"></a>七、自定制@property</h1><ul>
+<li>利用描述符原理完成一个自定制@property，实现延迟计算（本质就是把一个函数属性利用装饰器原理做成一个描述符：类的属性字典中函数名为key，value为描述符类产生的对象）</li>
+</ul>
+<h2 id="7-1-property回顾"><a href="#7-1-property回顾" class="headerlink" title="7.1 property回顾"></a>7.1 property回顾</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Room:</span><br><span class="line">    def __init__(self, name, width, length):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.width &#x3D; width</span><br><span class="line">        self.length &#x3D; length</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def area(self):</span><br><span class="line">        return self.width * self.length</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">r1 &#x3D; Room(&#39;alex&#39;, 1, 1)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(r1.area)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-2-自定制property"><a href="#7-2-自定制property" class="headerlink" title="7.2 自定制property"></a>7.2 自定制property</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class Lazyproperty:</span><br><span class="line">    def __init__(self, func):</span><br><span class="line">        self.func &#x3D; func</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;这是我们自己定制的静态属性，r1.area实际是要执行r1.area()&#39;)</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        return self.func(instance)  # 此时你应该明白，到底是谁在为你做自动传递self的事情</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Room:</span><br><span class="line">    def __init__(self, name, width, length):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.width &#x3D; width</span><br><span class="line">        self.length &#x3D; length</span><br><span class="line"></span><br><span class="line">    @Lazyproperty  # area&#x3D;Lazyproperty(area) 相当于定义了一个类属性,即描述符</span><br><span class="line">    def area(self):</span><br><span class="line">        return self.width * self.length</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">r1 &#x3D; Room(&#39;alex&#39;, 1, 1)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(r1.area)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是我们自己定制的静态属性，r1.area实际是要执行r1.area()</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-3-实现延迟计算功能"><a href="#7-3-实现延迟计算功能" class="headerlink" title="7.3 实现延迟计算功能"></a>7.3 实现延迟计算功能</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class Lazyproperty:</span><br><span class="line">    def __init__(self, func):</span><br><span class="line">        self.func &#x3D; func</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;这是我们自己定制的静态属性，r1.area实际是要执行r1.area()&#39;)</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        else:</span><br><span class="line">            print(&#39;---&gt;&#39;)</span><br><span class="line">            value &#x3D; self.func(instance)</span><br><span class="line">            setattr(instance, self.func.__name__, value)  # 计算一次就缓存到实例的属性字典中</span><br><span class="line">            return value</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Room:</span><br><span class="line">    def __init__(self, name, width, length):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.width &#x3D; width</span><br><span class="line">        self.length &#x3D; length</span><br><span class="line"></span><br><span class="line">    @Lazyproperty  # area&#x3D;Lazyproperty(area) 相当于&#39;定义了一个类属性,即描述符&#39;</span><br><span class="line">    def area(self):</span><br><span class="line">        return self.width * self.length</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">r1 &#x3D; Room(&#39;alex&#39;, 1, 1)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(r1.area)  # 先从自己的属性字典找,没有再去类的中找,然后出发了area的__get__方法</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这是我们自己定制的静态属性，r1.area实际是要执行r1.area()</span><br><span class="line">---&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(r1.area)  # 先从自己的属性字典找,找到了,是上次计算的结果,这样就不用每执行一次都去计算</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<h1 id="八、打破延迟计算"><a href="#八、打破延迟计算" class="headerlink" title="八、打破延迟计算"></a>八、打破延迟计算</h1><ul>
+<li>一个小的改动，延迟计算的美梦就破碎了</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class Lazyproperty:</span><br><span class="line">    def __init__(self, func):</span><br><span class="line">        self.func &#x3D; func</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner):</span><br><span class="line">        print(&#39;这是我们自己定制的静态属性，r1.area实际是要执行r1.area()&#39;)</span><br><span class="line">        if instance is None:</span><br><span class="line">            return self</span><br><span class="line">        else:</span><br><span class="line">            value &#x3D; self.func(instance)</span><br><span class="line">            instance.__dict__[self.func.__name__] &#x3D; value</span><br><span class="line">            return value</span><br><span class="line">        # return self.func(instance) # 此时你应该明白,到底是谁在为你做自动传递self的事情</span><br><span class="line">    def __set__(self, instance, value):</span><br><span class="line">        print(&#39;hahahahahah&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Room:</span><br><span class="line">    def __init__(self, name, width, length):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.width &#x3D; width</span><br><span class="line">        self.length &#x3D; length</span><br><span class="line"></span><br><span class="line">    @Lazyproperty  # area&#x3D;Lazyproperty(area) 相当于定义了一个类属性,即描述符</span><br><span class="line">    def area(self):</span><br><span class="line">        return self.width * self.length</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(Room.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;__module__&#39;: &#39;__main__&#39;, &#39;__init__&#39;: &lt;function Room.__init__ at 0x107d53620&gt;, &#39;area&#39;: &lt;__main__.Lazyproperty object at 0x107ba3860&gt;, &#39;__dict__&#39;: &lt;attribute &#39;__dict__&#39; of &#39;Room&#39; objects&gt;, &#39;__weakref__&#39;: &lt;attribute &#39;__weakref__&#39; of &#39;Room&#39; objects&gt;, &#39;__doc__&#39;: None&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">r1 &#x3D; Room(&#39;alex&#39;, 1, 1)</span><br><span class="line">print(r1.area)</span><br><span class="line">print(r1.area)</span><br><span class="line">print(r1.area)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">这是我们自己定制的静态属性，r1.area实际是要执行r1.area()</span><br><span class="line">1</span><br><span class="line">这是我们自己定制的静态属性，r1.area实际是要执行r1.area()</span><br><span class="line">1</span><br><span class="line">这是我们自己定制的静态属性，r1.area实际是要执行r1.area()</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(</span><br><span class="line">    r1.area</span><br><span class="line">)  #缓存功能失效,每次都去找描述符了,为何,因为描述符实现了set方法,它由非数据描述符变成了数据描述符,数据描述符比实例属性有更高的优先级,因而所有的属性操作都去找描述符了</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是我们自己定制的静态属性，r1.area实际是要执行r1.area()</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<h1 id="九、自定制-classmethod"><a href="#九、自定制-classmethod" class="headerlink" title="九、自定制@classmethod"></a>九、自定制@classmethod</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class ClassMethod:</span><br><span class="line">    def __init__(self, func):</span><br><span class="line">        self.func &#x3D; func</span><br><span class="line"></span><br><span class="line">    def __get__(</span><br><span class="line">            self, instance,</span><br><span class="line">            owner):  #类来调用,instance为None,owner为类本身,实例来调用,instance为实例,owner为类本身,</span><br><span class="line">        def feedback():</span><br><span class="line">            print(&#39;在这里可以加功能啊...&#39;)</span><br><span class="line">            return self.func(owner)</span><br><span class="line"></span><br><span class="line">        return feedback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; &#39;lqz&#39;</span><br><span class="line"></span><br><span class="line">    @ClassMethod  # say_hi&#x3D;ClassMethod(say_hi)</span><br><span class="line">    def say_hi(cls):</span><br><span class="line">        print(&#39;你好啊,帅哥 %s&#39; % cls.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">People.say_hi()</span><br><span class="line"></span><br><span class="line">p1 &#x3D; People()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在这里可以加功能啊...</span><br><span class="line">你好啊,帅哥 lqz</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p1.say_hi()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在这里可以加功能啊...</span><br><span class="line">你好啊,帅哥 lqz</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>疑问,类方法如果有参数呢,好说,好说</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">class ClassMethod:</span><br><span class="line">    def __init__(self, func):</span><br><span class="line">        self.func &#x3D; func</span><br><span class="line"></span><br><span class="line">    def __get__(self, instance, owner</span><br><span class="line">                ):  # 类来调用,instance为None,owner为类本身,实例来调用,instance为实例,owner为类本身,</span><br><span class="line">        def feedback(*args, **kwargs):</span><br><span class="line">            print(&#39;在这里可以加功能啊...&#39;)</span><br><span class="line">            return self.func(owner, *args, **kwargs)</span><br><span class="line"></span><br><span class="line">        return feedback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    name &#x3D; &#39;lqz&#39;</span><br><span class="line"></span><br><span class="line">    @ClassMethod  # say_hi&#x3D;ClassMethod(say_hi)</span><br><span class="line">    def say_hi(cls, msg):</span><br><span class="line">        print(&#39;你好啊,帅哥 %s %s&#39; % (cls.name, msg))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">People.say_hi(&#39;你是那偷心的贼&#39;)</span><br><span class="line"></span><br><span class="line">p1 &#x3D; People()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在这里可以加功能啊...</span><br><span class="line">你好啊,帅哥 lqz 你是那偷心的贼</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p1.say_hi(&#39;你是那偷心的贼&#39;)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在这里可以加功能啊...</span><br><span class="line">你好啊,帅哥 lqz 你是那偷心的贼</span><br></pre></td></tr></table></figure>
+
+<h1 id="一十、自定制-staticmethod"><a href="#一十、自定制-staticmethod" class="headerlink" title="一十、自定制@staticmethod"></a>一十、自定制@staticmethod</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class StaticMethod:</span><br><span class="line">    def __init__(self, func):</span><br><span class="line">        self.func &#x3D; func</span><br><span class="line"></span><br><span class="line">    def __get__(</span><br><span class="line">            self, instance,</span><br><span class="line">            owner):  # 类来调用，instance为None，owner为类本身，实例来调用，instance为实例，owner为类本身</span><br><span class="line">        def feedback(*args, **kwargs):</span><br><span class="line">            print(&#39;在这里可以加功能啊...&#39;)</span><br><span class="line">            return self.func(*args, **kwargs)</span><br><span class="line"></span><br><span class="line">        return feedback</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People:</span><br><span class="line">    @StaticMethod  # say_hi &#x3D; StaticMethod(say_hi)</span><br><span class="line">    def say_hi(x, y, z):</span><br><span class="line">        print(&#39;------&gt;&#39;, x, y, z)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">People.say_hi(1, 2, 3)</span><br><span class="line"></span><br><span class="line">p1 &#x3D; People()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在这里可以加功能啊...</span><br><span class="line">------&gt; 1 2 3</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p1.say_hi(4, 5, 6)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在这里可以加功能啊...</span><br><span class="line">------&gt; 4 5 6</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2qo716n3j3073073mx7.jpg" alt="103-描述符(get,set,delete)-放假.jpg"></p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/1-%E7%B1%BB%E7%9A%84%E7%BB%A7%E6%89%BF/">
+        <span class="nav-arrow">← </span>
+        
+          python/面向对象进阶/1-类的继承
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/10-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6%E5%B0%8F%E7%BB%93/">
+        
+          python/面向对象进阶/10-面向对象进阶小结
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、描述符"><span class="toc-nav-text">一、描述符</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、描述符的作用"><span class="toc-nav-text">二、描述符的作用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-何时，何地，会触发这三个方法的执行"><span class="toc-nav-text">2.1 何时，何地，会触发这三个方法的执行</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、两种描述符"><span class="toc-nav-text">三、两种描述符</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-数据描述符"><span class="toc-nav-text">3.1 数据描述符</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-非数据描述符"><span class="toc-nav-text">3.2 非数据描述符</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、描述符注意事项"><span class="toc-nav-text">四、描述符注意事项</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、使用描述符"><span class="toc-nav-text">五、使用描述符</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-1-牛刀小试"><span class="toc-nav-text">5.1 牛刀小试</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-2-拔刀相助"><span class="toc-nav-text">5.2 拔刀相助</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-3-磨刀霍霍"><span class="toc-nav-text">5.3 磨刀霍霍</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-4-大刀阔斧"><span class="toc-nav-text">5.4 大刀阔斧</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-4-1-类的装饰器-无参"><span class="toc-nav-text">5.4.1 类的装饰器:无参</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-4-2-类的装饰器-有参"><span class="toc-nav-text">5.4.2 类的装饰器:有参</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-5-刀光剑影"><span class="toc-nav-text">5.5 刀光剑影</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#六、描述符总结"><span class="toc-nav-text">六、描述符总结</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#七、自定制-property"><span class="toc-nav-text">七、自定制@property</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7-1-property回顾"><span class="toc-nav-text">7.1 property回顾</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7-2-自定制property"><span class="toc-nav-text">7.2 自定制property</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7-3-实现延迟计算功能"><span class="toc-nav-text">7.3 实现延迟计算功能</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#八、打破延迟计算"><span class="toc-nav-text">八、打破延迟计算</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#九、自定制-classmethod"><span class="toc-nav-text">九、自定制@classmethod</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一十、自定制-staticmethod"><span class="toc-nav-text">一十、自定制@staticmethod</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/面向对象高阶/5-描述符(__get__和__set__和__delete__)/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/面向对象高阶/5-描述符(__get__和__set__和__delete__)",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

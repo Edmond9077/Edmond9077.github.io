@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/19-%E9%94%81-%E4%BF%A1%E5%8F%B7%E9%87%8F-Event%E4%BA%8B%E4%BB%B6/">1-Python中的GIL</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          一、同步锁1.1 多个线程抢占资源的情况123456789101112131415161718from threading import Threadimport os,timedef work():    global n    temp=n    time.sleep(0.1)    n ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/19-%E9%94%81-%E4%BF%A1%E5%8F%B7%E9%87%8F-Event%E4%BA%8B%E4%BB%B6/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/26-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%B0%8F%E7%BB%93/">1-Python中的GIL</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          一、到底什么是线程?什么是进程?Python自己没有这玩意，Python中调用的操作系统的线程和进程。
+二、Python多线程情况下：计算密集型操作:效率低，Python内置的一个全局解释器锁，锁的作用就是保证同一时刻一个进程中只有一个线程可以被cpu调度，多线程无法利用多核优势，可以通过多 ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/26-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%B0%8F%E7%BB%93/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/11-%E8%BF%9B%E7%A8%8B%E6%B1%A0(multiprocess.Pool)/">1-Python中的GIL</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          一、进程池为什么要有进程池？进程池的概念。
+在程序实际处理问题过程中，忙时会有成千上万的任务需要被执行，闲时可能只有零星任务。那么在成千上万个任务需要被执行的时候，我们就需要去创建成千上万个进程么？首先，创建进程需要消耗时间，销毁进程也需要消耗时间。第二即便开启了成千上万的进程，操作系统也不 ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/11-%E8%BF%9B%E7%A8%8B%E6%B1%A0(multiprocess.Pool)/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/8-Python%E5%BC%82%E6%AD%A5%E5%BA%93%E4%B9%8Bgevent/">8-Python异步库之gevent</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          1.协程想学asyncio，得先了解协程，协程是根本呀！
+协程（Coroutine），也可以被称为微线程，是一种用户态内的上下文切换技术。简而言之，其实就是通过一个线程实现代码块相互切换执行。例如：
+1def func1():    print(1)    ...    print(2)de ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/8-Python%E5%BC%82%E6%AD%A5%E5%BA%93%E4%B9%8Bgevent/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/14-%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%9C%BA%E6%99%AF/">1-Python中的GIL</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          一、使用线程的实际场景
+开启一个字处理软件进程，该进程肯定需要办不止一件事情，比如监听键盘输入，处理文字，定时自动将文字保存到硬盘，这三个任务操作的都是同一块数据，因而不能用多进程。只能在一个进程里并发地开启三个线程，如果是单线程，那就只能是，键盘输入时，不能处理文字和自动保存，自动保存时又 ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/14-%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%9C%BA%E6%99%AF/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/25-IO%E6%A8%A1%E5%9E%8B/">3-IO操作与IO模型</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          一 IO操作本质数据复制的过程中不会消耗CPU
+123# 1 内存分为内核缓冲区和用户缓冲区# 2 用户的应用程序不能直接操作内核缓冲区，需要将数据从内核拷贝到用户才能使用# 3 而IO操作、网络请求加载到内存的数据一开始是放在内核缓冲区的
+
+
+
+二 IO模型1. BIO – 阻塞模式I/O ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/25-IO%E6%A8%A1%E5%9E%8B/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E5%8F%B2/">1-Python中的GIL</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          一、手工操作——穿孔卡片1946年第一台计算机诞生–20世纪50年代中期，计算机工作还在采用手工操作方式。此时还没有操作系统的概念。
+
+
+程序员将对应于程序和数据的已穿孔的纸带（或卡片）装入输入机，然后启动输入机把程序和数据输入计算机内存，接着通过控制台开关启动程序针对数据运行；计算完毕，打 ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%91%E5%B1%95%E5%8F%B2/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/10-Python%E5%BC%82%E6%AD%A5%E5%BA%93%E4%B9%8Btwisted/">10-Python异步库之twisted</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+        
+      </div>
+      <a class="more" href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/10-Python%E5%BC%82%E6%AD%A5%E5%BA%93%E4%B9%8Btwisted/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/11-Python%E5%BC%82%E6%AD%A5%E5%BA%93%E4%B9%8Bcelery/">11-Python异步库之celery</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          
+        
+      </div>
+      <a class="more" href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/11-Python%E5%BC%82%E6%AD%A5%E5%BA%93%E4%B9%8Bcelery/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/1-Python%E4%B8%AD%E7%9A%84GIL/">1-Python中的GIL</a>
+      </h2>
+      <p class="article-date">2020年3月25日</p>
+      
+        
+  <a href="/tags#Python" >
+    <span class="tag-code">Python</span>
+  </a>
+
+      
+      <div class="article-summary">
+        
+          一 GIL是什么1、GIL的全称是Global Interpreter Lock(全局解释器锁)，来源是python设计之初的考虑，为了数据安全所做的决定。
+2、每个CPU在同一时间只能执行一个线程（在单核CPU下的多线程其实都只是并发，不是并行，并发和并行从宏观上来讲都是同时处理多路请求的 ...
+        
+      </div>
+      <a class="more" href="/python/Python%E5%BC%82%E6%AD%A5IO%E5%B9%B6%E5%8F%91/1-Python%E4%B8%AD%E7%9A%84GIL/">详情...</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/page/24/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a href="/page/26/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

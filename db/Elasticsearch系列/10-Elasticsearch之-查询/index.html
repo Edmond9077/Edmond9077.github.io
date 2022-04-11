@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Elasticsearch系列/10-Elasticsearch之-查询 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Elasticsearch系列/10-Elasticsearch之-查询</h2>
+
+
+
+  <p class="post-date">2019-12-06</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Elasticsearch之-查询"><a href="#Elasticsearch之-查询" class="headerlink" title="Elasticsearch之-查询"></a>Elasticsearch之-查询</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">查询分类：</span><br><span class="line">基本查询：使用es内置查询条件进行查询</span><br><span class="line">组合查询：把多个查询组合在一起进行复合查询</span><br><span class="line">过滤：查询的同时，通过filter条件在不影响打分的情况下筛选数据</span><br></pre></td></tr></table></figure>
+
+<h2 id="一-基本查询"><a href="#一-基本查询" class="headerlink" title="一 基本查询"></a>一 基本查询</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#添加映射</span></span><br><span class="line">PUT lago</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"mappings"</span>: &#123;</span><br><span class="line">    <span class="string">"properties"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:&#123;</span><br><span class="line">        <span class="string">"stort"</span>:true,</span><br><span class="line">        <span class="string">"type"</span>:<span class="string">"text"</span>,</span><br><span class="line">        <span class="string">"analyzer"</span>:<span class="string">"ik_max_word"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"company_name"</span>:&#123;</span><br><span class="line">         <span class="string">"stort"</span>:true,</span><br><span class="line">        	<span class="string">"type"</span>:<span class="string">"keyword"</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"desc"</span>:&#123;</span><br><span class="line">        <span class="string">"type"</span>:<span class="string">"text"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"comments"</span>:&#123;</span><br><span class="line">        <span class="string">"type"</span>:<span class="string">"integer"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"add_time"</span>:&#123;</span><br><span class="line">        <span class="string">"type"</span>:<span class="string">"date"</span>,</span><br><span class="line">        <span class="string">"format"</span>:<span class="string">"yyy-MM-dd"</span></span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#测试数据</span></span><br><span class="line">POST lago/job</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>:<span class="string">"python django 开发工程师"</span>,</span><br><span class="line">  <span class="string">"company_name"</span>:<span class="string">"美团科技有限公司"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"对django熟悉，掌握mysql和非关系型数据库，网站开发"</span>,</span><br><span class="line">  <span class="string">"comments:200,</span></span><br><span class="line"><span class="string">  "</span>add_time<span class="string">":"</span><span class="number">2018</span><span class="number">-4</span><span class="number">-1</span><span class="string">"</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">POST lago/job</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">  "</span>title<span class="string">":"</span>python数据分析<span class="string">",</span></span><br><span class="line"><span class="string">  "</span>company_name<span class="string">":"</span>百度科技有限公司<span class="string">",</span></span><br><span class="line"><span class="string">  "</span>desc<span class="string">":"</span>熟悉python基础语法，熟悉数据分析<span class="string">",</span></span><br><span class="line"><span class="string">  "</span>comments:<span class="number">5</span>,</span><br><span class="line">  <span class="string">"add_time"</span>:<span class="string">"2018-10-1"</span></span><br><span class="line">&#125;</span><br><span class="line">POST lago/job</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>:<span class="string">"python自动化运维"</span>,</span><br><span class="line">  <span class="string">"company_name"</span>:<span class="string">"上海华为"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"熟悉python基础语法，精通Linux"</span>,</span><br><span class="line">  <span class="string">"comments:90,</span></span><br><span class="line"><span class="string">  "</span>add_time<span class="string">":"</span><span class="number">2019</span><span class="number">-9</span><span class="number">-18</span><span class="string">"</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-1-match查询"><a href="#1-1-match查询" class="headerlink" title="1.1 match查询"></a>1.1 match查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/job/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"match"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:<span class="string">"python"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#因为title字段做了分词，python都能搜索出来</span></span><br><span class="line"><span class="comment">#搜索python网站也能搜索出来，把python和网站分成两个词</span></span><br><span class="line"><span class="comment">#搜索爬取也能搜索到，把爬和取分词，去搜索</span></span><br><span class="line"><span class="comment">#只搜取 搜不到</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-term查询"><a href="#1-2-term查询" class="headerlink" title="1.2 term查询"></a>1.2 term查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"term"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:<span class="string">"python"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#会拿着药查询的词不做任何处理，直接查询</span></span><br><span class="line"><span class="comment">#用python爬虫，查不到，用match就能查到</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"term"</span>:&#123;</span><br><span class="line">      <span class="string">"company_name"</span>:<span class="string">"美团"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#通过美团，就查询不到</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-terms查询"><a href="#1-3-terms查询" class="headerlink" title="1.3 terms查询"></a>1.3 terms查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"terms"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:[<span class="string">"工程师"</span>,<span class="string">"django"</span>,<span class="string">"运维"</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#三个词，只要有一个，就会查询出来</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-控制查询的返回数量（分页）"><a href="#1-4-控制查询的返回数量（分页）" class="headerlink" title="1.4 控制查询的返回数量（分页）"></a>1.4 控制查询的返回数量（分页）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"match"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:<span class="string">"python"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;，</span><br><span class="line">  <span class="string">"form"</span>:<span class="number">1</span>,</span><br><span class="line">  <span class="string">"size"</span>:<span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#从第一条开始，大小为2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-match-all-查询"><a href="#1-5-match-all-查询" class="headerlink" title="1.5 match_all 查询"></a>1.5 match_all 查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"match_all"</span>:&#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#所有数据都返回</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-6-match-phrase查询"><a href="#1-6-match-phrase查询" class="headerlink" title="1.6 match_phrase查询"></a>1.6 match_phrase查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"match_phrase"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:&#123;</span><br><span class="line">        <span class="string">"query"</span>:<span class="string">"python系统"</span>,</span><br><span class="line">        <span class="string">"slop"</span>:<span class="number">6</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#短语查询， </span></span><br><span class="line"><span class="comment">#会把查询条件python和系统分词，放到列表中，再去搜索的时候，必须满足python和系统同时存在的才能搜出来</span></span><br><span class="line"><span class="comment">#"slop":6 ：python和系统这两个词之间最小的距离</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-7-multi-match"><a href="#1-7-multi-match" class="headerlink" title="1.7 multi_match"></a>1.7 multi_match</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"multy_match"</span>:&#123;</span><br><span class="line">   			<span class="string">"query"</span>:<span class="string">"python"</span>,</span><br><span class="line">      	<span class="string">"fields"</span>:[<span class="string">"title"</span>,<span class="string">"desc"</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#可以指定多个字段</span></span><br><span class="line"><span class="comment">#比如查询title和desc这个两个字段中包含python关键词的文档</span></span><br><span class="line"><span class="comment">#"fields":["title^3","desc"]:权重，title中的python是desc中的三倍</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-8-指定返回的字段"><a href="#1-8-指定返回的字段" class="headerlink" title="1.8 指定返回的字段"></a>1.8 指定返回的字段</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"stored_fields"</span>:[<span class="string">"title"</span>,<span class="string">"company_name"</span>]</span><br><span class="line">    <span class="string">"match"</span>:&#123;</span><br><span class="line">   			<span class="string">"title"</span>:<span class="string">"python"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#只返回title和company_name字段</span></span><br><span class="line"><span class="comment">#"stored_fields":["title","company_name",'dsc'],不会返回dsc，因为我们要求stroed_fields，之前desc字段设为false（默认），不会显示</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-9-sort-结果排序"><a href="#1-9-sort-结果排序" class="headerlink" title="1.9 sort 结果排序"></a>1.9 sort 结果排序</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line"> 			<span class="string">"match_all"</span>:&#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"sort"</span>:[</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"comments"</span>:&#123;</span><br><span class="line">        <span class="string">"order"</span>:<span class="string">"desc"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#查询所有文档，按comments按desc降序排序</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-10-range范围查询"><a href="#1-10-range范围查询" class="headerlink" title="1.10 range范围查询"></a>1.10 range范围查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line"> 			<span class="string">"range"</span>:&#123;</span><br><span class="line">        <span class="string">"comments"</span>:&#123;</span><br><span class="line">          <span class="string">"gte"</span>:<span class="number">10</span>,</span><br><span class="line">          <span class="string">"lte"</span>:<span class="number">20</span>,</span><br><span class="line">          <span class="string">"boost"</span>:<span class="number">2.0</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#指定comments字段大于等于10，小于等于20</span></span><br><span class="line"><span class="comment">#boost：权重</span></span><br><span class="line"></span><br><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line"> 			<span class="string">"range"</span>:&#123;</span><br><span class="line">        <span class="string">"add_time"</span>:&#123;</span><br><span class="line">          <span class="string">"gte"</span>:<span class="string">"2019-10-11"</span>,</span><br><span class="line">          <span class="string">"lte"</span>:<span class="string">"now"</span>,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#对时间进行查询</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-11-wildcard查询"><a href="#1-11-wildcard查询" class="headerlink" title="1.11 wildcard查询"></a>1.11 wildcard查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET lagou/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"wildcard"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:&#123;</span><br><span class="line">        <span class="string">"value"</span>:<span class="string">"pyth*n"</span>,</span><br><span class="line">        <span class="string">"boost"</span>:<span class="number">2.0</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#模糊查询，title中，有pyth任意值n得都能查出来</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="二-组合查询"><a href="#二-组合查询" class="headerlink" title="二 组合查询"></a>二 组合查询</h2><h3 id="2-1-bool查询"><a href="#2-1-bool查询" class="headerlink" title="2.1 bool查询"></a>2.1 bool查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#bool查询包括must should must_not filter</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">bool:&#123;</span></span><br><span class="line"><span class="string">	"filter":[],   字段过滤</span></span><br><span class="line"><span class="string">	"must":[],     所有查询条件都满足</span></span><br><span class="line"><span class="string">	"should":[],   满足一个或多个</span></span><br><span class="line"><span class="string">	"must_not":&#123;&#125;  都不满足于must相反</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="comment"># 建立测试数据</span></span><br><span class="line">POST lago/testjob/_bulk</span><br><span class="line">&#123;<span class="string">"index"</span>:&#123;<span class="string">"_id"</span>:<span class="number">1</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"salary"</span>:<span class="number">10</span>,<span class="string">"title"</span>:<span class="string">"Python"</span>&#125;</span><br><span class="line">&#123;<span class="string">"index"</span>:&#123;<span class="string">"_id"</span>:<span class="number">2</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"salary"</span>:<span class="number">20</span>,<span class="string">"title"</span>:<span class="string">"Scrapy"</span>&#125;</span><br><span class="line">&#123;<span class="string">"index"</span>:&#123;<span class="string">"_id"</span>:<span class="number">3</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"salary"</span>:<span class="number">30</span>,<span class="string">"title"</span>:<span class="string">"Django"</span>&#125;</span><br><span class="line">&#123;<span class="string">"index"</span>:&#123;<span class="string">"_id"</span>:<span class="number">4</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"salary"</span>:<span class="number">30</span>,<span class="string">"title"</span>:<span class="string">"Elasticsearch"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-简单过滤查询"><a href="#2-2-简单过滤查询" class="headerlink" title="2.2 简单过滤查询"></a>2.2 简单过滤查询</h3> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#select * from testjob where salary=20</span></span><br><span class="line">GET lagou/testjob/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    	<span class="string">"bool"</span>:&#123;</span><br><span class="line">        <span class="string">"must"</span>:&#123;</span><br><span class="line">          <span class="string">"match_all"</span>:&#123;&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"filter"</span>:&#123;</span><br><span class="line">          <span class="string">"term"</span>:&#123;</span><br><span class="line">            <span class="string">"salary"</span>:<span class="number">20</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-查询多个值"><a href="#1-3-查询多个值" class="headerlink" title="1.3 查询多个值"></a>1.3 查询多个值</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查询薪资是10k或20k的</span></span><br><span class="line">GET lagou/testjob/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    	<span class="string">"bool"</span>:&#123;</span><br><span class="line">        <span class="string">"must"</span>:&#123;</span><br><span class="line">          <span class="string">"match_all"</span>:&#123;&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"filter"</span>:&#123;</span><br><span class="line">          <span class="string">"terms"</span>:&#123;</span><br><span class="line">            <span class="string">"salary"</span>:[<span class="number">10</span>,<span class="number">20</span>]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#select * from testjob where title="python"</span></span><br><span class="line">GET lagou/testjob/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    	<span class="string">"bool"</span>:&#123;</span><br><span class="line">        <span class="string">"must"</span>:&#123;</span><br><span class="line">          <span class="string">"match_all"</span>:&#123;&#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"filter"</span>:&#123;</span><br><span class="line">          <span class="string">"term"</span>:&#123;</span><br><span class="line">            <span class="string">"title"</span>:<span class="string">"Python"</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#title 是text字段，会做大小写转换，term不会预处理，拿着大写Python去查查不到</span></span><br><span class="line"><span class="comment">#可以改成小写，或者用match来查询</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">   "filter":&#123;</span></span><br><span class="line"><span class="string">          "match":&#123;</span></span><br><span class="line"><span class="string">            "title":"Python"</span></span><br><span class="line"><span class="string">          &#125;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="comment">#查看分析器解析结果</span></span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"analyzer"</span>:<span class="string">"ik_max_word"</span>,</span><br><span class="line">  <span class="string">"text"</span>:<span class="string">"python网络开发工程师"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-bool过滤查询，可以做组合过滤查询"><a href="#1-4-bool过滤查询，可以做组合过滤查询" class="headerlink" title="1.4 bool过滤查询，可以做组合过滤查询"></a>1.4 bool过滤查询，可以做组合过滤查询</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#select * from testjob where (salary=20 or title=Python) and (salary!=30)</span></span><br><span class="line"><span class="comment">#查询薪资等于20k或者工作为python的工作，排除价格为30k的</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"bool"</span>:&#123;</span><br><span class="line">      <span class="string">"should"</span>:[</span><br><span class="line">        &#123;<span class="string">"term"</span>:&#123;<span class="string">"salary"</span>:<span class="number">20</span>&#125;&#125;,</span><br><span class="line">        &#123;<span class="string">"term"</span>:&#123;<span class="string">"title"</span>:<span class="string">"python"</span>&#125;&#125;</span><br><span class="line">      ],</span><br><span class="line">      <span class="string">"must_not"</span>:&#123;</span><br><span class="line">        <span class="string">"term"</span>:&#123;<span class="string">"salary"</span>:<span class="number">30</span>&#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#select * from testjob where title=python or (title=django and salary=30)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>:&#123;</span><br><span class="line">    <span class="string">"bool"</span>:&#123;</span><br><span class="line">      <span class="string">"should"</span>:[</span><br><span class="line">        &#123;<span class="string">"term"</span>:&#123;<span class="string">"title"</span>:<span class="string">"python"</span>&#125;&#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">"bool"</span>:&#123;</span><br><span class="line">            <span class="string">"must"</span>:[</span><br><span class="line">              &#123;<span class="string">"term"</span>:&#123;<span class="string">"title"</span>:<span class="string">"django"</span>&#125;&#125;,</span><br><span class="line">              &#123;<span class="string">"term"</span>:&#123;<span class="string">"salary"</span>:<span class="number">30</span>&#125;&#125;</span><br><span class="line">            ]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/15-Elasticsearch%E9%AB%98%E7%BA%A7%E4%B9%8B-%E4%BD%8D%E7%BD%AE%E5%9D%90%E6%A0%87%E5%AE%9E%E7%8E%B0%E9%99%84%E8%BF%91%E7%9A%84%E4%BA%BA%E6%90%9C%E7%B4%A2/">
+        <span class="nav-arrow">← </span>
+        
+          db/Elasticsearch系列/15-Elasticsearch高级之-位置坐标实现附近的人搜索
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/05-ElasticSearch%E4%B9%8B-%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D%E5%99%A8/">
+        
+          db/Elasticsearch系列/05-ElasticSearch之-安装中文分词器
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Elasticsearch之-查询"><span class="toc-nav-text">Elasticsearch之-查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-基本查询"><span class="toc-nav-text">一 基本查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-match查询"><span class="toc-nav-text">1.1 match查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-term查询"><span class="toc-nav-text">1.2 term查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-terms查询"><span class="toc-nav-text">1.3 terms查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-控制查询的返回数量（分页）"><span class="toc-nav-text">1.4 控制查询的返回数量（分页）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-5-match-all-查询"><span class="toc-nav-text">1.5 match_all 查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-6-match-phrase查询"><span class="toc-nav-text">1.6 match_phrase查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-7-multi-match"><span class="toc-nav-text">1.7 multi_match</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-8-指定返回的字段"><span class="toc-nav-text">1.8 指定返回的字段</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-9-sort-结果排序"><span class="toc-nav-text">1.9 sort 结果排序</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-10-range范围查询"><span class="toc-nav-text">1.10 range范围查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-11-wildcard查询"><span class="toc-nav-text">1.11 wildcard查询</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-组合查询"><span class="toc-nav-text">二 组合查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-bool查询"><span class="toc-nav-text">2.1 bool查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-简单过滤查询"><span class="toc-nav-text">2.2 简单过滤查询</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-查询多个值"><span class="toc-nav-text">1.3 查询多个值</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-bool过滤查询，可以做组合过滤查询"><span class="toc-nav-text">1.4 bool过滤查询，可以做组合过滤查询</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Elasticsearch系列/10-Elasticsearch之-查询/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Elasticsearch系列/10-Elasticsearch之-查询",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

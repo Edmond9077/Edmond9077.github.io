@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/MySQL入门/1-数据库基础 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/MySQL入门/1-数据库基础</h2>
+
+
+
+  <p class="post-date">2020-10-22</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h1><p>假设现在你已经是某大型互联网公司的高级程序员，让你写一个火车票购票系统，来hold住十一期间全国的购票需求，你怎么写？</p>
+<p>由于在同一时段抢票的人数太多，所以你的程序不可能写在一台机器上，应该是多台机器一起分担用户的购票请求。</p>
+<p>那么问题就来了，票务信息的数据存在哪里？存在文件里么？</p>
+<p>如果存储在文件里，那么存储在哪一台机器上呢？是每台机器上都存储一份么？</p>
+<p>首先，如果其中一台机器上卖出的票另外两台机器是感知不到的，</p>
+<p>其次，是如果我们将数据和程序放在同一个机器上，如果程序和数据有一个出了问题都会导致整个服务不可用.\。</p>
+<p>最后，是操作文件，修改文件对python代码来说是一件很麻烦的事</p>
+<p>基于上面这些问题，单纯的将数据存储在和程序同一台机器上的文件中是非常不明智的。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjz9ye83nnj30950c5t9n.jpg" alt="191-数据库基础-01.png"></p>
+<h1 id="二、为什么用数据库"><a href="#二、为什么用数据库" class="headerlink" title="二、为什么用数据库"></a>二、为什么用数据库</h1><p>根据上面的例子，我们已经知道：</p>
+<ol>
+<li>将文件和程序存在一台机器上是很不合理的。</li>
+<li>操作文件是一件很麻烦的事</li>
+</ol>
+<h2 id="2-1-所以就出现了一个新的概念——数据3074153569"><a href="#2-1-所以就出现了一个新的概念——数据3074153569" class="headerlink" title="2.1 所以就出现了一个新的概念——数据3074153569)"></a>2.1 所以就出现了一个新的概念——数据3074153569)</h2><p>你可以理解为 数据库 是一个可以在一台机器上独立工作的，并且可以给我们提供高效、便捷的方式对数据进行增删改查的一种工具。</p>
+<p>如此就帮助我们解决了上面出现的问题，如果将所有的数据都存储在一个独立的机器上，而对用户提供服务的机器只是存放你写的代码。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjz9ztxppej30ee0art9w.jpg" alt="191-数据库基础-02.png"></p>
+<h2 id="2-2-数据库的优势"><a href="#2-2-数据库的优势" class="headerlink" title="2.2 数据库的优势"></a>2.2 数据库的优势</h2><ol>
+<li>程序稳定性 ：这样任意一台服务所在的机器崩溃了都不会影响数据和另外的服务。</li>
+<li>数据一致性 ：所有的数据都存储在一起，所有的程序操作的数据都是统一的，就不会出现数据不一致的现象</li>
+<li>并发 ：数据库可以良好的支持并发，所有的程序操作数据库都是通过网络，而数据库本身支持并发的网络操作，不需要我们自己写socket</li>
+<li>效率 ：使用数据库对数据进行增删改查的效率要高出我们自己处理文件很多</li>
+</ol>
+<h1 id="三、认识数据库"><a href="#三、认识数据库" class="headerlink" title="三、认识数据库"></a>三、认识数据库</h1><h2 id="3-1-什么是数据（Data）"><a href="#3-1-什么是数据（Data）" class="headerlink" title="3.1 什么是数据（Data）"></a>3.1 什么是数据（Data）</h2><p>描述事物的符号记录称为数据，描述事物的符号既可以是数字，也可以是文字、图片，图像、声音、语言等，数据由多种表现形式，它们都可以经过数字化后存入计算机</p>
+<p>在计算机中描述一个事物，就需要抽取这一事物的典型特征，组成一条记录，就相当于文件里的一行内容，如：<code>tank,不详,83,1935,广东,oldboy</code></p>
+<p>单纯的一条记录并没有任何意义，如果我们按逗号作为分隔，依次定义各个字段的意思，相当于定义表的标题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Copyid,name,sex,age,birth,born_addr,company <span class="comment"># 字段/列名</span></span><br><span class="line"><span class="number">1</span>,tank,不详,<span class="number">83</span>,<span class="number">1935</span>,山东,oldboy <span class="comment"># 数据</span></span><br></pre></td></tr></table></figure>
+
+<p>这样我们就可以了解tank，性别不详，年龄83岁，出生于1935年，住的养老院是老男孩</p>
+<h2 id="3-2-什么是数据库（DataBase，简称DB）3627863191"><a href="#3-2-什么是数据库（DataBase，简称DB）3627863191" class="headerlink" title="3.2 什么是数据库（DataBase，简称DB）3627863191)"></a>3.2 什么是数据库（DataBase，简称DB）3627863191)</h2><p>数据库即存放数据的仓库，只不过这个仓库是在计算机存储设备上，而且数据是按一定的格式存放的。</p>
+<p>过去人们将数据存放在文件柜里，现在数据量庞大，已经不再适用。</p>
+<p>数据库是长期存放在计算机内、有组织、可共享的数据集合。</p>
+<p>数据库中的数据按一定的数据模型组织、描述和储存，具有较小的冗余度、较高的数据独立性和易扩展性，并可为各种用户共享。</p>
+<h2 id="3-3-什么是数据库管理系统（DataBase-Management-System-简称DBMS）"><a href="#3-3-什么是数据库管理系统（DataBase-Management-System-简称DBMS）" class="headerlink" title="3.3 什么是数据库管理系统（DataBase Management System 简称DBMS）"></a>3.3 什么是数据库管理系统（DataBase Management System 简称DBMS）</h2><p>在了解了Data与DB的概念后，如何科学地组织和存储数据，如何高效获取和维护数据成了关键。</p>
+<p>这就用到了一个系统软件—数据库管理系统，如MySQL、Oracle、SQLite、Access、MS SQL Server。</p>
+<ul>
+<li>mysql主要用于大型门户，例如搜狗、新浪等，它主要的优势就是开放源代码，因为开放源代码这个数据库是免费的，他现在是甲骨文公司的产品。</li>
+<li>oracle主要用于银行、铁路、飞机场等。该数据库功能强大，软件费用高。也是甲骨文公司的产品。</li>
+<li>sql server是微软公司的产品，主要应用于大中型企业，如联想、方正等。</li>
+</ul>
+<p>而对数据库管理的人员一般称之为：数据库管理员 DBA（Database Administrator）</p>
+<h2 id="3-4-数据库服务器、数据管理系统、数据库、表与记录的关系（重点）"><a href="#3-4-数据库服务器、数据管理系统、数据库、表与记录的关系（重点）" class="headerlink" title="3.4 数据库服务器、数据管理系统、数据库、表与记录的关系（重点）"></a>3.4 数据库服务器、数据管理系统、数据库、表与记录的关系（重点）</h2><p>记录：1 老王 15201413111 22（多个字段的信息组成一条记录，即文件中的一行内容）</p>
+<p>表：userinfo,studentinfo,courseinfo（即文件）</p>
+<p>数据库：db（即文件夹）</p>
+<p>数据库管理系统：如mysql（是一个软件）</p>
+<p>数据库服务器：一台计算机（对内存要求比较高）</p>
+<p>总结：</p>
+<ul>
+<li>数据库服务器：运行数据库管理软件</li>
+<li>数据库管理软件：管理数据库</li>
+<li>数据库：即文件夹，用来组织文件/表</li>
+<li>表：即文件，用来存放多行内容/多条记录</li>
+</ul>
+<h1 id="四、数据库管理技术的发展历程-了解"><a href="#四、数据库管理技术的发展历程-了解" class="headerlink" title="四、数据库管理技术的发展历程(了解)"></a>四、数据库管理技术的发展历程(了解)</h1><h2 id="4-1-人工管理阶段"><a href="#4-1-人工管理阶段" class="headerlink" title="4.1 人工管理阶段"></a>4.1 人工管理阶段</h2><p>20世纪50年代中期以前，计算机主要用于科学计算。</p>
+<p>当时的硬件水平：外存只有纸带、卡片、磁带，没有磁盘等直接存取的存储设备</p>
+<p>当时的软件状况：没有操作系统，没有管理数据的软件，数据的处理方式是批处理。</p>
+<p>人工管理数据具有以下特点：</p>
+<ol>
+<li>数据不保存：计算机主要用于科学计算，数据临时用，临时输入，不保存</li>
+<li>应用程序管理数据：数据要有应用程序自己管理，应用程序需要处理数据的逻辑+物理结构，开发负担很重</li>
+<li>数据不共享：一组数据只对应一个程序，多个程序之间涉及相同数据时，必须各自定义，造成数据大量冗余</li>
+<li>数据不具有独立性：数据的逻辑结构或物理结构发生变化后，必须对应用程序做出相应的修改，开发负担进一步加大</li>
+</ol>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjza0gozduj30ad06yjro.jpg" alt="191-数据库基础-03.png"></p>
+<h2 id="4-2-文件系统阶段"><a href="#4-2-文件系统阶段" class="headerlink" title="4.2 文件系统阶段"></a>4.2 文件系统阶段</h2><p>20世纪50年代后期到60年代中期</p>
+<p>硬件水平：有了磁盘、磁鼓等可直接存取的存储设备</p>
+<p>软件水平：有了操作系统，并且操作系统中已经有了专门的数据管理软件，即文件系统；处理方式上不仅有了批处理，而且能够联机实时处理</p>
+<p><strong>文件系统管理数据具有以下优点：</strong></p>
+<ol>
+<li>数据可以长期保存：计算机大量用于数据处理，因而数据需要长期保存，进行增删改查操作</li>
+<li>由文件系统管理数据：文件系统这个软件，把数据组织成相对独立的数据文件，利用按文件名，按记录进行存取。实现了记录内的结构性，但整体无结构。并且程序与数据之间由文件系统提供存取方法进行转换，是应用程序与数据之间有了一定的独立性，程序员可以不必过多考虑物理细节。</li>
+</ol>
+<p><strong>文件系统管理数据具有以下缺点：</strong></p>
+<ol>
+<li>数据共享性差，冗余度大：一个文件对应一个应用程序，不同应用有相同数据时，也必须建立各自的文件，不能共享相同的数据，造成数据冗余，浪费空间，且相同的数据重复存储，各自管理，容易造成数据不一致性</li>
+<li>数据独立性差：一旦数据的逻辑结构改变，必须修改应用程序，修改文件结构的定义。应用程序的改变，也将引起文件的数据结构的改变。因此数据与程序之间缺乏独立性。可见，文件系统仍然是一个不具有弹性的无结构的数据集合，即文件之间是孤立的，不能反映现实世界事物之间的内存联系。</li>
+</ol>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjza0qmml1j308d07mmxn.jpg" alt="191-数据库基础-04.png?x-oss-process=style/watermark"></p>
+<h2 id="4-3-数据系统阶段"><a href="#4-3-数据系统阶段" class="headerlink" title="4.3 数据系统阶段"></a>4.3 数据系统阶段</h2><p>20世纪60年代后期以来，计算机用于管理的规模越来越大，应用越来越广泛，数据量急剧增长，同时多种应用，多种语言互相覆盖地共享数据结合要求越来越强烈</p>
+<p>硬件水平：有了大容量磁盘，硬件架构下降</p>
+<p>软件水平：软件价格上升（开发效率必须提升，必须将程序员从数据管理中解放出来），分布式的概念盛行。</p>
+<p>数据库系统的特点：</p>
+<ol>
+<li>数据结构化（如上图odboy_stu）</li>
+<li>数据共享，冗余度低，易扩充</li>
+<li>数据独立性高</li>
+<li>数据由DBMS统一管理和控制<ol>
+<li>数据的安全性保护</li>
+<li>数据的完整性检查</li>
+<li>并发控制</li>
+<li>数据库恢复</li>
+</ol>
+</li>
+</ol>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/MySQL%E5%85%A5%E9%97%A8/17-%E4%BD%BF%E7%94%A8Python%E6%93%8D%E4%BD%9CMySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
+        <span class="nav-arrow">← </span>
+        
+          python/MySQL入门/17-使用Python操作MySQL数据库
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/MySQL%E5%85%A5%E9%97%A8/9-MySQL%E8%A1%A8%E7%9A%84%E5%AE%8C%E6%95%B4%E6%80%A7%E7%BA%A6%E6%9D%9F/">
+        
+          python/MySQL入门/9-MySQL表的完整性约束
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、介绍"><span class="toc-nav-text">一、介绍</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、为什么用数据库"><span class="toc-nav-text">二、为什么用数据库</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-所以就出现了一个新的概念——数据3074153569"><span class="toc-nav-text">2.1 所以就出现了一个新的概念——数据3074153569)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-数据库的优势"><span class="toc-nav-text">2.2 数据库的优势</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、认识数据库"><span class="toc-nav-text">三、认识数据库</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-什么是数据（Data）"><span class="toc-nav-text">3.1 什么是数据（Data）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-什么是数据库（DataBase，简称DB）3627863191"><span class="toc-nav-text">3.2 什么是数据库（DataBase，简称DB）3627863191)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-3-什么是数据库管理系统（DataBase-Management-System-简称DBMS）"><span class="toc-nav-text">3.3 什么是数据库管理系统（DataBase Management System 简称DBMS）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-4-数据库服务器、数据管理系统、数据库、表与记录的关系（重点）"><span class="toc-nav-text">3.4 数据库服务器、数据管理系统、数据库、表与记录的关系（重点）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、数据库管理技术的发展历程-了解"><span class="toc-nav-text">四、数据库管理技术的发展历程(了解)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-1-人工管理阶段"><span class="toc-nav-text">4.1 人工管理阶段</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-2-文件系统阶段"><span class="toc-nav-text">4.2 文件系统阶段</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-3-数据系统阶段"><span class="toc-nav-text">4.3 数据系统阶段</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/MySQL入门/1-数据库基础/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/MySQL入门/1-数据库基础",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

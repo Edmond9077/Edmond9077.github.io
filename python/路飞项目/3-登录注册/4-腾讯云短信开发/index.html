@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/3-登录注册/4-腾讯云短信开发 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/3-登录注册/4-腾讯云短信开发</h2>
+
+
+
+  <p class="post-date">2020-02-29</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="腾讯云短信开发"><a href="#腾讯云短信开发" class="headerlink" title="腾讯云短信开发"></a>腾讯云短信开发</h2><h3 id="短信服务应用申请"><a href="#短信服务应用申请" class="headerlink" title="短信服务应用申请"></a>短信服务应用申请</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""" 准备工作</span></span><br><span class="line"><span class="string">1）创建短信应用 - 应用管理</span></span><br><span class="line"><span class="string">2）申请短信签名 - 国内短信 &gt; 签名管理</span></span><br><span class="line"><span class="string">3）申请短信模块 - 国内短信 &gt; 正文模板管理</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="python中开发腾讯云短信服务"><a href="#python中开发腾讯云短信服务" class="headerlink" title="python中开发腾讯云短信服务"></a>python中开发腾讯云短信服务</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）API文档，接口的使用说吧</span></span><br><span class="line"><span class="string">2）SDK，基于开发语言封装的可以直接调用的功能(工具)集合</span></span><br><span class="line"><span class="string">	官网sdk使用文档中找到安装命令：pip install qcloudsms_py</span></span><br><span class="line"><span class="string">	按照sdk使用说明进行开发：https://cloud.tencent.com/document/product/382/11672</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="t-sms-py"><a href="#t-sms-py" class="headerlink" title="t_sms.py"></a>t_sms.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 所有配置换成申请的数据</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 申请的短信应用 SDK AppID</span></span><br><span class="line">appid = <span class="number">1400</span></span><br><span class="line"><span class="comment"># 申请的短信应用 SDK AppKey</span></span><br><span class="line">appkey = <span class="string">"ba81"</span></span><br><span class="line"><span class="comment"># 申请的短信模板ID，需要在短信控制台中申请</span></span><br><span class="line">template_id = <span class="number">5447</span></span><br><span class="line"><span class="comment"># 申请的签名，参数使用的是`签名内容`，而不是`签名ID`</span></span><br><span class="line">sms_sign = <span class="string">"Owen的技术栈"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> qcloudsms_py <span class="keyword">import</span> SmsSingleSender</span><br><span class="line">sender = SmsSingleSender(appid, appkey)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_code</span><span class="params">()</span>:</span></span><br><span class="line">    code = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">        code += str(random.randint(<span class="number">0</span>, <span class="number">9</span>))</span><br><span class="line">    <span class="keyword">return</span> code</span><br><span class="line"></span><br><span class="line">mobile = <span class="number">13344556677</span></span><br><span class="line"><span class="comment"># 模板所需参数，和申请的模板中占位符要保持一致</span></span><br><span class="line">code = get_code()</span><br><span class="line">print(code)</span><br><span class="line">params = [code, <span class="number">5</span>]</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    result = sender.send_with_param(<span class="number">86</span>, mobile, template_id, params, sign=sms_sign, extend=<span class="string">""</span>, ext=<span class="string">""</span>)</span><br><span class="line">    <span class="keyword">if</span> result <span class="keyword">and</span> result.get(<span class="string">'result'</span>) == <span class="number">0</span>:</span><br><span class="line">        print(<span class="string">'发送成功'</span>)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    print(<span class="string">'短信发送失败：%s'</span> % e)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="短信服务二次封装"><a href="#短信服务二次封装" class="headerlink" title="短信服务二次封装"></a>短信服务二次封装</h2><h5 id="在libs下创建-tx-sms-包"><a href="#在libs下创建-tx-sms-包" class="headerlink" title="在libs下创建 tx_sms 包"></a>在libs下创建 tx_sms 包</h5><h5 id="init-py"><a href="#init-py" class="headerlink" title="init.py"></a>init.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> .sms <span class="keyword">import</span> get_code, send_code</span><br></pre></td></tr></table></figure>
+
+<h5 id="settings-py"><a href="#settings-py" class="headerlink" title="settings.py"></a>settings.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 申请的短信应用 SDK AppID</span></span><br><span class="line">APP_ID = <span class="number">1400</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 申请的短信应用 SDK AppKey</span></span><br><span class="line">APP_KEY = <span class="string">"ba81"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 申请的短信模板ID，需要在短信控制台中申请</span></span><br><span class="line">TEMPLATE_ID = <span class="number">5447</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 申请的签名，参数使用的是`签名内容`，而不是`签名ID`</span></span><br><span class="line">SIGN = <span class="string">"Owen的技术栈"</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="sms-py"><a href="#sms-py" class="headerlink" title="sms.py"></a>sms.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_code</span><span class="params">()</span>:</span></span><br><span class="line">    code = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</span><br><span class="line">        code += str(random.randint(<span class="number">0</span>, <span class="number">9</span>))</span><br><span class="line">    <span class="keyword">return</span> code</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> qcloudsms_py <span class="keyword">import</span> SmsSingleSender</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> settings</span><br><span class="line"><span class="keyword">from</span> utils.logging <span class="keyword">import</span> logger</span><br><span class="line">sender = SmsSingleSender(settings.APP_ID, settings.APP_KEY)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_code</span><span class="params">(mobile, code, exp)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result = sender.send_with_param(</span><br><span class="line">            <span class="number">86</span>,</span><br><span class="line">            mobile,</span><br><span class="line">            settings.TEMPLATE_ID,</span><br><span class="line">            (code, exp),</span><br><span class="line">            sign=settings.SIGN,</span><br><span class="line">            extend=<span class="string">""</span>, ext=<span class="string">""</span></span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">if</span> result <span class="keyword">and</span> result.get(<span class="string">'result'</span>) == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        logger.error(<span class="string">'短信发送失败：%s'</span> % result.get(<span class="string">'errmsg'</span>))</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        logger.critical(<span class="string">'短信发送异常：%s'</span> % e)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/3-%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/3-%E6%89%8B%E6%9C%BA%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E9%AA%8C%E8%AF%81%E6%8E%A5%E5%8F%A3/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/3-登录注册/3-手机是否存在验证接口
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/3-%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/5-%E7%9F%AD%E4%BF%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E6%8E%A5%E5%8F%A3/">
+        
+          python/路飞项目/3-登录注册/5-短信验证码接口
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#腾讯云短信开发"><span class="toc-nav-text">腾讯云短信开发</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#短信服务应用申请"><span class="toc-nav-text">短信服务应用申请</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#python中开发腾讯云短信服务"><span class="toc-nav-text">python中开发腾讯云短信服务</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#t-sms-py"><span class="toc-nav-text">t_sms.py</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#短信服务二次封装"><span class="toc-nav-text">短信服务二次封装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#在libs下创建-tx-sms-包"><span class="toc-nav-text">在libs下创建 tx_sms 包</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#init-py"><span class="toc-nav-text">init.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#settings-py"><span class="toc-nav-text">settings.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#sms-py"><span class="toc-nav-text">sms.py</span></a></li></ol></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/3-登录注册/4-腾讯云短信开发/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/3-登录注册/4-腾讯云短信开发",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

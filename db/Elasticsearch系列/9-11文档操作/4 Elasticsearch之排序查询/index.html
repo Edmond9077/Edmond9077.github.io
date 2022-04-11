@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Elasticsearch系列/9-11文档操作/4 Elasticsearch之排序查询 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Elasticsearch系列/9-11文档操作/4 Elasticsearch之排序查询</h2>
+
+
+
+  <p class="post-date">2020-03-09</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="4-Elasticsearch之排序查询"><a href="#4-Elasticsearch之排序查询" class="headerlink" title="4 Elasticsearch之排序查询"></a>4 Elasticsearch之排序查询</h1><h2 id="一-准备数据"><a href="#一-准备数据" class="headerlink" title="一 准备数据"></a>一 准备数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">PUT lqz/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"顾老二"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">30</span>,</span><br><span class="line">  <span class="string">"from"</span>: <span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">  <span class="string">"tags"</span>: [<span class="string">"黑"</span>, <span class="string">"长"</span>, <span class="string">"直"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"大娘子"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">18</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"sheng"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"肤白貌美，娇憨可爱"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"白"</span>, <span class="string">"富"</span>,<span class="string">"美"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">3</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"龙套偏房"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">22</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"mmp，没怎么看，不知道怎么形容"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"造数据"</span>, <span class="string">"真"</span>,<span class="string">"难"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">4</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"石头"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">29</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"粗中有细，狐假虎威"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"粗"</span>, <span class="string">"大"</span>,<span class="string">"猛"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">5</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"魏行首"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">25</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"广云台"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"仿佛兮若轻云之蔽月,飘飘兮若流风之回雪,mmp，最后竟然没有嫁给顾老二！"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"闭月"</span>,<span class="string">"羞花"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二-排序查询：sort"><a href="#二-排序查询：sort" class="headerlink" title="二 排序查询：sort"></a>二 排序查询：sort</h2><h3 id="2-1-降序：desc"><a href="#2-1-降序：desc" class="headerlink" title="2.1 降序：desc"></a>2.1 降序：desc</h3><p>想到排序，出现在脑海中的无非就是升（正）序和降（倒）序。比如我们查询顾府都有哪些人，并根据age字段按照降序，并且，我只想看<code>nmae</code>和<code>age</code>字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match"</span>: &#123;</span><br><span class="line">      <span class="string">"from"</span>: <span class="string">"gu"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"sort"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"age"</span>: &#123;</span><br><span class="line">        <span class="string">"order"</span>: <span class="string">"desc"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例，在条件查询的基础上，我们又通过<code>sort</code>来做排序，根据<code>age</code>字段排序，是降序呢还是升序，由<code>order</code>字段控制，<code>desc</code>是降序。</p>
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : false,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">3</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : null,</span><br><span class="line">    <span class="string">"hits"</span> : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"顾老二"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">30</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"黑"</span>,</span><br><span class="line">            <span class="string">"长"</span>,</span><br><span class="line">            <span class="string">"直"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">30</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"4"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"石头"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">29</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"粗中有细，狐假虎威"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"粗"</span>,</span><br><span class="line">            <span class="string">"大"</span>,</span><br><span class="line">            <span class="string">"猛"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">29</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"3"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"龙套偏房"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">22</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"mmp，没怎么看，不知道怎么形容"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"造数据"</span>,</span><br><span class="line">            <span class="string">"真"</span>,</span><br><span class="line">            <span class="string">"难"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">22</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例中，结果是以降序排列方式返回的。</p>
+<h3 id="2-2-升序：asc"><a href="#2-2-升序：asc" class="headerlink" title="2.2 升序：asc"></a>2.2 升序：asc</h3><p>那么想要升序怎么搞呢？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_all"</span>: &#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"sort"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"age"</span>: &#123;</span><br><span class="line">        <span class="string">"order"</span>: <span class="string">"asc"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例，想要以升序的方式排列，只需要将<code>order</code>值换为<code>asc</code>就可以了。</p>
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : false,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : null,</span><br><span class="line">    <span class="string">"hits"</span> : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"2"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"大娘子"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">18</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"sheng"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"肤白貌美，娇憨可爱"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"白"</span>,</span><br><span class="line">            <span class="string">"富"</span>,</span><br><span class="line">            <span class="string">"美"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">18</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"3"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"龙套偏房"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">22</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"mmp，没怎么看，不知道怎么形容"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"造数据"</span>,</span><br><span class="line">            <span class="string">"真"</span>,</span><br><span class="line">            <span class="string">"难"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">22</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"5"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"魏行首"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">25</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"广云台"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"仿佛兮若轻云之蔽月,飘飘兮若流风之回雪,mmp，最后竟然没有嫁给顾老二！"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"闭月"</span>,</span><br><span class="line">            <span class="string">"羞花"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">25</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"4"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"石头"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">29</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"粗中有细，狐假虎威"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"粗"</span>,</span><br><span class="line">            <span class="string">"大"</span>,</span><br><span class="line">            <span class="string">"猛"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">29</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : null,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"顾老二"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">30</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"黑"</span>,</span><br><span class="line">            <span class="string">"长"</span>,</span><br><span class="line">            <span class="string">"直"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"sort"</span> : [</span><br><span class="line">          <span class="number">30</span></span><br><span class="line">        ]</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例，可以看到结果是以<code>age</code>从小到大的顺序返回结果。</p>
+<h2 id="三-不是什么数据类型都能排序"><a href="#三-不是什么数据类型都能排序" class="headerlink" title="三 不是什么数据类型都能排序"></a>三 不是什么数据类型都能排序</h2><p>那么，你可能会问，除了<code>age</code>，能不能以别的属性作为排序条件啊？来试试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/chengyuan/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_all"</span>: &#123;&#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"sort"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"name"</span>: &#123;</span><br><span class="line">        <span class="string">"order"</span>: <span class="string">"asc"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例，我们以<code>name</code>属性来排序，来看结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"error"</span>: &#123;</span><br><span class="line">    <span class="string">"root_cause"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"type"</span>: <span class="string">"illegal_argument_exception"</span>,</span><br><span class="line">        <span class="string">"reason"</span>: <span class="string">"Fielddata is disabled on text fields by default. Set fielddata=true on [name] in order to load fielddata in memory by uninverting the inverted index. Note that this can however use significant memory. Alternatively use a keyword field instead."</span></span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"type"</span>: <span class="string">"search_phase_execution_exception"</span>,</span><br><span class="line">    <span class="string">"reason"</span>: <span class="string">"all shards failed"</span>,</span><br><span class="line">    <span class="string">"phase"</span>: <span class="string">"query"</span>,</span><br><span class="line">    <span class="string">"grouped"</span>: true,</span><br><span class="line">    <span class="string">"failed_shards"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"shard"</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="string">"index"</span>: <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"node"</span>: <span class="string">"wrtr435jSgi7_naKq2Y_zQ"</span>,</span><br><span class="line">        <span class="string">"reason"</span>: &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"illegal_argument_exception"</span>,</span><br><span class="line">          <span class="string">"reason"</span>: <span class="string">"Fielddata is disabled on text fields by default. Set fielddata=true on [name] in order to load fielddata in memory by uninverting the inverted index. Note that this can however use significant memory. Alternatively use a keyword field instead."</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"caused_by"</span>: &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"illegal_argument_exception"</span>,</span><br><span class="line">      <span class="string">"reason"</span>: <span class="string">"Fielddata is disabled on text fields by default. Set fielddata=true on [name] in order to load fielddata in memory by uninverting the inverted index. Note that this can however use significant memory. Alternatively use a keyword field instead."</span>,</span><br><span class="line">      <span class="string">"caused_by"</span>: &#123;</span><br><span class="line">        <span class="string">"type"</span>: <span class="string">"illegal_argument_exception"</span>,</span><br><span class="line">        <span class="string">"reason"</span>: <span class="string">"Fielddata is disabled on text fields by default. Set fielddata=true on [name] in order to load fielddata in memory by uninverting the inverted index. Note that this can however use significant memory. Alternatively use a keyword field instead."</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"status"</span>: <span class="number">400</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果跟我们想象的不一样，报错了！</p>
+<p>注意：在排序的过程中，只能使用可排序的属性进行排序。那么可以排序的属性有哪些呢？</p>
+<ul>
+<li>数字</li>
+<li>日期</li>
+</ul>
+<p>其他的都不行！</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/9-11%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C/3-term%E4%B8%8Ematch%E6%9F%A5%E8%AF%A2/">
+        <span class="nav-arrow">← </span>
+        
+          db/Elasticsearch系列/9-11文档操作/3-term与match查询
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/9-11%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C/5-Elasticsearch%E4%B9%8B%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2/">
+        
+          db/Elasticsearch系列/9-11文档操作/5-Elasticsearch之分页查询
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#4-Elasticsearch之排序查询"><span class="toc-nav-text">4 Elasticsearch之排序查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-准备数据"><span class="toc-nav-text">一 准备数据</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-排序查询：sort"><span class="toc-nav-text">二 排序查询：sort</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-降序：desc"><span class="toc-nav-text">2.1 降序：desc</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-升序：asc"><span class="toc-nav-text">2.2 升序：asc</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-不是什么数据类型都能排序"><span class="toc-nav-text">三 不是什么数据类型都能排序</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Elasticsearch系列/9-11文档操作/4 Elasticsearch之排序查询/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Elasticsearch系列/9-11文档操作/4 Elasticsearch之排序查询",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

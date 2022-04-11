@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Elasticsearch系列/19-Elasticsearch之配置文件 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Elasticsearch系列/19-Elasticsearch之配置文件</h2>
+
+
+
+  <p class="post-date">2019-12-30</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一 前言"></a>一 前言</h2><p>在<code>elasticsearch\config</code>目录下，有三个核心的配置文件：</p>
+<ul>
+<li>elasticsearch.yml，es相关的配置。</li>
+<li>jvm.options，Java jvm相关参数的配置。</li>
+<li>log4j2.properties，日志相关的配置，因为es采用了<a href="https://baike.baidu.com/item/log4j/480673?fr=aladdin" target="_blank" rel="noopener">log4j</a>的日志框架。</li>
+</ul>
+<p>这里以elasticsearch6.5.4版本为例，并且由于版本不同，配置也不太也一样，仅作参考！</p>
+<h2 id="二-elasticsearch-yml"><a href="#二-elasticsearch-yml" class="headerlink" title="二 elasticsearch.yml"></a>二 elasticsearch.yml</h2><h3 id="2-1-Cluster"><a href="#2-1-Cluster" class="headerlink" title="2.1 Cluster"></a>2.1 Cluster</h3><ul>
+<li>配置集群名称，由多个es实例组成的集群，有一个共同的名称。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster.name: my-application</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>集群端口设置。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transport.tcp.port: 9300</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>防止同一个shard的主副本存在同一个物理机上。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster.routing.allocation.same_shard.host:true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化数据恢复时，并发恢复线程的个数，默认是4个。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster.routing.allocation.node_initial_primaries_recoveries: 4</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加删除节点或者负载均衡时并发恢复线程的个数。默认是4个。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster.routing.allocation.node_concurrent_recoveries: 4</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Node"><a href="#2-2-Node" class="headerlink" title="2.2 Node"></a>2.2 Node</h3><ul>
+<li>节点名称配置，一个es实例其实是一个es进程，在集群中被称为节点。如果一个服务器上配置集群，各节点的名称不能重复。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node.name: node-1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>为节点添加自定义属性，</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node.attr.rack: r1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>该节点是否有资格成为主节点，默认为true。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node.master: true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置节点是否存储数据。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node.data: true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置默认主分片的个数，默认为5片，需要说明的是，主分片一经分配则无法更改。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.number_of_shards: 5</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置默认复制分片的个数，默认一个主分片对应一个复制分片，需要说明的是，复制分片可以手动调整。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.number_of_replicas: 1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置数据恢复时限制的带宽，默认0及不限制。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">indices.recovery.max_size_per_ser: 0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置这个参数来限制从其它分片恢复数据时最大同时打开并发流的个数，默认为5。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">indices.recovery.concurrent_streams: 5</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置数据恢复时限制的带宽，默认0及不限制。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">indices.recovery.max_size_per_ser: 0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置这个参数来限制从其它分片恢复数据时最大同时打开并发流的个数，默认为5。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">indices.recovery.concurrent_streams: 5</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-Paths"><a href="#2-3-Paths" class="headerlink" title="2.3 Paths"></a>2.3 Paths</h3><ul>
+<li>存储数据路径设置，多个路径以英文状态的逗号分隔，默认根目录下的<code>conf</code>目录。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">path.data: &#x2F;path&#x2F;to&#x2F;data</span><br><span class="line"># path.data: &#x2F;path&#x2F;to&#x2F;data1,&#x2F;path&#x2F;to&#x2F;data1</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置临时文件存储路径，默认是es目录下的work目录。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path.work: &#x2F;path&#x2F;to&#x2F;work</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>日志文件路径，默认为根目录下的<code>logs</code>目录。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path.logs: &#x2F;path&#x2F;to&#x2F;logs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置日志文件的存储路径，默认是es目录下的<code>logs</code>目录。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path.logs: &#x2F;path&#x2F;to&#x2F;logs</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置插件的存放路径，默认是es目录下的<code>plugins</code>目录。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path.plugins: &#x2F;path&#x2F;to&#x2F;plugins</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-Network"><a href="#2-4-Network" class="headerlink" title="2.4 Network"></a>2.4 Network</h3><ul>
+<li>为es实例绑定特定的IP地址。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">network.host: 192.168.0.1</span><br></pre></td></tr></table></figure>
+
+<p>上面的设置可以拆分为两个参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">network.bind_host: 192.168.0.1 	# 设置绑定的ip地址，ipv4或ipv6都可以</span><br><span class="line">network.publish_host: 192.168.0.1  # 设置其它节点和该节点交互的ip地址，如果不设置它会自动判断，值必须是个真实的ip地址</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>为es实例设置特定的端口，默认为9200端口。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http.port: 9200</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-Discovery"><a href="#2-5-Discovery" class="headerlink" title="2.5 Discovery"></a>2.5 Discovery</h3><ul>
+<li>设置是否打开多播发现节点，默认是true。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">discovery.zen.ping.multicast.enabled: true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置es<a href="https://www.cnblogs.com/Neeo/articles/10567476.html#单播" target="_blank" rel="noopener">单播发现列表</a>，在es启动时，通过这个列表发现别的es实例，从而加入集群。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">discovery.zen.ping.unicast.hosts: [&quot;host1&quot;, &quot;host2&quot;]</span><br><span class="line">discovery.zen.ping.unicast.hosts: [&quot;10.0.0.1&quot;, &quot;10.0.0.3:9300&quot;, &quot;10.0.0.6[9300-9400]&quot;]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>discovery.zen.minimum_master_nodes</code>设置是告诉集群有多少个节点有资格成为主节点，一般的规则是集群节点数除以2（向下取整）再加一。比如3个节点集群要设置为2，这个试着是为了防止<a href="https://www.cnblogs.com/Neeo/articles/10567476.html#什么是脑裂" target="_blank" rel="noopener">脑裂问题</a>。</li>
+<li>设置集群中自动发现其它节点时ping连接超时时间，默认为3秒，对于比较差的网络环境可以高点的值来防止自动发现时出错。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">discovery.zen.ping.timeout: 3s</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-Memory"><a href="#2-6-Memory" class="headerlink" title="2.6 Memory"></a>2.6 Memory</h3><ul>
+<li>启动时锁定内存，默认为true，因为当jvm开始swapping时es的效率  会降低，所以要保证它不swap，可以把ES_MIN_MEM和ES_MAX_MEM两个环境变量设置成同一个值，并且保证机器有足够的内存分配给es。 同时也要允许elasticsearch的进程可以锁住内存，linux下可以通过ulimit -l unlimited命令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bootstrap.memory_lock: true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>禁止swapping交换。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bootstrap.mlockall: true</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-7-Gateway"><a href="#2-7-Gateway" class="headerlink" title="2.7 Gateway"></a>2.7 Gateway</h3><ul>
+<li>设置是否压缩tcp传输时的数据。默认是false不压缩。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transport.tcp.compress: true</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置内容的最大容量，默认是100mb。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http.max_content_length: 100mb</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>是否使用http协议对外提供服务。默认为true。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http.enabled: false</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置gateway的类型，默认为本地文件系统，也可以设置分布式文件系统、Hadoop的HDFS或者AWS的都可以。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gateway.type: local</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在完全重新启动集群之后阻塞初始恢复，直到启动N个节点为止，详情参见<a href="https://www.cnblogs.com/Neeo/articles/10843759.html" target="_blank" rel="noopener">Recovery</a></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gateway.recover_after_nodes: 3</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置初始化数据恢复进程的超时时间。默认是5分钟。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gateway.recover_after_time: 5m</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置该集群中节点的数量，默认为2个，一旦这N个节点启动，就会立即进行数据恢复。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gateway.expected_nodes: 2</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-8-Various"><a href="#2-8-Various" class="headerlink" title="2.8 Various"></a>2.8 Various</h3><ul>
+<li>删除索引时需要显式名称。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">action.destructive_requires_name: true</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-jvm-options"><a href="#三-jvm-options" class="headerlink" title="三 jvm.options"></a>三 jvm.options</h2><ul>
+<li>设置jvm堆的大小，最大值和最小值，应该是一致的，并且应该根据你的物理内存决定。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-Xms1g     # 设置最小堆为1g</span><br><span class="line">-Xmx1g		# 设置最大堆为1g</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-log4j2-properties"><a href="#四-log4j2-properties" class="headerlink" title="四 log4j2.properties"></a>四 log4j2.properties</h2><p>这个配置文件，我们一般不修改其配置。</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/17-%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB-%E5%88%A0%E9%99%A4%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B/">
+        <span class="nav-arrow">← </span>
+        
+          db/Elasticsearch系列/17-扩展阅读-删除映射类型
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/6-%E8%AF%BE%E7%A8%8B%E6%A8%A1%E5%9D%97/2-%E8%AF%BE%E7%A8%8B%E4%B8%BB%E9%A1%B5%E4%B9%8B%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%88%86%E6%9E%90/">
+        
+          python/路飞项目/6-课程模块/2-课程主页之课程表分析
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-前言"><span class="toc-nav-text">一 前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-elasticsearch-yml"><span class="toc-nav-text">二 elasticsearch.yml</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-Cluster"><span class="toc-nav-text">2.1 Cluster</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-Node"><span class="toc-nav-text">2.2 Node</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-3-Paths"><span class="toc-nav-text">2.3 Paths</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-4-Network"><span class="toc-nav-text">2.4 Network</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-Discovery"><span class="toc-nav-text">2.5 Discovery</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-6-Memory"><span class="toc-nav-text">2.6 Memory</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-7-Gateway"><span class="toc-nav-text">2.7 Gateway</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-8-Various"><span class="toc-nav-text">2.8 Various</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-jvm-options"><span class="toc-nav-text">三 jvm.options</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-log4j2-properties"><span class="toc-nav-text">四 log4j2.properties</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Elasticsearch系列/19-Elasticsearch之配置文件/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Elasticsearch系列/19-Elasticsearch之配置文件",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/其他/05-Supervisor的使用 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/其他/05-Supervisor的使用</h2>
+
+
+
+  <p class="post-date">2020-05-17</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Supervisor-的使用"><a href="#Supervisor-的使用" class="headerlink" title="Supervisor 的使用"></a>Supervisor 的使用</h1><h2 id="一-Supervisor介绍"><a href="#一-Supervisor介绍" class="headerlink" title="一  Supervisor介绍"></a>一  Supervisor介绍</h2><p>Supervisor  (<a href="https://link.jianshu.com?t=http://supervisord.org/" target="_blank" rel="noopener">http://supervisord.org</a>) 是一个用 [Python] 写的进程管理工具，可以很方便的用来启动、重启、关闭进程(不仅仅是 Python 进程)。除了对单个进程的控制，还可以同时启动、关闭多个进程，比如很不幸的服务器出问题导致所有应用程序都被杀死，此时可以用 supervisor 同时启动所有应用程序而不是一个一个地敲命令启动</p>
+<h2 id="二-安装"><a href="#二-安装" class="headerlink" title="二 安装"></a>二 安装</h2><h3 id="2-1-安装方式"><a href="#2-1-安装方式" class="headerlink" title="2.1 安装方式"></a>2.1 安装方式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以通过apt-get、yum安装，既然Supervisor是基于python编写的，那我们就用pip安装好了</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 1 配置好yum源后，可以直接安装</span></span><br><span class="line">yum install supervisor</span><br><span class="line"></span><br><span class="line"><span class="comment">#2 Debian/Ubuntu可通过apt安装</span></span><br><span class="line">apt-get install supervisor</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3 pip安装</span></span><br><span class="line">sudo yum install python-setuptools-devel</span><br><span class="line">pip install supervisor</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4 easy_install安装</span></span><br><span class="line">sudo yum install python-setuptools-devel</span><br><span class="line">easy_install supervisor</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-验证"><a href="#2-2-验证" class="headerlink" title="2.2 验证"></a>2.2 验证</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 安装完成后，会在 /usr/bin 下加入三个命令：</span></span><br><span class="line">[root@lqz bin]<span class="comment"># ls |grep super</span></span><br><span class="line">echo_supervisord_conf  <span class="comment"># 生成一个配置文件示例</span></span><br><span class="line">supervisorctl          <span class="comment"># 服务端</span></span><br><span class="line">supervisord            <span class="comment"># 客户端</span></span><br><span class="line"><span class="comment"># 2 安装完成后，会在 /etc 下创建一个 supervisord.d目录用于存放supervisor的配置文件,</span></span><br><span class="line"><span class="comment"># 还有一个supervisord.conf配置文件（如果没有使用命令： echo_supervisord_conf &gt; /etc/supervisord.conf 生成）</span></span><br><span class="line">[root@lqz etc]<span class="comment"># ls |grep super</span></span><br><span class="line">supervisord.conf</span><br><span class="line">supervisord.d</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3 方便起见，把supervisor服务器相关的配置写入supervisord.conf中,把监控各个进程的配置，按照进程名存在 supervisord.conf 目录下。（这个可以在supervisord.conf中的[include]部分下配置）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-配置"><a href="#2-3-配置" class="headerlink" title="2.3 配置"></a>2.3 配置</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 修改配置文件</span></span><br><span class="line">vim supervisord.conf </span><br><span class="line"><span class="comment"># 2 最后一行改为（;表示注释），这样配置文件可以写到supervisord.d目录下一xx.ini命名</span></span><br><span class="line">[include]</span><br><span class="line">files = supervisord.d/*.ini</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3 简单说明:</span></span><br><span class="line">    [unix_http_server] 配置socket连接部分</span><br><span class="line">    [supervisord] 配置supervisor服务器部分</span><br><span class="line">    [supervisorctl] 配置supervisor客户端部分</span><br><span class="line">    [inet_http_server] 配置web管理界面</span><br><span class="line">    [include] 配置需要引入的其他配置</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-配置详情（了解）"><a href="#2-4-配置详情（了解）" class="headerlink" title="2.4 配置详情（了解）"></a>2.4 配置详情（了解）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">[unix_http_server]</span><br><span class="line">file=/tmp/supervisor.sock   ; UNIX socket 文件，supervisorctl 会使用</span><br><span class="line">;chmod=<span class="number">0700</span>                 ; socket 文件的 mode，默认是 <span class="number">0700</span></span><br><span class="line">;chown=nobody:nogroup       ; socket 文件的 owner，格式： uid:gid</span><br><span class="line"></span><br><span class="line">;[inet_http_server]         ; HTTP 服务器，提供 web 管理界面</span><br><span class="line">;port=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9001</span>        ; Web 管理后台运行的 IP 和端口，如果开放到公网，需要注意安全性</span><br><span class="line">;username=user              ; 登录管理后台的用户名</span><br><span class="line">;password=<span class="number">123</span>               ; 登录管理后台的密码</span><br><span class="line"></span><br><span class="line">[supervisord]</span><br><span class="line">logfile=/tmp/supervisord.log ; 日志文件，默认是 $CWD/supervisord.log</span><br><span class="line">logfile_maxbytes=<span class="number">50</span>MB        ; 日志文件大小，超出会 rotate，默认 <span class="number">50</span>MB</span><br><span class="line">logfile_backups=<span class="number">10</span>           ; 日志文件保留备份数量默认 <span class="number">10</span></span><br><span class="line">loglevel=info                ; 日志级别，默认 info，其它: debug,warn,trace</span><br><span class="line">pidfile=/tmp/supervisord.pid ; pid 文件</span><br><span class="line">nodaemon=false               ; 是否在前台启动，默认是 false，即以 daemon 的方式启动</span><br><span class="line">minfds=<span class="number">1024</span>                  ; 可以打开的文件描述符的最小值，默认 <span class="number">1024</span></span><br><span class="line">minprocs=<span class="number">200</span>                 ; 可以打开的进程数的最小值，默认 <span class="number">200</span></span><br><span class="line"></span><br><span class="line">; the below section must remain <span class="keyword">in</span> the config file <span class="keyword">for</span> RPC</span><br><span class="line">; (supervisorctl/web interface) to work, additional interfaces may be</span><br><span class="line">; added by defining them <span class="keyword">in</span> separate rpcinterface: sections</span><br><span class="line">[rpcinterface:supervisor]</span><br><span class="line">supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface</span><br><span class="line"></span><br><span class="line">[supervisorctl]</span><br><span class="line">serverurl=unix:///tmp/supervisor.sock ; 通过 UNIX socket 连接 supervisord，路径与 unix_http_server 部分的 file 一致</span><br><span class="line">;serverurl=http://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">9001</span> ; 通过 HTTP 的方式连接 supervisord</span><br><span class="line"></span><br><span class="line">; 包含其他的配置文件</span><br><span class="line">[include]</span><br><span class="line">files = relative/directory/*.ini    ; 可以是 *.conf 或 *.ini</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-启动、停止、重启"><a href="#2-5-启动、停止、重启" class="headerlink" title="2.5 启动、停止、重启"></a>2.5 启动、停止、重启</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 启动supervisord</span></span><br><span class="line">supervisord -c /etc/supervisord.conf   或  supervisord </span><br><span class="line"><span class="comment"># 2 停止supervisord</span></span><br><span class="line">supervisorctl shutdown</span><br><span class="line"><span class="comment"># 3 重新加载配置文件</span></span><br><span class="line">supervisorctl reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4 注意：如果配置了密码（使用如下命令）</span></span><br><span class="line">supervisorctl -u user -p <span class="number">123</span> reload</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三-program-配置"><a href="#三-program-配置" class="headerlink" title="三 program 配置"></a>三 program 配置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只要在/etc/supervisord.d/目录下所有 *.ini都会被管理</span></span><br><span class="line">vi /etc/supervisord.d/redis.ini</span><br><span class="line">[program:redis-server]</span><br><span class="line">command=/usr/bin/redis-server /etc/redis/<span class="number">6379.</span>conf</span><br><span class="line">priority=<span class="number">999</span>                ; 优先级（越小越优先）</span><br><span class="line">autostart=true              ; supervisord启动时，该程序也启动</span><br><span class="line">autorestart=true            ; 异常退出时，自动启动</span><br><span class="line">startsecs=<span class="number">10</span>                ; 启动后持续<span class="number">10</span>s后未发生异常，才表示启动成功</span><br><span class="line">startretries=<span class="number">3</span>              ; 异常后，自动重启次数</span><br><span class="line">exitcodes=<span class="number">0</span>,<span class="number">2</span>               ; exit异常抛出的是<span class="number">0</span>、<span class="number">2</span>时才认为是异常</span><br><span class="line">stopsignal=QUIT             ; 杀进程的信号</span><br><span class="line"></span><br><span class="line">; 在程序发送stopignal后，等待操作系统将SIGCHLD返回给supervisord的秒数。</span><br><span class="line">; 如果在supervisord从进程接收到SIGCHLD之前经过了这个秒数，</span><br><span class="line">; supervisord将尝试用最终的SIGKILL杀死它</span><br><span class="line">stopwaitsecs=<span class="number">1</span></span><br><span class="line">user=root                   ; 设置启动该程序的用户</span><br><span class="line">log_stdout=true             ; 如果为<span class="literal">True</span>，则记录程序日志</span><br><span class="line">log_stderr=false            ; 如果为<span class="literal">True</span>，则记录程序错误日志</span><br><span class="line">logfile=/var/log/redis-server.log    ; 程序日志路径</span><br><span class="line">logfile_maxbytes=<span class="number">1</span>MB        ; 日志文件最大大小</span><br><span class="line">logfile_backups=<span class="number">10</span>          ; 日志文件最大数量</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="四-进程管理"><a href="#四-进程管理" class="headerlink" title="四 进程管理"></a>四 进程管理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1启动supervisord管理的所有进程</span></span><br><span class="line">supervisorctl start all</span><br><span class="line"><span class="comment">#2 停止supervisord管理的所有进程</span></span><br><span class="line">supervisorctl stop all</span><br><span class="line"><span class="comment">#3 启动supervisord管理的某一个特定进程</span></span><br><span class="line">supervisorctl start program-name   <span class="comment"># program-name为[program:xx]中的xx</span></span><br><span class="line"><span class="comment"># 4 停止supervisord管理的某一个特定进程</span></span><br><span class="line">supervisorctl stop program-name  // program-name为[program:xx]中的xx</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5 重启所有进程或所有进程</span></span><br><span class="line">supervisorctl restart all </span><br><span class="line"><span class="comment"># 重启所有supervisorctl reatart program-name </span></span><br><span class="line"><span class="comment"># 重启某一进程，program-name为[program:xx]中的xx</span></span><br><span class="line"><span class="comment"># 6 查看supervisord当前管理的所有进程的状态</span></span><br><span class="line">supervisorctl status</span><br></pre></td></tr></table></figure>
+
+<h2 id="五-使用-supervisorctl-客户端命令"><a href="#五-使用-supervisorctl-客户端命令" class="headerlink" title="五 使用 supervisorctl 客户端命令"></a>五 使用 supervisorctl 客户端命令</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Supervisorctl 是 supervisord 的一个命令行客户端工具，启动时需要指定与 supervisord 使用同一份配置文件，否则与 supervisord 一样按照顺序查找配置文件</span></span><br><span class="line">supervisorctl -c /etc/supervisord.conf</span><br><span class="line"><span class="comment"># 上面这个命令会进入 supervisorctl 的 shell 界面，然后可以执行不同的命令了：</span></span><br><span class="line"></span><br><span class="line">supervisorctl <span class="comment"># 或者启动后，直接使用 （进入shell界面）</span></span><br><span class="line"></span><br><span class="line">&gt; status    <span class="comment"># 查看程序状态</span></span><br><span class="line">&gt; stop program-name    <span class="comment"># 关闭 program-name  程序</span></span><br><span class="line">&gt; start program-name   <span class="comment"># 启动 program-name  程序</span></span><br><span class="line">&gt; restart program-name     <span class="comment"># 重启 program-name  程序</span></span><br><span class="line">&gt; reread    ＃ 读取有更新（增加）的配置文件，不会启动新添加的程序</span><br><span class="line">&gt; update    ＃ 重启配置文件修改过的程序</span><br><span class="line"></span><br><span class="line">上面这些命令都有相应的输出，除了进入 supervisorctl 的 shell 界面，等同于直接在 bash 终端运行：</span><br><span class="line">$ supervisorctl status</span><br><span class="line">$ supervisorctl stop usercenter</span><br><span class="line">$ supervisorctl start usercenter</span><br><span class="line">$ supervisorctl restart usercenter</span><br><span class="line">$ supervisorctl reread</span><br><span class="line">$ supervisorctl update</span><br></pre></td></tr></table></figure>
+
+<h2 id="六-使用web管理"><a href="#六-使用web管理" class="headerlink" title="六 使用web管理"></a>六 使用web管理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 修改配置文件</span></span><br><span class="line">vim /etc/supervisord.conf </span><br><span class="line"><span class="comment"># 2 修改内容如下</span></span><br><span class="line">[inet_http_server]         ; inet (TCP) server disabled by default</span><br><span class="line">port=<span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span>:<span class="number">9001</span>        ; (ip_address:port specifier, *:port <span class="keyword">for</span> all iface)</span><br><span class="line">;username=user              ; (default <span class="keyword">is</span> no username (open server))</span><br><span class="line">;password=<span class="number">123</span>               ; (default <span class="keyword">is</span> no password (open server))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3 重启</span></span><br><span class="line">supervisorctl reload</span><br><span class="line"><span class="comment"># 4 在浏览器打开：http://101.133.225.166:8080/</span></span><br><span class="line">可以看到</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gevyk12aoaj31hk0hin0h.jpg" alt="image-20200518012520200"></p>
+<h2 id="七-Supervisor配置systemctl服务，开机自动启"><a href="#七-Supervisor配置systemctl服务，开机自动启" class="headerlink" title="七 Supervisor配置systemctl服务，开机自动启"></a>七 Supervisor配置systemctl服务，开机自动启</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 新建配置文件</span></span><br><span class="line">vim  /usr/lib/systemd/system/supervisor.service</span><br><span class="line"><span class="comment"># 2 内容如下</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=supervisor</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/usr/bin/supervisord -c /usr/local/supervisord.conf</span><br><span class="line">ExecStop=/usr/bin/supervisorctl $OPTIONS shutdown</span><br><span class="line">ExecReload=/usr/bin/supervisorctl $OPTIONS reload</span><br><span class="line">KillMode=process</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=<span class="number">42</span>s</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3 干掉原先的supervisor进程</span></span><br><span class="line">ps -ef|grep super</span><br><span class="line">root     14465     1  0 00:58 ?        00:00:00 /usr/bin/python /usr/bin/supervisord -c /etc/supervisord.conf</span><br><span class="line">kill <span class="number">14465</span></span><br><span class="line"><span class="comment">#4 使用systemctl启动</span></span><br><span class="line">systemctl start supervisor.service</span><br><span class="line">systemctl status supervisor.service</span><br><span class="line"><span class="comment">#5 开机自启</span></span><br><span class="line">systemctl enable supervisor.service</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="八-Supervisor管理redis和nginx"><a href="#八-Supervisor管理redis和nginx" class="headerlink" title="八 Supervisor管理redis和nginx"></a>八 Supervisor管理redis和nginx</h2><h3 id="8-1-配置nginx"><a href="#8-1-配置nginx" class="headerlink" title="8.1 配置nginx"></a>8.1 配置nginx</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1 vim /etc/vim /etc/supervisord.d/nginx.ini</span></span><br><span class="line"><span class="comment"># 2 写入</span></span><br><span class="line">[program:nginx]</span><br><span class="line">command=/usr/sbin/nginx  -g <span class="string">'daemon off;'</span> </span><br><span class="line">autostart=true ; 自动启动</span><br><span class="line">autorestart=true ; 自动重启</span><br><span class="line">user=root ; 以哪个用户执行</span><br><span class="line">stdout_logfile=/tmp/supervisor_nginx.log ; 日志路径</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-配置redis"><a href="#8-2-配置redis" class="headerlink" title="8.2 配置redis"></a>8.2 配置redis</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#1 vim /etc/vim /etc/supervisord.d/redis.ini</span></span><br><span class="line"><span class="comment"># 2 写入</span></span><br><span class="line">[program:redis]</span><br><span class="line">command=redis-server </span><br><span class="line">autostart=true ; 自动启动</span><br><span class="line">autorestart=true ; 自动重启</span><br><span class="line">user=root ; 以哪个用户执行</span><br><span class="line">stdout_logfile=/tmp/supervisor_redis.log ; 日志路径</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-重启"><a href="#8-3-重启" class="headerlink" title="8.3 重启"></a>8.3 重启</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl shutdown</span><br><span class="line">supervisord -c /etc/supervisord.conf</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">supervisorctl reload</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-4-测试"><a href="#8-4-测试" class="headerlink" title="8.4 测试"></a>8.4 测试</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 杀死nginx进程</span></span><br><span class="line"><span class="comment"># 杀死redis进程</span></span><br><span class="line">redis-cli</span><br><span class="line">输入：shutwodn</span><br><span class="line"><span class="comment"># 发现服务又自动重启了</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="九-常见问题及解决"><a href="#九-常见问题及解决" class="headerlink" title="九 常见问题及解决"></a>九 常见问题及解决</h2><h3 id="9-1-问题一"><a href="#9-1-问题一" class="headerlink" title="9.1 问题一"></a>9.1 问题一</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 报错</span></span><br><span class="line">BACKOFF   Exited too quickly (process log may have details)</span><br><span class="line"><span class="comment"># 原因</span></span><br><span class="line">supervisor 比较适合监控业务应用，且只能监控前台程序，实现的daemon【后台启动】的程序不能用它监控，否则supervisor&gt; status 会提示：BACKOFF  Exited too quickly (process log may have details)</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-2-问题二"><a href="#9-2-问题二" class="headerlink" title="9.2 问题二"></a>9.2 问题二</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 报错</span></span><br><span class="line">FATAL     Exited too quickly (process log may have details</span><br><span class="line"><span class="comment"># 原因</span></span><br><span class="line">错误FATAL产生的原因可能是你的python命令的环境配置有问题，如果你是虚拟环境配置的话，必须使用虚拟环境的路径的python或gunicorn命令否则会失败！</span><br><span class="line"><span class="comment"># 解决</span></span><br><span class="line">[program:gunicorn]</span><br><span class="line">command=/root/.local/share/virtualenvs/blog/bin/gunicorn -c other_config/gunicorn.py main:app </span><br><span class="line"><span class="comment">#; 这里的gunicorn必须是你运行python环境对应的环境【如果是虚拟环境就必须配置虚拟环境的路径下面的命令】</span></span><br><span class="line">autostart = true     ; 在 supervisord 启动的时候也自动启动</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-3-问题三"><a href="#9-3-问题三" class="headerlink" title="9.3 问题三"></a>9.3 问题三</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 报错</span></span><br><span class="line">启动了多个supervisord服务，导致无法正常关闭服务</span><br><span class="line">在运行supervisord -c /etc/supervisord.conf之前，直接运行过supervisord -c /etc/supervisord.d/xx.conf导致有些进程被多个superviord管理，无法正常关闭进程。</span><br><span class="line"><span class="comment"># 解决</span></span><br><span class="line">使用ps -fe | grep supervisord查看所有启动过的supervisord服务，kill相关的进程。</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-4-问题四"><a href="#9-4-问题四" class="headerlink" title="9.4 问题四"></a>9.4 问题四</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 报错</span></span><br><span class="line">unix:///var/run/supervisor/supervisor.sock no such file</span><br><span class="line"><span class="comment"># 解决</span></span><br><span class="line">sudo chmod <span class="number">777</span> /run</span><br><span class="line">sudo chmod <span class="number">777</span> /var/log</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-5-问题五"><a href="#9-5-问题五" class="headerlink" title="9.5  问题五"></a>9.5  问题五</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 报错</span></span><br><span class="line">Unlinking stale socket /var/run/supervisor/supervisor.sock</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决（或者直接删除）</span></span><br><span class="line">unlink /var/run/supervisor/supervisor.sock</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-6-问题六"><a href="#9-6-问题六" class="headerlink" title="9.6 问题六"></a>9.6 问题六</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#报错</span></span><br><span class="line">Error: Another program <span class="keyword">is</span> already listening on a port that one of our HTTP servers <span class="keyword">is</span> configured to use.  Shut this program down first before starting supervisord.</span><br><span class="line"><span class="comment"># 解决</span></span><br><span class="line">ps aux | grep supervisord</span><br><span class="line">kill - <span class="number">9</span> 进程ID</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1/5-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E7%9A%84%E5%8C%BA%E5%88%AB/">
+        <span class="nav-arrow">← </span>
+        
+          python/分布式与微服务/5-分布式架构与微服务架构的区别
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%85%B6%E4%BB%96/03-paramiko%E6%A8%A1%E5%9D%97%E7%9A%84%E4%BD%BF%E7%94%A8/">
+        
+          python/其他/03-paramiko模块的使用
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Supervisor-的使用"><span class="toc-nav-text">Supervisor 的使用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-Supervisor介绍"><span class="toc-nav-text">一  Supervisor介绍</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-安装"><span class="toc-nav-text">二 安装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-安装方式"><span class="toc-nav-text">2.1 安装方式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-验证"><span class="toc-nav-text">2.2 验证</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-3-配置"><span class="toc-nav-text">2.3 配置</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-4-配置详情（了解）"><span class="toc-nav-text">2.4 配置详情（了解）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-启动、停止、重启"><span class="toc-nav-text">2.5 启动、停止、重启</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-program-配置"><span class="toc-nav-text">三 program 配置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-进程管理"><span class="toc-nav-text">四 进程管理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-使用-supervisorctl-客户端命令"><span class="toc-nav-text">五 使用 supervisorctl 客户端命令</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-使用web管理"><span class="toc-nav-text">六 使用web管理</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#七-Supervisor配置systemctl服务，开机自动启"><span class="toc-nav-text">七 Supervisor配置systemctl服务，开机自动启</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#八-Supervisor管理redis和nginx"><span class="toc-nav-text">八 Supervisor管理redis和nginx</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#8-1-配置nginx"><span class="toc-nav-text">8.1 配置nginx</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#8-2-配置redis"><span class="toc-nav-text">8.2 配置redis</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#8-3-重启"><span class="toc-nav-text">8.3 重启</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#8-4-测试"><span class="toc-nav-text">8.4 测试</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#九-常见问题及解决"><span class="toc-nav-text">九 常见问题及解决</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-1-问题一"><span class="toc-nav-text">9.1 问题一</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-2-问题二"><span class="toc-nav-text">9.2 问题二</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-3-问题三"><span class="toc-nav-text">9.3 问题三</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-4-问题四"><span class="toc-nav-text">9.4 问题四</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-5-问题五"><span class="toc-nav-text">9.5  问题五</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-6-问题六"><span class="toc-nav-text">9.6 问题六</span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/其他/05-Supervisor的使用/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/其他/05-Supervisor的使用",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

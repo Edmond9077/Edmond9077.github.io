@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/面向对象进阶/9-类和对象的绑定方法及非绑定方法 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/面向对象进阶/9-类和对象的绑定方法及非绑定方法</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>类中定义的方法大致可以分为两类：绑定方法和非绑定方法。其中绑定方法又可以分为绑定到对象的方法和绑定到类的方法。</p>
+<h1 id="一、绑定方法"><a href="#一、绑定方法" class="headerlink" title="一、绑定方法"></a>一、绑定方法</h1><h2 id="1-1-对象的绑定方法"><a href="#1-1-对象的绑定方法" class="headerlink" title="1.1 对象的绑定方法"></a>1.1 对象的绑定方法</h2><p>在类中没有被任何装饰器修饰的方法就是 绑定到对象的方法，这类方法专门为对象定制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Person:</span><br><span class="line">    country &#x3D; &quot;China&quot;</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line"></span><br><span class="line">    def speak(self):</span><br><span class="line">        print(self.name + &#39;, &#39; + str(self.age))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p &#x3D; Person(&#39;Kitty&#39;, 18)</span><br><span class="line">print(p.__dict__)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;name&#39;: &#39;Kitty&#39;, &#39;age&#39;: 18&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(Person.__dict__[&#39;speak&#39;])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;function Person.speak at 0x10f0dd268&gt;</span><br></pre></td></tr></table></figure>
+
+<p>speak即为绑定到对象的方法，这个方法不在对象的名称空间中，而是在类的名称空间中。</p>
+<p>通过对象调用绑定到对象的方法，会有一个自动传值的过程，即自动将当前对象传递给方法的第一个参数（self，一般都叫self，也可以写成别的名称）；若是使用类调用，则第一个参数需要手动传值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">p &#x3D; Person(&#39;Kitty&#39;, 18)</span><br><span class="line">p.speak()  # 通过对象调用</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Kitty, 18</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Person.speak(p)  # 通过类调用</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Kitty, 18</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-类的绑定方法"><a href="#1-2-类的绑定方法" class="headerlink" title="1.2 类的绑定方法"></a>1.2 类的绑定方法</h2><p>类中使用 @classmethod 修饰的方法就是绑定到类的方法。这类方法专门为类定制。通过类名调用绑定到类的方法时，会将类本身当做参数传给类方法的第一个参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Operate_database():</span><br><span class="line">    host &#x3D; &#39;192.168.0.5&#39;</span><br><span class="line">    port &#x3D; &#39;3306&#39;</span><br><span class="line">    user &#x3D; &#39;abc&#39;</span><br><span class="line">    password &#x3D; &#39;123456&#39;</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def connect(cls):  # 约定俗成第一个参数名为cls，也可以定义为其他参数名</span><br><span class="line">        print(cls)</span><br><span class="line">        print(cls.host + &#39;:&#39; + cls.port + &#39; &#39; + cls.user + &#39;&#x2F;&#39; + cls.password)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Operate_database.connect()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &#39;__main__.Operate_database&#39;&gt;</span><br><span class="line">192.168.0.5:3306 abc&#x2F;123456</span><br></pre></td></tr></table></figure>
+
+<p>通过对象也可以调用，只是默认传递的第一个参数还是这个对象对应的类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Operate_database().connect()  # 输出结果一致</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &#39;__main__.Operate_database&#39;&gt;</span><br><span class="line">192.168.0.5:3306 abc&#x2F;123456</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、非绑定方法"><a href="#二、非绑定方法" class="headerlink" title="二、非绑定方法"></a>二、非绑定方法</h1><p>在类内部使用 @staticmethod 修饰的方法即为非绑定方法，这类方法和普通定义的函数没有区别，不与类或对象绑定，谁都可以调用，且没有自动传值的效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Operate_database():</span><br><span class="line">    def __init__(self, host, port, user, password):</span><br><span class="line">        self.host &#x3D; host</span><br><span class="line">        self.port &#x3D; port</span><br><span class="line">        self.user &#x3D; user</span><br><span class="line">        self.password &#x3D; password</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def get_passwrod(salt, password):</span><br><span class="line">        m &#x3D; hashlib.md5(salt.encode(&#39;utf-8&#39;))  # 加盐处理</span><br><span class="line">        m.update(password.encode(&#39;utf-8&#39;))</span><br><span class="line">        return m.hexdigest()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">hash_password &#x3D; Operate_database.get_passwrod(&#39;lala&#39;, &#39;123456&#39;)  # 通过类来调用</span><br><span class="line">print(hash_password)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f7a1cc409ed6f51058c2b4a94a7e1956</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">p &#x3D; Operate_database(&#39;192.168.0.5&#39;, &#39;3306&#39;, &#39;abc&#39;, &#39;123456&#39;)</span><br><span class="line">hash_password &#x3D; p.get_passwrod(p.user, p.password)  # 也可以通过对象调用</span><br><span class="line">print(hash_password)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0659c7992e268962384eb17fafe88364</span><br></pre></td></tr></table></figure>
+
+<p>简而言之，非绑定方法就是将普通方法放到了类的内部。</p>
+<h1 id="三、练习"><a href="#三、练习" class="headerlink" title="三、练习"></a>三、练习</h1><p>假设我们现在有一个需求，需要让Mysql实例化出的对象可以从文件settings.py中读取数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># settings.py</span><br><span class="line">IP &#x3D; &#39;1.1.1.10&#39;</span><br><span class="line">PORT &#x3D; 3306</span><br><span class="line">NET &#x3D; 27</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># test.py</span><br><span class="line">import uuid</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Mysql:</span><br><span class="line">    def __init__(self, ip, port, net):</span><br><span class="line">        self.uid &#x3D; self.create_uid()</span><br><span class="line">        self.ip &#x3D; ip</span><br><span class="line">        self.port &#x3D; port</span><br><span class="line">        self.net &#x3D; net</span><br><span class="line"></span><br><span class="line">    def tell_info(self):</span><br><span class="line">        &quot;&quot;&quot;查看ip地址和端口号&quot;&quot;&quot;</span><br><span class="line">        print(&#39;%s:%s&#39; % (self.ip, self.port))</span><br><span class="line"></span><br><span class="line">    @classmethod</span><br><span class="line">    def from_conf(cls):</span><br><span class="line">        return cls(IP, NET, PORT)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def func(x, y):</span><br><span class="line">        print(&#39;不与任何人绑定&#39;)</span><br><span class="line"></span><br><span class="line">    @staticmethod</span><br><span class="line">    def create_uid():</span><br><span class="line">        &quot;&quot;&quot;随机生成一个字符串&quot;&quot;&quot;</span><br><span class="line">        return uuid.uuid1()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 默认的实例化方式：类名()</span><br><span class="line">obj &#x3D; Mysql(&#39;10.10.0.9&#39;, 3307, 27)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj.tell_info()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10.10.0.9:3307</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-1-绑定方法小结"><a href="#3-1-绑定方法小结" class="headerlink" title="3.1 绑定方法小结"></a>3.1 绑定方法小结</h2><p>如果函数体代码需要用外部传入的类，则应该将该函数定义成绑定给类的方法</p>
+<p>如果函数体代码需要用外部传入的对象，则应该将该函数定义成绑定给对象的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 一种新的实例化方式：从配置文件中读取配置完成实例化</span><br><span class="line">obj1 &#x3D; Mysql.from_conf()</span><br><span class="line">obj1.tell_info()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1.1.1.10:27</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(obj.tell_info)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;bound method Mysql.tell_info of &lt;__main__.Mysql object at 0x10f469240&gt;&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(obj.from_conf)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;bound method Mysql.from_conf of &lt;class &#39;__main__.Mysql&#39;&gt;&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-非绑定方法小结"><a href="#3-2-非绑定方法小结" class="headerlink" title="3.2 非绑定方法小结"></a>3.2 非绑定方法小结</h2><p>如果函数体代码既不需要外部传入的类也不需要外部传入的对象，则应该将该函数定义成非绑定方法/普通函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj.func(1, 2)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不与任何人绑定</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mysql.func(3, 4)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">不与任何人绑定</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(obj.func)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;function Mysql.func at 0x10f10e620&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(Mysql.func)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;function Mysql.func at 0x10f10e620&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(obj.uid)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a78489ec-92a3-11e9-b4d7-acde48001122</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/12-__init__%E5%92%8C__new__/">
+        <span class="nav-arrow">← </span>
+        
+          python/面向对象高阶/12-__init__和__new__
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/6-%E7%B1%BB%E7%9A%84%E5%A4%9A%E6%80%81%E5%92%8C%E5%A4%9A%E6%80%81%E6%80%A7/">
+        
+          python/面向对象进阶/6-类的多态和多态性
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、绑定方法"><span class="toc-nav-text">一、绑定方法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-对象的绑定方法"><span class="toc-nav-text">1.1 对象的绑定方法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-类的绑定方法"><span class="toc-nav-text">1.2 类的绑定方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、非绑定方法"><span class="toc-nav-text">二、非绑定方法</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、练习"><span class="toc-nav-text">三、练习</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-绑定方法小结"><span class="toc-nav-text">3.1 绑定方法小结</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-非绑定方法小结"><span class="toc-nav-text">3.2 非绑定方法小结</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/面向对象进阶/9-类和对象的绑定方法及非绑定方法/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/面向对象进阶/9-类和对象的绑定方法及非绑定方法",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Redis系列/09-Redis系列之-缓存的使用和优化 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Redis系列/09-Redis系列之-缓存的使用和优化</h2>
+
+
+
+  <p class="post-date">2019-12-29</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-缓存的收益与成本"><a href="#一-缓存的收益与成本" class="headerlink" title="一 缓存的收益与成本"></a>一 缓存的收益与成本</h2><h3 id="1-1-受益"><a href="#1-1-受益" class="headerlink" title="1.1 受益"></a>1.1 受益</h3><blockquote>
+<p>1 加速读写</p>
+<p>2 降低后端负载：后端服务器通过前端缓存降低负载，业务端使用redis降低后端mysql负载</p>
+</blockquote>
+<h3 id="1-2-成本"><a href="#1-2-成本" class="headerlink" title="1.2 成本"></a>1.2 成本</h3><blockquote>
+<p>1 数据不一致：缓存层和数据层有时间窗口不一致，和更新策略有关</p>
+<p>2 代码维护成本：多了一层缓存逻辑</p>
+<p>3 运维成本：比如使用了Redis Cluster</p>
+</blockquote>
+<h3 id="1-3-使用场景"><a href="#1-3-使用场景" class="headerlink" title="1.3 使用场景"></a>1.3 使用场景</h3><blockquote>
+<p>1 降低后端负载：对高消耗的sql，join结果集/分组统计的结果做缓存</p>
+<p>2 加速请求响应：利用redis优化io响应时间</p>
+<p>3 大量写合并为批量写：如计数器先redis累加再批量写入db</p>
+</blockquote>
+<h2 id="二-缓存更新策略"><a href="#二-缓存更新策略" class="headerlink" title="二 缓存更新策略"></a>二 缓存更新策略</h2><blockquote>
+<p>1 LRU/LFU/FIFO算法剔除：例如maxmemory-policy(到了最大内存，对应的应对策略)</p>
+<p>​        LRU -Least Recently Used,没有被使用时间最长的</p>
+<p>​        LFU -Least Frequenty User,一定时间段内使用次数最少的</p>
+<p>​        FIFO -First In First Out</p>
+<p>​        LIRS (Low Inter-reference Recency  Set)是一个页替换算法，相比于LRU(Least Recently  Used)和很多其他的替换算法，LIRS具有较高的性能。这是通过使用两次访问同一页之间的距离（本距离指中间被访问了多少非重复块）作为一种尺度去动态地将访问页排序，从而去做一个替换的选择</p>
+<p>配置文件中设置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;<span class="comment"># LRU配置</span></span><br><span class="line">&gt;maxmemory-policy:volatile-lru</span><br><span class="line">&gt;（<span class="number">1</span>）noeviction: 如果内存使用达到了maxmemory，client还要继续写入数据，那么就直接报错给客户端</span><br><span class="line">&gt;（<span class="number">2</span>）allkeys-lru: 就是我们常说的LRU算法，移除掉最近最少使用的那些keys对应的数据，ps最长用的策略</span><br><span class="line">&gt;（<span class="number">3</span>）volatile-lru: 也是采取LRU算法，但是仅仅针对那些设置了指定存活时间（TTL）的key才会清理掉</span><br><span class="line">&gt;（<span class="number">4</span>）allkeys-random: 随机选择一些key来删除掉</span><br><span class="line">&gt;（<span class="number">5</span>）volatile-random: 随机选择一些设置了TTL的key来删除掉</span><br><span class="line">&gt;（<span class="number">6</span>）volatile-ttl: 移除掉部分keys，选择那些TTL时间比较短的keys</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt;<span class="comment"># LFU配置 Redis4.0之后为maxmemory_policy淘汰策略添加了两个LFU模式：</span></span><br><span class="line">&gt;volatile-lfu：对有过期时间的key采用LFU淘汰算法</span><br><span class="line">&gt;allkeys-lfu：对全部key采用LFU淘汰算法</span><br><span class="line">&gt;<span class="comment"># 还有2个配置可以调整LFU算法：</span></span><br><span class="line">&gt;lfu-log-factor <span class="number">10</span></span><br><span class="line">&gt;lfu-decay-time <span class="number">1</span></span><br><span class="line">&gt;<span class="comment"># lfu-log-factor可以调整计数器counter的增长速度，lfu-log-factor越大，counter增长的越慢。</span></span><br><span class="line">&gt;<span class="comment"># lfu-decay-time是一个以分钟为单位的数值，可以调整counter的减少速度</span></span><br></pre></td></tr></table></figure>
+
+</blockquote>
+<blockquote>
+<p>2 超时剔除：例如expire，设置过期时间</p>
+<p>3 主动更新：开发控制生命周期</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>一致性</th>
+<th>维护成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LRU/LIRS算法剔除</td>
+<td>最差</td>
+<td>低</td>
+</tr>
+<tr>
+<td>超时剔除</td>
+<td>较差</td>
+<td>低</td>
+</tr>
+<tr>
+<td>主动更新</td>
+<td>强</td>
+<td>高</td>
+</tr>
+</tbody></table>
+<p>1 低一致性：最大内存和淘汰策略</p>
+<p>2 高一致性：超时剔除和主动更新结合，最大内存和淘汰策略兜底</p>
+<h2 id="三-缓存粒度控制"><a href="#三-缓存粒度控制" class="headerlink" title="三 缓存粒度控制"></a>三 缓存粒度控制</h2><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gduwyfg8mgj30bm0dsjt6.jpg" alt="image-20200416002406930" style="zoom:50%;" />
+
+<blockquote>
+<p>1 从mysql获取用户信息：select * from user where id=100</p>
+<p>2 设置用户信息缓存：set user:100 <code>select * from user where id=100</code></p>
+<p>3 缓存粒度：</p>
+<p>​    缓存全部属性</p>
+<p>​    缓存部分重要属性</p>
+</blockquote>
+<p>1 通用性：全量属性更好</p>
+<p>2 占用空间：部分属性更好</p>
+<p>3 代码维护：表面上全量属性更好</p>
+<h2 id="四-缓存穿透，缓存击穿，缓存雪崩"><a href="#四-缓存穿透，缓存击穿，缓存雪崩" class="headerlink" title="四 缓存穿透，缓存击穿，缓存雪崩"></a>四 缓存穿透，缓存击穿，缓存雪崩</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">###  缓存穿透</span></span><br><span class="line"><span class="comment">#描述：</span></span><br><span class="line">缓存穿透是指缓存和数据库中都没有的数据，而用户不断发起请求，如发起为id为“<span class="number">-1</span>”的数据或id为特别大不存在的数据。这时的用户很可能是攻击者，攻击会导致数据库压力过大。</span><br><span class="line"><span class="comment">#解决方案：</span></span><br><span class="line"><span class="number">1</span> 接口层增加校验，如用户鉴权校验，id做基础校验，id&lt;=<span class="number">0</span>的直接拦截；</span><br><span class="line"><span class="number">2</span> 从缓存取不到的数据，在数据库中也没有取到，这时也可以将key-value对写为key-null，缓存有效时间可以设置短点，如<span class="number">30</span>秒（设置太长会导致正常情况也没法使用）。这样可以防止攻击用户反复用同一个id暴力攻击</span><br><span class="line"><span class="number">3</span> 通过布隆过滤器实现</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### 缓存击穿</span></span><br><span class="line"><span class="comment">#描述：</span></span><br><span class="line">缓存击穿是指缓存中没有但数据库中有的数据（一般是缓存时间到期），这时由于并发用户特别多，同时读缓存没读到数据，又同时去数据库去取数据，引起数据库压力瞬间增大，造成过大压力</span><br><span class="line"><span class="comment">#解决方案：</span></span><br><span class="line">设置热点数据永远不过期。</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"><span class="comment">### 缓存雪崩</span></span><br><span class="line"><span class="comment">#描述：</span></span><br><span class="line">缓存雪崩是指缓存中数据大批量到过期时间，而查询数据量巨大，引起数据库压力过大甚至down机。和缓存击穿不同的是，        缓存击穿指并发查同一条数据，缓存雪崩是不同数据都过期了，很多数据都查不到从而查数据库。</span><br><span class="line"><span class="comment"># 解决方案：</span></span><br><span class="line"><span class="number">1</span> 缓存数据的过期时间设置随机，防止同一时间大量数据过期现象发生。</span><br><span class="line"><span class="number">2</span> 如果缓存数据库是分布式部署，将热点数据均匀分布在不同搞得缓存数据库中。</span><br><span class="line"><span class="number">3</span> 设置热点数据永远不过期。</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Redis%E7%B3%BB%E5%88%97/07-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-Redis-Sentinel/">
+        <span class="nav-arrow">← </span>
+        
+          db/Redis系列/07-Redis系列之-Redis-Sentinel
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/18-Elasticsearch%E4%B9%8B%E6%89%93%E5%88%86%E6%9C%BA%E5%88%B6/">
+        
+          db/Elasticsearch系列/18-Elasticsearch之打分机制
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-缓存的收益与成本"><span class="toc-nav-text">一 缓存的收益与成本</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-受益"><span class="toc-nav-text">1.1 受益</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-成本"><span class="toc-nav-text">1.2 成本</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-使用场景"><span class="toc-nav-text">1.3 使用场景</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-缓存更新策略"><span class="toc-nav-text">二 缓存更新策略</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-缓存粒度控制"><span class="toc-nav-text">三 缓存粒度控制</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-缓存穿透，缓存击穿，缓存雪崩"><span class="toc-nav-text">四 缓存穿透，缓存击穿，缓存雪崩</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Redis系列/09-Redis系列之-缓存的使用和优化/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Redis系列/09-Redis系列之-缓存的使用和优化",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

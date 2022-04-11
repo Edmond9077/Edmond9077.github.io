@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/10-__doc__/">python/面向对象高阶/10-__doc__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、doc
+返回类的注释信息
+
+123456class Foo:    &#39;我是描述信息&#39;    passprint(Foo.__doc__)
+
+
+
+1我是描述信息
+
+
+该属性无法被继承
+
+123456class Foo:    &#39;我是描述信息&#39;    pass ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/10-__doc__/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/16-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86(__enter__%E5%92%8C__exit__)/">python/面向对象高阶/16-实现文件上下文管理(__enter__和__exit__)</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          
+我们知道在操作文件对象的时候可以这么写
+
+12with open(&#39;a.txt&#39;) as f:    &#39;代码块&#39;
+
+
+上述叫做上下文管理协议，即with语句，为了让一个对象兼容with语句，必须在这个对象的类中声明enter和exit方法
+
+一、上下文管理协 ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/16-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86(__enter__%E5%92%8C__exit__)/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/17-%E5%85%83%E7%B1%BB(metaclass)/">python/面向对象高阶/17-元类(metaclass)</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、引言
+元类属于python面向对象编程的深层魔法，99%的人都不得要领，一些自以为搞明白元类的人其实也只是自圆其说、点到为止，从对元类的控制上来看就破绽百出、逻辑混乱，今天我就来带大家来深度了解python元类的来龙去脉。
+笔者深入浅出的背后是对技术一日复一日的执念，希望可以大家可以尊重 ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/17-%E5%85%83%E7%B1%BB(metaclass)/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/8-%E7%B1%BB%E7%9A%84property%E7%89%B9%E6%80%A7/">python/面向对象进阶/8-类的property特性</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、什么是 property特性
+property装饰器用于将被装饰的方法伪装成一个数据属性，在使用时可以不用加括号而直接使用
+
+123456789101112131415# ############### 定义 ###############class Foo:    def func(s ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/8-%E7%B1%BB%E7%9A%84property%E7%89%B9%E6%80%A7/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/5-super()%E6%96%B9%E6%B3%95%E8%AF%A6%E8%A7%A3/">python/面向对象进阶/5-super()方法详解</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、单独调用父类的方法需求：编写一个类，然后再写一个子类进行继承，使用子类去调用父类的方法1。
+使用方法1打印： 胖子老板，来包槟榔。
+
+那么先写一个胖子老板的父类，执行一下：
+
+12345678910class FatFather(object):    def __init__(self ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/5-super()%E6%96%B9%E6%B3%95%E8%AF%A6%E8%A7%A3/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/18-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E7%BA%A7%E5%B0%8F%E7%BB%93/">python/面向对象高阶/18-面向对象高级小结</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、面向对象高级小结1.1 isinstance,issubclassisinstance判断是否为类的实例化对象,会检测父类,而type不会检测父类
+issubclass,判断是否为其子类
+1.2 反射
+hasattr:通过字符串判断是否类属性存在
+getattr:通过字符串获取类属性
+s ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/18-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E7%BA%A7%E5%B0%8F%E7%BB%93/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/2-%E5%8F%8D%E5%B0%84(hasattr%E5%92%8Cgetattr%E5%92%8Csetattr%E5%92%8Cdelattr)/">python/面向对象高阶/2-反射(hasattr和getattr和setattr和delattr)</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、反射在类中的使用反射就是通过字符串来操作类或者对象的属性
+
+反射本质就是在使用内置函数，其中反射有以下四个内置函数：
+
+  12341. hasattr：判断一个方法是否存在与这个类中2. getattr：根据字符串去获取obj对象里的对应的方法的内存地址，加&quot;()&quot; ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/2-%E5%8F%8D%E5%B0%84(hasattr%E5%92%8Cgetattr%E5%92%8Csetattr%E5%92%8Cdelattr)/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/8-logging%E6%A8%A1%E5%9D%97/">python/常用模块/8-logging模块</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、低配logging日志总共分为以下五个级别，这个五个级别自下而上进行匹配 debug–&gt;info–&gt;warning–&gt;error–&gt;critical，默认最低级别为warning级别。
+
+1234567import logginglogging.debug(&#3 ...
+        
+      </div>
+      <a class="more" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/8-logging%E6%A8%A1%E5%9D%97/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/15-pathlib%E6%A8%A1%E5%9D%97/">python/常用模块/15-pathlib模块</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、pathlib库官方定义pathlib 是Python内置库，Python 文档给它的定义是 Object-oriented filesystem paths（面向对象的文件系统路径）。pathlib 提供表示文件系统路径的类，其语义适用于不同的操作系统。路径类在纯路径之间划分，纯路径提 ...
+        
+      </div>
+      <a class="more" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/15-pathlib%E6%A8%A1%E5%9D%97/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/3-__setattr__%E5%92%8C__delattr__%E5%92%8C__getattr__/">python/面向对象高阶/3-__setattr__和__delattr__和__getattr__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          123456789101112131415161718192021class Foo:    x &#x3D; 1    def __init__(self, y):        self.y &#x3D; y    def __getattr__(self, item):         ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/3-__setattr__%E5%92%8C__delattr__%E5%92%8C__getattr__/">详情...</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/page/5/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a href="/page/7/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

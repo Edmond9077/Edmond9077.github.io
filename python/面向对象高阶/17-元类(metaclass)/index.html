@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/面向对象高阶/17-元类(metaclass) | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/面向对象高阶/17-元类(metaclass)</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h1><ul>
+<li>元类属于python面向对象编程的深层魔法，99%的人都不得要领，一些自以为搞明白元类的人其实也只是自圆其说、点到为止，从对元类的控制上来看就破绽百出、逻辑混乱，今天我就来带大家来深度了解python元类的来龙去脉。</li>
+<li>笔者深入浅出的背后是对技术一日复一日的执念，希望可以大家可以尊重原创，为大家能因此文而解开对元类所有的疑惑而感到开心！！！</li>
+</ul>
+<h1 id="二、什么是元类"><a href="#二、什么是元类" class="headerlink" title="二、什么是元类"></a>二、什么是元类</h1><ul>
+<li>在python中一切皆对象，那么我们用class关键字定义的类本身也是一个对象，负责产生该对象的类称之为元类，即元类可以简称为类的类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">class Foo:  # Foo&#x3D;元类()</span><br><span class="line">    pass</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2qxadyxlj30i70463ye.jpg" alt="114-元类metaclass-类的创建.png"></p>
+<h1 id="三、为什么用元类"><a href="#三、为什么用元类" class="headerlink" title="三、为什么用元类"></a>三、为什么用元类</h1><ul>
+<li>元类是负责产生类的，所以我们学习元类或者自定义元类的目的：是为了控制类的产生过程，还可以控制对象的产生过程</li>
+</ul>
+<h1 id="四、内置函数exec-储备"><a href="#四、内置函数exec-储备" class="headerlink" title="四、内置函数exec(储备)"></a>四、内置函数exec(储备)</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cmd &#x3D; &quot;&quot;&quot;</span><br><span class="line">x&#x3D;1</span><br><span class="line">print(&#39;exec函数运行了&#39;)</span><br><span class="line">def func(self):</span><br><span class="line">    pass</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">class_dic &#x3D; &#123;&#125;</span><br><span class="line"># 执行cmd中的代码，然后把产生的名字丢入class_dic字典中</span><br><span class="line">exec(cmd, &#123;&#125;, class_dic)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec函数运行了</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(class_dic)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;x&#39;: 1, &#39;func&#39;: &lt;function func at 0x10a0bc048&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="五、class创建类"><a href="#五、class创建类" class="headerlink" title="五、class创建类"></a>五、class创建类</h1><ul>
+<li>如果说类也是对象，那么用class关键字的去创建类的过程也是一个实例化的过程，该实例化的目的是为了得到一个类，调用的是元类</li>
+<li>用class关键字创建一个类，用的默认的元类type，因此以前说不要用type作为类别判断</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class People:  # People&#x3D;type(...)</span><br><span class="line">    country &#x3D; &#39;China&#39;</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line"></span><br><span class="line">    def eat(self):</span><br><span class="line">        print(&#39;%s is eating&#39; % self.name)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(type(People))</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &#39;type&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2qxvspp3j30vu0epdgx.jpg" alt="114-元类metaclass-class关键字.png"></p>
+<h2 id="5-1-type实现"><a href="#5-1-type实现" class="headerlink" title="5.1 type实现"></a>5.1 type实现</h2><ul>
+<li>创建类的3个要素：类名，基类，类的名称空间</li>
+<li>People = type(类名，基类，类的名称空间)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class_name &#x3D; &#39;People&#39;  # 类名</span><br><span class="line"></span><br><span class="line">class_bases &#x3D; (object, )  # 基类</span><br><span class="line"></span><br><span class="line"># 类的名称空间</span><br><span class="line">class_dic &#x3D; &#123;&#125;</span><br><span class="line">class_body &#x3D; &quot;&quot;&quot;</span><br><span class="line">country&#x3D;&#39;China&#39;</span><br><span class="line">def __init__(self,name,age):</span><br><span class="line">    self.name&#x3D;name</span><br><span class="line">    self.age&#x3D;age</span><br><span class="line">def eat(self):</span><br><span class="line">    print(&#39;%s is eating&#39; %self.name)</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">exec(</span><br><span class="line">    class_body,</span><br><span class="line">    &#123;&#125;,</span><br><span class="line">    class_dic,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(class_name)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">People</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(class_bases)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(&lt;class &#39;object&#39;&gt;,)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(class_dic)  # 类的名称空间</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;country&#39;: &#39;China&#39;, &#39;__init__&#39;: &lt;function __init__ at 0x10a0bc048&gt;, &#39;eat&#39;: &lt;function eat at 0x10a0bcd08&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>People = type(类名，基类，类的名称空间)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">People1 &#x3D; type(class_name, class_bases, class_dic)</span><br><span class="line">print(People1)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &#39;__main__.People&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj1 &#x3D; People1(1, 2)</span><br><span class="line">obj1.eat()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 is eating</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>class创建的类的调用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(People)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &#39;__main__.People&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj &#x3D; People1(1, 2)</span><br><span class="line">obj.eat()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 is eating</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、自定义元类控制类的创建"><a href="#六、自定义元类控制类的创建" class="headerlink" title="六、自定义元类控制类的创建"></a>六、自定义元类控制类的创建</h1><ul>
+<li>使用自定义的元类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class Mymeta(type):  # 只有继承了type类才能称之为一个元类，否则就是一个普通的自定义类</span><br><span class="line">    def __init__(self, class_name, class_bases, class_dic):</span><br><span class="line">        print(&#39;self:&#39;, self)  # 现在是People</span><br><span class="line">        print(&#39;class_name:&#39;, class_name)</span><br><span class="line">        print(&#39;class_bases:&#39;, class_bases)</span><br><span class="line">        print(&#39;class_dic:&#39;, class_dic)</span><br><span class="line">        super(Mymeta, self).__init__(class_name, class_bases,</span><br><span class="line">                                     class_dic)  # 重用父类type的功能</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>分析用class自定义类的运行原理（而非元类的的运行原理）：<ol>
+<li>拿到一个字符串格式的类名class_name=’People’</li>
+<li>拿到一个类的基类们class_bases=(obejct,)</li>
+<li>执行类体代码，拿到一个类的名称空间class_dic={…}</li>
+<li>调用People=type(class_name,class_bases,class_dic)</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class People(object, metaclass&#x3D;Mymeta):  # People&#x3D;Mymeta(类名,基类们,类的名称空间)</span><br><span class="line">    country &#x3D; &#39;China&#39;</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line"></span><br><span class="line">    def eat(self):</span><br><span class="line">        print(&#39;%s is eating&#39; % self.name)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">self: &lt;class &#39;__main__.People&#39;&gt;</span><br><span class="line">class_name: People</span><br><span class="line">class_bases: (&lt;class &#39;object&#39;&gt;,)</span><br><span class="line">class_dic: &#123;&#39;__module__&#39;: &#39;__main__&#39;, &#39;__qualname__&#39;: &#39;People&#39;, &#39;country&#39;: &#39;China&#39;, &#39;__init__&#39;: &lt;function People.__init__ at 0x10a0bcbf8&gt;, &#39;eat&#39;: &lt;function People.eat at 0x10a0bc2f0&gt;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-1-应用"><a href="#6-1-应用" class="headerlink" title="6.1 应用"></a>6.1 应用</h2><ul>
+<li>自定义元类控制类的产生过程，类的产生过程其实就是元类的调用过程</li>
+<li>我们可以控制类必须有文档，可以使用如下的方式实现</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Mymeta(type):  # 只有继承了type类才能称之为一个元类，否则就是一个普通的自定义类</span><br><span class="line">    def __init__(self, class_name, class_bases, class_dic):</span><br><span class="line">        if class_dic.get(&#39;__doc__&#39;) is None or len(</span><br><span class="line">                class_dic.get(&#39;__doc__&#39;).strip()) &#x3D;&#x3D; 0:</span><br><span class="line">            raise TypeError(&#39;类中必须有文档注释，并且文档注释不能为空&#39;)</span><br><span class="line">        if not class_name.istitle():</span><br><span class="line">            raise TypeError(&#39;类名首字母必须大写&#39;)</span><br><span class="line">        super(Mymeta, self).__init__(class_name, class_bases,</span><br><span class="line">                                     class_dic)  # 重用父类的功能</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line"></span><br><span class="line">    class People(object, metaclass&#x3D;Mymeta</span><br><span class="line">                 ):  #People  &#x3D; Mymeta(&#39;People&#39;,(object,),&#123;....&#125;)</span><br><span class="line">        #     &quot;&quot;&quot;这是People类&quot;&quot;&quot;</span><br><span class="line">        country &#x3D; &#39;China&#39;</span><br><span class="line"></span><br><span class="line">        def __init__(self, name, age):</span><br><span class="line">            self.name &#x3D; name</span><br><span class="line">            self.age &#x3D; age</span><br><span class="line"></span><br><span class="line">        def eat(self):</span><br><span class="line">            print(&#39;%s is eating&#39; % self.name)</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类中必须有文档注释，并且文档注释不能为空</span><br></pre></td></tr></table></figure>
+
+<h1 id="七、call-储备"><a href="#七、call-储备" class="headerlink" title="七、call(储备)"></a>七、<strong>call</strong>(储备)</h1><ul>
+<li>要想让obj这个对象变成一个可调用的对象，需要在该对象的类中定义一个方法、、<strong>call</strong>方法，该方法会在调用对象时自动触发</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def __call__(self, *args, **kwargs):</span><br><span class="line">        print(args)</span><br><span class="line">        print(kwargs)</span><br><span class="line">        print(&#39;__call__实现了，实例化对象可以加括号调用了&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">obj(&#39;lqz&#39;, age&#x3D;18)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(&#39;lqz&#39;,)</span><br><span class="line">&#123;&#39;age&#39;: 18&#125;</span><br><span class="line">__call__实现了，实例化对象可以加括号调用了</span><br></pre></td></tr></table></figure>
+
+<h1 id="八、new-储备"><a href="#八、new-储备" class="headerlink" title="八、new(储备)"></a>八、<strong>new</strong>(储备)</h1><p>我们之前说类实例化第一个调用的是<strong>init</strong>，但<strong>init</strong>其实不是实例化一个类的时候第一个被调用 的方法。当使用 Persion(name, age) 这样的表达式来实例化一个类时，最先被调用的方法 其实是 <strong>new</strong> 方法。</p>
+<p><strong>new</strong>方法接受的参数虽然也是和<strong>init</strong>一样，但<strong>init</strong>是在类实例创建之后调用，而 <strong>new</strong>方法正是创建这个类实例的方法。</p>
+<p>注意：<strong><em>\</em>new\</strong>() 函数只能用于从object继承的新式类。**</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class A:</span><br><span class="line">    pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class B(A):</span><br><span class="line">    def __new__(cls):</span><br><span class="line">        print(&quot;__new__方法被执行&quot;)</span><br><span class="line">        return cls.__new__(cls)</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        print(&quot;__init__方法被执行&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">b &#x3D; B()</span><br></pre></td></tr></table></figure>
+
+<h1 id="九、自定义元类控制类的实例化"><a href="#九、自定义元类控制类的实例化" class="headerlink" title="九、自定义元类控制类的实例化"></a>九、自定义元类控制类的实例化</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Mymeta(type):</span><br><span class="line">    def __call__(self, *args, **kwargs):</span><br><span class="line">        print(self)  # self是People</span><br><span class="line">        print(args)  # args &#x3D; (&#39;lqz&#39;,)</span><br><span class="line">        print(kwargs)  # kwargs &#x3D; &#123;&#39;age&#39;:18&#125;</span><br><span class="line">        # return 123</span><br><span class="line">        # 1. 先造出一个People的空对象，申请内存空间</span><br><span class="line">        # __new__方法接受的参数虽然也是和__init__一样，但__init__是在类实例创建之后调用，而 __new__方法正是创建这个类实例的方法。</span><br><span class="line">        obj &#x3D; self.__new__(self)  # 虽然和下面同样是People，但是People没有，找到的__new__是父类的</span><br><span class="line">        # 2. 为该对空对象初始化独有的属性</span><br><span class="line">        self.__init__(obj, *args, **kwargs)</span><br><span class="line">        # 3. 返回一个初始化好的对象</span><br><span class="line">        return obj</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>People = Mymeta()，People()则会触发<strong>call</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class People(object, metaclass&#x3D;Mymeta):</span><br><span class="line">    country &#x3D; &#39;China&#39;</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line"></span><br><span class="line">    def eat(self):</span><br><span class="line">        print(&#39;%s is eating&#39; % self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#     在调用Mymeta的__call__的时候，首先会找自己（如下函数）的，自己的没有才会找父类的</span><br><span class="line">#     def __new__(cls, *args, **kwargs):</span><br><span class="line">#         # print(cls)  # cls是People</span><br><span class="line">#         # cls.__new__(cls) # 错误，无限死循环，自己找自己的，会无限递归</span><br><span class="line">#         obj &#x3D; super(People, cls).__new__(cls)  # 使用父类的，则是去父类中找__new__</span><br><span class="line">#         return obj</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>类的调用，即类实例化就是元类的调用过程，可以通过元类Mymeta的<strong>call</strong>方法控制</li>
+<li>分析：调用Pepole的目的<ol>
+<li>先造出一个People的空对象</li>
+<li>为该对空对象初始化独有的属性</li>
+<li>返回一个初始化好的对象</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj &#x3D; People(&#39;lqz&#39;, age&#x3D;18)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;class &#39;__main__.People&#39;&gt;</span><br><span class="line">(&#39;lqz&#39;,)</span><br><span class="line">&#123;&#39;age&#39;: 18&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(obj.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;name&#39;: &#39;lqz&#39;, &#39;age&#39;: 18&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="一十、自定义元类后类的继承顺序"><a href="#一十、自定义元类后类的继承顺序" class="headerlink" title="一十、自定义元类后类的继承顺序"></a>一十、自定义元类后类的继承顺序</h1><p>结合python继承的实现原理+元类重新看属性的查找应该是什么样子呢？？？</p>
+<p>在学习完元类后，其实我们用class自定义的类也全都是对象（包括object类本身也是元类type的 一个实例，可以用type(object)查看），我们学习过继承的实现原理，如果把类当成对象去看，将下述继承应该说成是：对象OldboyTeacher继承对象Foo，对象Foo继承对象Bar，对象Bar继承对象object</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">class Mymeta(type):  # 只有继承了type类才能称之为一个元类，否则就是一个普通的自定义类</span><br><span class="line">    n &#x3D; 444</span><br><span class="line"></span><br><span class="line">    def __call__(self, *args,</span><br><span class="line">                 **kwargs):  #self&#x3D;&lt;class &#39;__main__.OldboyTeacher&#39;&gt;</span><br><span class="line">        obj &#x3D; self.__new__(self)</span><br><span class="line">        self.__init__(obj, *args, **kwargs)</span><br><span class="line">        return obj</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Bar(object):</span><br><span class="line">    n &#x3D; 333</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Bar):</span><br><span class="line">    n &#x3D; 222</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OldboyTeacher(Foo, metaclass&#x3D;Mymeta):</span><br><span class="line">    n &#x3D; 111</span><br><span class="line"></span><br><span class="line">    school &#x3D; &#39;oldboy&#39;</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line"></span><br><span class="line">    def say(self):</span><br><span class="line">        print(&#39;%s says welcome to the oldboy to learn Python&#39; % self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(</span><br><span class="line">    OldboyTeacher.n</span><br><span class="line">)  # 自下而上依次注释各个类中的n&#x3D;xxx，然后重新运行程序，发现n的查找顺序为OldboyTeacher-&gt;Foo-&gt;Bar-&gt;object-&gt;Mymeta-&gt;type</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">111</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(OldboyTeacher.n)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">111</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查找顺序：<ol>
+<li>先对象层：OldoyTeacher-&gt;Foo-&gt;Bar-&gt;object</li>
+<li>然后元类层：Mymeta-&gt;type</li>
+</ol>
+</li>
+</ul>
+<p>依据上述总结，我们来分析下元类Mymeta中<strong>call</strong>里的self.<strong>new</strong>的查找</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">class Mymeta(type):</span><br><span class="line">    n &#x3D; 444</span><br><span class="line"></span><br><span class="line">    def __call__(self, *args,</span><br><span class="line">                 **kwargs):  #self&#x3D;&lt;class &#39;__main__.OldboyTeacher&#39;&gt;</span><br><span class="line">        obj &#x3D; self.__new__(self)</span><br><span class="line">        print(self.__new__ is object.__new__)  #True</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Bar(object):</span><br><span class="line">    n &#x3D; 333</span><br><span class="line"></span><br><span class="line">    # def __new__(cls, *args, **kwargs):</span><br><span class="line">    #     print(&#39;Bar.__new__&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Foo(Bar):</span><br><span class="line">    n &#x3D; 222</span><br><span class="line"></span><br><span class="line">    # def __new__(cls, *args, **kwargs):</span><br><span class="line">    #     print(&#39;Foo.__new__&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class OldboyTeacher(Foo, metaclass&#x3D;Mymeta):</span><br><span class="line">    n &#x3D; 111</span><br><span class="line"></span><br><span class="line">    school &#x3D; &#39;oldboy&#39;</span><br><span class="line"></span><br><span class="line">    def __init__(self, name, age):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line"></span><br><span class="line">    def say(self):</span><br><span class="line">        print(&#39;%s says welcome to the oldboy to learn Python&#39; % self.name)</span><br><span class="line"></span><br><span class="line">    # def __new__(cls, *args, **kwargs):</span><br><span class="line">    #     print(&#39;OldboyTeacher.__new__&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">OldboyTeacher(&#39;lqz&#39;,</span><br><span class="line">              18)  # 触发OldboyTeacher的类中的__call__方法的执行，进而执行self.__new__开始查找</span><br></pre></td></tr></table></figure>
+
+<p>总结，Mymeta下的<strong>call</strong>里的self.<strong>new</strong>在OldboyTeacher、Foo、Bar里都没有找到<strong>new</strong>的情况下，会去找object里的<strong>new</strong>，而object下默认就有一个<strong>new</strong>，所以即便是之前的类均未实现<strong>new</strong>,也一定会在object中找到一个，根本不会、也根本没必要再去找元类Mymeta-&gt;type中查找<strong>new</strong></p>
+<h1 id="十一、练习"><a href="#十一、练习" class="headerlink" title="十一、练习"></a>十一、练习</h1><p>需求：使用元类修改属性为隐藏属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class Mymeta(type):</span><br><span class="line">    def __init__(self, class_name, class_bases, class_dic):</span><br><span class="line">        # 加上逻辑，控制类Foo的创建</span><br><span class="line">        super(Mymeta, self).__init__(class_name, class_bases, class_dic)</span><br><span class="line"></span><br><span class="line">    def __call__(self, *args, **kwargs):</span><br><span class="line">        # 加上逻辑，控制Foo的调用过程，即Foo对象的产生过程</span><br><span class="line">        obj &#x3D; self.__new__(self)</span><br><span class="line">        self.__init__(obj, *args, **kwargs)</span><br><span class="line">        # 修改属性为隐藏属性</span><br><span class="line">        obj.__dict__ &#x3D; &#123;</span><br><span class="line">            &#39;_%s__%s&#39; % (self.__name__, k): v</span><br><span class="line">            for k, v in obj.__dict__.items()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return obj</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class Foo(object, metaclass&#x3D;Mymeta):  # Foo &#x3D; Mymeta(...)</span><br><span class="line">    def __init__(self, name, age, sex):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line">        self.age &#x3D; age</span><br><span class="line">        self.sex &#x3D; sex</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj &#x3D; Foo(&#39;lqz&#39;, 18, &#39;male&#39;)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(obj.__dict__)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;_Foo__name&#39;: &#39;egon&#39;, &#39;_Foo__age&#39;: 18, &#39;_Foo__sex&#39;: &#39;male&#39;&#125;</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/8-%E7%B1%BB%E7%9A%84property%E7%89%B9%E6%80%A7/">
+        <span class="nav-arrow">← </span>
+        
+          python/面向对象进阶/8-类的property特性
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/16-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86(__enter__%E5%92%8C__exit__)/">
+        
+          python/面向对象高阶/16-实现文件上下文管理(__enter__和__exit__)
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、引言"><span class="toc-nav-text">一、引言</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、什么是元类"><span class="toc-nav-text">二、什么是元类</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、为什么用元类"><span class="toc-nav-text">三、为什么用元类</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、内置函数exec-储备"><span class="toc-nav-text">四、内置函数exec(储备)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、class创建类"><span class="toc-nav-text">五、class创建类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-1-type实现"><span class="toc-nav-text">5.1 type实现</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#六、自定义元类控制类的创建"><span class="toc-nav-text">六、自定义元类控制类的创建</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-1-应用"><span class="toc-nav-text">6.1 应用</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#七、call-储备"><span class="toc-nav-text">七、call(储备)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#八、new-储备"><span class="toc-nav-text">八、new(储备)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#九、自定义元类控制类的实例化"><span class="toc-nav-text">九、自定义元类控制类的实例化</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一十、自定义元类后类的继承顺序"><span class="toc-nav-text">一十、自定义元类后类的继承顺序</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#十一、练习"><span class="toc-nav-text">十一、练习</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/面向对象高阶/17-元类(metaclass)/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/面向对象高阶/17-元类(metaclass)",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

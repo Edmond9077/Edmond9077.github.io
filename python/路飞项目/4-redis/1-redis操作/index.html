@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/4-redis/1-redis操作 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/4-redis/1-redis操作</h2>
+
+
+
+  <p class="post-date">2020-03-03</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="2redis介绍"><a href="#2redis介绍" class="headerlink" title="2redis介绍"></a>2redis介绍</h2><h5 id="redis安装"><a href="#redis安装" class="headerlink" title="redis安装"></a>redis安装</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1、官网下载：安装包或是绿色面安装</span></span><br><span class="line"><span class="string">2、安装并配置环境变量</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="redis-VS-mysql"><a href="#redis-VS-mysql" class="headerlink" title="redis VS mysql"></a>redis VS mysql</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">redis: 内存数据库(读写快)、非关系型(操作数据方便、数据固定)</span></span><br><span class="line"><span class="string">mysql: 硬盘数据库(数据持久化)、关系型(操作数据间关系、可以不同组合)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">大量访问的临时数据，才有redis数据库更优</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="redis-VS-memcache"><a href="#redis-VS-memcache" class="headerlink" title="redis VS memcache"></a>redis VS memcache</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">redis: 操作字符串、列表、字典、无序集合、有序集合 | 支持数据持久化(数据丢失可以找回(默认持久化，主动持久化save)、可以将数据同步给mysql) | 高并发支持</span></span><br><span class="line"><span class="string">memcache: 操作字符串 | 不支持数据持久化 | 并发量小</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Redis操作"><a href="#Redis操作" class="headerlink" title="Redis操作"></a>Redis操作</h2><h5 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">前提：前往一个方便管理redis持久化文件的逻辑再启动服务：dump.rdb</span></span><br><span class="line"><span class="string">1）前台启动服务</span></span><br><span class="line"><span class="string">&gt;: redis-server</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）后台启动服务</span></span><br><span class="line"><span class="string">&gt;: redis-server --service-start</span></span><br><span class="line"><span class="string">注）Linux系统后台启动（或是修改配置文件，建议采用方式）</span></span><br><span class="line"><span class="string">&gt;: redis-server &amp;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）配置文件启动前台服务</span></span><br><span class="line"><span class="string">&gt;: redis-server 配置文件的绝对路径</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）配置文件启动后台服务</span></span><br><span class="line"><span class="string">注）windows系统默认按Redis安装包下的redis.windows-service.conf配置文件启动</span></span><br><span class="line"><span class="string">&gt;: redis-server --service-start</span></span><br><span class="line"><span class="string">注）Linux系统可以完全自定义配置文件(redis.conf)后台启动</span></span><br><span class="line"><span class="string">&gt;: redis-server 配置文件的绝对路径 &amp;</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">windows系统</span></span><br><span class="line"><span class="string">1）前台启动</span></span><br><span class="line"><span class="string">	i）打开终端切换到redis安装目录</span></span><br><span class="line"><span class="string">	&gt;: cd C:\Apps\Redis</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	ii）启动服务</span></span><br><span class="line"><span class="string">	&gt;: redis-server redis.windows.conf</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）后台启动</span></span><br><span class="line"><span class="string">	i）打开终端切换到redis安装目录</span></span><br><span class="line"><span class="string">	&gt;: cd C:\Apps\Redis</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	ii）启动服务（后面的配置文件可以省略）</span></span><br><span class="line"><span class="string">	&gt;: redis-server --service-start redis.windows-service.conf</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="密码管理"><a href="#密码管理" class="headerlink" title="密码管理"></a>密码管理</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）提倡在配置文件中配置，采用配置文件启动</span></span><br><span class="line"><span class="string">requirepass 密码</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）当服务启动后，并且连入数据库（redis数据库不能轻易重启），可以再改当前服务的密码(服务重启，密码重置)</span></span><br><span class="line"><span class="string">config set requirepass 新密码</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）已连入数据库，可以查看当前数据库服务密码</span></span><br><span class="line"><span class="string">config get requirepass</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）默认连接：-h默认127.0.0.1，-p默认6379，-n默认0，-a默认无</span></span><br><span class="line"><span class="string">&gt;: redis-cli</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）完整连接：</span></span><br><span class="line"><span class="string">&gt;: redis-cli -h ip地址 -p 端口号 -n 数据库编号 -a 密码</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）先连接，后输入密码</span></span><br><span class="line"><span class="string">&gt;: redis-cli -h ip地址 -p 端口号 -n 数据库编号</span></span><br><span class="line"><span class="string">&gt;: auth 密码</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="切换数据库"><a href="#切换数据库" class="headerlink" title="切换数据库"></a>切换数据库</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）在连入数据库后执行</span></span><br><span class="line"><span class="string">&gt;: select 数据库编号</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="关闭服务"><a href="#关闭服务" class="headerlink" title="关闭服务"></a>关闭服务</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）先连接数据库，再关闭redis服务</span></span><br><span class="line"><span class="string">&gt;: redis-cli -h ip地址 -p 端口号 -n 数据库编号 -a 密码</span></span><br><span class="line"><span class="string">&gt;: shutdown</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）直接连接数据库并关闭redis服务</span></span><br><span class="line"><span class="string">&gt;: redis-cli -h ip地址 -p 端口号 -n 数据库编号 -a 密码 shutdown</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="清空redis数据库"><a href="#清空redis数据库" class="headerlink" title="清空redis数据库"></a>清空redis数据库</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）连接数据库执行</span></span><br><span class="line"><span class="string">&gt;: flushall</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h5 id="数据持久化"><a href="#数据持久化" class="headerlink" title="数据持久化"></a>数据持久化</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）配置文件默认配置</span></span><br><span class="line"><span class="string">save 900 1  # 超过900秒有1个键值对操作，会自动调用save完成数据持久化</span></span><br><span class="line"><span class="string">save 300 10  # 超过300秒有10个键值对操作，会自动调用save完成数据持久化</span></span><br><span class="line"><span class="string">save 60 10000  # 超过60秒有10000个键值对操作，会自动调用save完成数据持久化</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）安全机制</span></span><br><span class="line"><span class="string"># 当redis服务不可控宕机，会默认调用一下save完成数据持久化（如果数据量过大，也可能存在部分数据丢失）</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）主动持久化</span></span><br><span class="line"><span class="string">&gt;: save  # 连入数据库时，主动调用save完成数据持久化</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">注：数据持久化默认保存文件 dump.rdb，保存路径默认为启动redis服务的当前路径</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="redis相关配置"><a href="#redis相关配置" class="headerlink" title="redis相关配置"></a>redis相关配置</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）绑定的ip地址，多个ip用空格隔开</span></span><br><span class="line"><span class="string">bind 127.0.0.1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）端口，默认6379，一般不做修改</span></span><br><span class="line"><span class="string">port 6379</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）是否以守护进程启动，默认为no，一般改为yes代表后台启动（windows系统不支持）</span></span><br><span class="line"><span class="string">daemonize no</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）定义日志级别，默认值为notice，有如下4种取值：</span></span><br><span class="line"><span class="string">	debug（记录大量日志信息，适用于开发、测试阶段）</span></span><br><span class="line"><span class="string">	verbose（较多日志信息）</span></span><br><span class="line"><span class="string">	notice（适量日志信息，使用于生产环境）</span></span><br><span class="line"><span class="string">	warning（仅有部分重要、关键信息才会被记录）</span></span><br><span class="line"><span class="string">loglevel notice</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">5）配置日志文件保持地址，默认打印在命令行终端的窗口上</span></span><br><span class="line"><span class="string">	如果填写 "./redis.log" 就会在启动redis服务的终端所在目录下，用redis.log记录redis日志</span></span><br><span class="line"><span class="string">logfile ""</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">eg）终端首先切断到log文件夹所在目录(一般就可以采用redis的安装目录，也可以自定义)，再启动reids服务</span></span><br><span class="line"><span class="string">logfile "./log/redis.log"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">6）数据库个数，默认是16个，没特殊情况，不建议修改</span></span><br><span class="line"><span class="string">databases 16</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">7）数据持久化</span></span><br><span class="line"><span class="string">save 900 1  # 超过900秒有1个键值对操作，会自动调用save完成数据持久化</span></span><br><span class="line"><span class="string">save 300 10  # 超过300秒有10个键值对操作，会自动调用save完成数据持久化</span></span><br><span class="line"><span class="string">save 60 10000  # 超过60秒有10000个键值对操作，会自动调用save完成数据持久化</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">8）数据库持久化到硬盘失败，redis会立即停止接收用户数据，让用户知道redis持久化异常，避免数据灾难发生(重启redis即可)，默认为yes，不能做修改</span></span><br><span class="line"><span class="string">stop-writes-on-bgsave-error yes</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">9）消耗cpu来压缩数据进行持久化，数据量小，但会消耗cpu性能，根据实际情况可以做调整</span></span><br><span class="line"><span class="string">rdbcompression yes</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">10）增持cpu 10%性能销毁来完成持久化数据的校验，可以取消掉</span></span><br><span class="line"><span class="string">rdbchecksum yes</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">11）持久化存储的文件名称</span></span><br><span class="line"><span class="string">dbfilename dump.rdb</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">12）持久化存储文件的路径，默认是启动服务的终端所在目录</span></span><br><span class="line"><span class="string">dir ./</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">13）reids数据库密码</span></span><br><span class="line"><span class="string">requirepass 密码</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Redis数据类型"><a href="#Redis数据类型" class="headerlink" title="Redis数据类型"></a>Redis数据类型</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">数据操作：字符串、列表、哈希(字典)、无序集合、有序(排序)集合</span></span><br><span class="line"><span class="string">	有序集合：游戏排行榜</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">字符串：</span></span><br><span class="line"><span class="string">	set key value</span></span><br><span class="line"><span class="string">	get key</span></span><br><span class="line"><span class="string">	mset k1 v1 k2 v2 ...</span></span><br><span class="line"><span class="string">	mget k1 k2 ...</span></span><br><span class="line"><span class="string">	setex key exp value</span></span><br><span class="line"><span class="string">	incrby key increment</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">列表：</span></span><br><span class="line"><span class="string">	rpush key value1 value2 ...</span></span><br><span class="line"><span class="string">	lpush key value1 value2 ...</span></span><br><span class="line"><span class="string">	lrange key bindex eindex</span></span><br><span class="line"><span class="string">	lindex key index</span></span><br><span class="line"><span class="string">	lpop key | rpop key</span></span><br><span class="line"><span class="string">	linsert key before|after old_value new_value</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">哈希：</span></span><br><span class="line"><span class="string">	hset key field value</span></span><br><span class="line"><span class="string">	hget key field</span></span><br><span class="line"><span class="string">	hmset key field1 value1 field2 value2 ...</span></span><br><span class="line"><span class="string">	hmget key field1 field2</span></span><br><span class="line"><span class="string">	hkeys key</span></span><br><span class="line"><span class="string">	hvals key</span></span><br><span class="line"><span class="string">	hdel key field</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">集合：</span></span><br><span class="line"><span class="string">	sadd key member1 member2 ...</span></span><br><span class="line"><span class="string">	sdiff key1 key2 ...</span></span><br><span class="line"><span class="string">	sdiffstore newkey key1 key2 ...</span></span><br><span class="line"><span class="string">	sinter key1 key2 ...</span></span><br><span class="line"><span class="string">	sunion key1 key2 ...</span></span><br><span class="line"><span class="string">	smembers key</span></span><br><span class="line"><span class="string">	spop key</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">有序集合：</span></span><br><span class="line"><span class="string">	zadd key grade1 member1 grade2 member2 ...</span></span><br><span class="line"><span class="string">	zincrby key grade member</span></span><br><span class="line"><span class="string">	zrange key start end</span></span><br><span class="line"><span class="string">	zrevrange key start end</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="python使用redis"><a href="#python使用redis" class="headerlink" title="python使用redis"></a>python使用redis</h2><h5 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;: pip3 install redis</span><br></pre></td></tr></table></figure>
+
+<h5 id="直接使用"><a href="#直接使用" class="headerlink" title="直接使用"></a>直接使用</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"><span class="comment"># decode_responses=True得到的结果会自动解码（不是二进制数据）</span></span><br><span class="line">r = redis.Redis(host=<span class="string">'127.0.0.1'</span>, port=<span class="number">6379</span>, db=<span class="number">1</span>, password=<span class="literal">None</span>, decode_responses=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h5 id="连接池使用"><a href="#连接池使用" class="headerlink" title="连接池使用"></a>连接池使用</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">'127.0.0.1'</span>, port=<span class="number">6379</span>, db=<span class="number">1</span>, max_connections=<span class="number">100</span>, password=<span class="literal">None</span>, decode_responses=<span class="literal">True</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br></pre></td></tr></table></figure>
+
+<h5 id="缓存使用：要额外安装-django-redis"><a href="#缓存使用：要额外安装-django-redis" class="headerlink" title="缓存使用：要额外安装 django-redis"></a>缓存使用：要额外安装 django-redis</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1.将缓存存储位置配置到redis中：settings.py</span></span><br><span class="line">CACHES = &#123;</span><br><span class="line">    <span class="string">"default"</span>: &#123;</span><br><span class="line">        <span class="string">"BACKEND"</span>: <span class="string">"django_redis.cache.RedisCache"</span>,</span><br><span class="line">        <span class="string">"LOCATION"</span>: <span class="string">"redis://127.0.0.1:6379/0"</span>,</span><br><span class="line">        <span class="string">"OPTIONS"</span>: &#123;</span><br><span class="line">            <span class="string">"CLIENT_CLASS"</span>: <span class="string">"django_redis.client.DefaultClient"</span>,</span><br><span class="line">            <span class="string">"CONNECTION_POOL_KWARGS"</span>: &#123;<span class="string">"max_connections"</span>: <span class="number">100</span>&#125;,</span><br><span class="line">            <span class="string">"DECODE_RESPONSES"</span>: <span class="literal">True</span>,</span><br><span class="line">            <span class="string">"PASSWORD"</span>: <span class="string">""</span>,</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2.操作cache模块直接操作缓存：views.py</span></span><br><span class="line"><span class="keyword">from</span> django.core.cache <span class="keyword">import</span> cache  <span class="comment"># 结合配置文件实现插拔式</span></span><br><span class="line"><span class="comment"># 存放token，可以直接设置过期时间</span></span><br><span class="line">cache.set(<span class="string">'token'</span>, <span class="string">'header.payload.signature'</span>, <span class="number">300</span>)</span><br><span class="line"><span class="comment"># 取出token</span></span><br><span class="line">token = cache.get(<span class="string">'token'</span>)</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/3-%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/8-%E5%89%8D%E5%8F%B0%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C%E4%BF%AE%E8%AE%A2/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/3-登录注册/8-前台登录注册修订
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/5-celery/1-celery/">
+        
+          python/路飞项目/5-celery/1-celery
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2redis介绍"><span class="toc-nav-text">2redis介绍</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#redis安装"><span class="toc-nav-text">redis安装</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#redis-VS-mysql"><span class="toc-nav-text">redis VS mysql</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#redis-VS-memcache"><span class="toc-nav-text">redis VS memcache</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Redis操作"><span class="toc-nav-text">Redis操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#启动服务"><span class="toc-nav-text">启动服务</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#密码管理"><span class="toc-nav-text">密码管理</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#连接数据库"><span class="toc-nav-text">连接数据库</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#切换数据库"><span class="toc-nav-text">切换数据库</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#关闭服务"><span class="toc-nav-text">关闭服务</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#清空redis数据库"><span class="toc-nav-text">清空redis数据库</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#数据持久化"><span class="toc-nav-text">数据持久化</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#redis相关配置"><span class="toc-nav-text">redis相关配置</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Redis数据类型"><span class="toc-nav-text">Redis数据类型</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#python使用redis"><span class="toc-nav-text">python使用redis</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#依赖"><span class="toc-nav-text">依赖</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#直接使用"><span class="toc-nav-text">直接使用</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#连接池使用"><span class="toc-nav-text">连接池使用</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#缓存使用：要额外安装-django-redis"><span class="toc-nav-text">缓存使用：要额外安装 django-redis</span></a></li></ol></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/4-redis/1-redis操作/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/4-redis/1-redis操作",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

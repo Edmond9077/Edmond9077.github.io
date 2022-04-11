@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/面向对象进阶/8-类的property特性 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/面向对象进阶/8-类的property特性</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、什么是-property特性"><a href="#一、什么是-property特性" class="headerlink" title="一、什么是 property特性"></a>一、什么是 property特性</h1><ul>
+<li>property装饰器用于将被装饰的方法伪装成一个数据属性，在使用时可以不用加括号而直接使用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># ############### 定义 ###############</span><br><span class="line">class Foo:</span><br><span class="line">    def func(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line">    # 定义property属性</span><br><span class="line">    @property</span><br><span class="line">    def prop(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ############### 调用 ###############</span><br><span class="line">foo_obj &#x3D; Foo()</span><br><span class="line">foo_obj.func()  # 调用实例方法</span><br><span class="line">foo_obj.prop  # 调用property属性</span><br></pre></td></tr></table></figure>
+
+<p>如下的例子用于说明如何定一个简单的property属性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class Goods(object):</span><br><span class="line">    @property</span><br><span class="line">    def size(self):</span><br><span class="line">        return 100</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">g &#x3D; Goods()</span><br><span class="line">print(g.size)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100</span><br></pre></td></tr></table></figure>
+
+<p>property属性的定义和调用要注意一下几点：</p>
+<p>\1. 定义时，在实例方法的基础上添加 @property 装饰器；并且仅有一个self参数</p>
+<p>\2. 调用时，无需括号</p>
+<h1 id="二、简单示例"><a href="#二、简单示例" class="headerlink" title="二、简单示例"></a>二、简单示例</h1><p>对于京东商城中显示电脑主机的列表页面，每次请求不可能把数据库中的所有内容都显示到页面上，而是通过分页的功能局部显示，所以在向数据库中请求数据时就要显示的指定获取从第m条到第n条的所有数据 这个分页的功能包括：</p>
+<ol>
+<li>根据用户请求的当前页和总数据条数计算出 m 和 n</li>
+<li>根据m 和 n 去数据库中请求数据</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># ############### 定义 ###############</span><br><span class="line">class Pager:</span><br><span class="line">    def __init__(self, current_page):</span><br><span class="line">        # 用户当前请求的页码（第一页、第二页...）</span><br><span class="line">        self.current_page &#x3D; current_page</span><br><span class="line">        # 每页默认显示10条数据</span><br><span class="line">        self.per_items &#x3D; 10</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def start(self):</span><br><span class="line">        val &#x3D; (self.current_page - 1) * self.per_items</span><br><span class="line">        return val</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def end(self):</span><br><span class="line">        val &#x3D; self.current_page * self.per_items</span><br><span class="line">        return val</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ############### 调用 ###############</span><br><span class="line">p &#x3D; Pager(1)</span><br><span class="line">print(p.start)  # 就是起始值，即：m</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(p.end)  # 就是结束值，即：n</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10</span><br></pre></td></tr></table></figure>
+
+<p>从上述可见Python的property属性的功能是：property属性内部进行一系列的逻辑计算，最终将计算结果返回。</p>
+<h1 id="三、-property属性的两种方式"><a href="#三、-property属性的两种方式" class="headerlink" title="三、 property属性的两种方式"></a>三、 property属性的两种方式</h1><ol>
+<li>装饰器 即：在方法上应用装饰器（推荐使用）</li>
+<li>类属性 即：在类中定义值为property对象的类属性（Python2历史遗留）</li>
+</ol>
+<h2 id="3-1-装饰器"><a href="#3-1-装饰器" class="headerlink" title="3.1 装饰器"></a>3.1 装饰器</h2><p>在类的实例方法上应用 @property 装饰器</p>
+<p>Python中的类有经典类和新式类，新式类的属性比经典类的属性丰富。（ 如果类继object，那么该类是新式类 ）</p>
+<p>经典类，具有一种 @property 装饰器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># ############### 定义 ###############</span><br><span class="line">class Goods:</span><br><span class="line">    @property</span><br><span class="line">    def price(self):</span><br><span class="line">        return &quot;laowang&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ############### 调用 ###############</span><br><span class="line">obj &#x3D; Goods()</span><br><span class="line">result &#x3D; obj.price  # 自动执行 @property 修饰的 price 方法，并获取方法的返回值</span><br><span class="line">print(result)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">laowang</span><br></pre></td></tr></table></figure>
+
+<p>新式类，具有三种 @property 装饰器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#coding&#x3D;utf-8</span><br><span class="line"># ############### 定义 ###############</span><br><span class="line">class Goods:</span><br><span class="line">    &quot;&quot;&quot;python3中默认继承object类</span><br><span class="line">        以python2、3执行此程序的结果不同，因为只有在python3中才有@xxx.setter  @xxx.deleter</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def price(self):</span><br><span class="line">        print(&#39;@property&#39;)</span><br><span class="line"></span><br><span class="line">    @price.setter</span><br><span class="line">    def price(self, value):</span><br><span class="line">        print(&#39;@price.setter&#39;)</span><br><span class="line"></span><br><span class="line">    @price.deleter</span><br><span class="line">    def price(self):</span><br><span class="line">        print(&#39;@price.deleter&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># ############### 调用 ###############</span><br><span class="line">obj &#x3D; Goods()</span><br><span class="line">obj.price  # 自动执行 @property 修饰的 price 方法，并获取方法的返回值</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj.price &#x3D; 123  # 自动执行 @price.setter 修饰的 price 方法，并将  123 赋值给方法的参数</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@price.setter</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del obj.price  # 自动执行 @price.deleter 修饰的 price 方法</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@price.deleter</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><strong>经典类中的属性只有一种访问方式，其对应被 @property 修饰的方法</strong></li>
+<li><strong>新式类中的属性有三种访问方式，并分别对应了三个被 @property、@方法名.setter、@方法名.deleter 修饰的方法</strong></li>
+</ul>
+<p>由于新式类中具有三种访问方式，我们可以根据它们几个属性的访问特点，分别将三个方法定义为对同一个属性：获取、修改、删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">class Goods(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        # 原价</span><br><span class="line">        self.original_price &#x3D; 100</span><br><span class="line">        # 折扣</span><br><span class="line">        self.discount &#x3D; 0.8</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def price(self):</span><br><span class="line">        # 实际价格 &#x3D; 原价 * 折扣</span><br><span class="line">        new_price &#x3D; self.original_price * self.discount</span><br><span class="line">        return new_price</span><br><span class="line"></span><br><span class="line">    @price.setter</span><br><span class="line">    def price(self, value):</span><br><span class="line">        self.original_price &#x3D; value</span><br><span class="line"></span><br><span class="line">    @price.deleter</span><br><span class="line">    def price(self):</span><br><span class="line">        print(&#39;del&#39;)</span><br><span class="line">        del self.original_price</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj &#x3D; Goods()</span><br><span class="line">print(obj.price)  # 获取商品价格</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">80.0</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj.price &#x3D; 200  # 修改商品原价</span><br><span class="line">print(obj.price)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">160.0</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del obj.price  # 删除商品原价</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-类属性方式"><a href="#3-2-类属性方式" class="headerlink" title="3.2 类属性方式"></a>3.2 类属性方式</h2><p>创建值为property对象的类属性</p>
+<p>注意：<strong>当使用类属性的方式创建property属性时，经典类和新式类无区别</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Foo:</span><br><span class="line">    def get_bar(self):</span><br><span class="line">        return &#39;laowang&#39;</span><br><span class="line"></span><br><span class="line">    BAR &#x3D; property(get_bar)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line">reuslt &#x3D; obj.BAR  # 自动调用get_bar方法，并获取方法的返回值</span><br><span class="line">print(reuslt)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">laowang</span><br></pre></td></tr></table></figure>
+
+<p>property方法中有个四个参数</p>
+<ol>
+<li>第一个参数是方法名，调用 对象.属性 时自动触发执行方法</li>
+<li>第二个参数是方法名，调用 对象.属性 ＝ XXX 时自动触发执行方法</li>
+<li>第三个参数是方法名，调用 del 对象.属性 时自动触发执行方法</li>
+<li>第四个参数是字符串，调用 对象.属性.<strong>doc</strong> ，此参数是该属性的描述信息</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#coding&#x3D;utf-8</span><br><span class="line">class Foo(object):</span><br><span class="line">    def get_bar(self):</span><br><span class="line">        print(&quot;getter...&quot;)</span><br><span class="line">        return &#39;laowang&#39;</span><br><span class="line"></span><br><span class="line">    def set_bar(self, value):</span><br><span class="line">        &quot;&quot;&quot;必须两个参数&quot;&quot;&quot;</span><br><span class="line">        print(&quot;setter...&quot;)</span><br><span class="line">        return &#39;set value&#39; + value</span><br><span class="line"></span><br><span class="line">    def del_bar(self):</span><br><span class="line">        print(&quot;deleter...&quot;)</span><br><span class="line">        return &#39;laowang&#39;</span><br><span class="line"></span><br><span class="line">    BAR &#x3D; property(get_bar, set_bar, del_bar, &quot;description...&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj &#x3D; Foo()</span><br><span class="line"></span><br><span class="line">obj.BAR  # 自动调用第一个参数中定义的方法：get_bar</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">getter...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#39;laowang&#39;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj.BAR &#x3D; &quot;alex&quot;  # 自动调用第二个参数中定义的方法：set_bar方法，并将“alex”当作参数传入</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setter...</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">desc &#x3D; Foo.BAR.__doc__  # 自动获取第四个参数中设置的值：description...</span><br><span class="line">print(desc)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description...</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del obj.BAR  # 自动调用第三个参数中定义的方法：del_bar方法</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deleter...</span><br></pre></td></tr></table></figure>
+
+<p>由于类属性方式创建property属性具有3种访问方式，我们可以根据它们几个属性的访问特点，分别将三个方法定义为对同一个属性：获取、修改、删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class Goods(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        # 原价</span><br><span class="line">        self.original_price &#x3D; 100</span><br><span class="line">        # 折扣</span><br><span class="line">        self.discount &#x3D; 0.8</span><br><span class="line"></span><br><span class="line">    def get_price(self):</span><br><span class="line">        # 实际价格 &#x3D; 原价 * 折扣</span><br><span class="line">        new_price &#x3D; self.original_price * self.discount</span><br><span class="line">        return new_price</span><br><span class="line"></span><br><span class="line">    def set_price(self, value):</span><br><span class="line">        self.original_price &#x3D; value</span><br><span class="line"></span><br><span class="line">    def del_price(self):</span><br><span class="line">        del self.original_price</span><br><span class="line"></span><br><span class="line">    PRICE &#x3D; property(get_price, set_price, del_price, &#39;价格属性描述...&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">obj &#x3D; Goods()</span><br><span class="line">obj.PRICE  # 获取商品价格</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">80.0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obj.PRICE &#x3D; 200  # 修改商品原价</span><br><span class="line">print(obj.PRICE)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">160.0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">del obj.PRICE  # 删除商品原价</span><br></pre></td></tr></table></figure>
+
+<p>综上所述:</p>
+<ul>
+<li>定义property属性共有两种方式，分别是【装饰器】和【类属性】，而【装饰器】方式针对经典类和新式类又有所不同。</li>
+<li>通过使用property属性，能够简化调用者在获取数据的流程</li>
+</ul>
+<h1 id="四、property-类的封装"><a href="#四、property-类的封装" class="headerlink" title="四、property+类的封装"></a>四、property+类的封装</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class People:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.__name &#x3D; name</span><br><span class="line"></span><br><span class="line">    @property  # 查看obj.name</span><br><span class="line">    def name(self):</span><br><span class="line">        return &#39;&lt;名字是：%s&gt;&#39; % self.__name</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">peo1 &#x3D; People(&#39;lqz&#39;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(peo1.name)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;名字是：lqz&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">    peo1.name &#x3D; &#39;EGON&#39;</span><br><span class="line">except Exception as e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">can&#39;t set attribute</span><br></pre></td></tr></table></figure>
+
+<h1 id="五、应用"><a href="#五、应用" class="headerlink" title="五、应用"></a>五、应用</h1><h2 id="5-1-私有属性添加getter和setter方法"><a href="#5-1-私有属性添加getter和setter方法" class="headerlink" title="5.1 私有属性添加getter和setter方法"></a>5.1 私有属性添加getter和setter方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">class Money(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.__money &#x3D; 0</span><br><span class="line"></span><br><span class="line">    def getMoney(self):</span><br><span class="line">        return self.__money</span><br><span class="line"></span><br><span class="line">    def setMoney(self, value):</span><br><span class="line">        if isinstance(value, int):</span><br><span class="line">            self.__money &#x3D; value</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;error:不是整型数字&quot;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-使用property升级getter和setter方法"><a href="#5-2-使用property升级getter和setter方法" class="headerlink" title="5.2 使用property升级getter和setter方法"></a>5.2 使用property升级getter和setter方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class Money(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.__money &#x3D; 0</span><br><span class="line"></span><br><span class="line">    def getMoney(self):</span><br><span class="line">        return self.__money</span><br><span class="line"></span><br><span class="line">    def setMoney(self, value):</span><br><span class="line">        if isinstance(value, int):</span><br><span class="line">            self.__money &#x3D; value</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;error:不是整型数字&quot;)</span><br><span class="line"></span><br><span class="line">    # 定义一个属性，当对这个money设置值时调用setMoney,当获取值时调用getMoney</span><br><span class="line">    money &#x3D; property(getMoney, setMoney)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a &#x3D; Money()</span><br><span class="line">a.money &#x3D; 100  # 调用setMoney方法</span><br><span class="line">print(a.money)  # 调用getMoney方法</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-3-使用property取代getter和setter方法"><a href="#5-3-使用property取代getter和setter方法" class="headerlink" title="5.3 使用property取代getter和setter方法"></a>5.3 使用property取代getter和setter方法</h2><p>重新实现一个属性的设置和读取方法,可做边界判定</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">class Money(object):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.__money &#x3D; 0</span><br><span class="line"></span><br><span class="line">    # 使用装饰器对money进行装饰，那么会自动添加一个叫money的属性，当调用获取money的值时，调用装饰的方法</span><br><span class="line">    @property</span><br><span class="line">    def money(self):</span><br><span class="line">        return self.__money</span><br><span class="line"></span><br><span class="line">    # 使用装饰器对money进行装饰，当对money设置值时，调用装饰的方法</span><br><span class="line">    @money.setter</span><br><span class="line">    def money(self, value):</span><br><span class="line">        if isinstance(value, int):</span><br><span class="line">            self.__money &#x3D; value</span><br><span class="line">        else:</span><br><span class="line">            print(&quot;error:不是整型数字&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a &#x3D; Money()</span><br><span class="line">a.money &#x3D; 100</span><br><span class="line">print(a.money)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、练习"><a href="#六、练习" class="headerlink" title="六、练习"></a>六、练习</h1><p>计算圆的周长和面积</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import math</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Circle:</span><br><span class="line">    def __init__(self, radius):  # 圆的半径radius</span><br><span class="line">        self.radius &#x3D; radius</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def area(self):</span><br><span class="line">        return math.pi * self.radius**2  # 计算面积</span><br><span class="line"></span><br><span class="line">    @property</span><br><span class="line">    def perimeter(self):</span><br><span class="line">        return 2 * math.pi * self.radius  # 计算周长</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">c &#x3D; Circle(10)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(c.radius)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">10</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(c.area)  # 可以向访问数据属性一样去访问area，会触发一个函数的执行，动态计算出一个值</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">314.1592653589793</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(c.perimeter)  # 同上</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">62.83185307179586</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/5-super()%E6%96%B9%E6%B3%95%E8%AF%A6%E8%A7%A3/">
+        <span class="nav-arrow">← </span>
+        
+          python/面向对象进阶/5-super()方法详解
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/17-%E5%85%83%E7%B1%BB(metaclass)/">
+        
+          python/面向对象高阶/17-元类(metaclass)
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、什么是-property特性"><span class="toc-nav-text">一、什么是 property特性</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、简单示例"><span class="toc-nav-text">二、简单示例</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、-property属性的两种方式"><span class="toc-nav-text">三、 property属性的两种方式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-装饰器"><span class="toc-nav-text">3.1 装饰器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-类属性方式"><span class="toc-nav-text">3.2 类属性方式</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、property-类的封装"><span class="toc-nav-text">四、property+类的封装</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、应用"><span class="toc-nav-text">五、应用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-1-私有属性添加getter和setter方法"><span class="toc-nav-text">5.1 私有属性添加getter和setter方法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-2-使用property升级getter和setter方法"><span class="toc-nav-text">5.2 使用property升级getter和setter方法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-3-使用property取代getter和setter方法"><span class="toc-nav-text">5.3 使用property取代getter和setter方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#六、练习"><span class="toc-nav-text">六、练习</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/面向对象进阶/8-类的property特性/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/面向对象进阶/8-类的property特性",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

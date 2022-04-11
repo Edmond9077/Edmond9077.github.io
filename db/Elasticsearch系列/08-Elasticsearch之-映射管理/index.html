@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Elasticsearch系列/08-Elasticsearch之-映射管理 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Elasticsearch系列/08-Elasticsearch之-映射管理</h2>
+
+
+
+  <p class="post-date">2019-12-06</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Elasticsearch之-映射管理"><a href="#Elasticsearch之-映射管理" class="headerlink" title="Elasticsearch之-映射管理"></a>Elasticsearch之-映射管理</h1><p>在Elasticsearch 6.0.0或更高版本中创建的索引只包含一个mapping type。 在5.x中使用multiple mapping types创建的索引将继续像以前一样在Elasticsearch 6.x中运行。 Mapping types将在Elasticsearch 7.0.0中完全删除</p>
+<h2 id="一-映射介绍"><a href="#一-映射介绍" class="headerlink" title="一 映射介绍"></a>一 映射介绍</h2><p>在创建索引的时候，可以预先定义字段的类型及相关属性</p>
+<p>Es会根据Json数据源的基础类型，猜测你想要映射的字段，将输入的数据转变成可以搜索的索引项。</p>
+<p>Mapping是我们自己定义的字段数据类型，同时告诉es如何索引数据及是否可以被搜索</p>
+<p>作用：会让索引建立的更加细致和完善</p>
+<h3 id="1-1-字段数据类型"><a href="#1-1-字段数据类型" class="headerlink" title="1.1 字段数据类型"></a>1.1 字段数据类型</h3><p>string类型：text，keyword</p>
+<p>数字类型：long，integer，short，byte，double，float</p>
+<p>日期类型：data</p>
+<p>布尔类型：boolean</p>
+<p>binary类型：binary</p>
+<p>复杂类型：object（实体，对象），nested（列表）</p>
+<p>geo类型：geo-point，geo-shape（地理位置）</p>
+<p>专业类型：ip，competion（搜索建议）</p>
+<h3 id="1-2-映射参数"><a href="#1-2-映射参数" class="headerlink" title="1.2 映射参数"></a>1.2 映射参数</h3><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+<th>适合类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>store</td>
+<td>值为yes表示存储，no表示不存储，默认为no</td>
+<td>all</td>
+</tr>
+<tr>
+<td>index</td>
+<td>yes表示分析，no表示不分析，默认为true</td>
+<td>text</td>
+</tr>
+<tr>
+<td>null_value</td>
+<td>如果字段为空，可以设置一个默认值，比如”NA”（传过来为空，不能搜索，na可以搜索）</td>
+<td>all</td>
+</tr>
+<tr>
+<td>analyzer</td>
+<td>可以设置索引和搜索时用的分析器，默认使用的是standard分析器，还可以使用whitespace，simple。都是英文分析器</td>
+<td>all</td>
+</tr>
+<tr>
+<td>include_in_all</td>
+<td>默认es为每个文档定义一个特殊域_all,它的作用是让每个字段都被搜索到，如果想让某个字段不被搜索到，可以设置为false</td>
+<td>all</td>
+</tr>
+<tr>
+<td>format</td>
+<td>时间格式字符串模式</td>
+<td>date</td>
+</tr>
+</tbody></table>
+<h2 id="二-创建索引"><a href="#二-创建索引" class="headerlink" title="二 创建索引"></a>二 创建索引</h2><p>text类型会取出词做倒排索引,keyword不会被分词，原样存储，原样匹配</p>
+<p>mapping类型一旦确定，以后就不能修改了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#6.x的版本没问题</span></span><br><span class="line">PUT books</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"mappings"</span>: &#123;</span><br><span class="line">    <span class="string">"book"</span>:&#123;</span><br><span class="line">      <span class="string">"properties"</span>:&#123;</span><br><span class="line">        <span class="string">"title"</span>:&#123;</span><br><span class="line">          <span class="string">"type"</span>:<span class="string">"text"</span>,</span><br><span class="line">         	<span class="string">"analyzer"</span>: <span class="string">"ik_max_word"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"price"</span>:&#123;</span><br><span class="line">          <span class="string">"type"</span>:<span class="string">"integer"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"addr"</span>:&#123;</span><br><span class="line">          <span class="string">"type"</span>:<span class="string">"keyword"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"company"</span>:&#123;</span><br><span class="line">          <span class="string">"properties"</span>:&#123;</span><br><span class="line">            <span class="string">"name"</span>:&#123;<span class="string">"type"</span>:<span class="string">"text"</span>&#125;,</span><br><span class="line">            <span class="string">"company_addr"</span>:&#123;<span class="string">"type"</span>:<span class="string">"text"</span>&#125;,</span><br><span class="line">            <span class="string">"employee_count"</span>:&#123;<span class="string">"type"</span>:<span class="string">"integer"</span>&#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"publish_date"</span>:&#123;<span class="string">"type"</span>:<span class="string">"date"</span>,<span class="string">"format"</span>:<span class="string">"yyy-MM-dd"</span>&#125;</span><br><span class="line">       </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>7.x版本以后</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">PUT books</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"mappings"</span>: &#123;</span><br><span class="line">    <span class="string">"properties"</span>:&#123;</span><br><span class="line">      <span class="string">"title"</span>:&#123;</span><br><span class="line">        <span class="string">"type"</span>:<span class="string">"text"</span>,</span><br><span class="line">        <span class="string">"analyzer"</span>: <span class="string">"ik_max_word"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"price"</span>:&#123;</span><br><span class="line">        <span class="string">"type"</span>:<span class="string">"integer"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"addr"</span>:&#123;</span><br><span class="line">        <span class="string">"type"</span>:<span class="string">"keyword"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"company"</span>:&#123;</span><br><span class="line">        <span class="string">"properties"</span>:&#123;</span><br><span class="line">          <span class="string">"name"</span>:&#123;<span class="string">"type"</span>:<span class="string">"text"</span>&#125;,</span><br><span class="line">          <span class="string">"company_addr"</span>:&#123;<span class="string">"type"</span>:<span class="string">"text"</span>&#125;,</span><br><span class="line">          <span class="string">"employee_count"</span>:&#123;<span class="string">"type"</span>:<span class="string">"integer"</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"publish_date"</span>:&#123;<span class="string">"type"</span>:<span class="string">"date"</span>,<span class="string">"format"</span>:<span class="string">"yyy-MM-dd"</span>&#125;</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>插入数据测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">PUT books/_doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>:<span class="string">"大头儿子小偷爸爸"</span>,</span><br><span class="line">  <span class="string">"price"</span>:<span class="number">100</span>,  </span><br><span class="line">  <span class="string">"addr"</span>:<span class="string">"北京天安门"</span>,</span><br><span class="line">  <span class="string">"company"</span>:&#123;</span><br><span class="line">    <span class="string">"name"</span>:<span class="string">"我爱北京天安门"</span>,</span><br><span class="line">    <span class="string">"company_addr"</span>:<span class="string">"我的家在东北松花江傻姑娘"</span>,</span><br><span class="line">    <span class="string">"employee_count"</span>:<span class="number">10</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"publish_date"</span>:<span class="string">"2019-08-19"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#测试数据2</span></span><br><span class="line">PUT books/_doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>:<span class="string">"白雪公主和十个小矮人"</span>,</span><br><span class="line">  <span class="string">"price"</span>:<span class="string">"99"</span>, <span class="comment">#写字符串会自动转换</span></span><br><span class="line">  <span class="string">"addr"</span>:<span class="string">"黑暗森里"</span>,</span><br><span class="line">  <span class="string">"company"</span>:&#123;</span><br><span class="line">    <span class="string">"name"</span>:<span class="string">"我的家乡在上海"</span>,</span><br><span class="line">    <span class="string">"company_addr"</span>:<span class="string">"朋友一生一起走"</span>,</span><br><span class="line">    <span class="string">"employee_count"</span>:<span class="number">10</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"publish_date"</span>:<span class="string">"2018-05-19"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-查看索引"><a href="#三-查看索引" class="headerlink" title="三 查看索引"></a>三 查看索引</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看books索引的mapping</span></span><br><span class="line">GET books/_mapping</span><br><span class="line"><span class="comment">#获取所有的mapping</span></span><br><span class="line">GET _all/_mapping</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/07-Elasticsearch%E4%B9%8B-%E7%B4%A2%E5%BC%95%E6%93%8D%E4%BD%9C/">
+        <span class="nav-arrow">← </span>
+        
+          db/Elasticsearch系列/07-Elasticsearch之-索引操作
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/15-Elasticsearch%E9%AB%98%E7%BA%A7%E4%B9%8B-%E4%BD%8D%E7%BD%AE%E5%9D%90%E6%A0%87%E5%AE%9E%E7%8E%B0%E9%99%84%E8%BF%91%E7%9A%84%E4%BA%BA%E6%90%9C%E7%B4%A2/">
+        
+          db/Elasticsearch系列/15-Elasticsearch高级之-位置坐标实现附近的人搜索
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Elasticsearch之-映射管理"><span class="toc-nav-text">Elasticsearch之-映射管理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-映射介绍"><span class="toc-nav-text">一 映射介绍</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-字段数据类型"><span class="toc-nav-text">1.1 字段数据类型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-映射参数"><span class="toc-nav-text">1.2 映射参数</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-创建索引"><span class="toc-nav-text">二 创建索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-查看索引"><span class="toc-nav-text">三 查看索引</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Elasticsearch系列/08-Elasticsearch之-映射管理/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Elasticsearch系列/08-Elasticsearch之-映射管理",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

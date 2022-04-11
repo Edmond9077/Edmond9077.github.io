@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/MySQL入门/9-MySQL表的完整性约束 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/MySQL入门/9-MySQL表的完整性约束</h2>
+
+
+
+  <p class="post-date">2020-10-22</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、概览"><a href="#一、概览" class="headerlink" title="一、概览"></a>一、概览</h1><p>为了防止不符合规范的数据进入数据库，在用户对数据进行插入、修改、删除等操作时，DBMS自动按照一定的约束条件对数据进行监测，使不符合规范的数据不能进入数据库，以确保数据库中存储的数据正确、有效、相容。</p>
+<p>约束条件与数据类型的宽度一样，都是可选参数，主要分为以下几种：</p>
+<table>
+<thead>
+<tr>
+<th align="center">约束条件</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">NOT NULL</td>
+<td align="left">非空约束，指定某列不能为空；</td>
+</tr>
+<tr>
+<td align="center">UNIQUE</td>
+<td align="left">唯一约束，指定某列或者几列组合不能重复</td>
+</tr>
+<tr>
+<td align="center">PRIMARY KEY</td>
+<td align="left">主键，指定该列的值可以唯一地标识该列记录</td>
+</tr>
+<tr>
+<td align="center">FOREIGN KEY</td>
+<td align="left">外键，指定该行记录从属于主表中的一条记录，主要用于参照完整性</td>
+</tr>
+</tbody></table>
+<h1 id="二、NOT-NULL"><a href="#二、NOT-NULL" class="headerlink" title="二、NOT NULL"></a>二、NOT NULL</h1><p>是否可空，null表示空，非字符串</p>
+<p>not null - 不可空</p>
+<p>null - 可空</p>
+<h2 id="2-1-not-null实例"><a href="#2-1-not-null实例" class="headerlink" title="2.1 not null实例"></a>2.1 not null实例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table t12 (id int <span class="keyword">not</span> null);</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.02</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> t12;</span><br><span class="line">Empty set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; desc t12;</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">| Field | Type    | Null | Key | Default | Extra |</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">| id    | int(<span class="number">11</span>) | NO   |     | NULL    |       |</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">row <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">#不能向id列插入空元素。 </span></span><br><span class="line">mysql&gt; insert into t12 values (null);</span><br><span class="line">ERROR <span class="number">1048</span> (<span class="number">23000</span>): Column <span class="string">'id'</span> cannot be null</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into t12 values (<span class="number">1</span>);</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-DEFAULT"><a href="#2-2-DEFAULT" class="headerlink" title="2.2 DEFAULT"></a>2.2 DEFAULT</h2><p>我们约束某一列不为空，如果这一列中经常有重复的内容，就需要我们频繁的插入，这样会给我们的操作带来新的负担，于是就出现了默认值的概念。</p>
+<p>默认值，创建列时可以指定默认值，当插入数据时如果未主动设置，则自动添加默认值。</p>
+<h2 id="2-3-not-null-default-示例"><a href="#2-3-not-null-default-示例" class="headerlink" title="2.3 not null + default 示例"></a>2.3 not null + default 示例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table t13 (id1 int <span class="keyword">not</span> null,id2 int <span class="keyword">not</span> null default <span class="number">222</span>);</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; desc t13;</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">| Field | Type    | Null | Key | Default | Extra |</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">| id1   | int(<span class="number">11</span>) | NO   |     | NULL    |       |</span><br><span class="line">| id2   | int(<span class="number">11</span>) | NO   |     | <span class="number">222</span>     |       |</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 只向id1字段添加值，会发现id2字段会使用默认值填充</span></span><br><span class="line">mysql&gt; insert into t13 (id1) values (<span class="number">111</span>);</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> t13;</span><br><span class="line">+-----+-----+</span><br><span class="line">| id1 | id2 |</span><br><span class="line">+-----+-----+</span><br><span class="line">| <span class="number">111</span> | <span class="number">222</span> |</span><br><span class="line">+-----+-----+</span><br><span class="line">row <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment"># id1字段不能为空，所以不能单独向id2字段填充值；</span></span><br><span class="line">mysql&gt; insert into t13 (id2) values (<span class="number">223</span>);</span><br><span class="line">ERROR <span class="number">1364</span> (HY000): Field <span class="string">'id1'</span> doesn<span class="string">'t have a default value</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 向id1，id2中分别填充数据，id2的填充数据会覆盖默认值</span></span><br><span class="line"><span class="string">mysql&gt; insert into t13 (id1,id2) values (112,223);</span></span><br><span class="line"><span class="string">Query OK, 1 row affected (0.00 sec)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">mysql&gt; select * from t13;</span></span><br><span class="line"><span class="string">+-----+-----+</span></span><br><span class="line"><span class="string">| id1 | id2 |</span></span><br><span class="line"><span class="string">+-----+-----+</span></span><br><span class="line"><span class="string">| 111 | 222 |</span></span><br><span class="line"><span class="string">| 112 | 223 |</span></span><br><span class="line"><span class="string">+-----+-----+</span></span><br><span class="line"><span class="string">rows in set (0.00 sec)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-4-not-null不生效"><a href="#2-4-not-null不生效" class="headerlink" title="2.4 not null不生效"></a>2.4 not null不生效</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置严格模式：</span></span><br><span class="line">    不支持对<span class="keyword">not</span> null字段插入null值</span><br><span class="line">    不支持对自增长字段插入”值</span><br><span class="line">    不支持text字段有默认值</span><br><span class="line"></span><br><span class="line"><span class="comment"># 直接在mysql中生效(重启失效):</span></span><br><span class="line">mysql&gt;set sql_mode=<span class="string">"STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置文件添加(永久失效)：</span></span><br><span class="line">sql-mode=<span class="string">"STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="三、UNIQUE"><a href="#三、UNIQUE" class="headerlink" title="三、UNIQUE"></a>三、UNIQUE</h1><p>唯一约束，指定某列或者几列组合不能重复。</p>
+<h2 id="3-1-unique示例"><a href="#3-1-unique示例" class="headerlink" title="3.1 unique示例"></a>3.1 unique示例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法一：</span></span><br><span class="line">create table department1(</span><br><span class="line">id int,</span><br><span class="line">name varchar(<span class="number">20</span>) unique,</span><br><span class="line">comment varchar(<span class="number">100</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法二：</span></span><br><span class="line">create table department2(</span><br><span class="line">id int,</span><br><span class="line">name varchar(<span class="number">20</span>),</span><br><span class="line">comment varchar(<span class="number">100</span>),</span><br><span class="line">unique(name)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mysql&gt; insert into department1 values(<span class="number">1</span>,<span class="string">'IT'</span>,<span class="string">'技术'</span>);</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.00</span> sec)</span><br><span class="line">mysql&gt; insert into department1 values(<span class="number">1</span>,<span class="string">'IT'</span>,<span class="string">'技术'</span>);</span><br><span class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry <span class="string">'IT'</span> <span class="keyword">for</span> key <span class="string">'name'</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-not-null-和-unique-的结合"><a href="#3-2-not-null-和-unique-的结合" class="headerlink" title="3.2 not null 和 unique 的结合"></a>3.2 not null 和 unique 的结合</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table t1(id int <span class="keyword">not</span> null unique);</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.02</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; desc t1;</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">| Field | Type    | Null | Key | Default | Extra |</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">| id    | int(<span class="number">11</span>) | NO   | PRI | NULL    |       |</span><br><span class="line">+-------+---------+------+-----+---------+-------+</span><br><span class="line">row <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3-联合唯一"><a href="#3-3-联合唯一" class="headerlink" title="3.3 联合唯一"></a>3.3 联合唯一</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">create table service(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name varchar(<span class="number">20</span>),</span><br><span class="line">host varchar(<span class="number">15</span>) <span class="keyword">not</span> null,</span><br><span class="line">port int <span class="keyword">not</span> null,</span><br><span class="line">unique(host,port) <span class="comment">#联合唯一</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into service values</span><br><span class="line">    -&gt; (1,'nginx','192.168.0.10',80),</span><br><span class="line">    -&gt; (2,'haproxy','192.168.0.20',80),</span><br><span class="line">    -&gt; (3,'mysql','192.168.0.30',3306)</span><br><span class="line">    -&gt; ;</span><br><span class="line">Query OK, <span class="number">3</span> rows affected (<span class="number">0.01</span> sec)</span><br><span class="line">Records: <span class="number">3</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; insert into service(name,host,port) values(<span class="string">'nginx'</span>,<span class="string">'192.168.0.10'</span>,<span class="number">80</span>);</span><br><span class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry <span class="string">'192.168.0.10-80'</span> <span class="keyword">for</span> key <span class="string">'host'</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="四、PRIMARY-KEY"><a href="#四、PRIMARY-KEY" class="headerlink" title="四、PRIMARY KEY"></a>四、PRIMARY KEY</h1><p>主键为了保证表中的每一条数据的该字段都是表格中的唯一值。换言之，它是用来独一无二地确认一个表格中的每一行数据。<br>主键可以包含一个字段或多个字段。当主键包含多个栏位时，称为组合键 (Composite Key),也可以叫联合主键。<br>主键可以在建置新表格时设定 (运用 CREATE TABLE 语句)，或是以改变现有的表格架构方式设定 (运用 ALTER TABLE)。<br>主键必须唯一，主键值非空；可以是单一字段，也可以是多字段组合。</p>
+<h2 id="4-1-单字段主键"><a href="#4-1-单字段主键" class="headerlink" title="4.1 单字段主键"></a>4.1 单字段主键</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">============单列做主键===============</span><br><span class="line"><span class="comment">#方法一：not null+unique</span></span><br><span class="line">create table department1(</span><br><span class="line">id int <span class="keyword">not</span> null unique, <span class="comment">#主键</span></span><br><span class="line">name varchar(<span class="number">20</span>) <span class="keyword">not</span> null unique,</span><br><span class="line">comment varchar(<span class="number">100</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">mysql&gt; desc department1;</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| Field   | Type         | Null | Key | Default | Extra |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| id      | int(<span class="number">11</span>)      | NO   | PRI | NULL    |       |</span><br><span class="line">| name    | varchar(<span class="number">20</span>)  | NO   | UNI | NULL    |       |</span><br><span class="line">| comment | varchar(<span class="number">100</span>) | YES  |     | NULL    |       |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">#方法二：在某一个字段后用primary key</span></span><br><span class="line">create table department2(</span><br><span class="line">id int primary key, <span class="comment">#主键</span></span><br><span class="line">name varchar(<span class="number">20</span>),</span><br><span class="line">comment varchar(<span class="number">100</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">mysql&gt; desc department2;</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| Field   | Type         | Null | Key | Default | Extra |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| id      | int(<span class="number">11</span>)      | NO   | PRI | NULL    |       |</span><br><span class="line">| name    | varchar(<span class="number">20</span>)  | YES  |     | NULL    |       |</span><br><span class="line">| comment | varchar(<span class="number">100</span>) | YES  |     | NULL    |       |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment">#方法三：在所有字段后单独定义primary key</span></span><br><span class="line">create table department3(</span><br><span class="line">id int,</span><br><span class="line">name varchar(<span class="number">20</span>),</span><br><span class="line">comment varchar(<span class="number">100</span>),</span><br><span class="line">primary key(id); <span class="comment">#创建主键并为其命名pk_name</span></span><br><span class="line"></span><br><span class="line">mysql&gt; desc department3;</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| Field   | Type         | Null | Key | Default | Extra |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| id      | int(<span class="number">11</span>)      | NO   | PRI | NULL    |       |</span><br><span class="line">| name    | varchar(<span class="number">20</span>)  | YES  |     | NULL    |       |</span><br><span class="line">| comment | varchar(<span class="number">100</span>) | YES  |     | NULL    |       |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 方法四：给已经建成的表添加主键约束</span></span><br><span class="line">mysql&gt; create table department4(</span><br><span class="line">    -&gt; id int,</span><br><span class="line">    -&gt; name varchar(20),</span><br><span class="line">    -&gt; comment varchar(100));</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; desc department4;</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| Field   | Type         | Null | Key | Default | Extra |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| id      | int(<span class="number">11</span>)      | YES  |     | NULL    |       |</span><br><span class="line">| name    | varchar(<span class="number">20</span>)  | YES  |     | NULL    |       |</span><br><span class="line">| comment | varchar(<span class="number">100</span>) | YES  |     | NULL    |       |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; alter table department4 modify id int primary key;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.02</span> sec)</span><br><span class="line">Records: <span class="number">0</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; desc department4;</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| Field   | Type         | Null | Key | Default | Extra |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">| id      | int(<span class="number">11</span>)      | NO   | PRI | NULL    |       |</span><br><span class="line">| name    | varchar(<span class="number">20</span>)  | YES  |     | NULL    |       |</span><br><span class="line">| comment | varchar(<span class="number">100</span>) | YES  |     | NULL    |       |</span><br><span class="line">+---------+--------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-2-多字段主键"><a href="#4-2-多字段主键" class="headerlink" title="4.2 多字段主键"></a>4.2 多字段主键</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">==================多列做主键================</span><br><span class="line">create table service(</span><br><span class="line">ip varchar(<span class="number">15</span>),</span><br><span class="line">port char(<span class="number">5</span>),</span><br><span class="line">service_name varchar(<span class="number">10</span>) <span class="keyword">not</span> null,</span><br><span class="line">primary key(ip,port)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mysql&gt; desc service;</span><br><span class="line">+--------------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field        | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------------+-------------+------+-----+---------+-------+</span><br><span class="line">| ip           | varchar(<span class="number">15</span>) | NO   | PRI | NULL    |       |</span><br><span class="line">| port         | char(<span class="number">5</span>)     | NO   | PRI | NULL    |       |</span><br><span class="line">| service_name | varchar(<span class="number">10</span>) | NO   |     | NULL    |       |</span><br><span class="line">+--------------+-------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into service values</span><br><span class="line">    -&gt; ('172.16.45.10','3306','mysqld'),</span><br><span class="line">    -&gt; ('172.16.45.11','3306','mariadb')</span><br><span class="line">    -&gt; ;</span><br><span class="line">Query OK, <span class="number">2</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line">Records: <span class="number">2</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; insert into service values (<span class="string">'172.16.45.10'</span>,<span class="string">'3306'</span>,<span class="string">'nginx'</span>);</span><br><span class="line">ERROR <span class="number">1062</span> (<span class="number">23000</span>): Duplicate entry <span class="string">'172.16.45.10-3306'</span> <span class="keyword">for</span> key <span class="string">'PRIMARY'</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-3-AUTO-INCREMENT"><a href="#4-3-AUTO-INCREMENT" class="headerlink" title="4.3 AUTO_INCREMENT"></a>4.3 AUTO_INCREMENT</h2><p>约束字段为自动增长，被约束的字段必须同时被key约束</p>
+<h3 id="4-3-1-设置auto-increment"><a href="#4-3-1-设置auto-increment" class="headerlink" title="4.3.1 设置auto_increment"></a>4.3.1 设置auto_increment</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#不指定id，则自动增长</span></span><br><span class="line">create table student(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name varchar(<span class="number">20</span>),</span><br><span class="line">sex enum(<span class="string">'male'</span>,<span class="string">'female'</span>) default <span class="string">'male'</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">mysql&gt; desc student;</span><br><span class="line">+-------+-----------------------+------+-----+---------+----------------+</span><br><span class="line">| Field | Type                  | Null | Key | Default | Extra          |</span><br><span class="line">+-------+-----------------------+------+-----+---------+----------------+</span><br><span class="line">| id    | int(<span class="number">11</span>)               | NO   | PRI | NULL    | auto_increment |</span><br><span class="line">| name  | varchar(<span class="number">20</span>)           | YES  |     | NULL    |                |</span><br><span class="line">| sex   | enum(<span class="string">'male'</span>,<span class="string">'female'</span>) | YES  |     | male    |                |</span><br><span class="line">+-------+-----------------------+------+-----+---------+----------------+</span><br><span class="line">mysql&gt; insert into student(name) values</span><br><span class="line">    -&gt; ('lqz'),</span><br><span class="line">    -&gt; ('tank')</span><br><span class="line">    -&gt; ;</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> student;</span><br><span class="line">+----+------+------+</span><br><span class="line">| id | name | sex  |</span><br><span class="line">+----+------+------+</span><br><span class="line">|  <span class="number">1</span> | lqz | male |</span><br><span class="line">|  <span class="number">2</span> | tank | male |</span><br><span class="line">+----+------+------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#也可以指定id</span></span><br><span class="line">mysql&gt; insert into student values(<span class="number">4</span>,<span class="string">'asb'</span>,<span class="string">'female'</span>);</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into student values(<span class="number">7</span>,<span class="string">'wsb'</span>,<span class="string">'female'</span>);</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> student;</span><br><span class="line">+----+------+--------+</span><br><span class="line">| id | name | sex    |</span><br><span class="line">+----+------+--------+</span><br><span class="line">|  <span class="number">1</span> | lqz | male   |</span><br><span class="line">|  <span class="number">2</span> | tank | male   |</span><br><span class="line">|  <span class="number">4</span> | asb  | female |</span><br><span class="line">|  <span class="number">7</span> | wsb  | female |</span><br><span class="line">+----+------+--------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#对于自增的字段，在用delete删除后，再插入值，该字段仍按照删除前的位置继续增长</span></span><br><span class="line">mysql&gt; delete <span class="keyword">from</span> student;</span><br><span class="line">Query OK, <span class="number">4</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> student;</span><br><span class="line">Empty set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into student(name) values(<span class="string">'ysb'</span>);</span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> student;</span><br><span class="line">+----+------+------+</span><br><span class="line">| id | name | sex  |</span><br><span class="line">+----+------+------+</span><br><span class="line">|  <span class="number">8</span> | ysb  | male |</span><br><span class="line">+----+------+------+</span><br><span class="line"></span><br><span class="line"><span class="comment">#应该用truncate清空表，比起delete一条一条地删除记录，truncate是直接清空表，在删除大表时用它</span></span><br><span class="line">mysql&gt; truncate student;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into student(name) values(<span class="string">'lqz'</span>);</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> student;</span><br><span class="line">+----+------+------+</span><br><span class="line">| id | name | sex  |</span><br><span class="line">+----+------+------+</span><br><span class="line">|  <span class="number">1</span> | lqz | male |</span><br><span class="line">+----+------+------+</span><br><span class="line">row <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-4-offset偏移量（了解）"><a href="#4-4-offset偏移量（了解）" class="headerlink" title="4.4 offset偏移量（了解）"></a>4.4 offset偏移量（了解）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在创建完表后，修改自增字段的起始值</span></span><br><span class="line">mysql&gt; create table student(</span><br><span class="line">    -&gt; id int primary key auto_increment,</span><br><span class="line">    -&gt; name varchar(20),</span><br><span class="line">    -&gt; sex enum('male','female') default 'male'</span><br><span class="line">    -&gt; );</span><br><span class="line"></span><br><span class="line">mysql&gt; alter table student auto_increment=<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">mysql&gt; show create table student;</span><br><span class="line">.......</span><br><span class="line">ENGINE=InnoDB AUTO_INCREMENT=<span class="number">3</span> DEFAULT CHARSET=utf8</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into student(name) values(<span class="string">'lqz'</span>);</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> student;</span><br><span class="line">+----+------+------+</span><br><span class="line">| id | name | sex  |</span><br><span class="line">+----+------+------+</span><br><span class="line">|  <span class="number">3</span> | lqz | male |</span><br><span class="line">+----+------+------+</span><br><span class="line">row <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; show create table student;</span><br><span class="line">.......</span><br><span class="line">ENGINE=InnoDB AUTO_INCREMENT=<span class="number">4</span> DEFAULT CHARSET=utf8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#也可以创建表时指定auto_increment的初始值，注意初始值的设置为表选项，应该放到括号外</span></span><br><span class="line">create table student(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name varchar(<span class="number">20</span>),</span><br><span class="line">sex enum(<span class="string">'male'</span>,<span class="string">'female'</span>) default <span class="string">'male'</span></span><br><span class="line">)auto_increment=<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#设置步长</span></span><br><span class="line">sqlserver：自增步长</span><br><span class="line">    基于表级别</span><br><span class="line">    create table t1（</span><br><span class="line">        id int。。。</span><br><span class="line">    ）engine=innodb,auto_increment=<span class="number">2</span> 步长=<span class="number">2</span> default charset=utf8</span><br><span class="line"></span><br><span class="line">mysql自增的步长：</span><br><span class="line">    show session variables like <span class="string">'auto_inc%'</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#基于会话级别</span></span><br><span class="line">    set session auth_increment_increment=<span class="number">2</span> <span class="comment">#修改会话级别的步长</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#基于全局级别的</span></span><br><span class="line">    set <span class="keyword">global</span> auth_increment_increment=<span class="number">2</span> <span class="comment">#修改全局级别的步长（所有会话都生效）</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#！！！注意了注意了注意了！！！</span></span><br><span class="line">If the value of auto_increment_offset <span class="keyword">is</span> greater than that of auto_increment_increment, the value of auto_increment_offset <span class="keyword">is</span> ignored. </span><br><span class="line">翻译：如果auto_increment_offset的值大于auto_increment_increment的值，则auto_increment_offset的值会被忽略 ，这相当于第一步步子就迈大了，扯着了蛋</span><br><span class="line">比如：设置auto_increment_offset=<span class="number">3</span>，auto_increment_increment=<span class="number">2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mysql&gt; set <span class="keyword">global</span> auto_increment_increment=<span class="number">5</span>;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; set <span class="keyword">global</span> auto_increment_offset=<span class="number">3</span>;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; show variables like <span class="string">'auto_incre%'</span>; <span class="comment">#需要退出重新登录</span></span><br><span class="line">+--------------------------+-------+</span><br><span class="line">| Variable_name            | Value |</span><br><span class="line">+--------------------------+-------+</span><br><span class="line">| auto_increment_increment | <span class="number">1</span>     |</span><br><span class="line">| auto_increment_offset    | <span class="number">1</span>     |</span><br><span class="line">+--------------------------+-------+</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">create table student(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name varchar(<span class="number">20</span>),</span><br><span class="line">sex enum(<span class="string">'male'</span>,<span class="string">'female'</span>) default <span class="string">'male'</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">mysql&gt; insert into student(name) values(<span class="string">'lqz1'</span>),(<span class="string">'lqz2'</span>),(<span class="string">'lqz3'</span>);</span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> student;</span><br><span class="line">+----+-------+------+</span><br><span class="line">| id | name  | sex  |</span><br><span class="line">+----+-------+------+</span><br><span class="line">|  <span class="number">3</span> | lqz1 | male |</span><br><span class="line">|  <span class="number">8</span> | lqz2 | male |</span><br><span class="line">| <span class="number">13</span> | lqz3 | male |</span><br><span class="line">+----+-------+------+</span><br><span class="line"></span><br><span class="line">步长:auto_increment_increment,起始偏移量:auto_increment_offset</span><br></pre></td></tr></table></figure>
+
+<h1 id="五、FOREIGN-KEY"><a href="#五、FOREIGN-KEY" class="headerlink" title="五、FOREIGN KEY"></a>五、FOREIGN KEY</h1><p>多表 ：</p>
+<p>假设我们要描述所有公司的员工，需要描述的属性有这些 ： 工号 姓名 部门</p>
+<p>公司有3个部门，但是有1个亿的员工，那意味着部门这个字段需要重复存储，部门名字越长，越浪费</p>
+<p>解决方法： 我们完全可以定义一个部门表 然后让员工信息表关联该表，如何关联，即foreign key</p>
+<h2 id="5-1-创造外键的条件"><a href="#5-1-创造外键的条件" class="headerlink" title="5.1 创造外键的条件"></a>5.1 创造外键的条件</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; create table departments (dep_id int(<span class="number">4</span>),dep_name varchar(<span class="number">11</span>));</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.02</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; desc departments;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| dep_id   | int(<span class="number">4</span>)      | YES  |     | NULL    |       |</span><br><span class="line">| dep_name | varchar(<span class="number">11</span>) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建外键不成功</span></span><br><span class="line">mysql&gt; create table staff_info (s_id int,name varchar(<span class="number">20</span>),dep_id int,foreign key(dep_id) references departments(dep_id));</span><br><span class="line">ERROR <span class="number">1215</span> (HY000): Cannot add foreign key </span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置dep_id非空，仍然不能成功创建外键</span></span><br><span class="line">mysql&gt; alter table departments modify dep_id int(<span class="number">4</span>) <span class="keyword">not</span> null;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.02</span> sec)</span><br><span class="line">Records: <span class="number">0</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; desc departments;</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| dep_id   | int(<span class="number">4</span>)      | NO   |     | NULL    |       |</span><br><span class="line">| dep_name | varchar(<span class="number">11</span>) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; create table staff_info (s_id int,name varchar(<span class="number">20</span>),dep_id int,foreign key(dep_id) references departments(dep_id));</span><br><span class="line">ERROR <span class="number">1215</span> (HY000): Cannot add foreign key constraint</span><br><span class="line"></span><br><span class="line"><span class="comment"># 当设置字段为unique唯一字段时，设置该字段为外键成功</span></span><br><span class="line">mysql&gt; alter table departments modify dep_id int(<span class="number">4</span>) unique;</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.01</span> sec)</span><br><span class="line">Records: <span class="number">0</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; desc departments;                                                                                                       +----------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field    | Type        | Null | Key | Default | Extra |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">| dep_id   | int(<span class="number">4</span>)      | YES  | UNI | NULL    |       |</span><br><span class="line">| dep_name | varchar(<span class="number">11</span>) | YES  |     | NULL    |       |</span><br><span class="line">+----------+-------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; create table staff_info (s_id int,name varchar(<span class="number">20</span>),dep_id int,foreign key(dep_id) references departments(dep_id));</span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">0.02</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-外键操作示例"><a href="#5-2-外键操作示例" class="headerlink" title="5.2 外键操作示例"></a>5.2 外键操作示例</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#表类型必须是innodb存储引擎，且被关联的字段，即references指定的另外一个表的字段，必须保证唯一</span></span><br><span class="line">create table department(</span><br><span class="line">id int primary key,</span><br><span class="line">name varchar(<span class="number">20</span>) <span class="keyword">not</span> null</span><br><span class="line">)engine=innodb;</span><br><span class="line"></span><br><span class="line"><span class="comment">#dpt_id外键，关联父表（department主键id），同步更新，同步删除</span></span><br><span class="line">create table employee(</span><br><span class="line">id int primary key,</span><br><span class="line">name varchar(<span class="number">20</span>) <span class="keyword">not</span> null,</span><br><span class="line">dpt_id int,</span><br><span class="line">foreign key(dpt_id)</span><br><span class="line">references department(id)</span><br><span class="line">on delete cascade  <span class="comment"># 级连删除</span></span><br><span class="line">on update cascade <span class="comment"># 级连更新</span></span><br><span class="line">)engine=innodb;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#先往父表department中插入记录</span></span><br><span class="line">insert into department values</span><br><span class="line">(<span class="number">1</span>,<span class="string">'教质部'</span>),</span><br><span class="line">(<span class="number">2</span>,<span class="string">'技术部'</span>),</span><br><span class="line">(<span class="number">3</span>,<span class="string">'人力资源部'</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#再往子表employee中插入记录</span></span><br><span class="line">insert into employee values</span><br><span class="line">(<span class="number">1</span>,<span class="string">'jason'</span>,<span class="number">1</span>),</span><br><span class="line">(<span class="number">2</span>,<span class="string">'oscar'</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="number">3</span>,<span class="string">'lqz'</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="number">4</span>,<span class="string">'tank'</span>,<span class="number">2</span>),</span><br><span class="line">(<span class="number">5</span>,<span class="string">'mac'</span>,<span class="number">3</span>),</span><br><span class="line">(<span class="number">6</span>,<span class="string">'李沁洋'</span>,<span class="number">3</span>),</span><br><span class="line">(<span class="number">7</span>,<span class="string">'皮卡丘'</span>,<span class="number">3</span>),</span><br><span class="line">(<span class="number">8</span>,<span class="string">'程咬金'</span>,<span class="number">3</span>),</span><br><span class="line">(<span class="number">9</span>,<span class="string">'程咬银'</span>,<span class="number">3</span>)</span><br><span class="line">;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#删父表department，子表employee中对应的记录跟着删</span></span><br><span class="line">mysql&gt; delete <span class="keyword">from</span> department where id=<span class="number">2</span>;</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> employee;</span><br><span class="line">+----+-----------+--------+</span><br><span class="line">| id | name      | dpt_id |</span><br><span class="line">+----+-----------+--------+</span><br><span class="line">|  <span class="number">1</span> | jason      |      <span class="number">1</span> |</span><br><span class="line">|  <span class="number">5</span> | mac     |      <span class="number">3</span> |</span><br><span class="line">|  <span class="number">6</span> | 李沁洋    |      <span class="number">3</span> |</span><br><span class="line">|  <span class="number">7</span> | 皮卡丘    |      <span class="number">3</span> |</span><br><span class="line">|  <span class="number">8</span> | 程咬金    |      <span class="number">3</span> |</span><br><span class="line">|  <span class="number">9</span> | 程咬银    |      <span class="number">3</span> |</span><br><span class="line">+----+-----------+--------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#更新父表department，子表employee中对应的记录跟着改</span></span><br><span class="line">mysql&gt; update department set id=<span class="number">2</span> where id=<span class="number">3</span>;</span><br><span class="line">Query OK, <span class="number">1</span> row affected (<span class="number">0.01</span> sec)</span><br><span class="line">Rows matched: <span class="number">1</span>  Changed: <span class="number">1</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span> employee;</span><br><span class="line">+----+-----------+--------+</span><br><span class="line">| id | name      | dpt_id |</span><br><span class="line">+----+-----------+--------+</span><br><span class="line">|  <span class="number">1</span> | jason      |      <span class="number">1</span> |</span><br><span class="line">|  <span class="number">5</span> | mac     |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">6</span> | 李沁洋    |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">7</span> | 皮卡丘    |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">8</span> | 程咬金    |      <span class="number">2</span> |</span><br><span class="line">|  <span class="number">9</span> | 程咬银    |      <span class="number">2</span> |</span><br><span class="line">+----+-----------+--------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-3-on-delete-了解"><a href="#5-3-on-delete-了解" class="headerlink" title="5.3 on delete(了解)"></a>5.3 on delete(了解)</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  cascade方式</span></span><br><span class="line">在父表上update/delete记录时，同步update/delete掉子表的匹配记录 </span><br><span class="line"></span><br><span class="line"><span class="comment">#  set null方式</span></span><br><span class="line">在父表上update/delete记录时，将子表上匹配记录的列设为null</span><br><span class="line">要注意子表的外键列不能为<span class="keyword">not</span> null  </span><br><span class="line"></span><br><span class="line"><span class="comment">#  No action方式</span></span><br><span class="line">如果子表中有匹配的记录,则不允许对父表对应候选键进行update/delete操作  </span><br><span class="line"></span><br><span class="line"><span class="comment">#  Restrict方式</span></span><br><span class="line">同no action, 都是立即检查外键约束</span><br><span class="line"></span><br><span class="line"><span class="comment">#  Set default方式</span></span><br><span class="line">父表有变更时,子表将外键列设置成一个默认的值 但Innodb不能识别</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/MySQL%E5%85%A5%E9%97%A8/1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/">
+        <span class="nav-arrow">← </span>
+        
+          python/MySQL入门/1-数据库基础
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/MySQL%E5%85%A5%E9%97%A8/6-MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E6%A6%82%E8%BF%B0/">
+        
+          python/MySQL入门/6-MySQL存储引擎概述
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、概览"><span class="toc-nav-text">一、概览</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、NOT-NULL"><span class="toc-nav-text">二、NOT NULL</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-not-null实例"><span class="toc-nav-text">2.1 not null实例</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-DEFAULT"><span class="toc-nav-text">2.2 DEFAULT</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-3-not-null-default-示例"><span class="toc-nav-text">2.3 not null + default 示例</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-4-not-null不生效"><span class="toc-nav-text">2.4 not null不生效</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、UNIQUE"><span class="toc-nav-text">三、UNIQUE</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-unique示例"><span class="toc-nav-text">3.1 unique示例</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-not-null-和-unique-的结合"><span class="toc-nav-text">3.2 not null 和 unique 的结合</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-3-联合唯一"><span class="toc-nav-text">3.3 联合唯一</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、PRIMARY-KEY"><span class="toc-nav-text">四、PRIMARY KEY</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-1-单字段主键"><span class="toc-nav-text">4.1 单字段主键</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-2-多字段主键"><span class="toc-nav-text">4.2 多字段主键</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-3-AUTO-INCREMENT"><span class="toc-nav-text">4.3 AUTO_INCREMENT</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-3-1-设置auto-increment"><span class="toc-nav-text">4.3.1 设置auto_increment</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-4-offset偏移量（了解）"><span class="toc-nav-text">4.4 offset偏移量（了解）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、FOREIGN-KEY"><span class="toc-nav-text">五、FOREIGN KEY</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-1-创造外键的条件"><span class="toc-nav-text">5.1 创造外键的条件</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-2-外键操作示例"><span class="toc-nav-text">5.2 外键操作示例</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-3-on-delete-了解"><span class="toc-nav-text">5.3 on delete(了解)</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/MySQL入门/9-MySQL表的完整性约束/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/MySQL入门/9-MySQL表的完整性约束",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

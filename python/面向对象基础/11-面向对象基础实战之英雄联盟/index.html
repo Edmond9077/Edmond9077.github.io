@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/面向对象基础/11-面向对象基础实战之英雄联盟 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/面向对象基础/11-面向对象基础实战之英雄联盟</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、定义锐雯类"><a href="#一、定义锐雯类" class="headerlink" title="一、定义锐雯类"></a>一、定义锐雯类</h1><p><img src="http://www.chenyoude.com/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/114-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E4%B9%8B%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F-rw1.png" alt="114-面向对象基础实战之英雄联盟-rw1.png"></p>
+<p><img src="http://www.chenyoude.com/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/114-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E4%B9%8B%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F-rw2.png" alt="114-面向对象基础实战之英雄联盟-rw2.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Riven:</span><br><span class="line">    camp &#x3D; &#39;Noxus&#39;  # 所有玩家的英雄(锐雯)的阵营都是Noxus;</span><br><span class="line"></span><br><span class="line">    def __init__(</span><br><span class="line">            self,</span><br><span class="line">            nickname,</span><br><span class="line">            aggressivity&#x3D;54,  # 英雄的初始攻击力54;</span><br><span class="line">            life_value&#x3D;414,</span><br><span class="line">            money&#x3D;1001,</span><br><span class="line">            armor&#x3D;3):</span><br><span class="line">        self.nickname &#x3D; nickname  # 为自己的锐雯起个别名;</span><br><span class="line">        self.aggressivity &#x3D; aggressivity  # 英雄都有自己的攻击力;</span><br><span class="line">        self.life_value &#x3D; life_value  # 英雄都有自己的生命值;</span><br><span class="line">        self.money &#x3D; money</span><br><span class="line">        self.armor &#x3D; armor</span><br><span class="line"></span><br><span class="line">    def attack(self, enemy):  # 普通攻击技能，enemy是敌人;</span><br><span class="line">        damage_value &#x3D; self.aggressivity - enemy.armor  # 根据自己的攻击力，攻击敌人就减掉敌人的生命值。</span><br><span class="line">        enemy.life_value -&#x3D; damage_value</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、定义盖伦类"><a href="#二、定义盖伦类" class="headerlink" title="二、定义盖伦类"></a>二、定义盖伦类</h1><p><img src="http://www.chenyoude.com/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/114-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E4%B9%8B%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F-gl1.png" alt="114-面向对象基础实战之英雄联盟-gl1.png"></p>
+<p><img src="http://www.chenyoude.com/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/114-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E4%B9%8B%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F-gl2.png" alt="114-面向对象基础实战之英雄联盟-gl2.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">class Garen:  # 定义英雄盖伦的类，不同的玩家可以用它实例出自己英雄;</span><br><span class="line">    camp &#x3D; &#39;Demacia&#39;  # 所有玩家的英雄(盖伦)的阵营都是Demacia;</span><br><span class="line"></span><br><span class="line">    def __init__(</span><br><span class="line">            self,</span><br><span class="line">            nickname,</span><br><span class="line">            aggressivity&#x3D;58,  # 英雄的初始攻击力58...;</span><br><span class="line">            life_value&#x3D;455,</span><br><span class="line">            money&#x3D;100,</span><br><span class="line">            armor&#x3D;10):</span><br><span class="line">        self.nickname &#x3D; nickname  # 为自己的盖伦起个别名;</span><br><span class="line">        self.aggressivity &#x3D; aggressivity  # 英雄都有自己的攻击力;</span><br><span class="line">        self.life_value &#x3D; life_value  # 英雄都有自己的生命值;</span><br><span class="line"></span><br><span class="line">        self.money &#x3D; money</span><br><span class="line">        self.armor &#x3D; armor</span><br><span class="line"></span><br><span class="line">    def attack(self, enemy):  # 普通攻击技能，enemy是敌人;</span><br><span class="line">        damage_value &#x3D; self.aggressivity - enemy.armor  # 根据自己的攻击力，攻击敌人就减掉敌人的生命值。</span><br><span class="line">        enemy.life_value -&#x3D; damage_value</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、定义装备类"><a href="#三、定义装备类" class="headerlink" title="三、定义装备类"></a>三、定义装备类</h1><p><img src="http://www.chenyoude.com/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/114-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E4%B9%8B%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F-zb.png" alt="114-面向对象基础实战之英雄联盟-zb.png"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class BlackCleaver:</span><br><span class="line">    def __init__(self, price&#x3D;475, aggrev&#x3D;9, life_value&#x3D;100):</span><br><span class="line">        self.price &#x3D; price</span><br><span class="line">        self.aggrev &#x3D; aggrev</span><br><span class="line">        self.life_value &#x3D; life_value</span><br><span class="line"></span><br><span class="line">    def update(self, obj):</span><br><span class="line">        obj.money -&#x3D; self.price  #减钱</span><br><span class="line">        obj.aggressivity +&#x3D; self.aggrev  #加攻击</span><br><span class="line">        obj.life_value +&#x3D; self.life_value  #加生命值</span><br><span class="line"></span><br><span class="line">    def fire(self, obj):  #这是该装备的主动技能,喷火,烧死对方</span><br><span class="line">        obj.life_value -&#x3D; 1000  #假设火烧的攻击力是1000</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、交互"><a href="#四、交互" class="headerlink" title="四、交互"></a>四、交互</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">r1 &#x3D; Riven(&#39;草丛伦&#39;)</span><br><span class="line">g1 &#x3D; Garen(&#39;盖文&#39;)</span><br><span class="line">b1 &#x3D; BlackCleaver()</span><br><span class="line"></span><br><span class="line">print(r1.aggressivity, r1.life_value, r1.money)  #r1的攻击力,生命值,护甲</span><br><span class="line"></span><br><span class="line">if r1.money &gt; b1.price:</span><br><span class="line">    r1.b1 &#x3D; b1</span><br><span class="line">    b1.update(r1)</span><br><span class="line"></span><br><span class="line">print(r1.aggressivity, r1.life_value, r1.money)  #r1的攻击力,生命值,护甲</span><br><span class="line"></span><br><span class="line">print(g1.life_value)</span><br><span class="line">r1.attack(g1)  #普通攻击</span><br><span class="line">print(g1.life_value)</span><br><span class="line">r1.b1.fire(g1)  #用装备攻击</span><br><span class="line">print(g1.life_value)  #g1的生命值小于0就死了</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">54 414 1001</span><br><span class="line">63 514 526</span><br><span class="line">455</span><br><span class="line">402</span><br><span class="line">-598</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>按照这种思路一点一点的设计类和对象，最终你完全可以实现一个对战类游戏。</li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/7-hashlib%E5%92%8Chmac%E6%A8%A1%E5%9D%97/">
+        <span class="nav-arrow">← </span>
+        
+          python/常用模块/7-hashlib和hmac模块
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/12-re%E6%A8%A1%E5%9D%97/">
+        
+          python/常用模块/12-re模块
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、定义锐雯类"><span class="toc-nav-text">一、定义锐雯类</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、定义盖伦类"><span class="toc-nav-text">二、定义盖伦类</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、定义装备类"><span class="toc-nav-text">三、定义装备类</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、交互"><span class="toc-nav-text">四、交互</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/面向对象基础/11-面向对象基础实战之英雄联盟/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/面向对象基础/11-面向对象基础实战之英雄联盟",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

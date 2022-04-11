@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/MySQL系列/11-MySQL系列之-读写分离架构-Atlas | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/MySQL系列/11-MySQL系列之-读写分离架构-Atlas</h2>
+
+
+
+  <p class="post-date">2019-12-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="Atlas介绍"><a href="#Atlas介绍" class="headerlink" title=". Atlas介绍"></a>. Atlas介绍</h1><p><img src="https:////upload-images.jianshu.io/upload_images/16956686-24b9752549843352.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp" alt="img"></p>
+<p>image.png</p>
+<p><img src="https:////upload-images.jianshu.io/upload_images/16956686-dce5742c72a16dac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/546/format/webp" alt="img"></p>
+<p>image.png</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> Atlas是由 Qihoo <span class="number">360</span>, Web平台部基础架构团队开发维护的一个基于MySQL协议的数据中间层项目。</span><br><span class="line">它是在mysql-proxy <span class="number">0.8</span><span class="number">.2</span>版本的基础上，对其进行了优化，增加了一些新的功能特性。</span><br><span class="line"><span class="number">360</span>内部使用Atlas运行的mysql业务，每天承载的读写请求数达几十亿条。</span><br><span class="line">下载地址</span><br><span class="line">https:<span class="comment">//github.com/Qihoo360/Atlas/releases</span></span><br><span class="line">注意：</span><br><span class="line"><span class="number">1</span>、Atlas只能安装运行在<span class="number">64</span>位的系统上</span><br><span class="line"><span class="number">2</span>、Centos <span class="number">5.</span>X安装 Atlas-XX.el5.x86_64.rpm，Centos <span class="number">6.</span>X安装Atlas-XX.el6.x86_64.rpm。</span><br><span class="line"><span class="number">3</span>、后端mysql版本应大于<span class="number">5.1</span>，建议使用Mysql <span class="number">5.6</span>以上</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-安装配置"><a href="#2-安装配置" class="headerlink" title="2.安装配置"></a>2.安装配置</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">yum install -y Atlas*</span><br><span class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span>/mysql-proxy/conf</span><br><span class="line">mv test.cnf test.cnf.bak</span><br><span class="line"> vi test.cnf</span><br><span class="line">[mysql-proxy]</span><br><span class="line">admin-username = user</span><br><span class="line">admin-password = <span class="built_in">pwd</span></span><br><span class="line">proxy-backend-addresses = 10.0.0.55:3306</span><br><span class="line">proxy-read-only-backend-addresses = 10.0.0.51:3306,10.0.0.53:3306</span><br><span class="line">pwds = repl:3yb5jEku5h4=,mha:O2jBXONX098=</span><br><span class="line">daemon = <span class="literal">true</span></span><br><span class="line">keepalive = <span class="literal">true</span></span><br><span class="line">event-threads = 8</span><br><span class="line"><span class="built_in">log</span>-level = message</span><br><span class="line"><span class="built_in">log</span>-path = /usr/<span class="built_in">local</span>/mysql-proxy/<span class="built_in">log</span></span><br><span class="line">sql-log=ON</span><br><span class="line">proxy-address = 0.0.0.0:33060</span><br><span class="line">admin-address = 0.0.0.0:2345</span><br><span class="line">charset=utf8</span><br><span class="line">启动atlas</span><br><span class="line">/usr/<span class="built_in">local</span>/mysql-proxy/bin/mysql-proxyd <span class="built_in">test</span> start</span><br><span class="line">ps -ef |grep proxy</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-Atlas功能测试"><a href="#3-Atlas功能测试" class="headerlink" title="3. Atlas功能测试"></a>3. Atlas功能测试</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">测试读操作：</span><br><span class="line"><span class="selector-tag">mysql</span> <span class="selector-tag">-umha</span> <span class="selector-tag">-pmha</span>  <span class="selector-tag">-h</span> 10<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.53</span> <span class="selector-tag">-P</span> 33060 </span><br><span class="line"><span class="selector-tag">db03</span> <span class="selector-attr">[(none)]</span>&gt;<span class="selector-tag">select</span> @<span class="keyword">@server_id</span>;</span><br><span class="line">测试写操作：</span><br><span class="line"><span class="selector-tag">mysql</span>&gt; <span class="selector-tag">begin</span>;<span class="selector-tag">select</span> @<span class="keyword">@server_id</span>;<span class="selector-tag">commit</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-生产用户要求"><a href="#4-生产用户要求" class="headerlink" title="4. 生产用户要求"></a>4. 生产用户要求</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">开发人员申请一个应用用户 app(  <span class="keyword">select</span>  update  insert)  密码<span class="number">123456</span>,要通过<span class="number">10</span>网段登录</span><br><span class="line"><span class="number">1.</span> 在主库中,创建用户</span><br><span class="line">grant <span class="keyword">select</span> ,update,insert <span class="keyword">on</span> *.* to app@<span class="string">'10.0.0.%'</span> identified <span class="keyword">by</span> <span class="string">'123456'</span>;</span><br><span class="line"><span class="number">2.</span> 在atlas中添加生产用户</span><br><span class="line">/usr/local/mysql-proxy/bin/encrypt  <span class="number">123456</span>      ----&gt;制作加密密码</span><br><span class="line">vim test.cnf</span><br><span class="line">pwds = repl:<span class="number">3</span>yb5jEku5h4=,mha:O2jBXONX098=,app:/iZxz+<span class="number">0</span>GRoA=</span><br><span class="line">/usr/local/mysql-proxy/bin/mysql-proxyd test restart</span><br><span class="line">[<span class="meta">root@db03 conf</span>]<span class="meta"># mysql -uapp -p123456  -h 10.0.0.53 -P 33060</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="5-Atlas基本管理"><a href="#5-Atlas基本管理" class="headerlink" title="5. Atlas基本管理"></a>5. Atlas基本管理</h1><h1 id="连接管理接口"><a href="#连接管理接口" class="headerlink" title="连接管理接口"></a>连接管理接口</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">mysql</span> <span class="selector-tag">-uuser</span> <span class="selector-tag">-ppwd</span> <span class="selector-tag">-h127</span><span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span> <span class="selector-tag">-P2345</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="打印帮助："><a href="#打印帮助：" class="headerlink" title="打印帮助："></a>打印帮助：</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">select</span> * <span class="keyword">from</span> help;</span><br></pre></td></tr></table></figure>
+
+<h1 id="查询后端所有节点信息："><a href="#查询后端所有节点信息：" class="headerlink" title="查询后端所有节点信息："></a>查询后端所有节点信息：</h1><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;  SELECT * FROM backends    ;</span><br><span class="line">+-------------+----------------+-------+------+</span><br><span class="line"><span class="params">| backend_ndx |</span> address        <span class="params">| state |</span> type <span class="params">|</span></span><br><span class="line"><span class="params">+-------------+----------------+-------+------+</span></span><br><span class="line"><span class="params">|</span>           <span class="number">1</span> <span class="params">| 10.0.0.55:3306 |</span> up    <span class="params">| rw   |</span></span><br><span class="line"><span class="params">|           2 |</span> <span class="number">10.0</span>.<span class="number">0</span>.<span class="number">51</span><span class="symbol">:</span><span class="number">3306</span> <span class="params">| up    |</span> ro   <span class="params">|</span></span><br><span class="line"><span class="params">|</span>           <span class="number">3</span> <span class="params">| 10.0.0.53:3306 |</span> up    <span class="params">| ro   |</span></span><br><span class="line">+-------------+----------------+-------+------+</span><br><span class="line"><span class="number">3</span> rows <span class="keyword">in</span> set (<span class="number">0</span>.<span class="number">00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h1 id="动态添加删除节点"><a href="#动态添加删除节点" class="headerlink" title="动态添加删除节点"></a>动态添加删除节点</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">REMOVE BACKEND 3;</span><br></pre></td></tr></table></figure>
+
+<h1 id="动态添加节点"><a href="#动态添加节点" class="headerlink" title="动态添加节点"></a>动态添加节点</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">ADD</span> <span class="selector-tag">SLAVE</span> 10<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.53</span><span class="selector-pseudo">:3306</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="保存配置到配置文件"><a href="#保存配置到配置文件" class="headerlink" title="保存配置到配置文件"></a>保存配置到配置文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SAVE CONFIG;</span><br></pre></td></tr></table></figure>
+
+<h1 id="6-自动分表"><a href="#6-自动分表" class="headerlink" title="6. 自动分表"></a>6. 自动分表</h1><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">使用<span class="selector-tag">Atlas</span>的分表功能时，首先需要在配置文件<span class="selector-tag">test</span><span class="selector-class">.cnf</span>设置<span class="selector-tag">tables</span>参数。</span><br><span class="line"><span class="selector-tag">tables</span>参数设置格式：数据库名.表名.分表字段.子表数量，</span><br><span class="line">比如：</span><br><span class="line">你的数据库名叫<span class="selector-tag">school</span>，表名叫<span class="selector-tag">stu</span>，分表字段叫<span class="selector-tag">id</span>，总共分为2张表，那么就写为<span class="selector-tag">school</span><span class="selector-class">.stu</span><span class="selector-class">.id</span><span class="selector-class">.2</span>，如果还有其他的分表，以逗号分隔即可。</span><br></pre></td></tr></table></figure>
+
+<h1 id="7-关于读写分离建议"><a href="#7-关于读写分离建议" class="headerlink" title="7. 关于读写分离建议"></a>7. 关于读写分离建议</h1><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MySQL-Router    ---&gt; MySQL官方</span><br><span class="line">ProxySQL         ---&gt;Percona</span><br><span class="line">Maxscale         ---&gt; MariaDB</span><br></pre></td></tr></table></figure>
+
+
+
+<p>作者：wwwoldguocom<br>链接：<a href="https://www.jianshu.com/p/051c44f73530" target="_blank" rel="noopener">https://www.jianshu.com/p/051c44f73530</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/MySQL%E7%B3%BB%E5%88%97/10-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-MHA%E9%AB%98%E5%8F%AF%E7%94%A8/">
+        <span class="nav-arrow">← </span>
+        
+          db/MySQL系列/10-MySQL系列之-MHA高可用
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Redis%E7%B3%BB%E5%88%97/01-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-API%E7%9A%84%E4%BD%BF%E7%94%A8/">
+        
+          db/Redis系列/01-Redis系列之-API的使用
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#Atlas介绍"><span class="toc-nav-text">. Atlas介绍</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#2-安装配置"><span class="toc-nav-text">2.安装配置</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#3-Atlas功能测试"><span class="toc-nav-text">3. Atlas功能测试</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#4-生产用户要求"><span class="toc-nav-text">4. 生产用户要求</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#5-Atlas基本管理"><span class="toc-nav-text">5. Atlas基本管理</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#连接管理接口"><span class="toc-nav-text">连接管理接口</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#打印帮助："><span class="toc-nav-text">打印帮助：</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#查询后端所有节点信息："><span class="toc-nav-text">查询后端所有节点信息：</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#动态添加删除节点"><span class="toc-nav-text">动态添加删除节点</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#动态添加节点"><span class="toc-nav-text">动态添加节点</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#保存配置到配置文件"><span class="toc-nav-text">保存配置到配置文件</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#6-自动分表"><span class="toc-nav-text">6. 自动分表</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#介绍"><span class="toc-nav-text">介绍</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#7-关于读写分离建议"><span class="toc-nav-text">7. 关于读写分离建议</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/MySQL系列/11-MySQL系列之-读写分离架构-Atlas/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/MySQL系列/11-MySQL系列之-读写分离架构-Atlas",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

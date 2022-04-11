@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django框架/7-模板层 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django框架/7-模板层</h2>
+
+
+
+  <p class="post-date">2020-09-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-模版简介"><a href="#一-模版简介" class="headerlink" title="一 模版简介"></a>一 模版简介</h2><p>你可能已经注意到我们在例子视图中返回文本的方式有点特别。 也就是说，HTML被直接硬编码在 Python代码之中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def current_datetime(request):</span><br><span class="line">    now &#x3D; datetime.datetime.now()</span><br><span class="line">    html &#x3D; &quot;&lt;html&gt;&lt;body&gt;It is now %s.&lt;&#x2F;body&gt;&lt;&#x2F;html&gt;&quot; % now</span><br><span class="line">    return HttpResponse(html)</span><br></pre></td></tr></table></figure>
+
+<p>尽管这种技术便于解释视图是如何工作的，但直接将HTML硬编码到你的视图里却并不是一个好主意。 让我们来看一下为什么：</p>
+<ul>
+<li><p>对页面设计进行的任何改变都必须对 Python 代码进行相应的修改。 站点设计的修改往往比底层 Python 代码的修改要频繁得多，因此如果可以在不进行 Python 代码修改的情况下变更设计，那将会方便得多。</p>
+</li>
+<li><p>Python 代码编写和 HTML 设计是两项不同的工作，大多数专业的网站开发环境都将他们分配给不同的人员（甚至不同部门）来完成。 设计者和HTML/CSS的编码人员不应该被要求去编辑Python的代码来完成他们的工作。</p>
+</li>
+<li><p>程序员编写 Python代码和设计人员制作模板两项工作同时进行的效率是最高的，远胜于让一个人等待另一个人完成对某个既包含 Python又包含 HTML 的文件的编辑工作。</p>
+</li>
+</ul>
+<p><strong>基于这些原因，将页面的设计和Python的代码分离开会更干净简洁更容易维护。 我们可以使用 Django的 *模板系统* (Template System)来实现这种模式，这就是本章要具体讨论的问题</strong></p>
+<p> <strong><code>python的模板：HTML代码＋模板语法</code></strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">current_time</span><span class="params">(req)</span>:</span></span><br><span class="line">    <span class="comment"># ================================原始的视图函数</span></span><br><span class="line">    <span class="comment"># import datetime</span></span><br><span class="line">    <span class="comment"># now=datetime.datetime.now()</span></span><br><span class="line">    <span class="comment"># html="&lt;html&gt;&lt;body&gt;现在时刻：&lt;h1&gt;%s.&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;" %now</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># ================================django模板修改的视图函数</span></span><br><span class="line">    <span class="comment"># from django.template import Template,Context</span></span><br><span class="line">    <span class="comment"># now=datetime.datetime.now()</span></span><br><span class="line">    <span class="comment"># t=Template('&lt;html&gt;&lt;body&gt;现在时刻是:&lt;h1&gt;&#123;&#123;current_date&#125;&#125;&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;')</span></span><br><span class="line">    <span class="comment"># #t=get_template('current_datetime.html')</span></span><br><span class="line">    <span class="comment"># c=Context(&#123;'current_date':str(now)&#125;)</span></span><br><span class="line">    <span class="comment"># html=t.render(c)</span></span><br><span class="line">    <span class="comment">#</span></span><br><span class="line">    <span class="comment"># return HttpResponse(html)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">#另一种写法(推荐)</span></span><br><span class="line">    <span class="keyword">import</span> datetime</span><br><span class="line">    now=datetime.datetime.now()</span><br><span class="line">    <span class="keyword">return</span> render(req, <span class="string">'current_datetime.html'</span>, &#123;<span class="string">'current_date'</span>:str(now)[:<span class="number">19</span>]&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>模版语法重点：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">变量：&#123;&#123; 变量名 &#125;&#125;</span><br><span class="line">	<span class="number">1</span> 深度查询 用句点符</span><br><span class="line">	<span class="number">2</span> 过滤器</span><br><span class="line">  <span class="number">3</span> 标签：｛｛% % ｝｝</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二-模版语法之变量"><a href="#二-模版语法之变量" class="headerlink" title="二 模版语法之变量"></a>二 模版语法之变量</h2><p>在 Django 模板中遍历复杂数据结构的关键是句点字符, 语法：｛｛变量名｝｝</p>
+<h3 id="views-py"><a href="#views-py" class="headerlink" title="views.py"></a>views.py</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">template_test</span><span class="params">(request)</span>:</span></span><br><span class="line">    name = <span class="string">'lqz'</span></span><br><span class="line">    li = [<span class="string">'lqz'</span>, <span class="number">1</span>, <span class="string">'18'</span>]</span><br><span class="line">    dic = &#123;<span class="string">'name'</span>: <span class="string">'lqz'</span>, <span class="string">'age'</span>: <span class="number">18</span>&#125;</span><br><span class="line">    ll2 = [</span><br><span class="line">        &#123;<span class="string">'name'</span>: <span class="string">'lqz'</span>, <span class="string">'age'</span>: <span class="number">18</span>&#125;,</span><br><span class="line">        &#123;<span class="string">'name'</span>: <span class="string">'lqz2'</span>, <span class="string">'age'</span>: <span class="number">19</span>&#125;,</span><br><span class="line">        &#123;<span class="string">'name'</span>: <span class="string">'egon'</span>, <span class="string">'age'</span>: <span class="number">20</span>&#125;,</span><br><span class="line">        &#123;<span class="string">'name'</span>: <span class="string">'kevin'</span>, <span class="string">'age'</span>: <span class="number">23</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">    ll3=[]</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">            self.name = name</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(self)</span>:</span></span><br><span class="line">            print(<span class="string">'test函数'</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">11</span></span><br><span class="line"></span><br><span class="line"><span class="meta">        @classmethod</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">test_classmethod</span><span class="params">(cls)</span>:</span></span><br><span class="line">            print(<span class="string">'类方法'</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'类方法'</span></span><br><span class="line"></span><br><span class="line"><span class="meta">        @staticmethod</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">static_method</span><span class="params">()</span>:</span></span><br><span class="line">            print(<span class="string">'静态方法'</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'静态方法'</span></span><br><span class="line"></span><br><span class="line">    lqz = Person(<span class="string">'lqz'</span>)</span><br><span class="line">    egon = Person(<span class="string">'egon'</span>)</span><br><span class="line">    person_list = [lqz, egon]</span><br><span class="line">    bo = <span class="literal">True</span></span><br><span class="line">    te = test()</span><br><span class="line">    <span class="keyword">import</span> datetime</span><br><span class="line">    now=datetime.datetime.now()</span><br><span class="line">    link1=<span class="string">'&lt;a href="https://www.baidu.com"&gt;点我&lt;a&gt;'</span></span><br><span class="line">    <span class="keyword">from</span> django.utils <span class="keyword">import</span> safestring</span><br><span class="line">    link=safestring.mark_safe(link1)</span><br><span class="line">    <span class="comment"># html特殊符号对照表（http://tool.chinaz.com/Tools/htmlchar.aspx）</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 这样传到前台不会变成特殊字符，因为django给处理了</span></span><br><span class="line">    dot=<span class="string">'&amp;spades;'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># return render(request, 'template_index.html', &#123;'name':name,'person_list':person_list&#125;)</span></span><br><span class="line">    <span class="keyword">return</span> render(request, <span class="string">'template_index.html'</span>, locals())</span><br></pre></td></tr></table></figure>
+
+<h3 id="html"><a href="#html" class="headerlink" title="html"></a>html</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; name &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; li &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; dic &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; lqz &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; person_list &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; bo &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; te &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span>&gt;</span>深度查询句点符<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; li.1 &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; dic.name &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; lqz.test &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; lqz.name &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; person_list.0 &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; person_list.1.name &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span>&gt;</span>过滤器<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">            &#123;#注意：冒号后面不能加空格#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; now | date:"Y-m-d H:i:s" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            &#123;#如果变量为空，设置默认值,空数据，None，变量不存在，都适用#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; name |default:'数据为空' &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;#计算长度，只有一个参数#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; person_list |length &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;#计算文件大小#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; 1024 |filesizeformat &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            &#123;#字符串切片，前闭后开，前面取到，后面取不到#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; 'hello world lqz' |slice:"2:-1" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; 'hello world lqz' |slice:"2:5" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            &#123;#截断字符，至少三个起步，因为会有三个省略号（传负数，1，2，3都是三个省略号）#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; '刘清政 world lqz' |truncatechars:"4" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;#截断文字，以空格做区分，这个不算省略号#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; '刘清政   是      大帅比 谢谢' |truncatewords:"1" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; link1 &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; link1|safe &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; link &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="symbol">&amp;spades;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; dot &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            &#123;#add   可以加负数，传数字字符串都可以#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; "10"|add:"-2" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; li.1|add:"-2" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; li.1|add:2 &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; li.1|add:"2" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; li.1|add:"-2e" &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            &#123;#upper#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; name|upper &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; 'LQZ'|lower &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span>&gt;</span>模版语法之标签<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">            &#123;#for 循环 循环列表，循环字典，循环列表对象#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">ui</span>&gt;</span></span><br><span class="line">                &#123;% for foo in dic %&#125;</span><br><span class="line">                    &#123;&#123; foo &#125;&#125;</span><br><span class="line">                &#123;% endfor %&#125;</span><br><span class="line">                &#123;#也可以混用html标签#&#125;</span><br><span class="line">                &#123;% for foo in li %&#125;</span><br><span class="line">                    <span class="tag">&lt;<span class="name">ul</span>&gt;</span>foo<span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                &#123;% endfor %&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">ui</span>&gt;</span></span><br><span class="line">            &#123;#表格#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">"1"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                &#123;% for foo in ll2 %&#125;</span><br><span class="line">                    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123; foo.name &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123; foo.age &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                &#123;% endfor %&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">"1"</span>&gt;</span></span><br><span class="line">                &#123;#'parentloop': &#123;&#125;, 'counter0': 0, 'counter': 1, 'revcounter': 4, 'revcounter0': 3, 'first': True, 'last': False&#125;#&#125;</span><br><span class="line">                &#123;% for foo in ll2 %&#125;</span><br><span class="line">                    <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123; forloop.counter &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123; foo.name &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123; foo.age &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#123;% for foo in ll5 %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>foo.name<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;% empty %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>空的<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span>&gt;</span>if判断<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">            &#123;% if name %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>hi &#123;&#123; name &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>注销<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">            &#123;% else %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>请登录<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">""</span>&gt;</span>注册<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line">            &#123;#还有elif#&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">hr</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span>&gt;</span>with<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">            &#123;% with ll2.0.name as n %&#125;</span><br><span class="line">                &#123;&#123; n &#125;&#125;</span><br><span class="line">            &#123;% endwith %&#125;</span><br><span class="line">            &#123;&#123; n &#125;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#123;% load my_tag_filter %&#125;</span><br><span class="line"></span><br><span class="line">            &#123;&#123; 3|multi_filter:3 &#125;&#125;</span><br><span class="line"></span><br><span class="line">            &#123;#传参必须用空格区分#&#125;</span><br><span class="line">            &#123;% multi_tag 3 9 10 %&#125;</span><br><span class="line"></span><br><span class="line">            &#123;#可以跟if连用#&#125;</span><br><span class="line">            &#123;% if 3|multi_filter:3 &gt; 9 %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>大于<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;% else %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>小于<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            &#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：句点符也可以用来引用对象的方法(无参数方法):</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h4</span>&gt;</span>字典:&#123;&#123; dic.name.upper &#125;&#125;<span class="tag">&lt;/<span class="name">h4</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="三-模版之过滤器"><a href="#三-模版之过滤器" class="headerlink" title="三 模版之过滤器"></a>三 模版之过滤器</h2><h3 id="语法："><a href="#语法：" class="headerlink" title="语法："></a>语法：</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;obj|filter__name:param&#125;&#125;  变量名字|过滤器名称：变量</span><br></pre></td></tr></table></figure>
+
+<h3 id="default"><a href="#default" class="headerlink" title="default"></a>default</h3><p>如果一个变量是false或者为空，使用给定的默认值。否则，使用变量的值。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|default:<span class="string">"nothing"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="length"><a href="#length" class="headerlink" title="length"></a>length</h3><p>返回值的长度。它对字符串和列表都起作用。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|length &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 value 是 [‘a’, ‘b’, ‘c’, ‘d’]，那么输出是 4。</p>
+<h3 id="filesizeformat"><a href="#filesizeformat" class="headerlink" title="filesizeformat"></a>filesizeformat</h3><p>将值格式化为一个 “人类可读的” 文件尺寸 （例如 <code>&#39;13 KB&#39;</code>, <code>&#39;4.1 MB&#39;</code>, <code>&#39;102 bytes&#39;</code>, 等等）。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|filesizeformat &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果 <code>value</code> 是 123456789，输出将会是 <code>117.7 MB</code>。　　</p>
+<h3 id="date"><a href="#date" class="headerlink" title="date"></a>date</h3><p>如果 value=datetime.datetime.now()</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|date:<span class="string">"Y-m-d"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="slice"><a href="#slice" class="headerlink" title="slice"></a>slice</h3><p>如果 value=”hello world”</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|slice:<span class="string">"2:-1"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="truncatechars"><a href="#truncatechars" class="headerlink" title="truncatechars"></a>truncatechars</h3><p>如果字符串字符多于指定的字符数量，那么会被截断。截断的字符串将以可翻译的省略号序列（“…”）结尾。</p>
+<p><strong>参数：</strong>要截断的字符数</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|truncatechars:<span class="number">9</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="safe"><a href="#safe" class="headerlink" title="safe"></a>safe</h3><p>Django的模板中会对HTML标签和JS等语法标签进行自动转义，原因显而易见，这样是为了安全。但是有的时候我们可能不希望这些HTML元素被转义，比如我们做一个内容管理系统，后台添加的文章中是经过修饰的，这些修饰可能是通过一个类似于FCKeditor编辑加注了HTML修饰符的文本，如果自动转义的话显示的就是保护HTML标签的源文件。为了在Django中关闭HTML的自动转义有两种方式，如果是一个单独的变量我们可以通过过滤器“|safe”的方式告诉Django这段代码是安全的不必转义。比如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">value=<span class="string">"&lt;a href="</span><span class="string">"&gt;点击&lt;/a&gt;"</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|safe&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="其它过滤器（了解）"><a href="#其它过滤器（了解）" class="headerlink" title="其它过滤器（了解）"></a>其它过滤器（了解）</h3><table>
+<thead>
+<tr>
+<th>过滤器</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>upper</td>
+<td>以大写方式输出</td>
+<td></td>
+</tr>
+<tr>
+<td>add</td>
+<td>给value加上一个数值</td>
+<td></td>
+</tr>
+<tr>
+<td>addslashes</td>
+<td>单引号加上转义号</td>
+<td></td>
+</tr>
+<tr>
+<td>capfirst</td>
+<td>第一个字母大写</td>
+<td></td>
+</tr>
+<tr>
+<td>center</td>
+<td>输出指定长度的字符串，把变量居中</td>
+<td></td>
+</tr>
+<tr>
+<td>cut</td>
+<td>删除指定字符串</td>
+<td></td>
+</tr>
+<tr>
+<td>date</td>
+<td>格式化日期</td>
+<td></td>
+</tr>
+<tr>
+<td>default</td>
+<td>如果值不存在，则使用默认值代替</td>
+<td></td>
+</tr>
+<tr>
+<td>default_if_none</td>
+<td>如果值为None, 则使用默认值代替</td>
+<td></td>
+</tr>
+<tr>
+<td>dictsort</td>
+<td>按某字段排序，变量必须是一个dictionary</td>
+<td></td>
+</tr>
+<tr>
+<td>dictsortreversed</td>
+<td>按某字段倒序排序，变量必须是dictionary</td>
+<td></td>
+</tr>
+<tr>
+<td>divisibleby</td>
+<td>判断是否可以被数字整除</td>
+<td></td>
+</tr>
+<tr>
+<td>escape</td>
+<td>按HTML转义，比如将”&lt;”转换为”&amp;lt”</td>
+<td></td>
+</tr>
+<tr>
+<td>filesizeformat</td>
+<td>增加数字的可读性，转换结果为13KB,89MB,3Bytes等</td>
+<td></td>
+</tr>
+<tr>
+<td>first</td>
+<td>返回列表的第1个元素，变量必须是一个列表</td>
+<td></td>
+</tr>
+<tr>
+<td>floatformat</td>
+<td>转换为指定精度的小数，默认保留1位小数</td>
+<td></td>
+</tr>
+<tr>
+<td>get_digit</td>
+<td>从个位数开始截取指定位置的数字</td>
+<td></td>
+</tr>
+<tr>
+<td>join</td>
+<td>用指定分隔符连接列表</td>
+<td></td>
+</tr>
+<tr>
+<td>length</td>
+<td>返回列表中元素的个数或字符串长度</td>
+<td></td>
+</tr>
+<tr>
+<td>length_is</td>
+<td>检查列表，字符串长度是否符合指定的值</td>
+<td></td>
+</tr>
+<tr>
+<td>linebreaks</td>
+<td>用<p>或<br>标签包裹变量</td>
+<td></td>
+</tr>
+<tr>
+<td>linebreaksbr</td>
+<td>用<br/>标签代替换行符</td>
+<td></td>
+</tr>
+<tr>
+<td>linenumbers</td>
+<td>为变量中的每一行加上行号</td>
+<td></td>
+</tr>
+<tr>
+<td>ljust</td>
+<td>输出指定长度的字符串，变量左对齐</td>
+<td></td>
+</tr>
+<tr>
+<td>lower</td>
+<td>字符串变小写</td>
+<td></td>
+</tr>
+<tr>
+<td>make_list</td>
+<td>将字符串转换为列表</td>
+<td></td>
+</tr>
+<tr>
+<td>pluralize</td>
+<td>根据数字确定是否输出英文复数符号</td>
+<td></td>
+</tr>
+<tr>
+<td>random</td>
+<td>返回列表的随机一项</td>
+<td></td>
+</tr>
+<tr>
+<td>removetags</td>
+<td>删除字符串中指定的HTML标记</td>
+<td></td>
+</tr>
+<tr>
+<td>rjust</td>
+<td>输出指定长度的字符串，变量右对齐</td>
+<td></td>
+</tr>
+<tr>
+<td>slice</td>
+<td>切片操作， 返回列表</td>
+<td></td>
+</tr>
+<tr>
+<td>slugify</td>
+<td>在字符串中留下减号和下划线，其它符号删除，空格用减号替换</td>
+<td></td>
+</tr>
+<tr>
+<td>stringformat</td>
+<td>字符串格式化，语法同python</td>
+<td></td>
+</tr>
+<tr>
+<td>time</td>
+<td>返回日期的时间部分</td>
+<td></td>
+</tr>
+<tr>
+<td>timesince</td>
+<td>以“到现在为止过了多长时间”显示时间变量</td>
+<td></td>
+</tr>
+<tr>
+<td>timeuntil</td>
+<td>以“从现在开始到时间变量”还有多长时间显示时间变量</td>
+<td></td>
+</tr>
+<tr>
+<td>title</td>
+<td>每个单词首字母大写</td>
+<td></td>
+</tr>
+<tr>
+<td>truncatewords</td>
+<td>将字符串转换为省略表达方式</td>
+<td></td>
+</tr>
+<tr>
+<td>truncatewords_html</td>
+<td>同上，但保留其中的HTML标签</td>
+<td></td>
+</tr>
+<tr>
+<td>urlencode</td>
+<td>将字符串中的特殊字符转换为url兼容表达方式</td>
+<td></td>
+</tr>
+<tr>
+<td>urlize</td>
+<td>将变量字符串中的url由纯文本变为链接</td>
+<td></td>
+</tr>
+<tr>
+<td>wordcount</td>
+<td>返回变量字符串中的单词数</td>
+<td></td>
+</tr>
+<tr>
+<td>yesno</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="四-模版之标签"><a href="#四-模版之标签" class="headerlink" title="四 模版之标签"></a>四 模版之标签</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">标签看起来像是这样的： &#123;% tag %&#125;</span><br><span class="line">标签比变量更加复杂：一些在输出中创建文本，一些通过循环或逻辑来控制流程，一些加载其后的变量将使用到的额外信息到模版中。</span><br><span class="line">一些标签需要开始和结束标签 （例如&#123;% tag %&#125; ...标签 内容 ... &#123;% endtag %&#125;）</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="for标签"><a href="#for标签" class="headerlink" title="for标签"></a>for标签</h3><p>遍历每一个元素：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">for</span> person <span class="keyword">in</span> person_list %&#125;</span><br><span class="line">    &lt;p&gt;&#123;&#123; person.name &#125;&#125;&lt;/p&gt;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#可以利用&#123;% for obj in list reversed %&#125;反向完成循环。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>遍历一个字典：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">for</span> key,val <span class="keyword">in</span> dic.items %&#125;</span><br><span class="line">    &lt;p&gt;&#123;&#123; key &#125;&#125;:&#123;&#123; val &#125;&#125;&lt;/p&gt;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注：循环序号可以通过｛｛forloop｝｝显示　　</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">forloop.counter            The current iteration of the loop (<span class="number">1</span>-indexed) 当前循环的索引值（从<span class="number">1</span>开始）</span><br><span class="line">forloop.counter0           The current iteration of the loop (<span class="number">0</span>-indexed) 当前循环的索引值（从<span class="number">0</span>开始）</span><br><span class="line">forloop.revcounter         The number of iterations <span class="keyword">from</span> the end of the loop (<span class="number">1</span>-indexed) 当前循环的倒序索引值（从<span class="number">1</span>开始）</span><br><span class="line">forloop.revcounter0        The number of iterations <span class="keyword">from</span> the end of the loop (<span class="number">0</span>-indexed) 当前循环的倒序索引值（从<span class="number">0</span>开始）</span><br><span class="line">forloop.first              <span class="literal">True</span> <span class="keyword">if</span> this <span class="keyword">is</span> the first time through the loop 当前循环是不是第一次循环（布尔值）</span><br><span class="line">forloop.last               <span class="literal">True</span> <span class="keyword">if</span> this <span class="keyword">is</span> the last time through the loop 当前循环是不是最后一次循环（布尔值）</span><br><span class="line">forloop.parentloop         本层循环的外层循环</span><br></pre></td></tr></table></figure>
+
+<h3 id="for-…-empty"><a href="#for-…-empty" class="headerlink" title="for … empty"></a>for … empty</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># for 标签带有一个可选的&#123;% empty %&#125; 从句，以便在给出的组是空的或者没有被找到时，可以有所操作。</span></span><br><span class="line">&#123;% <span class="keyword">for</span> person <span class="keyword">in</span> person_list %&#125;</span><br><span class="line">    &lt;p&gt;&#123;&#123; person.name &#125;&#125;&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">&#123;% empty %&#125;</span><br><span class="line">    &lt;p&gt;sorry,no person here&lt;/p&gt;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="if-标签"><a href="#if-标签" class="headerlink" title="if 标签"></a>if 标签</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &#123;% if %&#125;会对一个变量求值，如果它的值是True（存在、不为空、且不是boolean类型的false值），对应的内容块会输出。</span></span><br><span class="line"></span><br><span class="line">&#123;% <span class="keyword">if</span> num &gt; <span class="number">100</span> <span class="keyword">or</span> num &lt; <span class="number">0</span> %&#125;</span><br><span class="line">    &lt;p&gt;无效&lt;/p&gt;</span><br><span class="line">&#123;% <span class="keyword">elif</span> num &gt; <span class="number">80</span> <span class="keyword">and</span> num &lt; <span class="number">100</span> %&#125;</span><br><span class="line">    &lt;p&gt;优秀&lt;/p&gt;</span><br><span class="line">&#123;% <span class="keyword">else</span> %&#125;</span><br><span class="line">    &lt;p&gt;凑活吧&lt;/p&gt;</span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>语句支持 <span class="keyword">and</span> 、<span class="keyword">or</span>、==、&gt;、&lt;、!=、&lt;=、&gt;=、<span class="keyword">in</span>、<span class="keyword">not</span> <span class="keyword">in</span>、<span class="keyword">is</span>、<span class="keyword">is</span> <span class="keyword">not</span>判断。</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="with"><a href="#with" class="headerlink" title="with"></a>with</h3><p>使用一个简单地名字缓存一个复杂的变量，当你需要使用一个“昂贵的”方法（比如访问数据库）很多次的时候是非常有用的</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;% with total&#x3D;business.employees.count %&#125;</span><br><span class="line">    &#123;&#123; total &#125;&#125; employee&#123;&#123; total|pluralize &#125;&#125;</span><br><span class="line">&#123;% endwith %&#125;</span><br><span class="line">不要写成as</span><br></pre></td></tr></table></figure>
+
+<h3 id="csrf-token"><a href="#csrf-token" class="headerlink" title="csrf_token"></a>csrf_token</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% csrf_token%&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这个标签用于跨站请求伪造保护</p>
+<h2 id="五-自定义标签和过滤器"><a href="#五-自定义标签和过滤器" class="headerlink" title="五 自定义标签和过滤器"></a>五 自定义标签和过滤器</h2><p>1、在settings中的INSTALLED_APPS配置当前app，不然django无法找到自定义的simple_tag.</p>
+<p>2、在app中创建templatetags模块(模块名只能是templatetags</p>
+<p>3、创建任意 .py 文件，如：my_tags.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django <span class="keyword">import</span> template</span><br><span class="line"><span class="keyword">from</span> django.utils.safestring <span class="keyword">import</span> mark_safe</span><br><span class="line"> </span><br><span class="line">register = template.Library()   <span class="comment">#register的名字是固定的,不可改变</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">@register.filter</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">filter_multi</span><span class="params">(v1,v2)</span>:</span></span><br><span class="line">    <span class="keyword">return</span>  v1 * v2</span><br><span class="line">    </span><br><span class="line"><span class="meta">@register.simple_tag</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simple_tag_multi</span><span class="params">(v1,v2)</span>:</span></span><br><span class="line">    <span class="keyword">return</span>  v1 * v2</span><br><span class="line">    </span><br><span class="line"><span class="meta">@register.simple_tag</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">my_input</span><span class="params">(id,arg)</span>:</span></span><br><span class="line">    result = <span class="string">"&lt;input type='text' id='%s' class='%s' /&gt;"</span> %(id,arg,)</span><br><span class="line">    <span class="keyword">return</span> mark_safe(result)</span><br></pre></td></tr></table></figure>
+
+<p>4、在使用自定义simple_tag和filter的html文件中导入之前创建的 my_tags.py</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;%load my_tags %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5、使用simple_tag和filter（如何调用</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;% load xxx %&#125;  </span><br><span class="line">      </span><br><span class="line"># num=12</span><br><span class="line">&#123;&#123; num|filter_multi:2 &#125;&#125; #24</span><br><span class="line"> </span><br><span class="line">&#123;&#123; num|filter_multi:"[22,333,4444]" &#125;&#125;</span><br><span class="line"> </span><br><span class="line">&#123;% simple_tag_multi 2 5 %&#125;  参数不限,但不能放在if for语句中</span><br><span class="line">&#123;% simple_tag_multi num 5 %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：filter可以用在if等语句后，simple_tag不可以</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">if</span> num|filter_multi:<span class="number">30</span> &gt; <span class="number">100</span> %&#125;</span><br><span class="line">    &#123;&#123; num|filter_multi:<span class="number">30</span> &#125;&#125;</span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="六-模版导入入和继承"><a href="#六-模版导入入和继承" class="headerlink" title="六 模版导入入和继承"></a>六 模版导入入和继承</h2><h3 id="模版导入"><a href="#模版导入" class="headerlink" title="模版导入"></a>模版导入</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">　　语法：&#123;% include <span class="string">'模版名称'</span> %&#125;</span><br><span class="line"></span><br><span class="line">　　如：&#123;% include <span class="string">'adv.html'</span> %&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"adv"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel panel-default"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-heading"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span> <span class="attr">class</span>=<span class="string">"panel-title"</span>&gt;</span>Panel title<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-body"</span>&gt;</span></span><br><span class="line">            Panel content</span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel panel-danger"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-heading"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span> <span class="attr">class</span>=<span class="string">"panel-title"</span>&gt;</span>Panel title<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-body"</span>&gt;</span></span><br><span class="line">            Panel content</span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel panel-warning"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-heading"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">h3</span> <span class="attr">class</span>=<span class="string">"panel-title"</span>&gt;</span>Panel title<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"panel-body"</span>&gt;</span></span><br><span class="line">            Panel content</span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"/static/bootstrap-3.3.7-dist/css/bootstrap.min.css"</span>&gt;</span></span><br><span class="line">    &#123;#    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"</span> <span class="attr">integrity</span>=<span class="string">"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"</span> <span class="attr">crossorigin</span>=<span class="string">"anonymous"</span>&gt;</span>#&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line">        * &#123;</span><br><span class="line">            margin: 0;</span><br><span class="line">            padding: 0;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="css">        <span class="selector-class">.header</span> &#123;</span></span><br><span class="line">            height: 50px;</span><br><span class="line">            width: 100%;</span><br><span class="line"><span class="css">            <span class="selector-tag">background-color</span>: <span class="selector-id">#369</span>;</span></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"header"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"container"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"row"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-md-3"</span>&gt;</span></span><br><span class="line">            &#123;% include 'adv.html' %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"col-md-9"</span>&gt;</span></span><br><span class="line">            &#123;% block conn %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">h1</span>&gt;</span>你好<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">            &#123;% endblock %&#125;</span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;% extends 'base.html' %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% block conn %&#125;</span><br><span class="line">    &#123;&#123; block.super &#125;&#125;</span><br><span class="line">是啊</span><br><span class="line"></span><br><span class="line">&#123;% endblock conn%&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="模版继承"><a href="#模版继承" class="headerlink" title="模版继承"></a>模版继承</h3><p>Django模版引擎中最强大也是最复杂的部分就是模版继承了。模版继承可以让您创建一个基本的“骨架”模版，它包含您站点中的全部元素，并且可以定义能够被子模版覆盖的 blocks 。</p>
+<p>通过从下面这个例子开始，可以容易的理解模版继承：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"style.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;% block title %&#125;My amazing site&#123;% endblock %&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"sidebar"</span>&gt;</span></span><br><span class="line">    &#123;% block sidebar %&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/"</span>&gt;</span>Home<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/blog/"</span>&gt;</span>Blog<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    &#123;% endblock %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span>&gt;</span></span><br><span class="line">    &#123;% block content %&#125;&#123;% endblock %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个模版，我们把它叫作 <code>base.html</code>， 它定义了一个可以用于两列排版页面的简单HTML骨架。“子模版”的工作是用它们的内容填充空的blocks。</p>
+<p>在这个例子中， <code>block</code> 标签定义了三个可以被子模版内容填充的block。 <code>block</code> 告诉模版引擎： 子模版可能会覆盖掉模版中的这些位置。</p>
+<p>子模版可能看起来是这样的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;% extends "base.html" %&#125;</span><br><span class="line"> </span><br><span class="line">&#123;% block title %&#125;My amazing blog&#123;% endblock %&#125;</span><br><span class="line"> </span><br><span class="line">&#123;% block content %&#125;</span><br><span class="line">&#123;% for entry in blog_entries %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>&#123;&#123; entry.title &#125;&#125;<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; entry.body &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line">&#123;% endblock %&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>extends</code> 标签是这里的关键。它告诉模版引擎，这个模版“继承”了另一个模版。当模版系统处理这个模版时，首先，它将定位父模版——在此例中，就是“base.html”。</p>
+<p>那时，模版引擎将注意到 <code>base.html</code> 中的三个 <code>block</code> 标签，并用子模版中的内容来替换这些block。根据 <code>blog_entries</code> 的值，输出可能看起来是这样的：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"style.css"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>My amazing blog<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"sidebar"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/"</span>&gt;</span>Home<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/blog/"</span>&gt;</span>Blog<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"content"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Entry one<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>This is my first entry.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Entry two<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>This is my second entry.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">请注意，子模版并没有定义 `sidebar` block，所以系统使用了父模版中的值。父模版的 `&#123;% block %&#125;` 标签中的内容总是被用作备选内容（fallback）。</span><br><span class="line"></span><br><span class="line">这种方式使代码得到最大程度的复用，并且使得添加内容到共享的内容区域更加简单，例如，部分范围内的导航。</span><br><span class="line"></span><br><span class="line">**这里是使用继承的一些提示**：</span><br><span class="line"></span><br><span class="line">&gt;- 如果你在模版中使用 `&#123;% extends %&#125;` 标签，它必须是模版中的第一个标签。其他的任何情况下，模版继承都将无法工作。</span><br><span class="line">&gt;</span><br><span class="line">&gt;- 在base模版中设置越多的 `&#123;% block %&#125;` 标签越好。请记住，子模版不必定义全部父模版中的blocks，所以，你可以在大多数blocks中填充合理的默认内容，然后，只定义你需要的那一个。多一点钩子总比少一点好。</span><br><span class="line">&gt;</span><br><span class="line">&gt;- 如果你发现你自己在大量的模版中复制内容，那可能意味着你应该把内容移动到父模版中的一个 `&#123;% block %&#125;` 中。</span><br><span class="line">&gt;</span><br><span class="line">&gt;- If you need to get the content of the block <span class="keyword">from</span> the parent template, the `&#123;&#123; block.super &#125;&#125;` variable will do the trick. This <span class="keyword">is</span> useful <span class="keyword">if</span> you want to add to the contents of a parent block instead of completely overriding it. Data inserted using `&#123;&#123; block.super &#125;&#125;` will <span class="keyword">not</span> be automatically escaped (see the next section), since it was already escaped, <span class="keyword">if</span> necessary, <span class="keyword">in</span> the parent template.</span><br><span class="line">&gt;</span><br><span class="line">&gt;- 为了更好的可读性，你也可以给你的 `&#123;% endblock %&#125;` 标签一个 *名字* 。例如：</span><br><span class="line">&gt;</span><br><span class="line">&gt;  &#123;%block content %&#125;...&#123;%endblock content %&#125;</span><br><span class="line">&gt;</span><br><span class="line">&gt;  在大型模版中，这个方法帮你清楚的看到哪一个　 `&#123;% block %&#125;` 标签被关闭了。</span><br><span class="line">&gt;</span><br><span class="line">&gt;- 不能在一个模版中定义多个相同名字的 `block` 标签。</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="七-静态文件相关"><a href="#七-静态文件相关" class="headerlink" title="七 静态文件相关"></a>七 静态文件相关</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% load static %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"&#123;% static "</span><span class="attr">images</span>/<span class="attr">hi.jpg</span>" %&#125;" <span class="attr">alt</span>=<span class="string">"Hi!"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>引用JS文件时使用：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% load static %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"&#123;% static "</span><span class="attr">mytest.js</span>" %&#125;"&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>某个文件多处被用到可以存为一个变量</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% load static %&#125;</span><br><span class="line">&#123;% static "images/hi.jpg" as myphoto %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; myphoto &#125;&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">img</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用get-static-prefix"><a href="#使用get-static-prefix" class="headerlink" title="使用get_static_prefix"></a>使用get_static_prefix</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;% load static %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"&#123;% get_static_prefix %&#125;images/hi.jpg"</span> <span class="attr">alt</span>=<span class="string">"Hi!"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% load static %&#125;</span><br><span class="line">&#123;% get_static_prefix as STATIC_PREFIX %&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; STATIC_PREFIX &#125;&#125;images/hi.jpg"</span> <span class="attr">alt</span>=<span class="string">"Hi!"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; STATIC_PREFIX &#125;&#125;images/hi2.jpg"</span> <span class="attr">alt</span>=<span class="string">"Hello!"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="inclusion-tag"><a href="#inclusion-tag" class="headerlink" title="inclusion_tag"></a>inclusion_tag</h3><p>多用于返回html代码片段</p>
+<p>示例：</p>
+<p>templatetags/my_inclusion.py</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">from django import template</span><br><span class="line">register = template.Library()</span><br><span class="line"></span><br><span class="line">@register.inclusion_tag('result.html')</span><br><span class="line">def show_results(n):</span><br><span class="line">    n = 1 if n <span class="tag">&lt; <span class="attr">1</span> <span class="attr">else</span> <span class="attr">int</span>(<span class="attr">n</span>)</span></span><br><span class="line"><span class="tag">    <span class="attr">data</span> = <span class="string">[</span>"第&#123;&#125;项"<span class="attr">.format</span>(<span class="attr">i</span>) <span class="attr">for</span> <span class="attr">i</span> <span class="attr">in</span> <span class="attr">range</span>(<span class="attr">1</span>, <span class="attr">n</span>+<span class="attr">1</span>)]</span></span><br><span class="line"><span class="tag">    <span class="attr">return</span> &#123;"<span class="attr">data</span>"<span class="attr">:</span> <span class="attr">data</span>&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>templates/snippets/result.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">  &#123;% for choice in data %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123; choice &#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">  &#123;% endfor %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>templates/index.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"x-ua-compatible"</span> <span class="attr">content</span>=<span class="string">"IE=edge"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>inclusion_tag test<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line">&#123;% load inclusion_tag_test %&#125;</span><br><span class="line"></span><br><span class="line">&#123;% show_results 10 %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django%E6%A1%86%E6%9E%B6/21-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django框架/21-Django高级之-跨站请求伪造
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django%E6%A1%86%E6%9E%B6/9-%E6%A8%A1%E5%9E%8B%E5%B1%82-%E5%A4%9A%E8%A1%A8%E6%93%8D%E4%BD%9C/">
+        
+          python/Django框架/9-模型层-多表操作
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-模版简介"><span class="toc-nav-text">一 模版简介</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-模版语法之变量"><span class="toc-nav-text">二 模版语法之变量</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#views-py"><span class="toc-nav-text">views.py</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#html"><span class="toc-nav-text">html</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-模版之过滤器"><span class="toc-nav-text">三 模版之过滤器</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#语法："><span class="toc-nav-text">语法：</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#default"><span class="toc-nav-text">default</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#length"><span class="toc-nav-text">length</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#filesizeformat"><span class="toc-nav-text">filesizeformat</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#date"><span class="toc-nav-text">date</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#slice"><span class="toc-nav-text">slice</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#truncatechars"><span class="toc-nav-text">truncatechars</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#safe"><span class="toc-nav-text">safe</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#其它过滤器（了解）"><span class="toc-nav-text">其它过滤器（了解）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-模版之标签"><span class="toc-nav-text">四 模版之标签</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#for标签"><span class="toc-nav-text">for标签</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#for-…-empty"><span class="toc-nav-text">for … empty</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#if-标签"><span class="toc-nav-text">if 标签</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#with"><span class="toc-nav-text">with</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#csrf-token"><span class="toc-nav-text">csrf_token</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-自定义标签和过滤器"><span class="toc-nav-text">五 自定义标签和过滤器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-模版导入入和继承"><span class="toc-nav-text">六 模版导入入和继承</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#模版导入"><span class="toc-nav-text">模版导入</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#模版继承"><span class="toc-nav-text">模版继承</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#七-静态文件相关"><span class="toc-nav-text">七 静态文件相关</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#使用get-static-prefix"><span class="toc-nav-text">使用get_static_prefix</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#inclusion-tag"><span class="toc-nav-text">inclusion_tag</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django框架/7-模板层/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django框架/7-模板层",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

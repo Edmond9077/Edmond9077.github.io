@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/面向对象高阶/2-反射(hasattr和getattr和setattr和delattr) | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/面向对象高阶/2-反射(hasattr和getattr和setattr和delattr)</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、反射在类中的使用"><a href="#一、反射在类中的使用" class="headerlink" title="一、反射在类中的使用"></a>一、反射在类中的使用</h1><p>反射就是通过字符串来操作类或者对象的属性</p>
+<ul>
+<li>反射本质就是在使用内置函数，其中反射有以下四个内置函数：</li>
+</ul>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. hasattr：判断一个方法是否存在与这个类中</span><br><span class="line">2. getattr：根据字符串去获取obj对象里的对应的方法的内存地址，加&quot;()&quot;括号即可执行</span><br><span class="line">3. setattr：通过setattr将外部的一个函数绑定到实例中</span><br><span class="line">4. delattr：删除一个实例或者类中的方法</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class People:</span><br><span class="line">    country &#x3D; &#39;China&#39;</span><br><span class="line"></span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name &#x3D; name</span><br><span class="line"></span><br><span class="line">    def eat(self):</span><br><span class="line">        print(&#39;%s is eating&#39; % self.name)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">peo1 &#x3D; People(&#39;lqz&#39;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(hasattr(peo1, &#39;eat&#39;))  # peo1.eat</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">True</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(getattr(peo1, &#39;eat&#39;))  # peo1.eat</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;bound method People.eat of &lt;__main__.People object at 0x1043b9f98&gt;&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(getattr(peo1, &#39;xxxxx&#39;, None))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">None</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setattr(peo1, &#39;age&#39;, 18)  # peo1.age&#x3D;18</span><br><span class="line">print(peo1.age)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">18</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(peo1.__dict__)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;name&#39;: &#39;egon&#39;, &#39;age&#39;: 18&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">delattr(peo1, &#39;name&#39;)  # del peo1.name</span><br><span class="line">print(peo1.__dict__)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#39;age&#39;: 18&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-1-应用"><a href="#1-1-应用" class="headerlink" title="1.1 应用"></a>1.1 应用</h2><p>需求：通过用户输入命令启动功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">class Ftp:</span><br><span class="line">    def __init__(self, ip, port):</span><br><span class="line">        self.ip &#x3D; ip</span><br><span class="line">        self.port &#x3D; port</span><br><span class="line"></span><br><span class="line">    def get(self):</span><br><span class="line">        print(&#39;GET function&#39;)</span><br><span class="line"></span><br><span class="line">    def put(self):</span><br><span class="line">        print(&#39;PUT function&#39;)</span><br><span class="line"></span><br><span class="line">    def run(self):</span><br><span class="line">        while True:</span><br><span class="line">            choice &#x3D; input(&#39;&gt;&gt;&gt;: &#39;).strip()</span><br><span class="line"></span><br><span class="line">            if choice &#x3D;&#x3D; &#39;q&#39;:</span><br><span class="line">                print(&#39;break&#39;)</span><br><span class="line">                break</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#             print(choice, type(choice))</span><br><span class="line">#             if hasattr(self, choice):</span><br><span class="line">#                 method &#x3D; getattr(self, choice)</span><br><span class="line">#                 method()</span><br><span class="line">#             else:</span><br><span class="line">#                 print(&#39;输入的命令不存在&#39;)</span><br><span class="line"></span><br><span class="line">            method &#x3D; getattr(self, choice, None)</span><br><span class="line"></span><br><span class="line">            if method is None:</span><br><span class="line">                print(&#39;输入的命令不存在&#39;)</span><br><span class="line">            else:</span><br><span class="line">                method()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conn &#x3D; Ftp(&#39;1.1.1.1&#39;, 23)</span><br><span class="line">conn.run()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;: time</span><br><span class="line">输入的命令不存在</span><br><span class="line">&gt;&gt;&gt;: time</span><br><span class="line">输入的命令不存在</span><br><span class="line">&gt;&gt;&gt;: q</span><br><span class="line">break</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、反射在模块中的使用"><a href="#二、反射在模块中的使用" class="headerlink" title="二、反射在模块中的使用"></a>二、反射在模块中的使用</h1><h2 id="2-1-前言"><a href="#2-1-前言" class="headerlink" title="2.1 前言"></a>2.1 前言</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># test.py</span><br><span class="line">def f1():</span><br><span class="line">    print(&#39;f1&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def f2():</span><br><span class="line">    print(&#39;f2&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def f3():</span><br><span class="line">    print(&#39;f3&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def f4():</span><br><span class="line">    print(&#39;f4&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a &#x3D; 1</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import test as ss</span><br><span class="line"></span><br><span class="line">ss.f1()</span><br><span class="line">ss.f2()</span><br><span class="line">print(ss.a)</span><br></pre></td></tr></table></figure>
+
+<p>我们要导入另外一个模块,可以使用import.现在有这样的需求,我动态输入一个模块名，可以随时访问到导入模块中的方法或者变量，怎么做呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">imp &#x3D; input(“请输入你想导入的模块名:”)</span><br><span class="line">CC &#x3D; __import__(imp) 這种方式就是通过输入字符串导入你所想导入的模块 </span><br><span class="line">CC.f1()  # 执行模块中的f1方法</span><br></pre></td></tr></table></figure>
+
+<p>上面我们实现了动态输入模块名，从而使我们能够输入模块名并且执行里面的函数。但是上面有一个缺点，那就是执行的函数被固定了。那么，我们能不能改进一下，动态输入函数名，并且来执行呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># dynamic.py</span><br><span class="line">imp &#x3D; input(&quot;请输入模块:&quot;)</span><br><span class="line">dd &#x3D; __import__(imp)</span><br><span class="line"># 等价于import imp</span><br><span class="line">inp_func &#x3D; input(&quot;请输入要执行的函数：&quot;)</span><br><span class="line"></span><br><span class="line">f &#x3D; getattr(dd, inp_func,</span><br><span class="line">            None)  # 作用:从导入模块中找到你需要调用的函数inp_func,然后返回一个该函数的引用.没有找到就烦会None</span><br><span class="line"></span><br><span class="line">f()  # 执行该函数</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请输入模块:time</span><br><span class="line">请输入要执行的函数：time</span><br><span class="line"></span><br><span class="line">1560959528.6127071</span><br></pre></td></tr></table></figure>
+
+<p>上面我们就实现了，动态导入一个模块，并且动态输入函数名然后执行相应功能。</p>
+<p>当然，上面还存在一点点小问题:那就是我的模块名有可能不是在本级目录中存放着。有可能是如下图存放方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">|- day24</span><br><span class="line">    |- lib</span><br><span class="line">        |- common.py</span><br></pre></td></tr></table></figure>
+
+<p>那么这种方式我们该如何搞定呢?看下面代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dd &#x3D; __import__(&quot;lib.text.commons&quot;)  # 这样仅仅导入了lib模块</span><br><span class="line">dd &#x3D; __import__(&quot;lib.text.commons&quot;, fromlist&#x3D;True)  # 改用这种方式就能导入成功</span><br><span class="line"># 等价于import config</span><br><span class="line">inp_func &#x3D; input(&quot;请输入要执行的函数：&quot;)</span><br><span class="line">f &#x3D; getattr(dd, inp_func)</span><br><span class="line">f()</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-反射机制"><a href="#2-2-反射机制" class="headerlink" title="2.2 反射机制"></a>2.2 反射机制</h2><p>上面说了那么多，到底什么是反射机制呢?</p>
+<p>其实，反射就是通过字符串的形式，导入模块；通过字符串的形式，去模块寻找指定函数，并执行。利用字符串的形式去对象（模块）中操作（查找/获取/删除/添加）成员，一种基于字符串的事件驱动！</p>
+<p>先来介绍四个内置函数:</p>
+<h3 id="2-2-1-getattr"><a href="#2-2-1-getattr" class="headerlink" title="2.2.1 getattr()"></a>2.2.1 getattr()</h3><p>getattr()函数是Python自省的核心函数，具体使用大体如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">class A:</span><br><span class="line">    def __init__(self):</span><br><span class="line">        self.name &#x3D; &#39;lqz&#39;</span><br><span class="line">        # self.age&#x3D;&#39;18&#39;</span><br><span class="line"></span><br><span class="line">    def method(self):</span><br><span class="line">        print(&quot;method print&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a &#x3D; A()</span><br><span class="line"></span><br><span class="line">print(getattr(a, &#39;name&#39;,</span><br><span class="line">              &#39;not find&#39;))  # 如果a 对象中有属性name则打印self.name的值，否则打印&#39;not find&#39;</span><br><span class="line">print(getattr(a, &#39;age&#39;,</span><br><span class="line">              &#39;not find&#39;))  # 如果a 对象中有属性age则打印self.age的值，否则打印&#39;not find&#39;</span><br><span class="line">print(getattr(a, &#39;method&#39;, &#39;default&#39;))  # 如果有方法method，否则打印其地址，否则打印default</span><br><span class="line">print(getattr(a, &#39;method&#39;, &#39;default&#39;)())  # 如果有方法method，运行函数并打印None否则打印default</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-2-hasattr-object-name"><a href="#2-2-2-hasattr-object-name" class="headerlink" title="2.2.2 hasattr(object, name)"></a>2.2.2 hasattr(object, name)</h3><p>说明：判断对象object是否包含名为name的特性（hasattr是通过调用getattr(ojbect, name)是否抛出异常来实现的）</p>
+<h3 id="2-2-3-setattr-object-name-value"><a href="#2-2-3-setattr-object-name-value" class="headerlink" title="2.2.3 setattr(object, name, value)"></a>2.2.3 setattr(object, name, value)</h3><p>这是相对应的getattr()。参数是一个对象,一个字符串和一个任意值。字符串可能会列出一个现有的属性或一个新的属性。这个函数将值赋给属性的。该对象允许它提供。例如,setattr(x,“foobar”,123)相当于x.foobar = 123。</p>
+<h3 id="2-2-4-delattr-object-name"><a href="#2-2-4-delattr-object-name" class="headerlink" title="2.2.4 delattr(object, name)"></a>2.2.4 delattr(object, name)</h3><p>与setattr()相关的一组函数。参数是由一个对象(记住python中一切皆是对象)和一个字符串组成的。string参数必须是对象属性名之一。该函数删除该obj的一个由string指定的属性。delattr(x, ‘foobar’)=del x.foobar</p>
+<p>我们可以利用上述的四个函数,来对模块进行一系列操作.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">r &#x3D; hasattr(commons, xxx)  # 判断某个函数或者变量是否存在</span><br><span class="line">print(r)</span><br><span class="line"></span><br><span class="line">setattr(commons, &#39;age&#39;, 18)  # 给commons模块增加一个全局变量age &#x3D; 18，创建成功返回none</span><br><span class="line"></span><br><span class="line">setattr(commons, &#39;age&#39;, lambda a: a + 1)  # 给模块添加一个函数</span><br><span class="line"></span><br><span class="line">delattr(commons, &#39;age&#39;)  # 删除模块中某个变量或者函数</span><br></pre></td></tr></table></figure>
+
+<p>注意：<strong>getattr,hasattr,setattr,delattr对模块的修改都在内存中进行，并不会影响文件中真实内容。</strong></p>
+<h2 id="2-3-应用"><a href="#2-3-应用" class="headerlink" title="2.3 应用"></a>2.3 应用</h2><p>基于反射机制模拟web框架路由</p>
+<p>需求：比如我们输入&lt;<a href="http://www.xxx.com/commons/f1&gt;" target="_blank" rel="noopener">www.xxx.com/commons/f1&gt;</a> ，返回f1的结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 动态导入模块，并执行其中函数</span><br><span class="line">url &#x3D; input(&quot;url: &quot;)</span><br><span class="line"></span><br><span class="line">target_module, target_func &#x3D; url.split(&#39;&#x2F;&#39;)</span><br><span class="line">m &#x3D; __import__(&#39;lib.&#39; + target_module, fromlist&#x3D;True)</span><br><span class="line"></span><br><span class="line">inp &#x3D; url.split(&quot;&#x2F;&quot;)[-1]  # 分割url,并取出url最后一个字符串</span><br><span class="line">if hasattr(m, target_func):  # 判断在commons模块中是否存在inp这个字符串</span><br><span class="line">    target_func &#x3D; getattr(m, target_func)  # 获取inp的引用</span><br><span class="line">    target_func()  # 执行</span><br><span class="line">else:</span><br><span class="line">    print(&quot;404&quot;)</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/8-logging%E6%A8%A1%E5%9D%97/">
+        <span class="nav-arrow">← </span>
+        
+          python/常用模块/8-logging模块
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/18-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E7%BA%A7%E5%B0%8F%E7%BB%93/">
+        
+          python/面向对象高阶/18-面向对象高级小结
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、反射在类中的使用"><span class="toc-nav-text">一、反射在类中的使用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-应用"><span class="toc-nav-text">1.1 应用</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、反射在模块中的使用"><span class="toc-nav-text">二、反射在模块中的使用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-前言"><span class="toc-nav-text">2.1 前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-反射机制"><span class="toc-nav-text">2.2 反射机制</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-1-getattr"><span class="toc-nav-text">2.2.1 getattr()</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-2-hasattr-object-name"><span class="toc-nav-text">2.2.2 hasattr(object, name)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-3-setattr-object-name-value"><span class="toc-nav-text">2.2.3 setattr(object, name, value)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-4-delattr-object-name"><span class="toc-nav-text">2.2.4 delattr(object, name)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-3-应用"><span class="toc-nav-text">2.3 应用</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/面向对象高阶/2-反射(hasattr和getattr和setattr和delattr)/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/面向对象高阶/2-反射(hasattr和getattr和setattr和delattr)",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

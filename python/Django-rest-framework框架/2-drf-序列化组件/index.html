@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django-rest-framework框架/2-drf-序列化组件 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django-rest-framework框架/2-drf-序列化组件</h2>
+
+
+
+  <p class="post-date">2020-06-28</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一-序列化器-Serializer"><a href="#一-序列化器-Serializer" class="headerlink" title="一 序列化器-Serializer"></a>一 序列化器-Serializer</h1><p>作用：</p>
+<pre><code>1. 序列化,序列化器会把模型对象转换成字典,经过response以后变成json字符串
+2. 反序列化,把客户端发送过来的数据,经过request以后变成字典,序列化器可以把字典转成模型
+3. 反序列化,完成数据校验功能</code></pre><h2 id="1-1-定义序列化器"><a href="#1-1-定义序列化器" class="headerlink" title="1.1 定义序列化器"></a>1.1 定义序列化器</h2><p>Django REST framework中的Serializer使用类来定义，须继承自rest_framework.serializers.Serializer。</p>
+<p>接下来，为了方便演示序列化器的使用，我们先创建一个新的子应用sers</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py startapp sers</span><br></pre></td></tr></table></figure>
+
+
+
+<p>我们已有了一个数据库模型类students/Student</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your models here.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    <span class="comment"># 模型字段</span></span><br><span class="line">    name = models.CharField(max_length=<span class="number">100</span>,verbose_name=<span class="string">"姓名"</span>,help_text=<span class="string">"提示文本:账号不能为空！"</span>)</span><br><span class="line">    sex = models.BooleanField(default=<span class="literal">True</span>,verbose_name=<span class="string">"性别"</span>)</span><br><span class="line">    age = models.IntegerField(verbose_name=<span class="string">"年龄"</span>)</span><br><span class="line">    class_null = models.CharField(max_length=<span class="number">5</span>,verbose_name=<span class="string">"班级编号"</span>)</span><br><span class="line">    description = models.TextField(verbose_name=<span class="string">"个性签名"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        db_table=<span class="string">"tb_student"</span></span><br><span class="line">        verbose_name = <span class="string">"学生"</span></span><br><span class="line">        verbose_name_plural = verbose_name</span><br></pre></td></tr></table></figure>
+
+<p>我们想为这个模型类提供一个序列化器，可以定义如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rest_framework <span class="keyword">import</span> serializers</span><br><span class="line"></span><br><span class="line"><span class="comment"># 声明序列化器，所有的序列化器都要直接或者间接继承于 Serializer</span></span><br><span class="line"><span class="comment"># 其中，ModelSerializer是Serializer的子类，ModelSerializer在Serializer的基础上进行了代码简化</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentSerializer</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    <span class="string">"""学生信息序列化器"""</span></span><br><span class="line">    <span class="comment"># 1. 需要进行数据转换的字段</span></span><br><span class="line">    id = serializers.IntegerField()</span><br><span class="line">    name = serializers.CharField()</span><br><span class="line">    age = serializers.IntegerField()</span><br><span class="line">    sex = serializers.BooleanField()</span><br><span class="line">    description = serializers.CharField()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 2. 如果序列化器集成的是ModelSerializer，则需要声明调用的模型信息</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 3. 验证代码</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 4. 编写添加和更新模型的代码</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：serializer不是只能为数据库模型类定义，也可以为非数据库模型类的数据定义。</strong>serializer是独立于数据库之外的存在。</p>
+<p><strong>常用字段类型</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>字段构造方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>BooleanField</strong></td>
+<td>BooleanField()</td>
+</tr>
+<tr>
+<td><strong>NullBooleanField</strong></td>
+<td>NullBooleanField()</td>
+</tr>
+<tr>
+<td><strong>CharField</strong></td>
+<td>CharField(max_length=None, min_length=None, allow_blank=False, trim_whitespace=True)</td>
+</tr>
+<tr>
+<td><strong>EmailField</strong></td>
+<td>EmailField(max_length=None, min_length=None, allow_blank=False)</td>
+</tr>
+<tr>
+<td><strong>RegexField</strong></td>
+<td>RegexField(regex, max_length=None, min_length=None, allow_blank=False)</td>
+</tr>
+<tr>
+<td><strong>SlugField</strong></td>
+<td>SlugField(max<em>length=50, min_length=None, allow_blank=False) 正则字段，验证正则模式 [a-zA-Z0-9</em>-]+</td>
+</tr>
+<tr>
+<td><strong>URLField</strong></td>
+<td>URLField(max_length=200, min_length=None, allow_blank=False)</td>
+</tr>
+<tr>
+<td><strong>UUIDField</strong></td>
+<td>UUIDField(format=’hex_verbose’)  format:  1) <code>&#39;hex_verbose&#39;</code> 如<code>&quot;5ce0e9a5-5ffa-654b-cee0-1238041fb31a&quot;</code>  2） <code>&#39;hex&#39;</code> 如 <code>&quot;5ce0e9a55ffa654bcee01238041fb31a&quot;</code>  3）<code>&#39;int&#39;</code> - 如: <code>&quot;123456789012312313134124512351145145114&quot;</code>  4）<code>&#39;urn&#39;</code> 如: <code>&quot;urn:uuid:5ce0e9a5-5ffa-654b-cee0-1238041fb31a&quot;</code></td>
+</tr>
+<tr>
+<td><strong>IPAddressField</strong></td>
+<td>IPAddressField(protocol=’both’, unpack_ipv4=False, **options)</td>
+</tr>
+<tr>
+<td><strong>IntegerField</strong></td>
+<td>IntegerField(max_value=None, min_value=None)</td>
+</tr>
+<tr>
+<td><strong>FloatField</strong></td>
+<td>FloatField(max_value=None, min_value=None)</td>
+</tr>
+<tr>
+<td><strong>DecimalField</strong></td>
+<td>DecimalField(max_digits, decimal_places, coerce_to_string=None, max_value=None, min_value=None) max_digits: 最多位数 decimal_palces: 小数点位置</td>
+</tr>
+<tr>
+<td><strong>DateTimeField</strong></td>
+<td>DateTimeField(format=api_settings.DATETIME_FORMAT, input_formats=None)</td>
+</tr>
+<tr>
+<td><strong>DateField</strong></td>
+<td>DateField(format=api_settings.DATE_FORMAT, input_formats=None)</td>
+</tr>
+<tr>
+<td><strong>TimeField</strong></td>
+<td>TimeField(format=api_settings.TIME_FORMAT, input_formats=None)</td>
+</tr>
+<tr>
+<td><strong>DurationField</strong></td>
+<td>DurationField()</td>
+</tr>
+<tr>
+<td><strong>ChoiceField</strong></td>
+<td>ChoiceField(choices) choices与Django的用法相同</td>
+</tr>
+<tr>
+<td><strong>MultipleChoiceField</strong></td>
+<td>MultipleChoiceField(choices)</td>
+</tr>
+<tr>
+<td><strong>FileField</strong></td>
+<td>FileField(max_length=None, allow_empty_file=False, use_url=UPLOADED_FILES_USE_URL)</td>
+</tr>
+<tr>
+<td><strong>ImageField</strong></td>
+<td>ImageField(max_length=None, allow_empty_file=False, use_url=UPLOADED_FILES_USE_URL)</td>
+</tr>
+<tr>
+<td><strong>ListField</strong></td>
+<td>ListField(child=, min_length=None, max_length=None)</td>
+</tr>
+<tr>
+<td><strong>DictField</strong></td>
+<td>DictField(child=)</td>
+</tr>
+</tbody></table>
+<p><strong>选项参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>max_length</strong></td>
+<td>最大长度</td>
+</tr>
+<tr>
+<td><strong>min_lenght</strong></td>
+<td>最小长度</td>
+</tr>
+<tr>
+<td><strong>allow_blank</strong></td>
+<td>是否允许为空</td>
+</tr>
+<tr>
+<td><strong>trim_whitespace</strong></td>
+<td>是否截断空白字符</td>
+</tr>
+<tr>
+<td><strong>max_value</strong></td>
+<td>最小值</td>
+</tr>
+<tr>
+<td><strong>min_value</strong></td>
+<td>最大值</td>
+</tr>
+</tbody></table>
+<p>通用参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>read_only</strong></td>
+<td>表明该字段仅用于序列化输出，默认False</td>
+</tr>
+<tr>
+<td><strong>write_only</strong></td>
+<td>表明该字段仅用于反序列化输入，默认False</td>
+</tr>
+<tr>
+<td><strong>required</strong></td>
+<td>表明该字段在反序列化时必须输入，默认True</td>
+</tr>
+<tr>
+<td><strong>default</strong></td>
+<td>反序列化时使用的默认值</td>
+</tr>
+<tr>
+<td><strong>allow_null</strong></td>
+<td>表明该字段是否允许传入None，默认False</td>
+</tr>
+<tr>
+<td><strong>validators</strong></td>
+<td>该字段使用的验证器</td>
+</tr>
+<tr>
+<td><strong>error_messages</strong></td>
+<td>包含错误编号与错误信息的字典</td>
+</tr>
+<tr>
+<td><strong>label</strong></td>
+<td>用于HTML展示API页面时，显示的字段名称</td>
+</tr>
+<tr>
+<td><strong>help_text</strong></td>
+<td>用于HTML展示API页面时，显示的字段帮助提示信息</td>
+</tr>
+</tbody></table>
+<h2 id="1-2-创建Serializer对象"><a href="#1-2-创建Serializer对象" class="headerlink" title="1.2 创建Serializer对象"></a>1.2 创建Serializer对象</h2><p>定义好Serializer类后，就可以创建Serializer对象了。</p>
+<p>Serializer的构造方法为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Serializer(instance=<span class="literal">None</span>, data=empty, **kwarg)</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<p>1）用于序列化时，将模型类对象传入<strong>instance</strong>参数</p>
+<p>2）用于反序列化时，将要被反序列化的数据传入<strong>data</strong>参数</p>
+<p>3）除了instance和data参数外，在构造Serializer对象时，还可通过<strong>context</strong>参数额外添加数据，如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">serializer = AccountSerializer(account, context=&#123;<span class="string">'request'</span>: request&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>通过context参数附加的数据，可以通过Serializer对象的context属性获取。</strong></p>
+<ol>
+<li>使用序列化器的时候一定要注意，序列化器声明了以后，不会自动执行，需要我们在视图中进行调用才可以。</li>
+<li>序列化器无法直接接收数据，需要我们在视图中创建序列化器对象时把使用的数据传递过来。</li>
+<li>序列化器的字段声明类似于我们前面使用过的表单系统。</li>
+<li>开发restful api时，序列化器会帮我们把模型数据转换成字典.</li>
+<li>drf提供的视图会帮我们把字典转换成json,或者把客户端发送过来的数据转换字典.</li>
+</ol>
+<h2 id="1-3-序列化器的使用"><a href="#1-3-序列化器的使用" class="headerlink" title="1.3 序列化器的使用"></a>1.3 序列化器的使用</h2><p>序列化器的使用分两个阶段：</p>
+<ol>
+<li>在客户端请求时，使用序列化器可以完成对数据的反序列化。</li>
+<li>在服务器响应时，使用序列化器可以完成对数据的序列化。</li>
+</ol>
+<h3 id="1-3-1-序列化"><a href="#1-3-1-序列化" class="headerlink" title="1.3.1 序列化"></a>1.3.1 序列化</h3><h4 id="1-3-1-1-基本使用"><a href="#1-3-1-1-基本使用" class="headerlink" title="1.3.1.1 基本使用"></a>1.3.1.1 基本使用</h4><p>1） 先查询出一个学生对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> students.models <span class="keyword">import</span> Student</span><br><span class="line"></span><br><span class="line">student = Student.objects.get(id=<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>2） 构造序列化器对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> .serializers <span class="keyword">import</span> StudentSerializer</span><br><span class="line"></span><br><span class="line">serializer = StudentSerializer(instance=student)</span><br></pre></td></tr></table></figure>
+
+<p>3）获取序列化数据</p>
+<p>通过data属性可以获取序列化后的数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">serializer.data</span><br><span class="line"><span class="comment"># &#123;'id': 4, 'name': '小张', 'age': 18, 'sex': True, 'description': '猴赛雷'&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>完整视图代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.views <span class="keyword">import</span> View</span><br><span class="line"><span class="keyword">from</span> students.models <span class="keyword">import</span> Student</span><br><span class="line"><span class="keyword">from</span> .serializers <span class="keyword">import</span> StudentSerializer</span><br><span class="line"><span class="keyword">from</span> django.http.response <span class="keyword">import</span> JsonResponse</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StudentView</span><span class="params">(View)</span>:</span></span><br><span class="line">    <span class="string">"""使用序列化器序列化转换单个模型数据"""</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        <span class="comment"># 获取数据</span></span><br><span class="line">        student = Student.objects.get(pk=pk)</span><br><span class="line">        <span class="comment"># 数据转换[序列化过程]</span></span><br><span class="line">        serializer = StudentSerializer(instance=student)</span><br><span class="line">        print(serializer.data)</span><br><span class="line">        <span class="comment"># 响应数据</span></span><br><span class="line">        <span class="keyword">return</span> JsonResponse(serializer.data)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>4）如果要被序列化的是包含多条数据的查询集QuerySet，可以通过添加<strong>many=True</strong>参数补充说明</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""使用序列化器序列化转换多个模型数据"""</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request)</span>:</span></span><br><span class="line">    <span class="comment"># 获取数据</span></span><br><span class="line">    student_list = Student.objects.all()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 转换数据[序列化过程]</span></span><br><span class="line">    <span class="comment"># 如果转换多个模型对象数据，则需要加上many=True</span></span><br><span class="line">    serializer = StudentSerializer(instance=student_list,many=<span class="literal">True</span>)</span><br><span class="line">    print( serializer.data ) <span class="comment"># 序列化器转换后的数据</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 响应数据给客户端</span></span><br><span class="line">    <span class="comment"># 返回的json数据，如果是列表，则需要声明safe=False</span></span><br><span class="line">    <span class="keyword">return</span> JsonResponse(serializer.data,safe=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 访问结果：</span></span><br><span class="line"><span class="comment"># [OrderedDict([('id', 1), ('name', 'xiaoming'), ('age', 20), ('sex', True), ('description', '测试')]), OrderedDict([('id', 2), ('name', 'xiaohui'), ('age', 22), ('sex', True), ('description', '后面来的测试')]), OrderedDict([('id', 4), ('name', '小张'), ('age', 18), ('sex', True), ('description', '猴赛雷')])]</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-3-1-2-高级用法"><a href="#1-3-1-2-高级用法" class="headerlink" title="1.3.1.2 高级用法"></a>1.3.1.2 高级用法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#source和serializers.SerializerMethodField()的用法</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># models.py</span></span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Book</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    title=models.CharField(max_length=<span class="number">32</span>)</span><br><span class="line">    price=models.IntegerField()</span><br><span class="line">    pub_date=models.DateField()</span><br><span class="line">    publish=models.ForeignKey(<span class="string">"Publish"</span>,on_delete=models.CASCADE,null=<span class="literal">True</span>)</span><br><span class="line">    authors=models.ManyToManyField(<span class="string">"Author"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.title</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Publish</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    name=models.CharField(max_length=<span class="number">32</span>)</span><br><span class="line">    email=models.EmailField()</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.name</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Author</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    name=models.CharField(max_length=<span class="number">32</span>)</span><br><span class="line">    age=models.IntegerField()</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.name</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ser.py</span></span><br><span class="line"><span class="keyword">from</span> rest_framework <span class="keyword">import</span> serializers</span><br><span class="line"><span class="keyword">from</span> app01.models <span class="keyword">import</span> Book</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookSerializers</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    id=serializers.CharField(read_only=<span class="literal">True</span>)</span><br><span class="line">    title=serializers.CharField(max_length=<span class="number">32</span>)</span><br><span class="line">    price=serializers.IntegerField()</span><br><span class="line">    pub_date=serializers.DateField()</span><br><span class="line">    <span class="comment"># publish=serializers.CharField(source="publish.name",read_only=True)</span></span><br><span class="line">    publish=serializers.CharField(source=<span class="string">"publish.name"</span>,default=<span class="string">'xxx'</span>)</span><br><span class="line">    <span class="comment">#authors=serializers.CharField(source="authors.all")</span></span><br><span class="line">    authors=serializers.SerializerMethodField(read_only=<span class="literal">True</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_authors</span><span class="params">(self,obj)</span>:</span></span><br><span class="line">        temp=[]</span><br><span class="line">        <span class="keyword">for</span> author <span class="keyword">in</span> obj.authors.all():</span><br><span class="line">            temp.append(author.name)</span><br><span class="line">        <span class="keyword">return</span> temp</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create</span><span class="params">(self, validated_data)</span>:</span></span><br><span class="line">        print(validated_data)</span><br><span class="line">        publish_id=validated_data.get(<span class="string">'publish'</span>).get(<span class="string">'name'</span>)</span><br><span class="line">        print(publish_id)</span><br><span class="line">        <span class="keyword">del</span> validated_data[<span class="string">'publish'</span>]</span><br><span class="line">        <span class="keyword">return</span> Book.objects.create(publish_id=publish_id,**validated_data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, instance, validated_data)</span>:</span></span><br><span class="line">        print(validated_data.get(<span class="string">'aa'</span>))</span><br><span class="line">        instance.title = validated_data.get(<span class="string">'title'</span>, instance.title)</span><br><span class="line">        instance.price = validated_data.get(<span class="string">'price'</span>, instance.price)</span><br><span class="line">        instance.pub_date = validated_data.get(<span class="string">'pub_date'</span>, instance.pub_date)</span><br><span class="line">        print(validated_data.get(<span class="string">'publish'</span>, instance.publish))</span><br><span class="line">        instance.publish_id = validated_data.get(<span class="string">'publish'</span>, instance.publish).get(<span class="string">'name'</span>)</span><br><span class="line">        instance.save()</span><br><span class="line">        <span class="keyword">return</span> instance</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># views.py</span></span><br><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render,HttpResponse</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> models</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.http <span class="keyword">import</span> HttpRequest</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> rest_framework.views <span class="keyword">import</span> APIView</span><br><span class="line"><span class="keyword">from</span> app01.models <span class="keyword">import</span> Book</span><br><span class="line"><span class="keyword">from</span> rest_framework.response <span class="keyword">import</span> Response</span><br><span class="line"><span class="keyword">from</span> app01.ser <span class="keyword">import</span> BookSerializers</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookViewSet</span><span class="params">(APIView)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request,*args,**kwargs)</span>:</span></span><br><span class="line">        book_list=Book.objects.all()</span><br><span class="line">        <span class="comment"># 序列化方式3:</span></span><br><span class="line">        bs=BookSerializers(book_list,many=<span class="literal">True</span>)     <span class="comment">#many=True代表有多条数据，如果只有一条数据，many=False</span></span><br><span class="line">        <span class="keyword">return</span> Response(bs.data)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self,request,*args,**kwargs)</span>:</span></span><br><span class="line"></span><br><span class="line">        bs=BookSerializers(data=request.data)</span><br><span class="line">        bs.is_valid(raise_exception=<span class="literal">True</span>)</span><br><span class="line">        <span class="comment"># print(bs.validated_data)</span></span><br><span class="line">        bs.save()</span><br><span class="line">        <span class="keyword">return</span> Response(bs.data)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookDetailView</span><span class="params">(APIView)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        book_obj=models.Book.objects.filter(pk=pk).first()</span><br><span class="line">        bs=BookSerializers(book_obj,many=<span class="literal">False</span>)</span><br><span class="line">        <span class="keyword">return</span> Response(bs.data)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">put</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        book_obj = models.Book.objects.filter(pk=pk).first()</span><br><span class="line"></span><br><span class="line">        bs=BookSerializers(instance=book_obj,data=request.data,partial=<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">if</span> bs.is_valid():</span><br><span class="line">            bs.save(aa=<span class="string">"lqz"</span>) <span class="comment"># update</span></span><br><span class="line">            <span class="keyword">return</span> Response(bs.data)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> Response(bs.errors)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete</span><span class="params">(self,request,pk)</span>:</span></span><br><span class="line">        models.Book.objects.filter(pk=pk).delete()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Response(<span class="string">""</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># urls.py</span></span><br><span class="line"><span class="keyword">from</span> django.contrib <span class="keyword">import</span> admin</span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">'admin/'</span>, admin.site.urls),</span><br><span class="line">    path(<span class="string">'books/'</span>, views.BookViewSet.as_view()),</span><br><span class="line">    re_path(<span class="string">'books/(?P&lt;pk&gt;\d+)/'</span>, views.BookDetailView.as_view()),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>source 如果是字段，会显示字段，如果是方法，会执行方法，不用加括号（authors=serializers.CharField(source=’authors.all’)）</p>
+<p>如在模型中定义一个方法，直接可以在在source指定执行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserInfo</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    user_type_choices = (</span><br><span class="line">        (<span class="number">1</span>,<span class="string">'普通用户'</span>),</span><br><span class="line">        (<span class="number">2</span>,<span class="string">'VIP'</span>),</span><br><span class="line">        (<span class="number">3</span>,<span class="string">'SVIP'</span>),</span><br><span class="line">    )</span><br><span class="line">    user_type = models.IntegerField(choices=user_type_choices)</span><br><span class="line"></span><br><span class="line">    username = models.CharField(max_length=<span class="number">32</span>,unique=<span class="literal">True</span>)</span><br><span class="line">    password = models.CharField(max_length=<span class="number">64</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#视图</span></span><br><span class="line">ret=models.UserInfo.objects.filter(pk=<span class="number">1</span>).first()</span><br><span class="line">aa=ret.get_user_type_display()</span><br><span class="line"></span><br><span class="line"><span class="comment">#serializer</span></span><br><span class="line">xx=serializers.CharField(source=<span class="string">'get_user_type_display'</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-2-反序列化"><a href="#1-3-2-反序列化" class="headerlink" title="1.3.2  反序列化"></a>1.3.2  反序列化</h3><h4 id="1-3-2-1-数据验证"><a href="#1-3-2-1-数据验证" class="headerlink" title="1.3.2.1 数据验证"></a>1.3.2.1 数据验证</h4><p>使用序列化器进行反序列化时，需要对数据进行验证后，才能获取验证成功的数据或保存成模型类对象。</p>
+<p>在获取反序列化的数据前，必须调用<strong>is_valid()</strong>方法进行验证，验证成功返回True，否则返回False。</p>
+<p>验证失败，可以通过序列化器对象的<strong>errors</strong>属性获取错误信息，返回字典，包含了字段和字段的错误。如果是非字段错误，可以通过修改REST framework配置中的<strong>NON_FIELD_ERRORS_KEY</strong>来控制错误字典中的键名。</p>
+<p>验证成功，可以通过序列化器对象的<strong>validated_data</strong>属性获取数据。</p>
+<p>在定义序列化器时，指明每个字段的序列化类型和选项参数，本身就是一种验证行为。</p>
+<p>如我们前面定义过的BookInfoSerializer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    id = serializers.IntegerField(label=<span class="string">'ID'</span>, read_only=<span class="literal">True</span>)</span><br><span class="line">    btitle = serializers.CharField(label=<span class="string">'名称'</span>, max_length=<span class="number">20</span>)</span><br><span class="line">    bpub_date = serializers.DateField(label=<span class="string">'发布日期'</span>, required=<span class="literal">False</span>)</span><br><span class="line">    bread = serializers.IntegerField(label=<span class="string">'阅读量'</span>, required=<span class="literal">False</span>)</span><br><span class="line">    bcomment = serializers.IntegerField(label=<span class="string">'评论量'</span>, required=<span class="literal">False</span>)</span><br><span class="line">    image = serializers.ImageField(label=<span class="string">'图片'</span>, required=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<p>通过构造序列化器对象，并将要反序列化的数据传递给data构造参数，进而进行验证</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> booktest.serializers <span class="keyword">import</span> BookInfoSerializer</span><br><span class="line">data = &#123;<span class="string">'bpub_date'</span>: <span class="number">123</span>&#125;</span><br><span class="line">serializer = BookInfoSerializer(data=data)</span><br><span class="line">serializer.is_valid()  <span class="comment"># 返回False</span></span><br><span class="line">serializer.errors</span><br><span class="line"><span class="comment"># &#123;'btitle': [ErrorDetail(string='This field is required.', code='required')], 'bpub_date': [ErrorDetail(string='Date has wrong format. Use one of these formats instead: YYYY[-MM[-DD]].', code='invalid')]&#125;</span></span><br><span class="line">serializer.validated_data  <span class="comment"># &#123;&#125;</span></span><br><span class="line"></span><br><span class="line">data = &#123;<span class="string">'btitle'</span>: <span class="string">'python'</span>&#125;</span><br><span class="line">serializer = BookInfoSerializer(data=data)</span><br><span class="line">serializer.is_valid()  <span class="comment"># True</span></span><br><span class="line">serializer.errors  <span class="comment"># &#123;&#125;</span></span><br><span class="line">serializer.validated_data  <span class="comment">#  OrderedDict([('btitle', 'python')])</span></span><br></pre></td></tr></table></figure>
+
+<p>is_valid()方法还可以在验证失败时抛出异常serializers.ValidationError，可以通过传递<strong>raise_exception=True</strong>参数开启，REST framework接收到此异常，会向前端返回HTTP 400 Bad Request响应。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Return a 400 response if the data was invalid.</span></span><br><span class="line">serializer.is_valid(raise_exception=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果觉得这些还不够，需要再补充定义验证行为，可以使用以下三种方法：</p>
+<h5 id="1-validate-字段名"><a href="#1-validate-字段名" class="headerlink" title="1) validate_字段名"></a>1) validate_字段名</h5><p>对<code>&lt;field_name&gt;</code>字段进行验证，如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">validate_btitle</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'django'</span> <span class="keyword">not</span> <span class="keyword">in</span> value.lower():</span><br><span class="line">            <span class="keyword">raise</span> serializers.ValidationError(<span class="string">"图书不是关于Django的"</span>)</span><br><span class="line">        <span class="keyword">return</span> value</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> booktest.serializers <span class="keyword">import</span> BookInfoSerializer</span><br><span class="line">data = &#123;<span class="string">'btitle'</span>: <span class="string">'python'</span>&#125;</span><br><span class="line">serializer = BookInfoSerializer(data=data)</span><br><span class="line">serializer.is_valid()  <span class="comment"># False   </span></span><br><span class="line">serializer.errors</span><br><span class="line"><span class="comment">#  &#123;'btitle': [ErrorDetail(string='图书不是关于Django的', code='invalid')]&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="2-validate"><a href="#2-validate" class="headerlink" title="2) validate"></a>2) validate</h5><p>在序列化器中需要同时对多个字段进行比较验证时，可以定义validate方法来验证，如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">validate</span><span class="params">(self, attrs)</span>:</span></span><br><span class="line">        bread = attrs[<span class="string">'bread'</span>]</span><br><span class="line">        bcomment = attrs[<span class="string">'bcomment'</span>]</span><br><span class="line">        <span class="keyword">if</span> bread &lt; bcomment:</span><br><span class="line">            <span class="keyword">raise</span> serializers.ValidationError(<span class="string">'阅读量小于评论量'</span>)</span><br><span class="line">        <span class="keyword">return</span> attrs</span><br></pre></td></tr></table></figure>
+
+<p>测试</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> booktest.serializers <span class="keyword">import</span> BookInfoSerializer</span><br><span class="line">data = &#123;<span class="string">'btitle'</span>: <span class="string">'about django'</span>, <span class="string">'bread'</span>: <span class="number">10</span>, <span class="string">'bcomment'</span>: <span class="number">20</span>&#125;</span><br><span class="line">s = BookInfoSerializer(data=data)</span><br><span class="line">s.is_valid()  <span class="comment"># False</span></span><br><span class="line">s.errors</span><br><span class="line"><span class="comment">#  &#123;'non_field_errors': [ErrorDetail(string='阅读量小于评论量', code='invalid')]&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="3-validators"><a href="#3-validators" class="headerlink" title="3) validators"></a>3) validators</h5><p>在字段中添加validators选项参数，也可以补充验证行为，如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">about_django</span><span class="params">(value)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> <span class="string">'django'</span> <span class="keyword">not</span> <span class="keyword">in</span> value.lower():</span><br><span class="line">        <span class="keyword">raise</span> serializers.ValidationError(<span class="string">"图书不是关于Django的"</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    id = serializers.IntegerField(label=<span class="string">'ID'</span>, read_only=<span class="literal">True</span>)</span><br><span class="line">    btitle = serializers.CharField(label=<span class="string">'名称'</span>, max_length=<span class="number">20</span>, validators=[about_django])</span><br><span class="line">    bpub_date = serializers.DateField(label=<span class="string">'发布日期'</span>, required=<span class="literal">False</span>)</span><br><span class="line">    bread = serializers.IntegerField(label=<span class="string">'阅读量'</span>, required=<span class="literal">False</span>)</span><br><span class="line">    bcomment = serializers.IntegerField(label=<span class="string">'评论量'</span>, required=<span class="literal">False</span>)</span><br><span class="line">    image = serializers.ImageField(label=<span class="string">'图片'</span>, required=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> booktest.serializers <span class="keyword">import</span> BookInfoSerializer</span><br><span class="line">data = &#123;<span class="string">'btitle'</span>: <span class="string">'python'</span>&#125;</span><br><span class="line">serializer = BookInfoSerializer(data=data)</span><br><span class="line">serializer.is_valid()  <span class="comment"># False   </span></span><br><span class="line">serializer.errors</span><br><span class="line"><span class="comment">#  &#123;'btitle': [ErrorDetail(string='图书不是关于Django的', code='invalid')]&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-3-2-2-反序列化-保存数据"><a href="#1-3-2-2-反序列化-保存数据" class="headerlink" title="1.3.2.2  反序列化-保存数据"></a>1.3.2.2  反序列化-保存数据</h4><p>前面的验证数据成功后,我们可以使用序列化器来完成数据反序列化的过程.这个过程可以把数据转成模型类对象.</p>
+<p>可以通过实现create()和update()两个方法来实现。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create</span><span class="params">(self, validated_data)</span>:</span></span><br><span class="line">        <span class="string">"""新建"""</span></span><br><span class="line">        <span class="keyword">return</span> BookInfo(**validated_data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, instance, validated_data)</span>:</span></span><br><span class="line">        <span class="string">"""更新，instance为要更新的对象实例"""</span></span><br><span class="line">        instance.btitle = validated_data.get(<span class="string">'btitle'</span>, instance.btitle)</span><br><span class="line">        instance.bpub_date = validated_data.get(<span class="string">'bpub_date'</span>, instance.bpub_date)</span><br><span class="line">        instance.bread = validated_data.get(<span class="string">'bread'</span>, instance.bread)</span><br><span class="line">        instance.bcomment = validated_data.get(<span class="string">'bcomment'</span>, instance.bcomment)</span><br><span class="line">        <span class="keyword">return</span> instance</span><br></pre></td></tr></table></figure>
+
+<p>如果需要在返回数据对象的时候，也将数据保存到数据库中，则可以进行如下修改</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.Serializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">create</span><span class="params">(self, validated_data)</span>:</span></span><br><span class="line">        <span class="string">"""新建"""</span></span><br><span class="line">        <span class="keyword">return</span> BookInfo.objects.create(**validated_data)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">update</span><span class="params">(self, instance, validated_data)</span>:</span></span><br><span class="line">        <span class="string">"""更新，instance为要更新的对象实例"""</span></span><br><span class="line">        instance.btitle = validated_data.get(<span class="string">'btitle'</span>, instance.btitle)</span><br><span class="line">        instance.bpub_date = validated_data.get(<span class="string">'bpub_date'</span>, instance.bpub_date)</span><br><span class="line">        instance.bread = validated_data.get(<span class="string">'bread'</span>, instance.bread)</span><br><span class="line">        instance.bcomment = validated_data.get(<span class="string">'bcomment'</span>, instance.bcomment)</span><br><span class="line">        instance.save()</span><br><span class="line">        <span class="keyword">return</span> instance</span><br></pre></td></tr></table></figure>
+
+<p>实现了上述两个方法后，在反序列化数据的时候，就可以通过save()方法返回一个数据对象实例了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">book = serializer.save()</span><br></pre></td></tr></table></figure>
+
+<p>如果创建序列化器对象的时候，没有传递instance实例，则调用save()方法的时候，create()被调用，相反，如果传递了instance实例，则调用save()方法的时候，update()被调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> db.serializers <span class="keyword">import</span> BookInfoSerializer</span><br><span class="line">data = &#123;<span class="string">'btitle'</span>: <span class="string">'封神演义'</span>&#125;</span><br><span class="line">serializer = BookInfoSerializer(data=data)</span><br><span class="line">serializer.is_valid()  <span class="comment"># True</span></span><br><span class="line">serializer.save()  <span class="comment"># &lt;BookInfo: 封神演义&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> db.models <span class="keyword">import</span> BookInfo</span><br><span class="line">book = BookInfo.objects.get(id=<span class="number">2</span>)</span><br><span class="line">data = &#123;<span class="string">'btitle'</span>: <span class="string">'倚天剑'</span>&#125;</span><br><span class="line">serializer = BookInfoSerializer(book, data=data)</span><br><span class="line">serializer.is_valid()  <span class="comment"># True</span></span><br><span class="line">serializer.save()  <span class="comment"># &lt;BookInfo: 倚天剑&gt;</span></span><br><span class="line">book.btitle  <span class="comment"># '倚天剑'</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-3-2-3-附加说明"><a href="#1-3-2-3-附加说明" class="headerlink" title="1.3.2.3 附加说明"></a>1.3.2.3 附加说明</h4><p>1） 在对序列化器进行save()保存时，可以额外传递数据，这些数据可以在create()和update()中的validated_data参数获取到</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># request.user 是django中记录当前登录用户的模型对象</span></span><br><span class="line">serializer.save(owner=request.user)</span><br></pre></td></tr></table></figure>
+
+<p>2）默认序列化器必须传递所有required的字段，否则会抛出验证异常。但是我们可以使用partial参数来允许部分字段更新</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Update `comment` with partial data</span></span><br><span class="line">serializer = CommentSerializer(comment, data=&#123;<span class="string">'content'</span>: <span class="string">u'foo bar'</span>&#125;, partial=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="1-3-3-模型类序列化器"><a href="#1-3-3-模型类序列化器" class="headerlink" title="1.3.3 模型类序列化器"></a>1.3.3 模型类序列化器</h3><p>如果我们想要使用序列化器对应的是Django的模型类，DRF为我们提供了ModelSerializer模型类序列化器来帮助我们快速创建一个Serializer类。</p>
+<p>ModelSerializer与常规的Serializer相同，但提供了：</p>
+<ul>
+<li>基于模型类自动生成一系列字段</li>
+<li>基于模型类自动为Serializer生成validators，比如unique_together</li>
+<li>包含默认的create()和update()的实现</li>
+</ul>
+<h4 id="1-3-3-1-定义"><a href="#1-3-3-1-定义" class="headerlink" title="1.3.3.1 定义"></a>1.3.3.1 定义</h4><p>比如我们创建一个BookInfoSerializer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = BookInfo</span><br><span class="line">        fields = <span class="string">'__all__'</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>model 指明参照哪个模型类</li>
+<li>fields 指明为模型类的哪些字段生成</li>
+</ul>
+<p>我们可以在python manage.py shell中查看自动生成的BookInfoSerializer的具体实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> booktest.serializers <span class="keyword">import</span> BookInfoSerializer</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>serializer = BookInfoSerializer()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>serializer</span><br><span class="line">BookInfoSerializer():</span><br><span class="line">    id = IntegerField(label=<span class="string">'ID'</span>, read_only=<span class="literal">True</span>)</span><br><span class="line">    btitle = CharField(label=<span class="string">'名称'</span>, max_length=<span class="number">20</span>)</span><br><span class="line">    bpub_date = DateField(allow_null=<span class="literal">True</span>, label=<span class="string">'发布日期'</span>, required=<span class="literal">False</span>)</span><br><span class="line">    bread = IntegerField(label=<span class="string">'阅读量'</span>, max_value=<span class="number">2147483647</span>, min_value=<span class="number">-2147483648</span>, required=<span class="literal">False</span>)</span><br><span class="line">    bcomment = IntegerField(label=<span class="string">'评论量'</span>, max_value=<span class="number">2147483647</span>, min_value=<span class="number">-2147483648</span>, required=<span class="literal">False</span>)</span><br><span class="line">    image = ImageField(allow_null=<span class="literal">True</span>, label=<span class="string">'图片'</span>, max_length=<span class="number">100</span>, required=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-3-2-指定字段"><a href="#1-3-3-2-指定字段" class="headerlink" title="1.3.3.2 指定字段"></a>1.3.3.2 指定字段</h4><p>1) 使用<strong>fields</strong>来明确字段，<code>__all__</code>表名包含所有字段，也可以写明具体哪些字段，如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = BookInfo</span><br><span class="line">        fields = (<span class="string">'id'</span>, <span class="string">'btitle'</span>, <span class="string">'bpub_date'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>2) 使用<strong>exclude</strong>可以明确排除掉哪些字段</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = BookInfo</span><br><span class="line">        exclude = (<span class="string">'image'</span>,)</span><br></pre></td></tr></table></figure>
+
+<p>3) 显示指明字段，如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HeroInfoSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    hbook = BookInfoSerializer()</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = HeroInfo</span><br><span class="line">        fields = (<span class="string">'id'</span>, <span class="string">'hname'</span>, <span class="string">'hgender'</span>, <span class="string">'hcomment'</span>, <span class="string">'hbook'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>4) 指明只读字段</p>
+<p>可以通过<strong>read_only_fields</strong>指明只读字段，即仅用于序列化输出的字段</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = BookInfo</span><br><span class="line">        fields = (<span class="string">'id'</span>, <span class="string">'btitle'</span>, <span class="string">'bpub_date'</span>， <span class="string">'bread'</span>, <span class="string">'bcomment'</span>)</span><br><span class="line">        read_only_fields = (<span class="string">'id'</span>, <span class="string">'bread'</span>, <span class="string">'bcomment'</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-3-3-3-添加额外参数选项"><a href="#1-3-3-3-添加额外参数选项" class="headerlink" title="1.3.3.3 添加额外参数选项"></a>1.3.3.3 添加额外参数选项</h4><p>我们可以使用<strong>extra_kwargs</strong>参数为ModelSerializer添加或修改原有的选项参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BookInfoSerializer</span><span class="params">(serializers.ModelSerializer)</span>:</span></span><br><span class="line">    <span class="string">"""图书数据序列化器"""</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        model = BookInfo</span><br><span class="line">        fields = (<span class="string">'id'</span>, <span class="string">'btitle'</span>, <span class="string">'bpub_date'</span>, <span class="string">'bread'</span>, <span class="string">'bcomment'</span>)</span><br><span class="line">        extra_kwargs = &#123;</span><br><span class="line">            <span class="string">'bread'</span>: &#123;<span class="string">'min_value'</span>: <span class="number">0</span>, <span class="string">'required'</span>: <span class="literal">True</span>&#125;,</span><br><span class="line">            <span class="string">'bcomment'</span>: &#123;<span class="string">'min_value'</span>: <span class="number">0</span>, <span class="string">'required'</span>: <span class="literal">True</span>&#125;,</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># BookInfoSerializer():</span></span><br><span class="line"><span class="comment">#    id = IntegerField(label='ID', read_only=True)</span></span><br><span class="line"><span class="comment">#    btitle = CharField(label='名称', max_length=20)</span></span><br><span class="line"><span class="comment">#    bpub_date = DateField(allow_null=True, label='发布日期', required=False)</span></span><br><span class="line"><span class="comment">#    bread = IntegerField(label='阅读量', max_value=2147483647, min_value=0, required=True)</span></span><br><span class="line"><span class="comment">#    bcomment = IntegerField(label='评论量', max_value=2147483647, min_value=0, required=True)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-4-局部全局校验源码分析"><a href="#1-4-局部全局校验源码分析" class="headerlink" title="1.4 局部全局校验源码分析"></a>1.4 局部全局校验源码分析</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#is_valid----&gt;self.run_validation-(执行Serializer的run_validation)--&gt;self.to_internal_value(data)---（执行Serializer的run_validation：485行）</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gghkhucudgj315w0rmqv5.jpg" alt="image-20200706212122698"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gghkj4qalrj31yg0qo1kz.jpg" alt="image-20200706212239321"></p>
+<h2 id="1-5-序列化组件源码分析"><a href="#1-5-序列化组件源码分析" class="headerlink" title="1.5 序列化组件源码分析"></a>1.5 序列化组件源码分析</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">序列化组件，先调用__new__方法，如果many=<span class="literal">True</span>，生成ListSerializer对象，如果为<span class="literal">False</span>，生成Serializer对象</span><br><span class="line">序列化对象.data方法--调用父类data方法---调用对象自己的to_representation（自定义的序列化类无此方法，去父类找）</span><br><span class="line">Aerializer类里有to_representation方法，<span class="keyword">for</span>循环执行attribute = field.get_attribute(instance)</span><br><span class="line">再去Field类里去找get_attribute方法，self.source_attrs就是被切分的source，然后执行get_attribute方法，source_attrs</span><br><span class="line">当参数传过去，判断是方法就加括号执行，是属性就把值取出来</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django-rest-framework%E6%A1%86%E6%9E%B6/1-drf-drf%E5%85%A5%E9%97%A8%E8%A7%84%E8%8C%83/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django-rest-framework框架/1-drf-drf入门规范
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django-rest-framework%E6%A1%86%E6%9E%B6/6-drf-%E8%AE%A4%E8%AF%81%E6%9D%83%E9%99%90%E9%A2%91%E7%8E%87/">
+        
+          python/Django-rest-framework框架/6-drf-认证权限频率
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一-序列化器-Serializer"><span class="toc-nav-text">一 序列化器-Serializer</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-定义序列化器"><span class="toc-nav-text">1.1 定义序列化器</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-创建Serializer对象"><span class="toc-nav-text">1.2 创建Serializer对象</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-3-序列化器的使用"><span class="toc-nav-text">1.3 序列化器的使用</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-1-序列化"><span class="toc-nav-text">1.3.1 序列化</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-1-1-基本使用"><span class="toc-nav-text">1.3.1.1 基本使用</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-1-2-高级用法"><span class="toc-nav-text">1.3.1.2 高级用法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-2-反序列化"><span class="toc-nav-text">1.3.2  反序列化</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-2-1-数据验证"><span class="toc-nav-text">1.3.2.1 数据验证</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#1-validate-字段名"><span class="toc-nav-text">1) validate_字段名</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#2-validate"><span class="toc-nav-text">2) validate</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#3-validators"><span class="toc-nav-text">3) validators</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-2-2-反序列化-保存数据"><span class="toc-nav-text">1.3.2.2  反序列化-保存数据</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-2-3-附加说明"><span class="toc-nav-text">1.3.2.3 附加说明</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-3-模型类序列化器"><span class="toc-nav-text">1.3.3 模型类序列化器</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-3-1-定义"><span class="toc-nav-text">1.3.3.1 定义</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-3-2-指定字段"><span class="toc-nav-text">1.3.3.2 指定字段</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-3-3-添加额外参数选项"><span class="toc-nav-text">1.3.3.3 添加额外参数选项</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-4-局部全局校验源码分析"><span class="toc-nav-text">1.4 局部全局校验源码分析</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-5-序列化组件源码分析"><span class="toc-nav-text">1.5 序列化组件源码分析</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django-rest-framework框架/2-drf-序列化组件/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django-rest-framework框架/2-drf-序列化组件",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Elasticsearch系列/9-11文档操作/16-Elasticsearch for Python之操作 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Elasticsearch系列/9-11文档操作/16-Elasticsearch for Python之操作</h2>
+
+
+
+  <p class="post-date">2020-03-10</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="16-Elasticsearch-for-Python之操作"><a href="#16-Elasticsearch-for-Python之操作" class="headerlink" title="16-Elasticsearch for Python之操作"></a>16-Elasticsearch for Python之操作</h1><h2 id="一-前言"><a href="#一-前言" class="headerlink" title="一 前言"></a>一 前言</h2><p>Python中关于elasticsearch的操作，主要集中一下几个方面：</p>
+<ul>
+<li>结果过滤，对于返回结果做过滤，主要是优化返回内容。</li>
+<li>Elasticsearch（简称es），直接操作elasticsearch对象，处理一些简单的索引信息。一下几个方面都是建立在es对象的基础上。</li>
+<li>Indices，关于索引的细节操作，比如创建自定义的<code>mappings</code>。</li>
+<li>Cluster，关于集群的相关操作。</li>
+<li>Nodes，关于节点的相关操作。</li>
+<li>Cat API，换一种查询方式，一般的返回都是json类型的，cat提供了简洁的返回结果。</li>
+<li>Snapshot，快照相关，快照是从正在运行的Elasticsearch集群中获取的备份。我们可以拍摄单个索引或整个群集的快照，并将其存储在共享文件系统的存储库中，并且有一些插件支持S3，HDFS，Azure，Google云存储等上的远程存储库。</li>
+<li>Task Management API，任务管理API是新的，仍应被视为测试版功能。API可能以不向后兼容的方式更改。</li>
+</ul>
+<h2 id="二-结果过滤"><a href="#二-结果过滤" class="headerlink" title="二 结果过滤"></a>二 结果过滤</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.search(index&#x3D;&#39;py2&#39;, filter_path&#x3D;[&#39;hits.total&#39;, &#39;hits.hits._source&#39;]))    # 可以省略type类型</span><br><span class="line">print(es.search(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;))        # 可以指定type类型</span><br><span class="line">print(es.search(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;, filter_path&#x3D;[&#39;hits.total&#39;]))</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>filter_path</code>参数用于减少elasticsearch返回的响应，比如仅返回<code>hits.total</code>和<code>hits.hits._source</code>内容。</strong><br> 除此之外，<code>filter_path</code>参数还支持<code>*</code>通配符以匹配字段名称、任何字段或者字段部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(es.search(index&#x3D;&#39;py2&#39;, filter_path&#x3D;[&#39;hits.*&#39;]))</span><br><span class="line">print(es.search(index&#x3D;&#39;py2&#39;, filter_path&#x3D;[&#39;hits.hits._*&#39;]))</span><br><span class="line">print(es.search(index&#x3D;&#39;py2&#39;, filter_path&#x3D;[&#39;hits.to*&#39;]))  # 仅返回响应数据的total</span><br><span class="line">print(es.search(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;, filter_path&#x3D;[&#39;hits.hits._*&#39;]))        # 可以加上可选的type类型</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-Elasticsearch（es对象）"><a href="#三-Elasticsearch（es对象）" class="headerlink" title="三 Elasticsearch（es对象）"></a>三 Elasticsearch（es对象）</h2><ul>
+<li><strong>es.index，向指定索引添加或更新文档，如果索引不存在，首先会创建该索引，然后再执行添加或者更新操作。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># print(es.index(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;&#39;4&#39;, body&#x3D;&#123;&quot;name&quot;:&quot;可可&quot;, &quot;age&quot;: 18&#125;))    # 正常</span><br><span class="line"># print(es.index(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;5, body&#x3D;&#123;&quot;name&quot;:&quot;卡卡西&quot;, &quot;age&quot;:22&#125;))     # 正常</span><br><span class="line"># print(es.index(index&#x3D;&#39;w2&#39;, id&#x3D;6, body&#x3D;&#123;&quot;name&quot;: &quot;鸣人&quot;, &quot;age&quot;: 22&#125;))  # 会报错，TypeError: index() missing 1 required positional argument: &#39;doc_type&#39;</span><br><span class="line">print(es.index(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;&#123;&quot;name&quot;: &quot;鸣人&quot;, &quot;age&quot;: 22&#125;))  # 可以不指定id，默认生成一个id</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.get，查询索引中指定文档。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.get(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;5))  # 正常</span><br><span class="line">print(es.get(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;))  # TypeError: get() missing 1 required positional argument: &#39;id&#39;</span><br><span class="line">print(es.get(index&#x3D;&#39;w2&#39;,  id&#x3D;5))  # TypeError: get() missing 1 required positional argument: &#39;doc_type&#39;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.search，执行搜索查询并获取与查询匹配的搜索匹配。这个用的最多，可以跟复杂的查询条件。<ul>
+<li><code>index</code>要搜索的以逗号分隔的索引名称列表; 使用_all 或空字符串对所有索引执行操作。</li>
+<li><code>doc_type</code> 要搜索的以逗号分隔的文档类型列表; 留空以对所有类型执行操作。</li>
+<li><code>body</code> 使用Query DSL（QueryDomain Specific Language查询表达式）的搜索定义。</li>
+<li><code>_source</code> 返回<code>_source</code>字段的true或false，或返回的字段列表，返回指定字段。</li>
+<li><code>_source_exclude</code>要从返回的<code>_source</code>字段中排除的字段列表，返回的所有字段中，排除哪些字段。</li>
+<li><code>_source_include</code>从<code>_source</code>字段中提取和返回的字段列表，跟<code>_source</code>差不多。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(es.search(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;&#123;&quot;query&quot;: &#123;&quot;match&quot;:&#123;&quot;age&quot;: 20&#125;&#125;&#125;))  # 一般查询</span><br><span class="line">print(es.search(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;&#123;&quot;query&quot;: &#123;&quot;match&quot;:&#123;&quot;age&quot;: 19&#125;&#125;&#125;,_source&#x3D;[&#39;name&#39;, &#39;age&#39;]))  # 结果字段过滤</span><br><span class="line">print(es.search(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;&#123;&quot;query&quot;: &#123;&quot;match&quot;:&#123;&quot;age&quot;: 19&#125;&#125;&#125;,_source_exclude  &#x3D;[ &#39;age&#39;]))</span><br><span class="line">print(es.search(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;&#123;&quot;query&quot;: &#123;&quot;match&quot;:&#123;&quot;age&quot;: 19&#125;&#125;&#125;,_source_include &#x3D;[ &#39;age&#39;]))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.get_source，通过索引、类型和ID获取文档的来源，其实，直接返回想要的字典。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.get_source(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;&#39;1&#39;))  # &#123;&#39;name&#39;: &#39;王五&#39;, &#39;age&#39;: 19&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.count，执行查询并获取该查询的匹配数。比如查询年龄是18的文档。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">body &#x3D; &#123;</span><br><span class="line">    &quot;query&quot;: &#123;</span><br><span class="line">        &quot;match&quot;: &#123;</span><br><span class="line">            &quot;age&quot;: 18</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">print(es.count(index&#x3D;&#39;py2&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;body))  # &#123;&#39;count&#39;: 1, &#39;_shards&#39;: &#123;&#39;total&#39;: 5, &#39;successful&#39;: 5, &#39;skipped&#39;: 0, &#39;failed&#39;: 0&#125;&#125;</span><br><span class="line">print(es.count(index&#x3D;&#39;py2&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;body)[&#39;count&#39;])  # 1</span><br><span class="line">print(es.count(index&#x3D;&#39;w2&#39;))  # &#123;&#39;count&#39;: 6, &#39;_shards&#39;: &#123;&#39;total&#39;: 5, &#39;successful&#39;: 5, &#39;skipped&#39;: 0, &#39;failed&#39;: 0&#125;&#125;</span><br><span class="line">print(es.count(index&#x3D;&#39;w2&#39;, doc_type&#x3D;&#39;doc&#39;))  # &#123;&#39;count&#39;: 6, &#39;_shards&#39;: &#123;&#39;total&#39;: 5, &#39;successful&#39;: 5, &#39;skipped&#39;: 0, &#39;failed&#39;: 0&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.create，创建索引（索引不存在的话）并新增一条数据，索引存在仅新增（只能新增，重复执行会报错）。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.create(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;&#39;1&#39;, body&#x3D;&#123;&quot;name&quot;: &#39;王五&#39;, &quot;age&quot;: 20&#125;))</span><br><span class="line">print(es.get(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;&#39;3&#39;))</span><br></pre></td></tr></table></figure>
+
+<p>在内部，调用了index，等价于：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.index(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;&#39;4&#39;, body&#x3D;&#123;&quot;name&quot;: &quot;麻子&quot;, &quot;age&quot;: 21&#125;))</span><br></pre></td></tr></table></figure>
+
+<p>但个人觉得没有index好用！</p>
+<ul>
+<li><strong>es.delete，删除指定的文档。比如删除文章id为<code>4</code>的文档，但不能删除索引，如果想要删除索引，还需要es.indices.delete来处理</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.delete(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;&#39;4&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.delete_by_query，删除与查询匹配的所有文档。<ul>
+<li><code>index</code> 要搜索的以逗号分隔的索引名称列表; 使用_all 或空字符串对所有索引执行操作。</li>
+<li><code>doc_type</code> 要搜索的以逗号分隔的文档类型列表; 留空以对所有类型执行操作。</li>
+<li><code>body</code>使用Query DSL的搜索定义。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.delete_by_query(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, body&#x3D;&#123;&quot;query&quot;: &#123;&quot;match&quot;:&#123;&quot;age&quot;: 20&#125;&#125;&#125;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.exists，查询elasticsearch中是否存在指定的文档，返回一个布尔值。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.exists(index&#x3D;&#39;py3&#39;, doc_type&#x3D;&#39;doc&#39;, id&#x3D;&#39;1&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.info，获取当前集群的基本信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.info())</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.ping，如果群集已启动，则返回True，否则返回False。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.ping())</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-Indices（es-indices）"><a href="#四-Indices（es-indices）" class="headerlink" title="四 Indices（es.indices）"></a>四 Indices（es.indices）</h2><ul>
+<li><strong>es.indices.create，在Elasticsearch中创建索引，用的最多。</strong>比如创建一个严格模式、有4个字段、并为<code>title</code>字段指定<code>ik_max_word</code>查询粒度的<code>mappings</code>。并应用到<code>py4</code>索引中。这也是常用的创建自定义索引的方式。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">body &#x3D; &#123;</span><br><span class="line">    &quot;mappings&quot;: &#123;</span><br><span class="line">        &quot;doc&quot;: &#123;</span><br><span class="line">            &quot;dynamic&quot;: &quot;strict&quot;,</span><br><span class="line">            &quot;properties&quot;: &#123;</span><br><span class="line">                &quot;title&quot;: &#123;</span><br><span class="line">                    &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">                    &quot;analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;url&quot;: &#123;</span><br><span class="line">                    &quot;type&quot;: &quot;text&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;action_type&quot;: &#123;</span><br><span class="line">                    &quot;type&quot;: &quot;text&quot;</span><br><span class="line">                &#125;,</span><br><span class="line">                &quot;content&quot;: &#123;</span><br><span class="line">                    &quot;type&quot;: &quot;text&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">es.indices.create(&#39;py4&#39;, body&#x3D;body)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.indices.analyze，返回分词结果。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">es.indices.analyze(body&#x3D;&#123;&#39;analyzer&#39;: &quot;ik_max_word&quot;, &quot;text&quot;: &quot;皮特和茱丽当选“年度模范情侣”Brad Pitt and Angelina Jolie&quot;&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.indices.delete，在Elasticsearch中删除索引。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.delete(index&#x3D;&#39;py4&#39;))</span><br><span class="line">print(es.indices.delete(index&#x3D;&#39;w3&#39;))    # &#123;&#39;acknowledged&#39;: True&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.indices.put_alias，为一个或多个索引创建别名，查询多个索引的时候，可以使用这个别名。<ul>
+<li><code>index</code> 别名应指向的逗号分隔的索引名称列表（支持通配符），使用_all对所有索引执行操作。</li>
+<li><code>name</code>要创建或更新的别名的名称。</li>
+<li><code>body</code>别名的设置，例如路由或过滤器。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.put_alias(index&#x3D;&#39;py4&#39;, name&#x3D;&#39;py4_alias&#39;))  # 为单个索引创建别名</span><br><span class="line">print(es.indices.put_alias(index&#x3D;[&#39;py3&#39;, &#39;py2&#39;], name&#x3D;&#39;py23_alias&#39;))  # 为多个索引创建同一个别名，联查用</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.indices.delete_alias，删除一个或多个别名。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.delete_alias(index&#x3D;&#39;alias1&#39;))</span><br><span class="line">print(es.indices.delete_alias(index&#x3D;[&#39;alias1, alias2&#39;]))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.indices.get_mapping，检索索引或索引/类型的映射定义。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.get_mapping(index&#x3D;&#39;py4&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.indices.get_settings，检索一个或多个（或所有）索引的设置。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.get_settings(index&#x3D;&#39;py4&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.indices.get，允许检索有关一个或多个索引的信息。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.get(index&#x3D;&#39;py2&#39;))    # 查询指定索引是否存在</span><br><span class="line">print(es.indices.get(index&#x3D;[&#39;py2&#39;, &#39;py3&#39;]))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>es.indices.get_alias，检索一个或多个别名。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.get_alias(index&#x3D;&#39;py2&#39;))</span><br><span class="line">print(es.indices.get_alias(index&#x3D;[&#39;py2&#39;, &#39;py3&#39;]))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.indices.get_field_mapping，检索特定字段的映射信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.indices.get_field_mapping(fields&#x3D;&#39;url&#39;, index&#x3D;&#39;py4&#39;, doc_type&#x3D;&#39;doc&#39;))</span><br><span class="line">print(es.indices.get_field_mapping(fields&#x3D;[&#39;url&#39;, &#39;title&#39;], index&#x3D;&#39;py4&#39;, doc_type&#x3D;&#39;doc&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.indices.delete_alias，删除特定别名。</li>
+<li>es.indices.exists，返回一个布尔值，指示给定的索引是否存在。</li>
+<li>es.indices.exists_type，检查索引/索引中是否存在类型/类型。</li>
+<li>es.indices.flus，明确的刷新一个或多个索引。</li>
+<li>es.indices.get_field_mapping，检索特定字段的映射。</li>
+<li>es.indices.get_template，按名称检索索引模板。</li>
+<li>es.indices.open，打开一个封闭的索引以使其可用于搜索。</li>
+<li>es.indices.close，关闭索引以从群集中删除它的开销。封闭索引被阻止进行读/写操作。</li>
+<li>es.indices.clear_cache，清除与一个或多个索引关联的所有缓存或特定缓存。</li>
+<li>es.indices.put_alias，为特定索引/索引创建别名。</li>
+<li>es.indices.get_uprade，监控一个或多个索引的升级程度。</li>
+<li>es.indices.put_mapping，注册特定类型的特定映射定义。</li>
+<li>es.indices.put_settings，实时更改特定索引级别设置。</li>
+<li>es.indices.put_template，创建一个索引模板，该模板将自动应用于创建的新索引。</li>
+<li>es.indices.rollove，当现有索引被认为太大或太旧时，翻转索引API将别名转移到新索引。API接受单个别名和条件列表。别名必须仅指向单个索引。如果索引满足指定条件，则创建新索引并切换别名以指向新别名。</li>
+<li>es.indices.segments，提供构建Lucene索引（分片级别）的低级别段信息。</li>
+</ul>
+<h2 id="五-Cluster（集群相关）"><a href="#五-Cluster（集群相关）" class="headerlink" title="五 Cluster（集群相关）"></a>五 Cluster（集群相关）</h2><ul>
+<li>es.cluster.get_settigns，获取集群设置。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.cluster.get_settings())</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cluster.health，获取有关群集运行状况的非常简单的状态。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.cluster.health())</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cluster.state，获取整个集群的综合状态信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.cluster.state())</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cluster.stats，返回群集的当前节点的信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.cluster.stats())</span><br></pre></td></tr></table></figure>
+
+<h2 id="六-Node（节点相关）"><a href="#六-Node（节点相关）" class="headerlink" title="六 Node（节点相关）"></a>六 Node（节点相关）</h2><ul>
+<li>es.nodes.info，返回集群中节点的信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.nodes.info())  # 返回所节点</span><br><span class="line">print(es.nodes.info(node_id&#x3D;&#39;node1&#39;))   # 指定一个节点</span><br><span class="line">print(es.nodes.info(node_id&#x3D;[&#39;node1&#39;, &#39;node2&#39;]))   # 指定多个节点列表</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.nodes.stats，获取集群中节点统计信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.nodes.stats())</span><br><span class="line">print(es.nodes.stats(node_id&#x3D;&#39;node1&#39;))</span><br><span class="line">print(es.nodes.stats(node_id&#x3D;[&#39;node1&#39;, &#39;node2&#39;]))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.nodes.hot_threads，获取指定节点的线程信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.nodes.hot_threads(node_id&#x3D;&#39;node1&#39;))</span><br><span class="line">print(es.nodes.hot_threads(node_id&#x3D;[&#39;node1&#39;, &#39;node2&#39;]))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.nodes.usage，获取集群中节点的功能使用信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.nodes.usage())</span><br><span class="line">print(es.nodes.usage(node_id&#x3D;&#39;node1&#39;))</span><br><span class="line">print(es.nodes.usage(node_id&#x3D;[&#39;node1&#39;, &#39;node2&#39;]))</span><br></pre></td></tr></table></figure>
+
+<h2 id="七-Cat（一种查询方式）"><a href="#七-Cat（一种查询方式）" class="headerlink" title="七 Cat（一种查询方式）"></a>七 Cat（一种查询方式）</h2><ul>
+<li>es.cat.aliases，返回别名信息。<ul>
+<li><code>name</code>要返回的以逗号分隔的别名列表。</li>
+<li><code>format</code>Accept标头的简短版本，例如json，yaml</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.aliases(name&#x3D;&#39;py23_alias&#39;))</span><br><span class="line">print(es.cat.aliases(name&#x3D;&#39;py23_alias&#39;, format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.allocation，返回分片使用情况。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.allocation())</span><br><span class="line">print(es.cat.allocation(node_id&#x3D;[&#39;node1&#39;]))</span><br><span class="line">print(es.cat.allocation(node_id&#x3D;[&#39;node1&#39;, &#39;node2&#39;], format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.count，Count提供对整个群集或单个索引的文档计数的快速访问。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.count())  # 集群内的文档总数</span><br><span class="line">print(es.cat.count(index&#x3D;&#39;py3&#39;))  # 指定索引文档总数</span><br><span class="line">print(es.cat.count(index&#x3D;[&#39;py3&#39;, &#39;py2&#39;], format&#x3D;&#39;json&#39;))  # 返回两个索引文档和</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.fielddata，基于每个节点显示有关当前加载的fielddata的信息。有些数据为了查询效率，会放在内存中，fielddata用来控制哪些数据应该被放在内存中，而这个<code>es.cat.fielddata</code>则查询现在哪些数据在内存中，数据大小等信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.fielddata())</span><br><span class="line">print(es.cat.fielddata(format&#x3D;&#39;json&#39;, bytes&#x3D;&#39;b&#39;))</span><br></pre></td></tr></table></figure>
+
+<p><code>bytes</code>显示字节值的单位，有效选项为：<code>&#39;b&#39;，&#39;k&#39;，&#39;kb&#39;，&#39;m&#39;，&#39;mb&#39;，&#39;g&#39;，&#39;gb&#39;，&#39;t&#39;，&#39;tb&#39; ，&#39;p&#39;，&#39;pb&#39;</code><br> <code>format</code>Accept标头的简短版本，例如json，yaml</p>
+<ul>
+<li>es.cat.health，从集群中<code>health</code>里面过滤出简洁的集群健康信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.health())</span><br><span class="line">print(es.cat.health(format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.help，返回<code>es.cat</code>的帮助信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.help())</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.indices，返回索引的信息；也可以使用此命令进行查询集群中有多少索引。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.indices())</span><br><span class="line">print(es.cat.indices(index&#x3D;&#39;py3&#39;))</span><br><span class="line">print(es.cat.indices(index&#x3D;&#39;py3&#39;, format&#x3D;&#39;json&#39;))</span><br><span class="line">print(len(es.cat.indices(format&#x3D;&#39;json&#39;)))  # 查询集群中有多少索引</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.master，返回集群中主节点的IP，绑定IP和节点名称。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.master())</span><br><span class="line">print(es.cat.master(format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.nodeattrs，返回节点的自定义属性。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.nodeattrs())</span><br><span class="line">print(es.cat.nodeattrs(format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.nodes，返回节点的拓扑，这些信息在查看整个集群时通常很有用，特别是大型集群。我有多少符合条件的节点？</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.nodes())</span><br><span class="line">print(es.cat.nodes(format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.plugins，返回节点的插件信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.plugins())</span><br><span class="line">print(es.cat.plugins(format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.segments，返回每个索引的Lucene有关的信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.segments())</span><br><span class="line">print(es.cat.segments(index&#x3D;&#39;py3&#39;))</span><br><span class="line">print(es.cat.segments(index&#x3D;&#39;py3&#39;, format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.shards，返回哪个节点包含哪些分片的信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.shards())</span><br><span class="line">print(es.cat.shards(index&#x3D;&#39;py3&#39;))</span><br><span class="line">print(es.cat.shards(index&#x3D;&#39;py3&#39;, format&#x3D;&#39;json&#39;))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>es.cat.thread_pool，获取有关线程池的信息。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(es.cat.thread_pool())</span><br></pre></td></tr></table></figure>
+
+<h2 id="八-Snapshot（快照相关）"><a href="#八-Snapshot（快照相关）" class="headerlink" title="八 Snapshot（快照相关）"></a>八 Snapshot（快照相关）</h2><ul>
+<li>es.snapshot.create，在存储库中创建快照。<ul>
+<li><code>repository</code> 存储库名称。</li>
+<li><code>snapshot</code>快照名称。</li>
+<li><code>body</code>快照定义。</li>
+</ul>
+</li>
+<li>es.snapshot.delete，从存储库中删除快照。</li>
+<li>es.snapshot.create_repository。注册共享文件系统存储库。</li>
+<li>es.snapshot.delete_repository，删除共享文件系统存储库。</li>
+<li>es.snapshot.get，检索有关快照的信息。</li>
+<li>es.snapshot.get_repository，返回有关已注册存储库的信息。</li>
+<li>es.snapshot.restore，恢复快照。</li>
+<li>es.snapshot.status，返回有关所有当前运行快照的信息。通过指定存储库名称，可以将结果限制为特定存储库。</li>
+<li>es.snapshot.verify_repository，返回成功验证存储库的节点列表，如果验证过程失败，则返回错误消息。</li>
+</ul>
+<h2 id="九-Task（任务相关）"><a href="#九-Task（任务相关）" class="headerlink" title="九 Task（任务相关）"></a>九 Task（任务相关）</h2><ul>
+<li>es.tasks.get，检索特定任务的信息。</li>
+<li>es.tasks.cancel，取消任务。</li>
+<li>es.tasks.list，任务列表。</li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/9-11%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C/15-Elasticsearch%20for%20Python%E4%B9%8B%E8%BF%9E%E6%8E%A5/">
+        <span class="nav-arrow">← </span>
+        
+          db/Elasticsearch系列/9-11文档操作/15-Elasticsearch for Python之连接
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%85%B6%E4%BB%96/04-MyCat%E5%AE%9E%E7%8E%B0%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/">
+        
+          python/其他/04-MyCat实现分库分表
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#16-Elasticsearch-for-Python之操作"><span class="toc-nav-text">16-Elasticsearch for Python之操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-前言"><span class="toc-nav-text">一 前言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-结果过滤"><span class="toc-nav-text">二 结果过滤</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-Elasticsearch（es对象）"><span class="toc-nav-text">三 Elasticsearch（es对象）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-Indices（es-indices）"><span class="toc-nav-text">四 Indices（es.indices）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-Cluster（集群相关）"><span class="toc-nav-text">五 Cluster（集群相关）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-Node（节点相关）"><span class="toc-nav-text">六 Node（节点相关）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#七-Cat（一种查询方式）"><span class="toc-nav-text">七 Cat（一种查询方式）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#八-Snapshot（快照相关）"><span class="toc-nav-text">八 Snapshot（快照相关）</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#九-Task（任务相关）"><span class="toc-nav-text">九 Task（任务相关）</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Elasticsearch系列/9-11文档操作/16-Elasticsearch for Python之操作/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Elasticsearch系列/9-11文档操作/16-Elasticsearch for Python之操作",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

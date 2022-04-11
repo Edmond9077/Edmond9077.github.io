@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/网络编程/5-基于TCP协议的socket套接字编程 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/网络编程/5-基于TCP协议的socket套接字编程</h2>
+
+
+
+  <p class="post-date">2020-10-17</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、什么是Scoket"><a href="#一、什么是Scoket" class="headerlink" title="一、什么是Scoket"></a>一、什么是Scoket</h1><p>Socket是应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。</p>
+<p>所以，我们无需深入理解tcp/udp协议，socket已经为我们封装好了，我们只需要遵循socket的规定去编程，写出的程序自然就是遵循tcp/udp标准的。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnjkhodkj30f20d8js4.jpg" alt="121-基于TCP协议的套接字编程-socket层.jpg?x-oss-process=style/watermark"></p>
+<ul>
+<li>注意：也有人将socket说成ip+port，ip是用来标识互联网中的一台主机的位置，而port是用来标识这台机器上的一个应用程序，ip地址是配置到网卡上的，而port是应用程序开启的，ip与port的绑定就标识了互联网中独一无二的一个应用程序，而程序的pid是同一台机器上不同进程或者线程的标识。</li>
+</ul>
+<h1 id="二、套接字发展史及分类"><a href="#二、套接字发展史及分类" class="headerlink" title="二、套接字发展史及分类"></a>二、套接字发展史及分类</h1><p>套接字起源于 20 世纪 70 年代加利福尼亚大学伯克利分校版本的 Unix,即人们所说的 BSD Unix。 因此,有时人们也把套接字称为“伯克利套接字”或“BSD 套接字”。一开始,套接字被设计用在同 一台主机上多个应用程序之间的通讯。这也被称进程间通讯,或 IPC。套接字有两种（或者称为有两个种族）,分别是基于文件型的和基于网络型的。</p>
+<h2 id="2-1-基于文件类型的套接字家族"><a href="#2-1-基于文件类型的套接字家族" class="headerlink" title="2.1 基于文件类型的套接字家族"></a>2.1 基于文件类型的套接字家族</h2><p>套接字家族的名字：AF_UNIX</p>
+<p>unix一切皆文件，基于文件的套接字调用的就是底层的文件系统来取数据，两个套接字进程运行在同一机器，可以通过访问同一个文件系统间接完成通信</p>
+<h2 id="2-2-基于网络类型的套接字家族"><a href="#2-2-基于网络类型的套接字家族" class="headerlink" title="2.2 基于网络类型的套接字家族"></a>2.2 基于网络类型的套接字家族</h2><p>套接字家族的名字：AF_INET</p>
+<p>(还有AF_INET6被用于ipv6，还有一些其他的地址家族，不过，他们要么是只用于某个平台，要么就是已经被废弃，或者是很少被使用，或者是根本没有实现，所有地址家族中，AF_INET是使用最广泛的一个，python支持很多种地址家族，但是由于我们只关心网络编程，所以大部分时候我么只使用AF_INET)</p>
+<h1 id="三、套接字工作流程"><a href="#三、套接字工作流程" class="headerlink" title="三、套接字工作流程"></a>三、套接字工作流程</h1><p>一个生活中的场景。你要打电话给一个朋友，先拨号，朋友听到电话铃声后提起电话，这时你和你的朋友就建立起了连接，就可以讲话了。等交流结束，挂断电话结束此次交谈。 生活中的场景就解释了这工作原理。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnjqumlcj30da0dnwex.jpg" alt="121-基于TCP协议的套接字编程-socket流程.jpg?x-oss-process=style/watermark"></p>
+<p>先从服务器端说起。服务器端先初始化Socket，然后与端口绑定(bind)，对端口进行监听(listen)，调用accept阻塞，等待客户端连接。在这时如果有个客户端初始化一个Socket，然后连接服务器(connect)，如果连接成功，这时客户端与服务器端的连接就建立了。客户端发送数据请求，服务器端接收请求并处理请求，然后把回应数据发送给客户端，客户端读取数据，最后关闭连接，一次交互结束，使用以下Python代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment"># socket_family 可以是 AF_UNIX 或 AF_INET。socket_type 可以是 SOCK_STREAM 或 SOCK_DGRAM。protocol 一般不填，默认值为 0</span></span><br><span class="line">socket.socket(socket_family, socket_type, protocal=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取tcp/ip套接字</span></span><br><span class="line">tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取udp/ip套接字</span></span><br><span class="line">udpSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 由于 socket 模块中有太多的属性。我们在这里破例使用了'from module import *'语句。使用 'from socket import *'，我们就把 socket 模块里的所有属性都带到我们的命名空间里了，这样能大幅减短我们的代码</span></span><br><span class="line">tcpSock = socket(AF_INET, SOCK_STREAM)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnjz17rvg30bj06dhdw.gif" alt="121-基于TCP协议的套接字编程-小兵潮.gif"></p>
+<h2 id="3-1-服务端套接字函数"><a href="#3-1-服务端套接字函数" class="headerlink" title="3.1 服务端套接字函数"></a>3.1 服务端套接字函数</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">s.bind()</td>
+<td align="center">绑定(主机,端口号)到套接字</td>
+</tr>
+<tr>
+<td align="center">s.listen()</td>
+<td align="center">开始TCP监听</td>
+</tr>
+<tr>
+<td align="center">s.accept()</td>
+<td align="center">被动接受TCP客户的连接,(阻塞式)等待连接的到来</td>
+</tr>
+</tbody></table>
+<h2 id="3-2-客户端套接字函数"><a href="#3-2-客户端套接字函数" class="headerlink" title="3.2 客户端套接字函数"></a>3.2 客户端套接字函数</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">s.connect()</td>
+<td align="center">主动初始化TCP服务器连接</td>
+</tr>
+<tr>
+<td align="center">s.connect_ex()</td>
+<td align="center">connect()函数的扩展版本,出错时返回出错码,而不是抛出异常</td>
+</tr>
+</tbody></table>
+<h2 id="3-3-公共用途的套接字函数"><a href="#3-3-公共用途的套接字函数" class="headerlink" title="3.3 公共用途的套接字函数"></a>3.3 公共用途的套接字函数</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">s.recv()</td>
+<td align="center">接收TCP数据</td>
+</tr>
+<tr>
+<td align="center">s.send()</td>
+<td align="center">发送TCP数据(send在待发送数据量大于己端缓存区剩余空间时,数据丢失,不会发完)</td>
+</tr>
+<tr>
+<td align="center">s.sendall()</td>
+<td align="center">发送完整的TCP数据(本质就是循环调用send,sendall在待发送数据量大于己端缓存区剩余空间时,数据不丢失,循环调用send直到发完)</td>
+</tr>
+<tr>
+<td align="center">s.recvfrom()</td>
+<td align="center">接收UDP数据</td>
+</tr>
+<tr>
+<td align="center">s.sendto()</td>
+<td align="center">发送UDP数据</td>
+</tr>
+<tr>
+<td align="center">s.getpeername()</td>
+<td align="center">连接到当前套接字的远端的地址</td>
+</tr>
+<tr>
+<td align="center">s.getsockname()</td>
+<td align="center">当前套接字的地址</td>
+</tr>
+<tr>
+<td align="center">s.getsockopt()</td>
+<td align="center">返回指定套接字的参数</td>
+</tr>
+<tr>
+<td align="center">s.setsockopt()</td>
+<td align="center">设置指定套接字的参数</td>
+</tr>
+<tr>
+<td align="center">s.close()</td>
+<td align="center">关闭套接字</td>
+</tr>
+</tbody></table>
+<h2 id="3-4-面向锁的套接字方法"><a href="#3-4-面向锁的套接字方法" class="headerlink" title="3.4 面向锁的套接字方法"></a>3.4 面向锁的套接字方法</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">s.setblocking()</td>
+<td align="center">设置套接字的阻塞与非阻塞模式</td>
+</tr>
+<tr>
+<td align="center">s.settimeout()</td>
+<td align="center">设置阻塞套接字操作的超时时间</td>
+</tr>
+<tr>
+<td align="center">s.gettimeout()</td>
+<td align="center">得到阻塞套接字操作的超时时间</td>
+</tr>
+</tbody></table>
+<h2 id="3-5-面向文件的套接字的函数"><a href="#3-5-面向文件的套接字的函数" class="headerlink" title="3.5 面向文件的套接字的函数"></a>3.5 面向文件的套接字的函数</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">s.fileno()</td>
+<td align="center">套接字的文件描述符</td>
+</tr>
+<tr>
+<td align="center">s.makefile()</td>
+<td align="center">创建一个与该套接字相关的文件</td>
+</tr>
+</tbody></table>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnk104poj30c80c874e.jpg" alt="121-基于TCP协议的套接字编程-打电话.jpg?x-oss-process=style/watermark"></p>
+<h1 id="四、基于TCP协议的套接字编程-简单"><a href="#四、基于TCP协议的套接字编程-简单" class="headerlink" title="四、基于TCP协议的套接字编程(简单)"></a>四、基于TCP协议的套接字编程(简单)</h1><ul>
+<li>可以通过<code>netstat -an | findstr 8080</code>查看套接字状态</li>
+</ul>
+<h2 id="4-1-服务端"><a href="#4-1-服务端" class="headerlink" title="4.1 服务端"></a>4.1 服务端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment">#1、买手机</span></span><br><span class="line">phone = socket.socket(socket.AF_INET,</span><br><span class="line">                      socket.SOCK_STREAM)  <span class="comment">#tcp称为流式协议,udp称为数据报协议SOCK_DGRAM</span></span><br><span class="line"><span class="comment"># print(phone)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2、插入/绑定手机卡</span></span><br><span class="line"><span class="comment"># phone.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)</span></span><br><span class="line">phone.bind((<span class="string">'127.0.0.1'</span>, <span class="number">8081</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">#3、开机</span></span><br><span class="line">phone.listen(<span class="number">5</span>)  <span class="comment"># 半连接池，限制的是请求数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#4、等待电话连接</span></span><br><span class="line">print(<span class="string">'start....'</span>)</span><br><span class="line">conn, client_addr = phone.accept()  <span class="comment">#（三次握手建立的双向连接，（客户端的ip，端口））</span></span><br><span class="line">print(conn)</span><br><span class="line">print(client_addr)</span><br><span class="line"></span><br><span class="line"><span class="comment">#5、通信：收\发消息</span></span><br><span class="line">data = conn.recv(<span class="number">1024</span>)  <span class="comment">#最大接收的字节数</span></span><br><span class="line">print(<span class="string">'来自客户端的数据'</span>, data)</span><br><span class="line">conn.send(data.upper())</span><br><span class="line"></span><br><span class="line"><span class="comment"># import time</span></span><br><span class="line"><span class="comment"># time.sleep(500)</span></span><br><span class="line"><span class="comment">#6、挂掉电话连接</span></span><br><span class="line">conn.close()</span><br><span class="line"></span><br><span class="line"><span class="comment">#7、关机</span></span><br><span class="line">phone.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-2-客户端"><a href="#4-2-客户端" class="headerlink" title="4.2 客户端"></a>4.2 客户端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="comment"># socket.AF</span></span><br><span class="line"><span class="comment">#1、买手机</span></span><br><span class="line">phone = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">print(phone)</span><br><span class="line"><span class="comment">#2、拨电话</span></span><br><span class="line">phone.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8081</span>))  <span class="comment"># 指定服务端ip和端口</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#3、通信：发\收消息</span></span><br><span class="line">phone.send(<span class="string">'hello'</span>.encode(<span class="string">'utf-8'</span>))</span><br><span class="line"><span class="comment"># phone.send(bytes('hello',encoding='utf-8'))</span></span><br><span class="line">data = phone.recv(<span class="number">1024</span>)</span><br><span class="line">print(data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># import time</span></span><br><span class="line"><span class="comment"># time.sleep(500)</span></span><br><span class="line"><span class="comment">#4、关闭</span></span><br><span class="line">phone.close()</span><br></pre></td></tr></table></figure>
+
+<h1 id="五、基于TCP协议的套接字编程-循环"><a href="#五、基于TCP协议的套接字编程-循环" class="headerlink" title="五、基于TCP协议的套接字编程(循环)"></a>五、基于TCP协议的套接字编程(循环)</h1><h2 id="5-1-服务端"><a href="#5-1-服务端" class="headerlink" title="5.1 服务端"></a>5.1 服务端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment">#1、买手机</span></span><br><span class="line">phone = socket.socket(socket.AF_INET,</span><br><span class="line">                      socket.SOCK_STREAM)  <span class="comment">#tcp称为流式协议,udp称为数据报协议SOCK_DGRAM</span></span><br><span class="line"><span class="comment"># print(phone)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2、插入/绑定手机卡</span></span><br><span class="line"><span class="comment"># phone.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)</span></span><br><span class="line">phone.bind((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">#3、开机</span></span><br><span class="line">phone.listen(<span class="number">5</span>)  <span class="comment"># 半连接池，限制的是请求数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#4、等待电话连接</span></span><br><span class="line">print(<span class="string">'start....'</span>)</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:  <span class="comment"># 连接循环</span></span><br><span class="line">    conn, client_addr = phone.accept()  <span class="comment">#（三次握手建立的双向连接，（客户端的ip，端口））</span></span><br><span class="line">    <span class="comment"># print(conn)</span></span><br><span class="line">    print(<span class="string">'已经有一个连接建立成功'</span>, client_addr)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#5、通信：收\发消息</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:  <span class="comment"># 通信循环</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            print(<span class="string">'服务端正在收数据...'</span>)</span><br><span class="line">            data = conn.recv(<span class="number">1024</span>)  <span class="comment">#最大接收的字节数，没有数据会在原地一直等待收，即发送者发送的数据量必须&gt;0bytes</span></span><br><span class="line">            <span class="comment"># print('===&gt;')</span></span><br><span class="line">            <span class="keyword">if</span> len(data) == <span class="number">0</span>: <span class="keyword">break</span>  <span class="comment">#在客户端单方面断开连接，服务端才会出现收空数据的情况</span></span><br><span class="line">            print(<span class="string">'来自客户端的数据'</span>, data)</span><br><span class="line">            conn.send(data.upper())</span><br><span class="line">        <span class="keyword">except</span> ConnectionResetError:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="comment">#6、挂掉电话连接</span></span><br><span class="line">    conn.close()</span><br><span class="line"></span><br><span class="line"><span class="comment">#7、关机</span></span><br><span class="line">phone.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-客户端"><a href="#5-2-客户端" class="headerlink" title="5.2 客户端"></a>5.2 客户端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment">#1、买手机</span></span><br><span class="line">phone = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line"><span class="comment"># print(phone)</span></span><br><span class="line"><span class="comment">#2、拨电话</span></span><br><span class="line">phone.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))  <span class="comment"># 指定服务端ip和端口</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#3、通信：发\收消息</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:  <span class="comment"># 通信循环</span></span><br><span class="line">    msg = input(<span class="string">'&gt;&gt;: '</span>).strip()  <span class="comment">#msg=''</span></span><br><span class="line">    <span class="keyword">if</span> len(msg) == <span class="number">0</span>: <span class="keyword">continue</span></span><br><span class="line">    phone.send(msg.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="comment"># print('has send-----&gt;')</span></span><br><span class="line">    data = phone.recv(<span class="number">1024</span>)</span><br><span class="line">    <span class="comment"># print('has recv-----&gt;')</span></span><br><span class="line">    print(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">#4、关闭</span></span><br><span class="line">phone.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-3-客户端"><a href="#5-3-客户端" class="headerlink" title="5.3 客户端"></a>5.3 客户端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"><span class="comment">#1、买手机</span></span><br><span class="line">phone = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line"><span class="comment"># print(phone)</span></span><br><span class="line"><span class="comment">#2、拨电话</span></span><br><span class="line">phone.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))  <span class="comment"># 指定服务端ip和端口</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#3、通信：发\收消息</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:  <span class="comment"># 通信循环</span></span><br><span class="line">    msg = input(<span class="string">'&gt;&gt;: '</span>).strip()</span><br><span class="line">    phone.send(msg.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    data = phone.recv(<span class="number">1024</span>)</span><br><span class="line">    print(data)</span><br><span class="line"></span><br><span class="line"><span class="comment">#4、关闭</span></span><br><span class="line">phone.close()</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、地址占用问题"><a href="#六、地址占用问题" class="headerlink" title="六、地址占用问题"></a>六、地址占用问题</h1><p>有的同学在重启服务端时可能会遇到：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnja6p66j30lz02xjru.jpg" alt="121-基于TCP协议的套接字编程-bug.png?x-oss-process=style/watermark"></p>
+<p>这个是由于你的服务端仍然存在四次挥手的time_wait状态在占用地址（如果不懂，请深入研究1.tcp三次握手，四次挥手 2.syn洪水攻击 3.服务器高并发情况下会有大量的time_wait状态的优化方法）</p>
+<h2 id="6-1-方法一"><a href="#6-1-方法一" class="headerlink" title="6.1 方法一"></a>6.1 方法一</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加入一条socket配置，重用ip和端口</span></span><br><span class="line"></span><br><span class="line">phone=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">phone.setsockopt(SOL_SOCKET,SO_REUSEADDR,<span class="number">1</span>) <span class="comment">#就是它，在bind前加</span></span><br><span class="line">phone.bind((<span class="string">'127.0.0.1'</span>,<span class="number">8080</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-2-方法二-Linux"><a href="#6-2-方法二-Linux" class="headerlink" title="6.2 方法二(Linux)"></a>6.2 方法二(Linux)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">发现系统存在大量TIME_WAIT状态的连接，通过调整linux内核参数解决，</span><br><span class="line">vi &#x2F;etc&#x2F;sysctl.conf</span><br><span class="line"></span><br><span class="line">编辑文件，加入以下内容：</span><br><span class="line">net.ipv4.tcp_syncookies &#x3D; 1</span><br><span class="line">net.ipv4.tcp_tw_reuse &#x3D; 1</span><br><span class="line">net.ipv4.tcp_tw_recycle &#x3D; 1</span><br><span class="line">net.ipv4.tcp_fin_timeout &#x3D; 30</span><br><span class="line"> </span><br><span class="line">然后执行 &#x2F;sbin&#x2F;sysctl -p 让参数生效。</span><br><span class="line"> </span><br><span class="line">net.ipv4.tcp_syncookies &#x3D; 1 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_tw_reuse &#x3D; 1 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_tw_recycle &#x3D; 1 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。</span><br><span class="line"></span><br><span class="line">net.ipv4.tcp_fin_timeout 修改系統默认的 TIMEOUT 时间</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/7-%E6%A8%A1%E6%8B%9Fssh%E8%BF%9C%E7%A8%8B%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4/">
+        <span class="nav-arrow">← </span>
+        
+          python/网络编程/7-模拟ssh远程执行命令
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/4-TCP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">
+        
+          python/网络编程/4-TCP协议的三次握手和四次挥手
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、什么是Scoket"><span class="toc-nav-text">一、什么是Scoket</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、套接字发展史及分类"><span class="toc-nav-text">二、套接字发展史及分类</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-基于文件类型的套接字家族"><span class="toc-nav-text">2.1 基于文件类型的套接字家族</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-基于网络类型的套接字家族"><span class="toc-nav-text">2.2 基于网络类型的套接字家族</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、套接字工作流程"><span class="toc-nav-text">三、套接字工作流程</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-服务端套接字函数"><span class="toc-nav-text">3.1 服务端套接字函数</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-客户端套接字函数"><span class="toc-nav-text">3.2 客户端套接字函数</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-3-公共用途的套接字函数"><span class="toc-nav-text">3.3 公共用途的套接字函数</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-4-面向锁的套接字方法"><span class="toc-nav-text">3.4 面向锁的套接字方法</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-5-面向文件的套接字的函数"><span class="toc-nav-text">3.5 面向文件的套接字的函数</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、基于TCP协议的套接字编程-简单"><span class="toc-nav-text">四、基于TCP协议的套接字编程(简单)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-1-服务端"><span class="toc-nav-text">4.1 服务端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-2-客户端"><span class="toc-nav-text">4.2 客户端</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、基于TCP协议的套接字编程-循环"><span class="toc-nav-text">五、基于TCP协议的套接字编程(循环)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-1-服务端"><span class="toc-nav-text">5.1 服务端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-2-客户端"><span class="toc-nav-text">5.2 客户端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-3-客户端"><span class="toc-nav-text">5.3 客户端</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#六、地址占用问题"><span class="toc-nav-text">六、地址占用问题</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-1-方法一"><span class="toc-nav-text">6.1 方法一</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6-2-方法二-Linux"><span class="toc-nav-text">6.2 方法二(Linux)</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/网络编程/5-基于TCP协议的socket套接字编程/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/网络编程/5-基于TCP协议的socket套接字编程",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Redis系列/03-Redis系列之-高级用法 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Redis系列/03-Redis系列之-高级用法</h2>
+
+
+
+  <p class="post-date">2019-12-26</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-慢查询"><a href="#一-慢查询" class="headerlink" title="一 慢查询"></a>一 慢查询</h2><h3 id="1-1-生命周期"><a href="#1-1-生命周期" class="headerlink" title="1.1 生命周期"></a>1.1 生命周期</h3><p>我们配置一个时间，如果查询时间超过了我们设置的时间，我们就认为这是一个慢查询.</p>
+<p>慢查询发生在第三阶段</p>
+<p>客户端超时不一定慢查询，但慢查询是客户端超时的一个可能因素</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1ga8r6p7tpej30z80k2afq.jpg" alt="image-20191225102102218"></p>
+<h3 id="1-2-两个配置"><a href="#1-2-两个配置" class="headerlink" title="1.2 两个配置"></a>1.2 两个配置</h3><h4 id="1-2-1-slowlog-max-len"><a href="#1-2-1-slowlog-max-len" class="headerlink" title="1.2.1 slowlog-max-len"></a>1.2.1 slowlog-max-len</h4><p>慢查询是一个先进先出的队列</p>
+<p>固定长度</p>
+<p>保存在内存中</p>
+<h4 id="1-2-2-slowlog-max-len"><a href="#1-2-2-slowlog-max-len" class="headerlink" title="1.2.2 slowlog-max-len"></a>1.2.2 slowlog-max-len</h4><p>慢查询阈值（单位：微秒）</p>
+<p>slowlog-log-slower-than=0，记录所有命令</p>
+<p>slowlog-log-slower-than &lt;0,不记录任何命令</p>
+<h4 id="1-2-3-配置方法"><a href="#1-2-3-配置方法" class="headerlink" title="1.2.3 配置方法"></a>1.2.3 配置方法</h4><p><strong>1 默认配置</strong></p>
+<p>config get slowlog-max-len=128</p>
+<p>Config get slowly-log-slower-than=10000</p>
+<p><strong>2 修改配置文件重启</strong></p>
+<p><strong>3 动态配置</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置记录所有命令</span></span><br><span class="line">config set slowlog-log-slower-than <span class="number">0</span></span><br><span class="line"><span class="comment"># 最多记录100条</span></span><br><span class="line">config set slowlog-max-len <span class="number">100</span></span><br><span class="line"><span class="comment"># 持久化到本地配置文件</span></span><br><span class="line">config rewrite</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">config set slowlog-max-len 1000</span></span><br><span class="line"><span class="string">config set slowlog-log-slower-than 1000</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-三个命令"><a href="#1-3-三个命令" class="headerlink" title="1.3 三个命令"></a>1.3 三个命令</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">slowlog get [n]  <span class="comment">#获取慢查询队列</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">日志由4个属性组成：</span></span><br><span class="line"><span class="string">1）日志的标识id</span></span><br><span class="line"><span class="string">2）发生的时间戳</span></span><br><span class="line"><span class="string">3）命令耗时</span></span><br><span class="line"><span class="string">4）执行的命令和参数</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line">slowlog len <span class="comment">#获取慢查询队列长度</span></span><br><span class="line"></span><br><span class="line">slowlog reset <span class="comment">#清空慢查询队列</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-经验"><a href="#1-4-经验" class="headerlink" title="1.4 经验"></a>1.4 经验</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> slowlog-max-len 不要设置过大，默认<span class="number">10</span>ms，通常设置<span class="number">1</span>ms</span><br><span class="line"><span class="number">2</span> slowlog-log-slower-than不要设置过小，通常设置<span class="number">1000</span>左右</span><br><span class="line"><span class="number">3</span> 理解命令生命周期</span><br><span class="line"><span class="number">4</span> 定期持久化慢查询</span><br></pre></td></tr></table></figure>
+
+<h2 id="二-pipeline与事务"><a href="#二-pipeline与事务" class="headerlink" title="二 pipeline与事务"></a>二 pipeline与事务</h2><h3 id="2-1-什么是pipeline-管道"><a href="#2-1-什么是pipeline-管道" class="headerlink" title="2.1 什么是pipeline(管道)"></a>2.1 什么是pipeline(管道)</h3><p>Redis的pipeline(管道)功能在命令行中没有，但redis是支持pipeline的，而且在各个语言版的client中都有相应的实现</p>
+<p>将一批命令，批量打包，在redis服务端批量计算(执行)，然后把结果批量返回</p>
+<p>1次pipeline(n条命令)=1次网络时间+n次命令时间</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pipeline期间将“独占”链接，此期间将不能进行非“管道”类型的其他操作，直到pipeline关闭；如果你的pipeline的指令集很庞大，为了不干扰链接中的其他操作，你可以为pipeline操作新建Client链接，让pipeline和其他正常操作分离在<span class="number">2</span>个client中。不过pipeline事实上所能容忍的操作个数，和socket-output缓冲区大小/返回结果的数据尺寸都有很大的关系；同时也意味着每个redis-server同时所能支撑的pipeline链接的个数，也是有限的，这将受限于server的物理内存或网络接口的缓冲能力</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-客户端实现"><a href="#2-2-客户端实现" class="headerlink" title="2.2 客户端实现"></a>2.2 客户端实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> redis</span><br><span class="line">pool = redis.ConnectionPool(host=<span class="string">'10.211.55.4'</span>, port=<span class="number">6379</span>)</span><br><span class="line">r = redis.Redis(connection_pool=pool)</span><br><span class="line"><span class="comment"># pipe = r.pipeline(transaction=False)</span></span><br><span class="line"><span class="comment">#创建pipeline</span></span><br><span class="line">pipe = r.pipeline(transaction=<span class="literal">True</span>)</span><br><span class="line"><span class="comment">#开启事务</span></span><br><span class="line">pipe.multi()</span><br><span class="line">pipe.set(<span class="string">'name'</span>, <span class="string">'lqz'</span>)</span><br><span class="line"><span class="comment">#其他代码，可能出异常</span></span><br><span class="line"></span><br><span class="line">pipe.set(<span class="string">'role'</span>, <span class="string">'nb'</span>)</span><br><span class="line"> </span><br><span class="line">pipe.execute()</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-与原生操作对比"><a href="#2-3-与原生操作对比" class="headerlink" title="2.3 与原生操作对比"></a>2.3 与原生操作对比</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过pipeline提交的多次命令，在服务端执行的时候，可能会被拆成多次执行，而mget等操作，是一次性执行的，所以，pipeline执行的命令并非原子性的</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-使用建议"><a href="#2-4-使用建议" class="headerlink" title="2.4 使用建议"></a>2.4 使用建议</h3><p>1 注意每次pipeline携带的数据量</p>
+<p>2 pipeline每次只能作用在一个Redis的节点上</p>
+<p>3 M(mset，mget….)操作和pipeline的区别</p>
+<h3 id="2-5-原生事务操作"><a href="#2-5-原生事务操作" class="headerlink" title="2.5 原生事务操作"></a>2.5 原生事务操作</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 mutil  开启事务，放到管道中一次性执行</span></span><br><span class="line">multi   <span class="comment"># 开启事务</span></span><br><span class="line">set name lqz</span><br><span class="line">set age <span class="number">18</span></span><br><span class="line"><span class="keyword">exec</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2 模拟事务</span></span><br><span class="line"><span class="comment"># 在开启事务之前，先watch</span></span><br><span class="line">wathc age</span><br><span class="line">multi</span><br><span class="line">decr age</span><br><span class="line"><span class="keyword">exec</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 另一台机器</span></span><br><span class="line">mutil</span><br><span class="line">decr age</span><br><span class="line"><span class="keyword">exec</span>  <span class="comment"># 先执行，上面的执行就会失败(乐观锁，被wathc的事务不会执行成功)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="三-发布订阅"><a href="#三-发布订阅" class="headerlink" title="三 发布订阅"></a>三 发布订阅</h2><h3 id="3-1-角色"><a href="#3-1-角色" class="headerlink" title="3.1 角色"></a>3.1 角色</h3><p><strong>发布者/订阅者/频道</strong></p>
+<p>发布者发布了消息，所有的订阅者都可以收到，就是生产者消费者模型（后订阅了，无法获取历史消息）</p>
+<h3 id="3-2-模型"><a href="#3-2-模型" class="headerlink" title="3.2 模型"></a>3.2 模型</h3><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1ga923qyr2uj31xp0u0jwt.jpg" alt="image-20191225163659941"></p>
+<h3 id="3-3-API"><a href="#3-3-API" class="headerlink" title="3.3 API"></a>3.3 API</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">publish channel message <span class="comment">#发布命令</span></span><br><span class="line">publish souhu:tv <span class="string">"hello world"</span> <span class="comment">#在souhu:tv频道发布一条hello world  返回订阅者个数</span></span><br><span class="line"></span><br><span class="line">subscribe [channel] <span class="comment">#订阅命令，可以订阅一个或多个</span></span><br><span class="line">subscribe souhu:tv  <span class="comment">#订阅sohu:tv频道</span></span><br><span class="line"></span><br><span class="line">unsubscribe [channel] <span class="comment">#取消订阅一个或多个频道</span></span><br><span class="line">unsubscribe sohu:tv  <span class="comment">#取消订阅sohu:tv频道</span></span><br><span class="line">    </span><br><span class="line">psubscribe [pattern...] <span class="comment">#订阅模式匹配</span></span><br><span class="line">psubscribe c*  <span class="comment">#订阅以c开头的频道</span></span><br><span class="line"></span><br><span class="line">unpsubscribe [pattern...] <span class="comment">#按模式退订指定频道</span></span><br><span class="line"></span><br><span class="line">pubsub channels <span class="comment">#列出至少有一个订阅者的频道,列出活跃的频道</span></span><br><span class="line"></span><br><span class="line">pubsub numsub [channel...] <span class="comment">#列出给定频道的订阅者数量</span></span><br><span class="line"></span><br><span class="line">pubsub numpat <span class="comment">#列出被订阅模式的数量</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-4-发布订阅和消息队列"><a href="#3-4-发布订阅和消息队列" class="headerlink" title="3.4 发布订阅和消息队列"></a>3.4 发布订阅和消息队列</h3><p>发布订阅数全收到，消息队列有个抢的过程，只有一个抢到</p>
+<h2 id="四-Bitmap位图"><a href="#四-Bitmap位图" class="headerlink" title="四 Bitmap位图"></a>四 Bitmap位图</h2><h3 id="4-1-位图是什么"><a href="#4-1-位图是什么" class="headerlink" title="4.1 位图是什么"></a>4.1 位图是什么</h3><p>下面是字符串big对应的二进制（b是98）</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1ga93bk259dj313y0isajp.jpg" alt="image-20191225172053447"></p>
+<h3 id="4-2-相关命令"><a href="#4-2-相关命令" class="headerlink" title="4.2 相关命令"></a>4.2 相关命令</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">set hello big <span class="comment">#放入key位hello 值为big的字符串</span></span><br><span class="line">getbit hello <span class="number">0</span> <span class="comment">#取位图的第0个位置，返回0</span></span><br><span class="line">getbit hello <span class="number">1</span> <span class="comment">#取位图的第1个位置，返回1 如上图</span></span><br><span class="line"></span><br><span class="line"><span class="comment">##我们可以直接操纵位</span></span><br><span class="line">setbit key offset value <span class="comment">#给位图指定索引设置值</span></span><br><span class="line">setbit hello <span class="number">7</span> <span class="number">1</span> <span class="comment">#把hello的第7个位置设为1 这样，big就变成了cig</span></span><br><span class="line"></span><br><span class="line">setbit test <span class="number">50</span> <span class="number">1</span> <span class="comment">#test不存在，在key为test的value的第50位设为1，那其他位都以0补</span></span><br><span class="line"></span><br><span class="line">bitcount key [start end] <span class="comment">#获取位图指定范围(start到end,单位为字节,注意按字节一个字节8个bit为，如果不指定就是获取全部)位值为1的个数</span></span><br><span class="line"></span><br><span class="line">bitop op destkey key [key...] <span class="comment">#做多个Bitmap的and(交集)/or(并集)/not(非)/xor(异或)，操作并将结果保存在destkey中 </span></span><br><span class="line">bitop <span class="keyword">and</span> after_lqz lqz lqz2 <span class="comment">#把lqz和lqz2按位与操作，放到after_lqz中</span></span><br><span class="line"></span><br><span class="line">bitpos key targetBit start end <span class="comment">#计算位图指定范围(start到end，单位为字节，如果不指定是获取全部)第一个偏移量对应的值等于targetBit的位置</span></span><br><span class="line">bitpos lqz <span class="number">1</span> <span class="comment">#big 对应位图中第一个1的位置，在第二个位置上，由于从0开始返回1</span></span><br><span class="line">bitpos lqz <span class="number">0</span> <span class="comment">#big 对应位图中第一个0的位置，在第一个位置上，由于从0开始返回0</span></span><br><span class="line">bitpos lqz <span class="number">1</span> <span class="number">1</span> <span class="number">2</span> <span class="comment">#返回9：返回从第一个字节到第二个字节之间 第一个1的位置，看上图，为9</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1ga93gnif6ej310q0iuwpy.jpg" alt="image-20191225172547661"></p>
+<h3 id="4-3-独立用户统计"><a href="#4-3-独立用户统计" class="headerlink" title="4.3 独立用户统计"></a>4.3 独立用户统计</h3><p>1 使用set和Bitmap对比</p>
+<p>2 1亿用户，5千万独立（1亿用户量，约5千万人访问，统计活跃用户数量）</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>每个userid占用空间</th>
+<th>需要存储用户量</th>
+<th>全部内存量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>set</td>
+<td>32位(假设userid是整形，占32位)</td>
+<td>5千万</td>
+<td>32位*5千万=200MB</td>
+</tr>
+<tr>
+<td>bitmap</td>
+<td>1位</td>
+<td>1亿</td>
+<td>1位*1亿=12.5MB</td>
+</tr>
+</tbody></table>
+<p>假设有10万独立用户，使用位图还是占用12.5mb，使用set需要32位*1万=4MB</p>
+<h3 id="4-5-总结"><a href="#4-5-总结" class="headerlink" title="4.5 总结"></a>4.5 总结</h3><p>1 位图类型是string类型，最大512M</p>
+<p>2 使用setbit时偏移量如果过大，会有较大消耗</p>
+<p>3 位图不是绝对好用，需要合理使用</p>
+<h2 id="五-HyperLogLog"><a href="#五-HyperLogLog" class="headerlink" title="五 HyperLogLog"></a>五 HyperLogLog</h2><h3 id="5-1-介绍"><a href="#5-1-介绍" class="headerlink" title="5.1 介绍"></a>5.1 介绍</h3><p>基于HyperLogLog算法：极小的空间完成独立数量统计</p>
+<p>本质还是字符串</p>
+<h3 id="5-2-三个命令"><a href="#5-2-三个命令" class="headerlink" title="5.2 三个命令"></a>5.2 三个命令</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">pfadd key element <span class="comment">#向hyperloglog添加元素,可以同时添加多个</span></span><br><span class="line">pfcount key <span class="comment">#计算hyperloglog的独立总数</span></span><br><span class="line">pfmerge destroy sourcekey1 sourcekey2<span class="comment">#合并多个hyperloglog，把sourcekey1和sourcekey2合并为destroy</span></span><br><span class="line"></span><br><span class="line">pfadd uuids <span class="string">"uuid1"</span> <span class="string">"uuid2"</span> <span class="string">"uuid3"</span> <span class="string">"uuid4"</span> <span class="comment">#向uuids中添加4个uuid</span></span><br><span class="line">pfcount uuids <span class="comment">#返回4</span></span><br><span class="line">pfadd uuids <span class="string">"uuid1"</span> <span class="string">"uuid5"</span><span class="comment">#有一个之前存在了，其实只把uuid5添加了</span></span><br><span class="line">pfcount uuids <span class="comment">#返回5</span></span><br><span class="line"></span><br><span class="line">pfadd uuids1 <span class="string">"uuid1"</span> <span class="string">"uuid2"</span> <span class="string">"uuid3"</span> <span class="string">"uuid4"</span></span><br><span class="line">pfadd uuids2 <span class="string">"uuid3"</span> <span class="string">"uuid4"</span> <span class="string">"uuid5"</span> <span class="string">"uuid6"</span></span><br><span class="line">pfmerge uuidsall uuids1 uuids2 <span class="comment">#合并</span></span><br><span class="line">pfcount uuidsall <span class="comment">#统计个数 返回6</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-内存消耗-amp-总结"><a href="#5-3-内存消耗-amp-总结" class="headerlink" title="5.3 内存消耗&amp;总结"></a>5.3 内存消耗&amp;总结</h3><p>百万级别独立用户统计，百万条数据只占15k</p>
+<p>错误率 0.81%</p>
+<p>无法取出单条数据，只能统计个数</p>
+<h2 id="六-GEO"><a href="#六-GEO" class="headerlink" title="六 GEO"></a>六 GEO</h2><h3 id="6-1-介绍"><a href="#6-1-介绍" class="headerlink" title="6.1 介绍"></a>6.1 介绍</h3><p>GEO（地理信息定位）：存储经纬度，计算两地距离，范围等</p>
+<p>北京：116.28，39.55</p>
+<p>天津：117.12，39.08</p>
+<p>可以计算天津到北京的距离，天津周围50km的城市，外卖等</p>
+<h3 id="6-2-5个城市纬度"><a href="#6-2-5个城市纬度" class="headerlink" title="6.2 5个城市纬度"></a>6.2 5个城市纬度</h3><table>
+<thead>
+<tr>
+<th>城市</th>
+<th>经度</th>
+<th>纬度</th>
+<th>简称</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>北京</td>
+<td>116.28</td>
+<td>39.55</td>
+<td>beijing</td>
+</tr>
+<tr>
+<td>天津</td>
+<td>117.12</td>
+<td>39.08</td>
+<td>tianjin</td>
+</tr>
+<tr>
+<td>石家庄</td>
+<td>114.29</td>
+<td>38.02</td>
+<td>shijiazhuang</td>
+</tr>
+<tr>
+<td>唐山</td>
+<td>118.01</td>
+<td>39.38</td>
+<td>tangshan</td>
+</tr>
+<tr>
+<td>保定</td>
+<td>115.29</td>
+<td>38.51</td>
+<td>baoding</td>
+</tr>
+</tbody></table>
+<h3 id="6-3-相关命令"><a href="#6-3-相关命令" class="headerlink" title="6.3 相关命令"></a>6.3 相关命令</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">geoadd key longitude latitude member <span class="comment">#增加地理位置信息</span></span><br><span class="line">geoadd cities:locations <span class="number">116.28</span> <span class="number">39.55</span> beijing <span class="comment">#把北京地理信息天津到cities:locations中</span></span><br><span class="line">geoadd cities:locations <span class="number">117.12</span> <span class="number">39.08</span> tianjin</span><br><span class="line">geoadd cities:locations <span class="number">114.29</span> <span class="number">38.02</span> shijiazhuang</span><br><span class="line">geoadd cities:locations <span class="number">118.01</span> <span class="number">39.38</span> tangshan</span><br><span class="line">geoadd cities:locations <span class="number">115.29</span> <span class="number">38.51</span> baoding</span><br><span class="line">    </span><br><span class="line">geopos key member <span class="comment">#获取地理位置信息</span></span><br><span class="line">geopos cities:locations beijing <span class="comment">#获取北京地理信息</span></span><br><span class="line"></span><br><span class="line">geodist key member1 member2 [unit]<span class="comment">#获取两个地理位置的距离 unit:m(米) km(千米) mi(英里) ft(尺)</span></span><br><span class="line">geodist cities:locations beijing tianjin km <span class="comment">#北京到天津的距离，89公里</span></span><br><span class="line"></span><br><span class="line">georadius key logitude latitude radiusm|km|ft|mi [withcoord] [withdist] [withhash] [COUNT count] [asc|desc] [store key][storedist key]</span><br><span class="line"></span><br><span class="line">georadiusbymember key member radiusm|km|ft|mi [withcoord] [withdist] [withhash] [COUNT count] [asc|desc] [store key][storedist key]</span><br><span class="line"><span class="comment">#获取指定位置范围内的地理位置信息集合</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">withcoord:返回结果中包含经纬度</span></span><br><span class="line"><span class="string">withdist：返回结果中包含距离中心节点位置</span></span><br><span class="line"><span class="string">withhash：返回解雇中包含geohash</span></span><br><span class="line"><span class="string">COUNT count：指定返回结果的数量</span></span><br><span class="line"><span class="string">asc|desc：返回结果按照距离中心店的距离做升序/降序排列</span></span><br><span class="line"><span class="string">store key：将返回结果的地理位置信息保存到指定键</span></span><br><span class="line"><span class="string">storedist key：将返回结果距离中心点的距离保存到指定键</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">georadiusbymember cities:locations beijing <span class="number">150</span> km</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">1) "beijing"</span></span><br><span class="line"><span class="string">2) "tianjin"</span></span><br><span class="line"><span class="string">3) "tangshan"</span></span><br><span class="line"><span class="string">4) "baoding"</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-总结"><a href="#6-4-总结" class="headerlink" title="6.4 总结"></a>6.4 总结</h3><p>3.2以后版本才有</p>
+<p>geo本质时zset类型</p>
+<p>可以使用zset的删除，删除指定member：zrem cities:locations beijing</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Redis%E7%B3%BB%E5%88%97/02-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8/">
+        <span class="nav-arrow">← </span>
+        
+          db/Redis系列/02-Redis系列之-客户端使用
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Redis%E7%B3%BB%E5%88%97/04-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E6%8C%81%E4%B9%85%E5%8C%96/">
+        
+          db/Redis系列/04-Redis系列之-持久化
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-慢查询"><span class="toc-nav-text">一 慢查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-生命周期"><span class="toc-nav-text">1.1 生命周期</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-两个配置"><span class="toc-nav-text">1.2 两个配置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-2-1-slowlog-max-len"><span class="toc-nav-text">1.2.1 slowlog-max-len</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-2-2-slowlog-max-len"><span class="toc-nav-text">1.2.2 slowlog-max-len</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-2-3-配置方法"><span class="toc-nav-text">1.2.3 配置方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-三个命令"><span class="toc-nav-text">1.3 三个命令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-经验"><span class="toc-nav-text">1.4 经验</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-pipeline与事务"><span class="toc-nav-text">二 pipeline与事务</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-什么是pipeline-管道"><span class="toc-nav-text">2.1 什么是pipeline(管道)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-客户端实现"><span class="toc-nav-text">2.2 客户端实现</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-3-与原生操作对比"><span class="toc-nav-text">2.3 与原生操作对比</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-4-使用建议"><span class="toc-nav-text">2.4 使用建议</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-5-原生事务操作"><span class="toc-nav-text">2.5 原生事务操作</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-发布订阅"><span class="toc-nav-text">三 发布订阅</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-1-角色"><span class="toc-nav-text">3.1 角色</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-模型"><span class="toc-nav-text">3.2 模型</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-3-API"><span class="toc-nav-text">3.3 API</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-4-发布订阅和消息队列"><span class="toc-nav-text">3.4 发布订阅和消息队列</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-Bitmap位图"><span class="toc-nav-text">四 Bitmap位图</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-1-位图是什么"><span class="toc-nav-text">4.1 位图是什么</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-2-相关命令"><span class="toc-nav-text">4.2 相关命令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-3-独立用户统计"><span class="toc-nav-text">4.3 独立用户统计</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-5-总结"><span class="toc-nav-text">4.5 总结</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-HyperLogLog"><span class="toc-nav-text">五 HyperLogLog</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-1-介绍"><span class="toc-nav-text">5.1 介绍</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-2-三个命令"><span class="toc-nav-text">5.2 三个命令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-3-内存消耗-amp-总结"><span class="toc-nav-text">5.3 内存消耗&amp;总结</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-GEO"><span class="toc-nav-text">六 GEO</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-1-介绍"><span class="toc-nav-text">6.1 介绍</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-2-5个城市纬度"><span class="toc-nav-text">6.2 5个城市纬度</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-3-相关命令"><span class="toc-nav-text">6.3 相关命令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-4-总结"><span class="toc-nav-text">6.4 总结</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Redis系列/03-Redis系列之-高级用法/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Redis系列/03-Redis系列之-高级用法",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

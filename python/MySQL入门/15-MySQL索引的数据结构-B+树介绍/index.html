@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/MySQL入门/15-MySQL索引的数据结构-B+树介绍 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/MySQL入门/15-MySQL索引的数据结构-B+树介绍</h2>
+
+
+
+  <p class="post-date">2020-10-22</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、树"><a href="#一、树" class="headerlink" title="一、树"></a>一、树</h1><p>树状图是一种<a href="https://baike.baidu.com/item/数据结构/1450" target="_blank" rel="noopener">数据结构</a> ，它是由n（n&gt;=1）个有限结点组成一个具有层次关系的集合。把它叫做“树”是因为它看起来像一棵倒挂的树，也就是说它是根朝上，而叶朝下的。<br>它具有以下的特点：每个结点有零个或多个子结点；没有父结点的结点称为根结点；每一个非根结点有且只有一个父结点；除了根结点外，每个子结点可以分为多个不相交的子树</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze1l6tpgj30bh0a7mxf.jpg" alt="205-MySQL索引的数据结构-B树介绍-01.png"></p>
+<p>根结点：A</p>
+<p>父节点：A是B，C的父节点</p>
+<p>叶子节点：D，E是叶子节点</p>
+<p>树的深度/树的高度：高度为3</p>
+<h1 id="二、B-树"><a href="#二、B-树" class="headerlink" title="二、B+树"></a>二、B+树</h1><p>前面讲了索引的基本原理，数据库的复杂性，又讲了操作系统的相关知识，目的就是让大家了解，任何一种数据结构都不是凭空产生的，一定会有它的背景和使用场景，我们现在总结一下，我们需要这种数据结构能够做些什么，其实很简单，那就是：每次查找数据时把磁盘IO次数控制在一个很小的数量级，最好是常数数量级。那么我们就想到如果一个高度可控的多路搜索树是否能满足需求呢？就这样，b+树应运而生（B+树是通过二叉查找树，再由平衡二叉树，B树演化而来）。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze1z4wvnj310w0g0ag5.jpg" alt="205-MySQL索引的数据结构-B树介绍-02.png"></p>
+<h2 id="2-1-B-树性质"><a href="#2-1-B-树性质" class="headerlink" title="2.1 B+树性质"></a>2.1 B+树性质</h2><ol>
+<li><strong>索引字段要尽量的小：</strong>通过上面的分析，我们知道IO次数取决于b+数的高度h，假设当前数据表的数据为N，每个磁盘块的数据项的数量是m，则有h=㏒(m+1)N，当数据量N一定的情况下，m越大，h越小；而m = 磁盘块的大小 / 数据项的大小，磁盘块的大小也就是一个数据页的大小，是固定的，如果数据项占的空间越小，数据项的数量越多，树的高度越低。这就是为什么每个数据项，即索引字段要尽量的小，比如int占4字节，要比bigint8字节少一半。这也是为什么b+树要求把真实的数据放到叶子节点而不是内层节点，一旦放到内层节点，磁盘块的数据项会大幅度下降，导致树增高。当数据项等于1时将会退化成线性表。</li>
+<li><strong>索引的最左匹配特性：</strong>当b+树的数据项是复合的数据结构，比如(name,age,sex)的时候，b+数是按照从左到右的顺序来建立搜索树的，比如当(张三,20,F)这样的数据来检索的时候，b+树会优先比较name来确定下一步的所搜方向，如果name相同再依次比较age和sex，最后得到检索的数据；但当(20,F)这样的没有name的数据来的时候，b+树就不知道下一步该查哪个节点，因为建立搜索树的时候name就是第一个比较因子，必须要先根据name来搜索才能知道下一步去哪里查询。比如当(张三,F)这样的数据来检索时，b+树可以用name来指定搜索方向，但下一个字段age的缺失，所以只能把名字等于张三的数据都找到，然后再匹配性别是F的数据了， 这个是非常重要的性质，即索引的最左匹配特性。</li>
+</ol>
+<h1 id="三、聚集索引和辅助索引"><a href="#三、聚集索引和辅助索引" class="headerlink" title="三、聚集索引和辅助索引"></a>三、聚集索引和辅助索引</h1><p>在数据库中，B+树的高度一般都在2<del>4层，这也就是说查找某一个键值的行记录时最多只需要2到4次IO，这倒不错。因为当前一般的机械硬盘每秒至少可以做100次IO，2</del>4次的IO意味着查询时间只需要0.02~0.04秒。</p>
+<p>数据库中的B+树索引可以分为聚集索引（clustered index）和辅助索引（secondary index），</p>
+<p>聚集索引与辅助索引相同的是：不管是聚集索引还是辅助索引，其内部都是B+树的形式，即高度是平衡的，叶子结点存放着所有的数据。</p>
+<p>聚集索引与辅助索引不同的是：叶子结点存放的是否是一整行的信息</p>
+<h2 id="3-1-聚集索引"><a href="#3-1-聚集索引" class="headerlink" title="3.1 聚集索引"></a>3.1 聚集索引</h2><p>InnoDB存储引擎表是索引组织表，即表中数据按照主键顺序存放。<br>而聚集索引（clustered index）就是按照每张表的主键构造一棵B+树，同时叶子结点存放的即为整张表的行记录数据，也将聚集索引的叶子结点称为数据页。<br>聚集索引的这个特性决定了索引组织表中数据也是索引的一部分。同B+树数据结构一样，每个数据页都通过一个双向链表来进行链接。</p>
+<p>如果未定义主键，MySQL取第一个唯一索引（unique）而且只含非空列（NOT NULL）作为主键，InnoDB使用它作为聚簇索引。</p>
+<p>如果没有这样的列，InnoDB就自己产生一个这样的ID值，它有六个字节，而且是隐藏的，使其作为聚簇索引。</p>
+<p>由于实际的数据页只能按照一棵B+树进行排序，因此每张表只能拥有一个聚集索引。<br>在多数情况下，查询优化器倾向于采用聚集索引。因为聚集索引能够在B+树索引的叶子节点上直接找到数据。<br>此外由于定义了数据的逻辑顺序，聚集索引能够特别快地访问针对范围值得查询。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze2ictu9j30hy095ta8.jpg" alt="205-MySQL索引的数据结构-B树介绍-13.png"></p>
+<p><strong>聚集索引的好处之一：</strong>它对主键的排序查找和范围查找速度非常快，叶子节点的数据就是用户所要查询的数据。如用户需要查找一张表，查询最后的10位用户信息，由于B+树索引是双向链表，所以用户可以快速找到最后一个数据页，并取出10条记录</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 参照第六小结测试索引的准备阶段来创建出表s1</span></span><br><span class="line">mysql&gt; desc s1; <span class="comment">#最开始没有主键</span></span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">| id     | int(<span class="number">11</span>)     | NO   |     | NULL    |       |</span><br><span class="line">| name   | varchar(<span class="number">20</span>) | YES  |     | NULL    |       |</span><br><span class="line">| gender | char(<span class="number">6</span>)     | YES  |     | NULL    |       |</span><br><span class="line">| email  | varchar(<span class="number">50</span>) | YES  |     | NULL    |       |</span><br><span class="line">+--------+-------------+------+-----+---------+-------+</span><br><span class="line">rows <span class="keyword">in</span> set (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; explain select * <span class="keyword">from</span> s1 order by id desc limit <span class="number">10</span>; <span class="comment">#Using filesort，需要二次排序</span></span><br><span class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+---------+----------+----------------+</span><br><span class="line">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows    | filtered | Extra          |</span><br><span class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+---------+----------+----------------+</span><br><span class="line">|  <span class="number">1</span> | SIMPLE      | s1    | NULL       | ALL  | NULL          | NULL | NULL    | NULL | <span class="number">2633472</span> |   <span class="number">100.00</span> | Using filesort |</span><br><span class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+---------+----------+----------------+</span><br><span class="line">row <span class="keyword">in</span> set, <span class="number">1</span> warning (<span class="number">0.11</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; alter table s1 add primary key(id); <span class="comment">#添加主键</span></span><br><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">13.37</span> sec)</span><br><span class="line">Records: <span class="number">0</span>  Duplicates: <span class="number">0</span>  Warnings: <span class="number">0</span></span><br><span class="line"></span><br><span class="line">mysql&gt; explain select * <span class="keyword">from</span> s1 order by id desc limit <span class="number">10</span>; <span class="comment">#基于主键的聚集索引在创建完毕后就已经完成了排序，无需二次排序</span></span><br><span class="line">+----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------+</span><br><span class="line">| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref  | rows | filtered | Extra |</span><br><span class="line">+----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------+</span><br><span class="line">|  <span class="number">1</span> | SIMPLE      | s1    | NULL       | index | NULL          | PRIMARY | <span class="number">4</span>       | NULL |   <span class="number">10</span> |   <span class="number">100.00</span> | NULL  |</span><br><span class="line">+----+-------------+-------+------------+-------+---------------+---------+---------+------+------+----------+-------+</span><br><span class="line">row <span class="keyword">in</span> set, <span class="number">1</span> warning (<span class="number">0.04</span> sec)</span><br></pre></td></tr></table></figure>
+
+<p><strong>聚集索引的好处之二：</strong>范围查询（range query），即如果要查找主键某一范围内的数据，通过叶子节点的上层中间节点就可以得到页的范围，之后直接读取数据页即可</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; alter table s1 drop primary key;</span><br><span class="line">Query OK, 2699998 rows affected (24.23 sec)</span><br><span class="line">Records: 2699998  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; desc s1;</span><br><span class="line">+<span class="comment">--------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| Field  | Type        | Null | Key | Default | Extra |</span><br><span class="line">+<span class="comment">--------+-------------+------+-----+---------+-------+</span></span><br><span class="line">| id     | int(11)     | NO   |     | NULL    |       |</span><br><span class="line">| name   | varchar(20) | YES  |     | NULL    |       |</span><br><span class="line">| gender | char(6)     | YES  |     | NULL    |       |</span><br><span class="line">| email  | varchar(50) | YES  |     | NULL    |       |</span><br><span class="line">+<span class="comment">--------+-------------+------+-----+---------+-------+</span></span><br><span class="line">rows in <span class="keyword">set</span> (<span class="number">0.12</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> s1 <span class="keyword">where</span> <span class="keyword">id</span> &gt; <span class="number">1</span> <span class="keyword">and</span> <span class="keyword">id</span> &lt; <span class="number">1000000</span>; <span class="comment"># 没有聚集索引，预估需要检索的rows数如下</span></span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+---------+----------+-------------+</span></span><br><span class="line">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows    | filtered | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+---------+----------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | s1    | NULL       | ALL  | NULL          | NULL | NULL    | NULL | 2690100 |    11.11 | Using where |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+------+---------------+------+---------+------+---------+----------+-------------+</span></span><br><span class="line">row in <span class="keyword">set</span>, <span class="number">1</span> <span class="keyword">warning</span> (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">alter</span> <span class="keyword">table</span> s1 <span class="keyword">add</span> primary <span class="keyword">key</span>(<span class="keyword">id</span>);</span><br><span class="line">Query OK, 0 rows affected (16.25 sec)</span><br><span class="line">Records: 0  Duplicates: 0  Warnings: 0</span><br><span class="line"></span><br><span class="line">mysql&gt; explain select * from s1 where id &gt; 1 and id &lt; 1000000; # 有聚集索引，预估需要检索的rows数如下</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+------+---------+----------+-------------+</span></span><br><span class="line">| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref  | rows    | filtered | Extra       |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+------+---------+----------+-------------+</span></span><br><span class="line">|  1 | SIMPLE      | s1    | NULL       | range | PRIMARY       | PRIMARY | 4       | NULL | 1343355 |   100.00 | Using where |</span><br><span class="line">+<span class="comment">----+-------------+-------+------------+-------+---------------+---------+---------+------+---------+----------+-------------+</span></span><br><span class="line">row in <span class="keyword">set</span>, <span class="number">1</span> <span class="keyword">warning</span> (<span class="number">0.09</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-辅助索引"><a href="#3-2-辅助索引" class="headerlink" title="3.2 辅助索引"></a>3.2 辅助索引</h2><p>表中除了聚集索引外其他索引都是辅助索引（Secondary Index，也称为非聚集索引），与聚集索引的区别是：辅助索引的叶子节点不包含行记录的全部数据。</p>
+<p>叶子节点除了包含键值以外，每个叶子节点中的索引行中还包含一个书签（bookmark）。该书签用来告诉InnoDB存储引擎去哪里可以找到与索引相对应的行数据。</p>
+<p>由于InnoDB存储引擎是索引组织表，因此InnoDB存储引擎的辅助索引的书签就是相应行数据的聚集索引键。如下图</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze37c89oj30lo0ei40u.jpg" alt="205-MySQL索引的数据结构-B树介绍-14.png"></p>
+<p>辅助索引的存在并不影响数据在聚集索引中的组织，因此每张表上可以有多个辅助索引，但只能有一个聚集索引。当通过辅助索引来寻找数据时，InnoDB存储引擎会遍历辅助索引并通过叶子级别的指针获得只想主键索引的主键，然后再通过主键索引来找到一个完整的行记录。</p>
+<p>举例来说，如果在一棵高度为3的辅助索引树种查找数据，那需要对这个辅助索引树遍历3次找到指定主键，如果聚集索引树的高度同样为3，那么还需要对聚集索引树进行3次查找，最终找到一个完整的行数据所在的页，因此一共需要6次逻辑IO访问才能得到最终的一个数据页。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze3ljdltj30g50cu0v1.jpg" alt="205-MySQL索引的数据结构-B树介绍-15.png"></p>
+<h2 id="3-3-聚集索引和非聚集索引的区别"><a href="#3-3-聚集索引和非聚集索引的区别" class="headerlink" title="3.3 聚集索引和非聚集索引的区别"></a>3.3 聚集索引和非聚集索引的区别</h2><p>聚集索引</p>
+<ol>
+<li>纪录的索引顺序与无力顺序相同<br>因此更适合between and和order by操作</li>
+<li>叶子结点直接对应数据<br>从中间级的索引页的索引行直接对应数据页</li>
+<li>每张表只能创建一个聚集索引</li>
+</ol>
+<p>非聚集索引</p>
+<ol>
+<li>索引顺序和物理顺序无关</li>
+<li>叶子结点不直接指向数据页</li>
+<li>每张表可以有多个非聚集索引，需要更多磁盘和内容</li>
+<li>多个索引会影响insert和update的速度</li>
+</ol>
+<h1 id="四、再看B-树"><a href="#四、再看B-树" class="headerlink" title="四、再看B+树"></a>四、再看B+树</h1><p>B+树和二叉树、平衡二叉树一样，都是经典的数据结构。B+树由B树和索引顺序访问方法（ISAM，是不是很熟悉？对，这也是MyISAM引擎最初参考的数据结构）演化而来，但是在实际使用过程中几乎已经没有使用B树的情况了。</p>
+<p>B+树的定义十分复杂，因此只简要地介绍B+树：B+树是为磁盘或其他直接存取辅助设备而设计的一种平衡查找树，在B+树中，所有记录节点都是按键值的大小顺序存放在同一层的叶节点中，各叶节点指针进行连接。</p>
+<p>我们先来看一个B+树，其高度为2，每页可存放4条记录，扇出（fan out）为5。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze496fv0j30ox06l0u6.jpg" alt="205-MySQL索引的数据结构-B树介绍-03.png"></p>
+<p>可以看出，所有记录都在叶节点中，并且是顺序存放的，如果我们从最左边的叶节点开始顺序遍历，可以得到所有键值的顺序排序：5、10、15、20、25、30、50、55、60、65、75、80、85、90。</p>
+<h2 id="4-1-B-树的插入操作"><a href="#4-1-B-树的插入操作" class="headerlink" title="4.1 B+树的插入操作"></a>4.1 B+树的插入操作</h2><p>B+树的插入必须保证插入后叶节点中的记录依然排序，同时需要考虑插入B+树的三种情况，每种情况都可能会导致不同的插入算法，如表5-1所示。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze8n1gr6j30p30b4mzx.jpg" alt="205-MySQL索引的数据结构-B树介绍-04.png"></p>
+<p>我们用实例来分析B+树的插入，我们插入28这个键值，发现当前Leaf Page和Index Page都没有满，我们直接插入就可以了。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze8r4y0lj30oy064myl.jpg" alt="205-MySQL索引的数据结构-B树介绍-05.png?x-oss-process=style/watermark"></p>
+<p>这次我们再插入一条70这个键值，这时原先的Leaf Page已经满了，但是Index Page还没有满，符合表5-1的第二种情况，这时插入Leaf Page后的情况为50、55、60、65、70。我们根据中间的值60拆分叶节点。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze9c5sw0j30n8086jsz.jpg" alt="205-MySQL索引的数据结构-B树介绍-06.png"></p>
+<p>因为图片显示的关系，这次我没有能在各叶节点加上双向链表指针。最后我们来插入记录95，这时符合表5-1讨论的第三种情况，即Leaf Page和Index Page都满了，这时需要做两次拆分。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze9msfugj30o50ax76i.jpg" alt="205-MySQL索引的数据结构-B树介绍-07.png"></p>
+<p>可以看到，不管怎么变化，B+树总是会保持平衡。但是为了保持平衡，对于新插入的键值可能需要做大量的拆分页（split）操作，而B+树主要用于磁盘，因此页的拆分意味着磁盘的操作，应该在可能的情况下尽量减少页的拆分。因此，B+树提供了旋转（rotation）的功能。</p>
+<p>旋转发生在Leaf Page已经满了、但是其左右兄弟节点没有满的情况下。（旋转是为了减少拆分页，如果叶子节点的左右兄弟节点还有空位置，那就旋转一下就能把当前数据插入了；如果自己和左右兄弟位置都满了那再怎么旋转也出不来位置了，只能拆分页了）这时B+树并不会急于去做拆分页的操作，而是将记录移到所在页的兄弟节点上。通常情况下，左兄弟被首先检查用来做旋转操作，这时我们插入键值70，其实B+树并不会急于去拆分叶节点，而是做旋转，50，55，55旋转。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjze9zz861j30p1069myl.jpg" alt="205-MySQL索引的数据结构-B树介绍-08.png"></p>
+<p>可以看到，采用旋转操作使B+树减少了一次页的拆分操作，而这时B+树的高度依然还是2。</p>
+<h2 id="4-2-B-树的删除操作"><a href="#4-2-B-树的删除操作" class="headerlink" title="4.2 B+树的删除操作"></a>4.2 B+树的删除操作</h2><p>B+树使用填充因子（fill factor）来控制树的删除变化，50%是填充因子可设的最小值。B+树的删除操作同样必须保证删除后叶节点中的记录依然排序，同插入一样，B+树的删除操作同样需要考虑如表5-2所示的三种情况，与插入不同的是，删除根据填充因子的变化来衡量。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjzeab550ij30p306u0us.jpg" alt="205-MySQL索引的数据结构-B树介绍-09.png"></p>
+<p>首先，删除键值为70的这条记录，该记录符合表5-2讨论的第一种情况，删除后。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjzeanflf2j30p50axwgr.jpg" alt="205-MySQL索引的数据结构-B树介绍-10.png"></p>
+<p>接着我们删除键值为25的记录，这也是表5-2讨论的第一种情况，但是该值还是Index Page中的值，因此在删除Leaf Page中25的值后，还应将25的右兄弟节点的28更新到Page Index中，最后可得到图。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjzeay7zqaj30ox0b5di0.jpg" alt="205-MySQL索引的数据结构-B树介绍-11.png"></p>
+<p>最后我们来看删除键值为60的情况，删除Leaf Page中键值为60的记录后，填充因子小于50%，这时需要做合并操作，同样，在删除Index Page中相关记录后需要做Index Page的合并操作，最后得到图。</p>
+<p>[<img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gjzebdn49xj30m3081t9y.jpg" alt="205-MySQL索引的数据结构-B树介绍-12.png"></p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/MySQL%E5%85%A5%E9%97%A8/6-MySQL%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E6%A6%82%E8%BF%B0/">
+        <span class="nav-arrow">← </span>
+        
+          python/MySQL入门/6-MySQL存储引擎概述
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/MySQL%E5%85%A5%E9%97%A8/11-MySQL%E5%8D%95%E8%A1%A8%E6%9F%A5%E8%AF%A2/">
+        
+          python/MySQL入门/11-MySQL单表查询
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、树"><span class="toc-nav-text">一、树</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、B-树"><span class="toc-nav-text">二、B+树</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-B-树性质"><span class="toc-nav-text">2.1 B+树性质</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、聚集索引和辅助索引"><span class="toc-nav-text">三、聚集索引和辅助索引</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-聚集索引"><span class="toc-nav-text">3.1 聚集索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-辅助索引"><span class="toc-nav-text">3.2 辅助索引</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-3-聚集索引和非聚集索引的区别"><span class="toc-nav-text">3.3 聚集索引和非聚集索引的区别</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、再看B-树"><span class="toc-nav-text">四、再看B+树</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-1-B-树的插入操作"><span class="toc-nav-text">4.1 B+树的插入操作</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-2-B-树的删除操作"><span class="toc-nav-text">4.2 B+树的删除操作</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/MySQL入门/15-MySQL索引的数据结构-B+树介绍/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/MySQL入门/15-MySQL索引的数据结构-B+树介绍",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

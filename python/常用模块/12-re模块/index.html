@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/常用模块/12-re模块 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/常用模块/12-re模块</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、正则表达式"><a href="#一、正则表达式" class="headerlink" title="一、正则表达式"></a>一、正则表达式</h1><p>正则表达式本身是一种小型的、高度专业化的编程语言，它并不是Python的一部分。正则表达式是用于处理字符串的强大工具，拥有自己独特的语法以及一个独立的处理引擎，效率上可能不如str自带的方法，但功能十分强大。得益于这一点，在提供了正则表达式的语言里，正则表达式的语法都是一样的，区别只在于不同的编程语言实现支持的语法数量不同；但不用担心，不被支持的语法通常是不常用的部分。如果已经在其他语言里使用过正则表达式，只需要简单看一看就可以上手了。而在python中，通过内嵌集成re模块，程序员们可以直接调用来实现正则匹配。正则表达式模式被编译成一系列的字节码，然后由用C编写的匹配引擎执行。</p>
+<p>下图展示了使用正则表达式进行匹配的流程：</p>
+<p>[<img src="http://www.chenyoude.com/Python%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83/80re%E6%A8%A1%E5%9D%97-%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="80re模块-流程图.png"></p>
+<p>正则表达式的大致匹配过程是：依次拿出表达式和文本中的字符比较，如果每一个字符都能匹配，则匹配成功；一旦有匹配不成功的字符则匹配失败。如果表达式中有量词或边界，这个过程会稍微有一些不同，但也是很好理解的，看下图中的示例以及自己多使用几次就能明白。</p>
+<p>下图列出了Python支持的正则表达式元字符和语法：</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gm2r55r00nj30m71brdms.jpg" alt="80re模块-匹配图.png"></p>
+<h2 id="1-1-数量词的贪婪模式与非贪婪模式"><a href="#1-1-数量词的贪婪模式与非贪婪模式" class="headerlink" title="1.1 数量词的贪婪模式与非贪婪模式"></a>1.1 数量词的贪婪模式与非贪婪模式</h2><p>正则表达式通常用于在文本中查找匹配的字符串。Python里数量词默认是贪婪的（在少数语言里也可能是默认非贪婪），总是尝试匹配尽可能多的字符；非贪婪的则相反，总是尝试匹配尽可能少的字符。例如：正则表达式”ab*”如果用于查找”abbbc”，将找到”abbb”。而如果使用非贪婪的数量词”ab*?”，将找到”a”。</p>
+<h2 id="1-2-反斜杠的困扰"><a href="#1-2-反斜杠的困扰" class="headerlink" title="1.2 反斜杠的困扰"></a>1.2 反斜杠的困扰</h2><p>与大多数编程语言相同，正则表达式里使用<code>\</code>作为转义字符，这就可能造成反斜杠困扰。假如你需要匹配文本中的字符<code>\</code>，那么使用编程语言表示的正则表达式里将需要4个反斜杠<code>\\\\</code>：前两个和后两个分别用于在编程语言里转义成反斜杠，转换成两个反斜杠后再在正则表达式里转义成一个反斜杠。Python里的原生字符串很好地解决了这个问题，这个例子中的正则表达式可以使用<code>r&#39;\\&#39;</code>表示。同样，匹配一个数字的<code>\\d</code>可以写成<code>r&#39;\d&#39;</code>。有了原生字符串，你再也不用担心是不是漏写了反斜杠，写出来的表达式也更直观。</p>
+<h2 id="1-3-匹配模式"><a href="#1-3-匹配模式" class="headerlink" title="1.3 匹配模式"></a>1.3 匹配模式</h2><p>正则表达式提供了一些可用的匹配模式，比如忽略大小写、多行匹配等，这部分内容将在Pattern类的工厂方法re.compile(pattern[, flags])中一起介绍。</p>
+<h1 id="二、re模块的基本使用"><a href="#二、re模块的基本使用" class="headerlink" title="二、re模块的基本使用"></a>二、re模块的基本使用</h1><p>正则表达式是用来匹配处理字符串的 python 中使用正则表达式需要引入re模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re  # 第一步，要引入re模块</span><br><span class="line">a &#x3D; re.findall(&quot;匹配规则&quot;, &quot;这个字符串是否有匹配规则的字符&quot;)  # 第二步，调用模块函数</span><br><span class="line">print(a)  # 以列表形式返回匹配到的字符串</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配规则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>^元字符</strong></p>
+<p>字符串开始位置与匹配规则符合就匹配，否则不匹配</p>
+<p>匹配字符串开头。在多行模式中匹配每一行的开头（Python3+已经失效，配合compile使用）</p>
+<p>^元字符如果写到[]字符集里就是反取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;^匹配规则&quot;, &quot;匹配规则这个字符串是否匹配&quot;)  # 字符串开始位置与匹配规则符合就匹配，否则不匹配</span><br><span class="line">print(a)</span><br><span class="line">#打印出 [&#39;匹配规则&#39;]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配规则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>[^a-z]反取</strong></p>
+<p>匹配出除字母外的字符，^元字符如果写到字符集里就是反取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;[^a-z]&quot;, &quot;匹配s规则这s个字符串是否s匹配f规则则re则则则&quot;)  # 反取，匹配出除字母外的字符</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;这&#39;, &#39;个&#39;, &#39;字&#39;, &#39;符&#39;, &#39;串&#39;, &#39;是&#39;, &#39;否&#39;, &#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>$元字符</strong></p>
+<p>字符串结束位置与匹配规则符合就匹配，否则不匹配</p>
+<p>匹配字符串末尾，在多行模式中匹配每一行的末尾</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;匹配规则$&quot;, &quot;这个字符串是否匹配规则&quot;)  # 字符串结束位置与匹配规则符合就匹配，否则不匹配</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配规则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>*元字符</strong></p>
+<p>需要字符串里完全符合，匹配规则，就匹配，（规则里的*元字符）前面的一个字符可以是0个或多个原本字符</p>
+<p>匹配前一个字符0或多次，贪婪匹配前导字符有多少个就匹配多少个很贪婪</p>
+<p>如果规则里只有一个分组，尽量避免用*否则会有可能匹配出空字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 需要字符串里完全符合，匹配规则，就匹配，（规则里的*元字符）前面的一个字符可以是0或多个原本字符</span><br><span class="line">a &#x3D; re.findall(&quot;匹配规则*&quot;, &quot;这个字符串是否匹配规则则则则则&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配规则则则则则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>+元字符</strong></p>
+<p>需要字符串里完全符合，匹配规则，就匹配，（规则里的+元字符）前面的一个字符可以是1个或多个原本字符</p>
+<p>匹配前一个字符1次或无限次，贪婪匹配前导字符有多少个就匹配多少个很贪婪</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 需要字符串里完全符合，匹配规则，就匹配，（规则里的+元字符）前面的一个字符可以是1个或多个原本字符</span><br><span class="line">a &#x3D; re.findall(&quot;匹配+&quot;, &quot;匹配配配配配规则这个字符串是否匹配规则则则则则&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配配配配配&#39;, &#39;匹配&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>?元字符</strong>(防止贪婪匹配)</p>
+<p>需要字符串里完全符合，匹配规则，就匹配，（规则里的?元字符）前面的一个字符可以是0个或1个原本字符</p>
+<p>匹配一个字符0次或1次</p>
+<p>还有一个功能是可以防止贪婪匹配，详情见防贪婪匹配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 需要字符串里完全符合，匹配规则，就匹配，（规则里的?元字符）前面的一个字符可以是0个或1个原本字符</span><br><span class="line">a &#x3D; re.findall(&quot;匹配规则?&quot;, &quot;匹配规这个字符串是否匹配规则则则则则&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配规&#39;, &#39;匹配规则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>{}元字符</strong>(范围)</p>
+<p>需要字符串里完全符合，匹配规则，就匹配，（规则里的 {} 元字符）前面的一个字符，是自定义字符数，位数的原本字符</p>
+<p>{m}匹配前一个字符m次，{m,n}匹配前一个字符m至n次，若省略n，则匹配m至无限次</p>
+<p>{0,}匹配前一个字符0或多次,等同于*元字符<br>{+,}匹配前一个字符1次或无限次,等同于+元字符<br>{0,1}匹配前一个字符0次或1次,等同于?元字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># &#123;m&#125;匹配前一个字符m次，&#123;m,n&#125;匹配前一个字符m至n次，若省略n，则匹配m至无限次</span><br><span class="line">a &#x3D; re.findall(&quot;匹配规则&#123;3&#125;&quot;, &quot;匹配规这个字符串是否匹配规则则则则则&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配规则则则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>[]元字符</strong>(字符集)</p>
+<p>需要字符串里完全符合，匹配规则，就匹配，（规则里的 [] 元字符）对应位置是[]里的任意一个字符就匹配</p>
+<p>字符集。对应的位置可以是字符集中任意字符。字符集中的字符可以逐个列出，也可以给出范围，如[abc]或[a-c]。[^abc]表示取反，即非abc。<br>所有特殊字符在字符集中都失去其原有的特殊含义。用\反斜杠转义恢复特殊字符的特殊含义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 需要字符串里完全符合，匹配规则，就匹配，（规则里的 [] 元字符）对应位置是[]里的任意一个字符就匹配</span><br><span class="line">a &#x3D; re.findall(&quot;匹配[a,b,c]规则&quot;, &quot;匹配a规则这个字符串是否匹配b规则则则则则&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配a规则&#39;, &#39;匹配b规则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>[^]</strong></p>
+<p>非，反取，匹配出除[]里面的字符，元字符如果写到字符集里就是反取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;[^a-z]&quot;, &quot;匹配s规则这s个字符串是否s匹配f规则则re则则则&quot;)  # 反取，匹配出除字母外的字符</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;这&#39;, &#39;个&#39;, &#39;字&#39;, &#39;符&#39;, &#39;串&#39;, &#39;是&#39;, &#39;否&#39;, &#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>反斜杠后边跟普通字符实现特殊功能</strong>(预定义字符)</p>
+<p>预定义字符是在字符集和组里都是有用的</p>
+<p>\d匹配任何十进制数，它相当于类[0-9]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;\d&quot;, &quot;匹配规则这2个字符串3是否匹配规则5则则则7则&quot;)  # \d匹配任何十进制数，它相当于类[0-9]</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;2&#39;, &#39;3&#39;, &#39;5&#39;, &#39;7&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>\d+</strong></p>
+<p>匹配一位或者多位数的数字时用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;\d+&quot;, &quot;匹配规则这2个字符串134444是否匹配规则5则则则7则&quot;)  # \d+如果需要匹配一位或者多位数的数字时用</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;2&#39;, &#39;134444&#39;, &#39;5&#39;, &#39;7&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>\D</strong></p>
+<p>匹配任何非数字字符，它相当于类[^0-9]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;\D&quot;, &quot;匹配规则这2个字符串3是否匹配规则5则则则7则&quot;)  # \D匹配任何非数字字符，它相当于类[^0-9]</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;这&#39;, &#39;个&#39;, &#39;字&#39;, &#39;符&#39;, &#39;串&#39;, &#39;是&#39;, &#39;否&#39;, &#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>\s</strong></p>
+<p>匹配任何空白字符，它相当于类[\t\n\r\f\v]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># \s匹配任何空白字符，它相当于类[\t\n\r\f\v]</span><br><span class="line">a &#x3D; re.findall(&quot;\s&quot;, &quot;匹配规则   这2个字符串3是否匹\n配规则5则则则7则&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39; &#39;, &#39; &#39;, &#39; &#39;, &#39;\n&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>\S</strong></p>
+<p>匹配任何非空白字符，它相当于类[^\t\n\r\f\v]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># \S匹配任何非空白字符，它相当于类[^\t\n\r\f\v]</span><br><span class="line">a &#x3D; re.findall(&quot;\S&quot;, &quot;匹配规则   这2个字符串3是否匹\n配规则5则则则7则&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;这&#39;, &#39;2&#39;, &#39;个&#39;, &#39;字&#39;, &#39;符&#39;, &#39;串&#39;, &#39;3&#39;, &#39;是&#39;, &#39;否&#39;, &#39;匹&#39;, &#39;配&#39;, &#39;规&#39;, &#39;则&#39;, &#39;5&#39;, &#39;则&#39;, &#39;则&#39;, &#39;则&#39;, &#39;7&#39;, &#39;则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>\w</strong></p>
+<p>匹配包括下划线在内任何字母数字字符，它相当于类[a-zA-Z0-9_]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># \w匹配包括下划线在内任何字母数字字符，它相当于类[a-zA-Z0-9_]</span><br><span class="line">a &#x3D; re.findall(&#39;\w&#39;, &quot;https:&#x2F;&#x2F;www.cnblogs.com&#x2F;&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;h&#39;, &#39;t&#39;, &#39;t&#39;, &#39;p&#39;, &#39;s&#39;, &#39;w&#39;, &#39;w&#39;, &#39;w&#39;, &#39;c&#39;, &#39;n&#39;, &#39;b&#39;, &#39;l&#39;, &#39;o&#39;, &#39;g&#39;, &#39;s&#39;, &#39;c&#39;, &#39;o&#39;, &#39;m&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>\W</strong></p>
+<p>匹配非任何字母数字字符包括下划线在内，它相当于类[^a-zA-Z0-9_]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># \w匹配包括下划线在内任何字母数字字符，它相当于类[a-zA-Z0-9_]</span><br><span class="line">a &#x3D; re.findall(&#39;\W&#39;, &quot;https:&#x2F;&#x2F;www.cnblogs.com&#x2F;&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;:&#39;, &#39;&#x2F;&#39;, &#39;&#x2F;&#39;, &#39;.&#39;, &#39;.&#39;, &#39;&#x2F;&#39;]</span><br></pre></td></tr></table></figure>
+
+<p><strong>()元字符</strong>(分组)</p>
+<p>也就是分组匹配，()里面的为一个组也可以理解成一个整体</p>
+<p>如果()后面跟的是特殊元字符如 (adc)* 那么*控制的前导字符就是()里的整体内容，不再是前导一个字符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 也就是分组匹配，()里面的为一个组也可以理解成一个整体</span><br><span class="line">a &#x3D; re.search(&quot;(a4)+&quot;, &quot;a4a4a4a4a4dg4g654gb&quot;)  # 匹配一个或多个a4</span><br><span class="line">b &#x3D; a.group()</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a4a4a4a4a4</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 也就是分组匹配，()里面的为一个组也可以理解成一个整体</span><br><span class="line"># 匹配 (a) (\d0-9的数字) (+可以是1个到多个0-9的数字)</span><br><span class="line">a &#x3D; re.search(&quot;a(\d+)&quot;, &quot;a466666664a4a4a4dg4g654gb&quot;)</span><br><span class="line">b &#x3D; a.group()</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a466666664</span><br></pre></td></tr></table></figure>
+
+<p><strong>|元字符</strong>(或)</p>
+<p>|或，或就是前后其中一个符合就匹配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(r&quot;你|好&quot;, &quot;a4a4a你4aabc4a4dgg好dg4g654g&quot;)  # |或，或就是前后其中一个符合就匹配</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;你&#39;, &#39;好&#39;]</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、re模块中常用功能函数"><a href="#三、re模块中常用功能函数" class="headerlink" title="三、re模块中常用功能函数"></a>三、re模块中常用功能函数</h1><h2 id="3-1-正则表达式的两种书写方式"><a href="#3-1-正则表达式的两种书写方式" class="headerlink" title="3.1 正则表达式的两种书写方式"></a>3.1 正则表达式的两种书写方式</h2><p>1.一种是直接在函数里书写规则，<strong>推荐使用</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; re.findall(&quot;匹配规则&quot;, &quot;这个字符串是否有匹配规则的字符&quot;)</span><br><span class="line">print(a)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;匹配规则&#39;]</span><br></pre></td></tr></table></figure>
+
+<p>2.另一种是先将正则表达式的字符串形式编译为Pattern实例，然后使用Pattern实例处理文本并获得匹配结果（一个Match实例），最后使用Match实例获得信息，进行其他的操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"></span><br><span class="line"># 将正则表达式编译成Pattern对象</span><br><span class="line">pattern &#x3D; re.compile(r&#39;hello&#39;)</span><br><span class="line"></span><br><span class="line"># 使用Pattern匹配文本，获得匹配结果，无法匹配时将返回None</span><br><span class="line">match &#x3D; pattern.match(&#39;hello world!&#39;)</span><br><span class="line"></span><br><span class="line">if match:</span><br><span class="line">    # 使用Match获得分组信息</span><br><span class="line">    print(match.group())</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-re-compile-strPattern-flag-函数"><a href="#3-2-re-compile-strPattern-flag-函数" class="headerlink" title="3.2 re.compile(strPattern[, flag])函数"></a>3.2 re.compile(strPattern[, flag])函数</h2><p>这个方法是Pattern类的工厂方法，用于将字符串形式的正则表达式编译为Pattern对象。 第二个参数flag是匹配模式，取值可以使用按位或运算符’|’表示同时生效，比如re.I | re.M。另外，你也可以在regex字符串中指定模式，比如re.compile(‘pattern’, re.I | re.M)与re.compile(‘(?im)pattern’)是等价的。</p>
+<p>下表是所有的正则匹配模式：</p>
+<table>
+<thead>
+<tr>
+<th align="center">修饰符</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">re.I</td>
+<td align="center">使匹配对大小写不敏感</td>
+</tr>
+<tr>
+<td align="center">re.L</td>
+<td align="center">做本地化识别（locale-aware）匹配</td>
+</tr>
+<tr>
+<td align="center">re.M</td>
+<td align="center">多行匹配，影响 ^ 和 $</td>
+</tr>
+<tr>
+<td align="center">re.S</td>
+<td align="center">使 . 匹配包括换行在内的所有字符</td>
+</tr>
+<tr>
+<td align="center">re.U</td>
+<td align="center">根据Unicode字符集解析字符。这个标志影响 \w, \W, \b, \B.</td>
+</tr>
+<tr>
+<td align="center">re.X</td>
+<td align="center">该标志通过给予你更灵活的格式以便你将正则表达式写得更易于理解。</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-1-re-S"><a href="#3-2-1-re-S" class="headerlink" title="3.2.1 re.S"></a>3.2.1 re.S</h3><ul>
+<li>在Python的正则表达式中，有一个参数为re.S。它表示 “.” 的作用扩展到整个字符串，包括“\n”。看如下代码：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">a &#x3D; &#39;&#39;&#39;asdfhellopass:</span><br><span class="line">    worldaf</span><br><span class="line">    &#39;&#39;&#39;</span><br><span class="line">b &#x3D; re.findall(&#39;hello(.*?)world&#39;, a)</span><br><span class="line">c &#x3D; re.findall(&#39;hello(.*?)world&#39;, a, re.S)</span><br><span class="line">print(&#39;b is &#39;, b)</span><br><span class="line">print(&#39;c is &#39;, c)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b is  []</span><br><span class="line">c is  [&#39;pass:\n    &#39;]</span><br></pre></td></tr></table></figure>
+
+<p>正则表达式中，“.”的作用是匹配除“\n”以外的任何字符，也就是说，它是在一行中进行匹配。这里的“行”是以“\n”进行区分的。a字符串有每行的末尾有一个“\n”，不过它不可见。</p>
+<p>如果不使用re.S参数，则只在每一行内进行匹配，如果一行没有，就换下一行重新开始，不会跨行。而使用re.S参数以后，正则表达式会将这个字符串作为一个整体，将“\n”当做一个普通的字符加入到这个字符串中，在整体中进行匹配。</p>
+<h3 id="3-2-2-re-I"><a href="#3-2-2-re-I" class="headerlink" title="3.2.2 re.I"></a>3.2.2 re.I</h3><ul>
+<li>不区分大小写</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res &#x3D; re.findall(r&quot;A&quot;, &quot;abc&quot;, re.I)</span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;a&#39;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-3-re-M"><a href="#3-2-3-re-M" class="headerlink" title="3.2.3 re.M"></a>3.2.3 re.M</h3><ul>
+<li>将所有行的尾字母输出（python3+已经无效）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s &#x3D; &#39;12 34&#x2F;n56 78&#x2F;n90&#39;</span><br><span class="line"></span><br><span class="line">re.findall(r&#39;^&#x2F;d+&#39;, s, re.M)  # 匹配位于行首的数字  # [&#39;12&#39;, &#39;56&#39;, &#39;90&#39;]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.findall(r&#39;&#x2F;A&#x2F;d+&#39;, s, re.M)  # 匹配位于字符串开头的数字  # [&#39;12&#39;]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.findall(r&#39;&#x2F;d+$&#39;, s, re.M)  # 匹配位于行尾的数字  # [&#39;34&#39;, &#39;78&#39;, &#39;90&#39;]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.findall(r&#39;&#x2F;d+&#x2F;Z&#39;, s, re.M)  # 匹配位于字符串尾的数字  # [&#39;90&#39;]</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-4-re-sub"><a href="#3-2-4-re-sub" class="headerlink" title="3.2.4 re.sub"></a>3.2.4 re.sub</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 要求结果：[&#39;12&#39;, &#39;23&#39;, &#39;34&#39;]</span><br><span class="line">l &#x3D; [&#39;1 2 &#39;, &#39;2   3&#39;, &#39;  3 4&#39;]</span><br><span class="line">import re</span><br><span class="line">print(eval(re.sub(r&#39;\s*&#39;, &#39;&#39;, str(l))))</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;12&#39;, &#39;23&#39;, &#39;34&#39;]</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3-re-match-pattern-string-flags-函数-常用"><a href="#3-3-re-match-pattern-string-flags-函数-常用" class="headerlink" title="3.3 re.match(pattern, string[, flags])函数(常用)"></a>3.3 re.match(pattern, string[, flags])函数(常用)</h2><p>match，从头匹配一个符合规则的字符串，从起始位置开始匹配，匹配成功返回一个对象，未匹配成功返回None<br>match(pattern, string, flags=0)</p>
+<ul>
+<li>pattern： 正则模型</li>
+<li>string ： 要匹配的字符串</li>
+<li>falgs ： 匹配模式</li>
+</ul>
+<p>注意：match()函数 与 search()函数基本是一样的功能，不一样的就是match()匹配字符串开始位置的一个符合规则的字符串，search()是在字符串全局匹配第一个合规则的字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 无分组</span><br><span class="line">origin &#x3D; &quot;hello egon bcd egon lge egon acd 19&quot;</span><br><span class="line">r &#x3D; re.match(&quot;h\w+&quot;, origin)  # match，从起始位置开始匹配，匹配成功返回一个对象，未匹配成功返回None</span><br><span class="line">print(r.group())  # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来</span><br><span class="line">print(r.groups())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</span><br><span class="line">print(r.groupdict())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br><span class="line">()</span><br><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 有分组</span><br><span class="line"># 为何要有分组？提取匹配成功的指定内容（先匹配成功全部正则，再匹配成功的局部内容提取出来）</span><br><span class="line">r &#x3D; re.match(&quot;h(\w+)&quot;, origin)  # match，从起始位置开始匹配，匹配成功返回一个对象，未匹配成功返回None</span><br><span class="line">print(r.group())  # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来</span><br><span class="line">print(r.groups())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</span><br><span class="line">print(r.groupdict())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br><span class="line">(&#39;ello&#39;,)</span><br><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 有两个分组定义了key</span><br><span class="line"># 为何要有分组？提取匹配成功的指定内容（先匹配成功全部正则，再匹配成功的局部内容提取出来）</span><br><span class="line"># ?P&lt;&gt;定义组里匹配内容的key(键)，&lt;&gt;里面写key名称，值就是匹配到的内容</span><br><span class="line">r &#x3D; re.match(&quot;(?P&lt;n1&gt;h)(?P&lt;n2&gt;\w+)&quot;, origin)</span><br><span class="line">print(r.group())  # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来</span><br><span class="line">print(r.groups())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</span><br><span class="line">print(r.groupdict())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello</span><br><span class="line">(&#39;h&#39;, &#39;ello&#39;)</span><br><span class="line">&#123;&#39;n1&#39;: &#39;h&#39;, &#39;n2&#39;: &#39;ello&#39;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-4-分组函数"><a href="#3-4-分组函数" class="headerlink" title="3.4 分组函数"></a>3.4 分组函数</h2><p><code>?P&lt;n1&gt;</code> # ?P&lt;&gt;定义组里匹配内容的key(键)，&lt;&gt;里面写key名称，值就是匹配到的内容（只对正则函数返回对象时有用）</p>
+<p>取出匹配对象方法</p>
+<p>只对正则函数返回对象的有用</p>
+<ul>
+<li>group() # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来，有参取匹配到的第几个如2</li>
+<li>groups() # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</li>
+<li>groupdict() # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</li>
+</ul>
+<h2 id="3-5-re-search-pattern-string-flags-函数"><a href="#3-5-re-search-pattern-string-flags-函数" class="headerlink" title="3.5 re.search(pattern, string[, flags])函数"></a>3.5 re.search(pattern, string[, flags])函数</h2><p>search,浏览全部字符串，匹配第一符合规则的字符串，浏览整个字符串去匹配第一个，未匹配成功返回None</p>
+<p>search(pattern, string, flags=0)</p>
+<ul>
+<li>pattern： 正则模型</li>
+<li>string ： 要匹配的字符串</li>
+<li>falgs ： 匹配模式</li>
+</ul>
+<p>注意：match()函数 与 search()函数基本是一样的功能，不一样的就是match()匹配字符串开始位置的一个符合规则的字符串，search()是在字符串全局匹配第一个合规则的字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 无分组</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line"># search浏览全部字符串，匹配第一符合规则的字符串，浏览整个字符串去匹配第一个，未匹配成功返回None</span><br><span class="line">r &#x3D; re.search(&quot;a\w+&quot;, origin)</span><br><span class="line">print(r.group())  # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来</span><br><span class="line">print(r.groups())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</span><br><span class="line">print(r.groupdict())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alex</span><br><span class="line">()</span><br><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 有分组</span><br><span class="line"># 为何要有分组？提取匹配成功的指定内容（先匹配成功全部正则，再匹配成功的局部内容提取出来）</span><br><span class="line">r &#x3D; re.search(&quot;a(\w+).*(\d)&quot;, origin)</span><br><span class="line">print(r.group())  # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来</span><br><span class="line">print(r.groups())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</span><br><span class="line">print(r.groupdict())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alex bcd alex lge alex acd 19</span><br><span class="line">(&#39;lex&#39;, &#39;9&#39;)</span><br><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 有两个分组定义了key</span><br><span class="line"># 为何要有分组？提取匹配成功的指定内容（先匹配成功全部正则，再匹配成功的局部内容提取出来）</span><br><span class="line"># ?P&lt;&gt;定义组里匹配内容的key(键)，&lt;&gt;里面写key名称，值就是匹配到的内容</span><br><span class="line">r &#x3D; re.search(&quot;a(?P&lt;n1&gt;\w+).*(?P&lt;n2&gt;\d)&quot;, origin)</span><br><span class="line">print(r.group())  # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来</span><br><span class="line">print(r.groups())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</span><br><span class="line">print(r.groupdict())  # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alex bcd alex lge alex acd 19</span><br><span class="line">(&#39;lex&#39;, &#39;9&#39;)</span><br><span class="line">&#123;&#39;n1&#39;: &#39;lex&#39;, &#39;n2&#39;: &#39;9&#39;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-6-re-findall-pattern-string-flags-函数-常用"><a href="#3-6-re-findall-pattern-string-flags-函数-常用" class="headerlink" title="3.6 re.findall(pattern, string[, flags])函数(常用)"></a>3.6 re.findall(pattern, string[, flags])函数(常用)</h2><p>findall(pattern, string, flags=0)</p>
+<ul>
+<li>pattern： 正则模型</li>
+<li>string ： 要匹配的字符串</li>
+<li>falgs ： 匹配模式</li>
+</ul>
+<p>浏览全部字符串，匹配所有合规则的字符串，匹配到的字符串放到一个列表中，未匹配成功返回空列表</p>
+<p>注意：一旦匹配成，再次匹配，是从前一次匹配成功的，后面一位开始的，也可以理解为匹配成功的字符串，不在参与下次匹配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 无分组</span><br><span class="line">r &#x3D; re.findall(&quot;\d+\w\d+&quot;, &quot;a2b3c4d5&quot;)  # 浏览全部字符串，匹配所有合规则的字符串，匹配到的字符串放到一个列表中</span><br><span class="line">print(r)  # 注意：匹配成功的字符串，不在参与下次匹配,所以3c4也符合规则但是没匹配到</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;2b3&#39;, &#39;4d5&#39;]</span><br></pre></td></tr></table></figure>
+
+<p>注意：如果没写匹配规则，也就是空规则，返回的是一个比原始字符串多一位的，空字符串列表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 无分组</span><br><span class="line">r &#x3D; re.findall(&quot;&quot;, &quot;a2b3c4d5&quot;)  # 浏览全部字符串，匹配所有合规则的字符串，匹配到的字符串放到一个列表中</span><br><span class="line">print(r)  # 注意：如果没写匹配规则，也就是空规则，返回的是一个比原始字符串多一位的，空字符串列表</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]</span><br></pre></td></tr></table></figure>
+
+<p>注意：正则匹配到空字符的情况，如果规则里只有一个组，而组后面是<em>就表示组里的内容可以是0个或者多过，这样组里就有了两个意思，一个意思是匹配组里的内容，二个意思是匹配组里0内容（即是空白）所以尽量避免用</em>否则会有可能匹配出空字符串</p>
+<p>注意：正则只拿组里最后一位，如果规则里只有一个组，匹配到的字符串里在拿组内容是，拿的是匹配到的内容最后一位</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line">r &#x3D; re.findall(&quot;(a)*&quot;, origin)</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;a&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;a&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;a&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;a&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;, &#39;&#39;]</span><br></pre></td></tr></table></figure>
+
+<p>无分组：匹配所有合规则的字符串，匹配到的字符串放到一个列表中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"># 无分组</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line">r &#x3D; re.findall(&quot;a\w+&quot;, origin)  # 浏览全部字符串，匹配所有合规则的字符串，匹配到的字符串放到一个列表中</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;alex&#39;, &#39;alex&#39;, &#39;alex&#39;, &#39;acd&#39;]</span><br></pre></td></tr></table></figure>
+
+<p>有分组：只将匹配到的字符串里，组的部分放到列表里返回，相当于groups()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line">r &#x3D; re.findall(&quot;a(\w+)&quot;, origin)  # 有分组：只将匹配到的字符串里，组的部分放到列表里返回</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;lex&#39;, &#39;lex&#39;, &#39;lex&#39;, &#39;cd&#39;]</span><br></pre></td></tr></table></figure>
+
+<p>多个分组：只将匹配到的字符串里，组的部分放到一个元组中，最后将所有元组放到一个列表里返</p>
+<p>相当于在group()结果里再将组的部分，分别，拿出来放入一个元组，最后将所有元组放入一个列表返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line"># 多个分组：只将匹配到的字符串里，组的部分放到一个元组中，最后将所有元组放到一个列表里返回</span><br><span class="line">r &#x3D; re.findall(&quot;(a)(\w+)&quot;, origin)</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[(&#39;a&#39;, &#39;lex&#39;), (&#39;a&#39;, &#39;lex&#39;), (&#39;a&#39;, &#39;lex&#39;), (&#39;a&#39;, &#39;cd&#39;)]</span><br></pre></td></tr></table></figure>
+
+<p>分组中有分组：只将匹配到的字符串里，组的部分放到一个元组中，先将包含有组的组，看作一个整体也就是一个组，把这个整体组放入一个元组里，然后在把组里的组放入一个元组，最后将所有组放入一个列表返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line"># 分组中有分组：只将匹配到的字符串里，组的部分放到一个元组中，先将包含有组的组，看作一个整体也就是一个组，把这个整体组放入一个元组里，然后在把组里的组放入一个元组，最后将所有组放入一个列表返回</span><br><span class="line">r &#x3D; re.findall(&quot;(a)(\w+(e))&quot;, origin)</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[(&#39;a&#39;, &#39;le&#39;, &#39;e&#39;), (&#39;a&#39;, &#39;le&#39;, &#39;e&#39;), (&#39;a&#39;, &#39;le&#39;, &#39;e&#39;)]</span><br></pre></td></tr></table></figure>
+
+<p>?:在有分组的情况下findall()函数，不只拿分组里的字符串，拿所有匹配到的字符串，注意?:只用于不是返回正则对象的函数如findall()</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line"># ?:在有分组的情况下，不只拿分组里的字符串，拿所有匹配到的字符串，注意?:只用于不是返回正则对象的函数如findall()</span><br><span class="line">b &#x3D; re.findall(&quot;a(?:\w+)&quot;, origin)</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;alex&#39;, &#39;alex&#39;, &#39;alex&#39;, &#39;acd&#39;]</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-7-re-split-pattern-string-maxsplit-函数"><a href="#3-7-re-split-pattern-string-maxsplit-函数" class="headerlink" title="3.7 re.split(pattern, string[, maxsplit])函数"></a>3.7 re.split(pattern, string[, maxsplit])函数</h2><p>根据正则匹配分割字符串，返回分割后的一个列表</p>
+<p>split(pattern, string, maxsplit=0, flags=0)</p>
+<ul>
+<li>pattern： 正则模型</li>
+<li>string ： 要匹配的字符串</li>
+<li>maxsplit：指定分割个数</li>
+<li>flags ： 匹配模式</li>
+</ul>
+<p>按照一个字符将全部字符串进行分割</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line">r &#x3D; re.split(&quot;a&quot;, origin)  # 根据正则匹配分割字符串</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;hello &#39;, &#39;lex bcd &#39;, &#39;lex lge &#39;, &#39;lex &#39;, &#39;cd 19&#39;]</span><br></pre></td></tr></table></figure>
+
+<p>将匹配到的字符串作为分割标准进行分割</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex 2acd 19&quot;</span><br><span class="line">r &#x3D; re.split(&quot;a\w+&quot;, origin)  # 根据正则匹配分割字符串</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#39;hello &#39;, &#39; bcd &#39;, &#39; lge &#39;, &#39; 2&#39;, &#39; 19&#39;]</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-8-re-sub-pattern-repl-string-count-函数"><a href="#3-8-re-sub-pattern-repl-string-count-函数" class="headerlink" title="3.8 re.sub(pattern, repl, string[, count])函数"></a>3.8 re.sub(pattern, repl, string[, count])函数</h2><p>替换匹配成功的指定位置字符串</p>
+<p>sub(pattern, repl, string, count=0, flags=0)</p>
+<ul>
+<li>pattern： 正则模型</li>
+<li>repl ： 要替换的字符串</li>
+<li>string ： 要匹配的字符串</li>
+<li>count ： 指定匹配个数</li>
+<li>flags ： 匹配模式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line">r &#x3D; re.sub(&quot;a&quot;, &quot;替换&quot;, origin)  # 替换匹配成功的指定位置字符串</span><br><span class="line">print(r)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello 替换lex bcd 替换lex lge 替换lex 替换cd 19</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-9-re-subn-pattern-repl-string-count-flags-函数"><a href="#3-9-re-subn-pattern-repl-string-count-flags-函数" class="headerlink" title="3.9 re.subn(pattern, repl, string,[, count][, flags])函数"></a>3.9 re.subn(pattern, repl, string,[, count][, flags])函数</h2><p>替换匹配成功的指定位置字符串,并且返回替换次数，可以用两个变量分别接受</p>
+<p>subn(pattern, repl, string, count=0, flags=0)</p>
+<ul>
+<li>pattern： 正则模型</li>
+<li>repl ： 要替换的字符串</li>
+<li>string ： 要匹配的字符串</li>
+<li>count ： 指定匹配个数</li>
+<li>flags ： 匹配模式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">origin &#x3D; &quot;hello alex bcd alex lge alex acd 19&quot;</span><br><span class="line">a, b &#x3D; re.subn(&quot;a&quot;, &quot;替换&quot;, origin)  # 替换匹配成功的指定位置字符串,并且返回替换次数，可以用两个变量分别接受</span><br><span class="line">print(a)</span><br><span class="line">print(b)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hello 替换lex bcd 替换lex lge 替换lex 替换cd 19</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、注意事项"><a href="#四、注意事项" class="headerlink" title="四、注意事项"></a>四、注意事项</h1><ol>
+<li>r原生字符：让在python里有特殊意义的字符如\b，转换成原生字符（就是去除它在python的特殊意义），不然会给正则表达式有冲突，为了避免这种冲突可以在规则前加原始字符r</li>
+<li>正则表达式，返回类型为表达式对象的，如：&lt;_sre.SRE_Match object; span=(6, 7), match=’a’&gt;，返回对象时，需要用正则方法取字符串，方法有：<ol>
+<li>group() # 获取匹配到的所有结果，不管有没有分组将匹配到的全部拿出来，有参取匹配到的第几个如2</li>
+<li>groups() # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分的结果</li>
+<li>groupdict() # 获取模型中匹配到的分组结果，只拿出匹配到的字符串中分组部分定义了key的组结果</li>
+</ol>
+</li>
+<li>匹配到的字符串里出现空字符：注意：正则匹配到空字符的情况，如果规则里只有一个组，而组后面是<em>就表示组里的内容可以是0个或者多过，这样组里就有了两个意思，一个意思是匹配组里的内容，二个意思是匹配组里0内容（即是空白）所以尽量避免用</em>否则会有可能匹配出空字符串</li>
+<li>()分组：注意：分组的意义，就是在匹配成功的字符串中，再提取()里的内容，也就是组里面的字符串</li>
+<li>?:在有分组的情况下findall()函数，不只拿分组里的字符串，拿所有匹配到的字符串，注意?:只用于不是返回正则对象的函数如findall()</li>
+</ol>
+<h1 id="五、计算器-经典"><a href="#五、计算器-经典" class="headerlink" title="五、计算器(经典)"></a>五、计算器(经典)</h1><p>基于递归和正则将下面的字符串翻译成计算器表达式，并且获取最终结果：<code>expression=&#39;-1-2*((60+2*(-3-40.0+42425/5)*(9-2*5/3+357/553/3*99/4*2998+10*568/14))-(-4*3)/(16-3*2))+56+(56-45)&#39;</code></p>
+<p>如果代码正确，计算结果为：<code>-553071849.7670887</code></p>
+<p>提示：<code>content=re.search(&#39;\(([\-\+\*\/]*\d+\.?\d*)+\)&#39;,expression).group() #(-3-40.0/5)</code></p>
+<h2 id="5-1-复杂版本"><a href="#5-1-复杂版本" class="headerlink" title="5.1 复杂版本"></a>5.1 复杂版本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;env python</span><br><span class="line"># -*- coding:utf-8 -*-</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">该计算器思路：</span><br><span class="line">    1、递归寻找表达式中只含有 数字和运算符的表达式，并计算结果</span><br><span class="line">    2、由于整数计算会忽略小数，所有的数字都认为是浮点型操作，以此来保留小数</span><br><span class="line">使用技术：</span><br><span class="line">    1、正则表达式</span><br><span class="line">    2、递归</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def compute_mul_div(arg):</span><br><span class="line">    &quot;&quot;&quot; 操作乘除</span><br><span class="line">    :param expression:表达式</span><br><span class="line">    :return:计算结果</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">    val &#x3D; arg[0]</span><br><span class="line">    mch &#x3D; re.search(&#39;\d+\.*\d*[\*\&#x2F;]+[\+\-]?\d+\.*\d*&#39;, val)</span><br><span class="line">    if not mch:</span><br><span class="line">        return</span><br><span class="line">    content &#x3D; re.search(&#39;\d+\.*\d*[\*\&#x2F;]+[\+\-]?\d+\.*\d*&#39;, val).group()</span><br><span class="line"></span><br><span class="line">    if len(content.split(&#39;*&#39;)) &gt; 1:</span><br><span class="line">        n1, n2 &#x3D; content.split(&#39;*&#39;)</span><br><span class="line">        value &#x3D; float(n1) * float(n2)</span><br><span class="line">    else:</span><br><span class="line">        n1, n2 &#x3D; content.split(&#39;&#x2F;&#39;)</span><br><span class="line">        value &#x3D; float(n1) &#x2F; float(n2)</span><br><span class="line"></span><br><span class="line">    before, after &#x3D; re.split(&#39;\d+\.*\d*[\*\&#x2F;]+[\+\-]?\d+\.*\d*&#39;, val, 1)</span><br><span class="line">    new_str &#x3D; &quot;%s%s%s&quot; % (before, value, after)</span><br><span class="line">    arg[0] &#x3D; new_str</span><br><span class="line">    compute_mul_div(arg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def compute_add_sub(arg):</span><br><span class="line">    &quot;&quot;&quot; 操作加减</span><br><span class="line">    :param expression:表达式</span><br><span class="line">    :return:计算结果</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    while True:</span><br><span class="line">        if arg[0].__contains__(&#39;+-&#39;) or arg[0].__contains__(&quot;++&quot;) or arg[</span><br><span class="line">                0].__contains__(&#39;-+&#39;) or arg[0].__contains__(&quot;--&quot;):</span><br><span class="line">            arg[0] &#x3D; arg[0].replace(&#39;+-&#39;, &#39;-&#39;)</span><br><span class="line">            arg[0] &#x3D; arg[0].replace(&#39;++&#39;, &#39;+&#39;)</span><br><span class="line">            arg[0] &#x3D; arg[0].replace(&#39;-+&#39;, &#39;-&#39;)</span><br><span class="line">            arg[0] &#x3D; arg[0].replace(&#39;--&#39;, &#39;+&#39;)</span><br><span class="line">        else:</span><br><span class="line">            break</span><br><span class="line"></span><br><span class="line">    if arg[0].startswith(&#39;-&#39;):</span><br><span class="line">        arg[1] +&#x3D; 1</span><br><span class="line">        arg[0] &#x3D; arg[0].replace(&#39;-&#39;, &#39;&amp;&#39;)</span><br><span class="line">        arg[0] &#x3D; arg[0].replace(&#39;+&#39;, &#39;-&#39;)</span><br><span class="line">        arg[0] &#x3D; arg[0].replace(&#39;&amp;&#39;, &#39;+&#39;)</span><br><span class="line">        arg[0] &#x3D; arg[0][1:]</span><br><span class="line">    val &#x3D; arg[0]</span><br><span class="line">    mch &#x3D; re.search(&#39;\d+\.*\d*[\+\-]&#123;1&#125;\d+\.*\d*&#39;, val)</span><br><span class="line">    if not mch:</span><br><span class="line">        return</span><br><span class="line">    content &#x3D; re.search(&#39;\d+\.*\d*[\+\-]&#123;1&#125;\d+\.*\d*&#39;, val).group()</span><br><span class="line">    if len(content.split(&#39;+&#39;)) &gt; 1:</span><br><span class="line">        n1, n2 &#x3D; content.split(&#39;+&#39;)</span><br><span class="line">        value &#x3D; float(n1) + float(n2)</span><br><span class="line">    else:</span><br><span class="line">        n1, n2 &#x3D; content.split(&#39;-&#39;)</span><br><span class="line">        value &#x3D; float(n1) - float(n2)</span><br><span class="line"></span><br><span class="line">    before, after &#x3D; re.split(&#39;\d+\.*\d*[\+\-]&#123;1&#125;\d+\.*\d*&#39;, val, 1)</span><br><span class="line">    new_str &#x3D; &quot;%s%s%s&quot; % (before, value, after)</span><br><span class="line">    arg[0] &#x3D; new_str</span><br><span class="line">    compute_add_sub(arg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def compute(expression):</span><br><span class="line">    &quot;&quot;&quot; 操作加减乘除</span><br><span class="line">    :param expression:表达式</span><br><span class="line">    :return:计算结果</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    inp &#x3D; [expression, 0]</span><br><span class="line"></span><br><span class="line">    # 处理表达式中的乘除</span><br><span class="line">    compute_mul_div(inp)</span><br><span class="line"></span><br><span class="line">    # 处理</span><br><span class="line">    compute_add_sub(inp)</span><br><span class="line">    if divmod(inp[1], 2)[1] &#x3D;&#x3D; 1:</span><br><span class="line">        result &#x3D; float(inp[0])</span><br><span class="line">        result &#x3D; result * -1</span><br><span class="line">    else:</span><br><span class="line">        result &#x3D; float(inp[0])</span><br><span class="line">    return result</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def exec_bracket(expression):</span><br><span class="line">    &quot;&quot;&quot; 递归处理括号，并计算</span><br><span class="line">    :param expression: 表达式</span><br><span class="line">    :return:最终计算结果</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    # 如果表达式中已经没有括号，则直接调用负责计算的函数，将表达式结果返回，如：2*1-82+444</span><br><span class="line">    if not re.search(&#39;\(([\+\-\*\&#x2F;]*\d+\.*\d*)&#123;2,&#125;\)&#39;, expression):</span><br><span class="line">        final &#x3D; compute(expression)</span><br><span class="line">        return final</span><br><span class="line">    # 获取 第一个 只含有 数字&#x2F;小数 和 操作符 的括号</span><br><span class="line">    # 如：</span><br><span class="line">    #    [&#39;1-2*((60-30+(-40.0&#x2F;5)*(9-2*5&#x2F;3+7&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))&#39;]</span><br><span class="line">    #    找出：(-40.0&#x2F;5)</span><br><span class="line">    content &#x3D; re.search(&#39;\(([\+\-\*\&#x2F;]*\d+\.*\d*)&#123;2,&#125;\)&#39;, expression).group()</span><br><span class="line"></span><br><span class="line">    # 分割表达式，即：</span><br><span class="line">    # 将[&#39;1-2*((60-30+(-40.0&#x2F;5)*(9-2*5&#x2F;3+7&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))&#39;]</span><br><span class="line">    # 分割更三部分：[&#39;1-2*((60-30+(    (-40.0&#x2F;5)      *(9-2*5&#x2F;3+7&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))&#39;]</span><br><span class="line">    before, nothing, after &#x3D; re.split(&#39;\(([\+\-\*\&#x2F;]*\d+\.*\d*)&#123;2,&#125;\)&#39;,</span><br><span class="line">                                      expression, 1)</span><br><span class="line"></span><br><span class="line">    print(&#39;before：&#39;, expression)</span><br><span class="line">    content &#x3D; content[1:len(content) - 1]</span><br><span class="line"></span><br><span class="line">    # 计算，提取的表示 (-40.0&#x2F;5)，并活的结果，即：-40.0&#x2F;5&#x3D;-8.0</span><br><span class="line">    ret &#x3D; compute(content)</span><br><span class="line"></span><br><span class="line">    print(&#39;%s&#x3D;%s&#39; % (content, ret))</span><br><span class="line"></span><br><span class="line">    # 将执行结果拼接，[&#39;1-2*((60-30+(      -8.0     *(9-2*5&#x2F;3+7&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))&#39;]</span><br><span class="line">    expression &#x3D; &quot;%s%s%s&quot; % (before, ret, after)</span><br><span class="line">    print(&#39;after：&#39;, expression)</span><br><span class="line">    print(&quot;&#x3D;&quot; * 10, &#39;上一次计算结束&#39;, &quot;&#x3D;&quot; * 10)</span><br><span class="line"></span><br><span class="line">    # 循环继续下次括号处理操作，本次携带者的是已被处理后的表达式，即：</span><br><span class="line">    # [&#39;1-2*((60-30+   -8.0  *(9-2*5&#x2F;3+7&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))&#39;]</span><br><span class="line"></span><br><span class="line">    # 如此周而复始的操作，直到表达式中不再含有括号</span><br><span class="line">    return exec_bracket(expression)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用 __name__ 的目的：</span><br><span class="line"># 只有执行 python index.py 时，以下代码才执行</span><br><span class="line"># 如果其他人导入该模块，以下代码不执行</span><br><span class="line">if __name__ &#x3D;&#x3D; &quot;__main__&quot;:</span><br><span class="line">    print(</span><br><span class="line">        &#39;*&#39; * 20, &quot;请计算表达式：&quot;,</span><br><span class="line">        &quot;1 - 2 * ( (60-30 +(-40.0&#x2F;5) * (9-2*5&#x2F;3 + 7 &#x2F;3*99&#x2F;4*2998 +10 * 568&#x2F;14 )) - (-4*3)&#x2F; (16-3*2) )&quot;,</span><br><span class="line">        &#39;*&#39; * 20)</span><br><span class="line">    #     inpp &#x3D; &#39;1 - 2 * ( (60-30 +(-40.0&#x2F;5) * (9-2*5&#x2F;3 + 7 &#x2F;3*99&#x2F;4*2998 +10 * 568&#x2F;14 )) - (-4*3)&#x2F; (16-3*2) ) &#39;</span><br><span class="line">    inpp &#x3D; &#39;-1-2*((60+2*(-3-40.0+42425&#x2F;5)*(9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))+56+(56-45)&#39;</span><br><span class="line">    # inpp &#x3D; &quot;1-2*-30&#x2F;-12*(-20+200*-3&#x2F;-200*-300-100)&quot;</span><br><span class="line">    # inpp &#x3D; &quot;1-5*980.0&quot;</span><br><span class="line">    inpp &#x3D; re.sub(&#39;\s*&#39;, &#39;&#39;, inpp)</span><br><span class="line">    # 表达式保存在列表中</span><br><span class="line">    result &#x3D; exec_bracket(inpp)</span><br><span class="line">    print(result)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">******************** 请计算表达式： 1 - 2 * ( (60-30 +(-40.0&#x2F;5) * (9-2*5&#x2F;3 + 7 &#x2F;3*99&#x2F;4*2998 +10 * 568&#x2F;14 )) - (-4*3)&#x2F; (16-3*2) ) ********************</span><br><span class="line">before： -1-2*((60+2*(-3-40.0+42425&#x2F;5)*(9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">-3-40.0+42425&#x2F;5&#x3D;8442.0</span><br><span class="line">after： -1-2*((60+2*8442.0*(9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 上一次计算结束 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">before： -1-2*((60+2*8442.0*(9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14&#x3D;16378.577154912598</span><br><span class="line">after： -1-2*((60+2*8442.0*16378.577154912598)-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 上一次计算结束 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">before： -1-2*((60+2*8442.0*16378.577154912598)-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">60+2*8442.0*16378.577154912598&#x3D;276535956.68354434</span><br><span class="line">after： -1-2*(276535956.68354434-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 上一次计算结束 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">before： -1-2*(276535956.68354434-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">-4*3&#x3D;-12.0</span><br><span class="line">after： -1-2*(276535956.68354434--12.0&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 上一次计算结束 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">before： -1-2*(276535956.68354434--12.0&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">16-3*2&#x3D;10.0</span><br><span class="line">after： -1-2*(276535956.68354434--12.0&#x2F;10.0)+56+(56-45)</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 上一次计算结束 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">before： -1-2*(276535956.68354434--12.0&#x2F;10.0)+56+(56-45)</span><br><span class="line">276535956.68354434--12.0&#x2F;10.0&#x3D;276535957.8835443</span><br><span class="line">after： -1-2*276535957.8835443+56+(56-45)</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 上一次计算结束 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">before： -1-2*276535957.8835443+56+(56-45)</span><br><span class="line">56-45&#x3D;11.0</span><br><span class="line">after： -1-2*276535957.8835443+56+11.0</span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 上一次计算结束 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">-553071849.7670887</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-简单易懂版"><a href="#5-2-简单易懂版" class="headerlink" title="5.2 简单易懂版"></a>5.2 简单易懂版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line"></span><br><span class="line">expression &#x3D; &#39;-1-2*((60+2*(-3-40.0+42425&#x2F;5)*(9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))+56+(56-45)&#39;</span><br><span class="line">question &#x3D; eval(expression)</span><br><span class="line">print(question)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def arithmetic(expression&#x3D;&#39;1+1&#39;):</span><br><span class="line">    #     content &#x3D; re.search(&#39;\(([\-\+\*\&#x2F;]*\d+\.?\d*)+\)&#39;, expression)  # (-3-40.0&#x2F;5)</span><br><span class="line">    content &#x3D; re.search(&#39;\(([-+*&#x2F;]*\d+\.?\d*)+\)&#39;, expression)  # (-3-40.0&#x2F;5)</span><br><span class="line">    if content:</span><br><span class="line">        content &#x3D; content.group()</span><br><span class="line">        content &#x3D; content[1:-1]</span><br><span class="line">        print(&#39;content:&#39;, content)</span><br><span class="line">        replace_content &#x3D; next_arithmetic(content)</span><br><span class="line">        expression &#x3D; re.sub(&#39;\(([-+*&#x2F;]*\d+\.?\d*)+\)&#39;,</span><br><span class="line">                            replace_content,</span><br><span class="line">                            expression,</span><br><span class="line">                            count&#x3D;1)</span><br><span class="line">        print(&#39;next_expression:&#39;, expression)</span><br><span class="line">    else:</span><br><span class="line">        answer &#x3D; next_arithmetic(expression)</span><br><span class="line">        return answer</span><br><span class="line">    return arithmetic(expression)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def next_arithmetic(content):</span><br><span class="line">    while True:</span><br><span class="line">        next_content_mul_div &#x3D; re.search(&#39;\d+\.?\d*[*&#x2F;][-+]?\d+\.?\d*&#39;,</span><br><span class="line">                                         content)  # 找出带有*&#x2F;的式子</span><br><span class="line">        if next_content_mul_div:  # 如果content含有带有*&#x2F;的式子</span><br><span class="line">            next_content_mul_div &#x3D; next_content_mul_div.group()</span><br><span class="line">            print(&#39;next_content_mul_div:&#39;, next_content_mul_div)</span><br><span class="line">            mul_div_content &#x3D; mul_div(next_content_mul_div)  # 计算出带有*&#x2F;的式子</span><br><span class="line">            print(&#39;mul_div_content:&#39;, mul_div_content)</span><br><span class="line">            content &#x3D; re.sub(&#39;\d+\.?\d*[*&#x2F;][-+]?\d+\.?\d*&#39;,</span><br><span class="line">                             str(mul_div_content),</span><br><span class="line">                             content,</span><br><span class="line">                             count&#x3D;1)  # 把带有*&#x2F;的式子计算出来后替换掉</span><br><span class="line">            print(&#39;content:&#39;, content)</span><br><span class="line">            continue</span><br><span class="line">        next_content_add_sub &#x3D; re.search(&#39;-?\d+\.?\d*[-+][-+]?\d+\.?\d*&#39;,</span><br><span class="line">                                         content)  # 找出带有-+的式子</span><br><span class="line">        if next_content_add_sub:  # 如果content含有带有+-的式子</span><br><span class="line">            next_content_add_sub &#x3D; next_content_add_sub.group()</span><br><span class="line">            print(&#39;next_content_add_sub:&#39;, next_content_add_sub)</span><br><span class="line">            add_sub_content &#x3D; add_sub(next_content_add_sub)  # 计算出带有-+的式子</span><br><span class="line">            print(&#39;add_sub_content:&#39;, add_sub_content)</span><br><span class="line">            add_sub_content &#x3D; str(add_sub_content)</span><br><span class="line">            content &#x3D; re.sub(&#39;-?\d+\.?\d*[-+]-?\d+\.?\d*&#39;,</span><br><span class="line">                             str(add_sub_content),</span><br><span class="line">                             content,</span><br><span class="line">                             count&#x3D;1)  # 把带有-+的式子计算出来后替换掉</span><br><span class="line">            print(&#39;content:&#39;, content)</span><br><span class="line">            continue</span><br><span class="line">        else:</span><br><span class="line">            break</span><br><span class="line">    return content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def add_sub(content):</span><br><span class="line">    if &#39;+&#39; in content:</span><br><span class="line">        content &#x3D; content.split(&#39;+&#39;)</span><br><span class="line">        print(content)</span><br><span class="line">        content &#x3D; float(content[0]) + float(content[1])</span><br><span class="line">        return content</span><br><span class="line">    elif &#39;-&#39; in content:</span><br><span class="line">        content &#x3D; content.split(&#39;-&#39;)</span><br><span class="line">        # 减法情况有多种</span><br><span class="line">        if content[0] &#x3D;&#x3D; &#39;-&#39; and content[2] &#x3D;&#x3D; &#39;-&#39;:</span><br><span class="line">            # content &#x3D; content.split(&#39;-&#39;)</span><br><span class="line">            print(content)</span><br><span class="line">            content &#x3D; -float(content[1]) - float(content[-1])</span><br><span class="line">            return content</span><br><span class="line">        if content[0] &#x3D;&#x3D; &#39;-&#39;:</span><br><span class="line">            # content &#x3D; content.split(&#39;-&#39;)</span><br><span class="line">            print(content)</span><br><span class="line">            content &#x3D; -float(content[1]) - float(content[-1])</span><br><span class="line">            return content</span><br><span class="line">        if content[1] &#x3D;&#x3D; &#39;-&#39; and content[2] &#x3D;&#x3D; &#39;-&#39;:</span><br><span class="line">            # content &#x3D; content.split(&#39;-&#39;)</span><br><span class="line">            print(content)</span><br><span class="line">            content &#x3D; -float(content[0]) + float(content[-1])</span><br><span class="line">            return content</span><br><span class="line">        if content[1] &#x3D;&#x3D; &#39;&#39;:</span><br><span class="line">            # content &#x3D; content.split(&#39;-&#39;)</span><br><span class="line">            print(content)</span><br><span class="line">            content &#x3D; float(content[0]) - float(content[2])</span><br><span class="line">            return content</span><br><span class="line">        if content[0] &#x3D;&#x3D; &#39;&#39; and content[2] !&#x3D; &#39;&#39;:</span><br><span class="line">            print(content)</span><br><span class="line">            content &#x3D; -float(content[1]) - float(content[2])</span><br><span class="line">            return content</span><br><span class="line">        if content[0] &#x3D;&#x3D; &#39;&#39; and content[2] &#x3D;&#x3D; &#39;&#39;:</span><br><span class="line">            print(content)</span><br><span class="line">            content &#x3D; -float(content[1]) + float(content[3])</span><br><span class="line">            return content</span><br><span class="line">        else:</span><br><span class="line">            # content &#x3D; content.split(&#39;-&#39;)</span><br><span class="line">            print(content)</span><br><span class="line">            content &#x3D; float(content[0]) - float(content[1])</span><br><span class="line">            return content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def mul_div(content):</span><br><span class="line">    if &#39;*&#39; in content:</span><br><span class="line">        content &#x3D; content.split(&#39;*&#39;)</span><br><span class="line">        print(content)</span><br><span class="line">        content &#x3D; float(content[0]) * float(content[1])</span><br><span class="line">        return content</span><br><span class="line">    elif &#39;&#x2F;&#39; in content:</span><br><span class="line">        content &#x3D; content.split(&#39;&#x2F;&#39;)</span><br><span class="line">        print(content)</span><br><span class="line">        content &#x3D; float(content[0]) &#x2F; float(content[1])</span><br><span class="line">        return content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># expression &#x3D; &#39;1-2*((60+2*(-3-40.0&#x2F;5)*(9-2*5&#x2F;3+7&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))&#39;</span><br><span class="line">expression &#x3D; &#39;-1-2*((60+2*(-3-40.0+42425&#x2F;5)*(9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))+56+(56-45)&#39;</span><br><span class="line">answer &#x3D; arithmetic(expression)</span><br><span class="line">print(answer)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line">-553071849.7670887</span><br><span class="line">content: -3-40.0+42425&#x2F;5</span><br><span class="line">next_content_mul_div: 42425&#x2F;5</span><br><span class="line">[&#39;42425&#39;, &#39;5&#39;]</span><br><span class="line">mul_div_content: 8485.0</span><br><span class="line">content: -3-40.0+8485.0</span><br><span class="line">next_content_add_sub: -3-40.0</span><br><span class="line">[&#39;&#39;, &#39;3&#39;, &#39;40.0&#39;]</span><br><span class="line">add_sub_content: -43.0</span><br><span class="line">content: -43.0+8485.0</span><br><span class="line">next_content_add_sub: -43.0+8485.0</span><br><span class="line">[&#39;-43.0&#39;, &#39;8485.0&#39;]</span><br><span class="line">add_sub_content: 8442.0</span><br><span class="line">content: 8442.0</span><br><span class="line">next_expression: -1-2*((60+2*8442.0*(9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14))-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">content: 9-2*5&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 2*5</span><br><span class="line">[&#39;2&#39;, &#39;5&#39;]</span><br><span class="line">mul_div_content: 10.0</span><br><span class="line">content: 9-10.0&#x2F;3+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 10.0&#x2F;3</span><br><span class="line">[&#39;10.0&#39;, &#39;3&#39;]</span><br><span class="line">mul_div_content: 3.3333333333333335</span><br><span class="line">content: 9-3.3333333333333335+357&#x2F;553&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 357&#x2F;553</span><br><span class="line">[&#39;357&#39;, &#39;553&#39;]</span><br><span class="line">mul_div_content: 0.6455696202531646</span><br><span class="line">content: 9-3.3333333333333335+0.6455696202531646&#x2F;3*99&#x2F;4*2998+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 0.6455696202531646&#x2F;3</span><br><span class="line">[&#39;0.6455696202531646&#39;, &#39;3&#39;]</span><br><span class="line">mul_div_content: 0.21518987341772153</span><br><span class="line">content: 9-3.3333333333333335+0.21518987341772153*99&#x2F;4*2998+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 0.21518987341772153*99</span><br><span class="line">[&#39;0.21518987341772153&#39;, &#39;99&#39;]</span><br><span class="line">mul_div_content: 21.303797468354432</span><br><span class="line">content: 9-3.3333333333333335+21.303797468354432&#x2F;4*2998+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 21.303797468354432&#x2F;4</span><br><span class="line">[&#39;21.303797468354432&#39;, &#39;4&#39;]</span><br><span class="line">mul_div_content: 5.325949367088608</span><br><span class="line">content: 9-3.3333333333333335+5.325949367088608*2998+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 5.325949367088608*2998</span><br><span class="line">[&#39;5.325949367088608&#39;, &#39;2998&#39;]</span><br><span class="line">mul_div_content: 15967.196202531646</span><br><span class="line">content: 9-3.3333333333333335+15967.196202531646+10*568&#x2F;14</span><br><span class="line">next_content_mul_div: 10*568</span><br><span class="line">[&#39;10&#39;, &#39;568&#39;]</span><br><span class="line">mul_div_content: 5680.0</span><br><span class="line">content: 9-3.3333333333333335+15967.196202531646+5680.0&#x2F;14</span><br><span class="line">next_content_mul_div: 5680.0&#x2F;14</span><br><span class="line">[&#39;5680.0&#39;, &#39;14&#39;]</span><br><span class="line">mul_div_content: 405.7142857142857</span><br><span class="line">content: 9-3.3333333333333335+15967.196202531646+405.7142857142857</span><br><span class="line">next_content_add_sub: 9-3.3333333333333335</span><br><span class="line">[&#39;9&#39;, &#39;3.3333333333333335&#39;]</span><br><span class="line">add_sub_content: 5.666666666666666</span><br><span class="line">content: 5.666666666666666+15967.196202531646+405.7142857142857</span><br><span class="line">next_content_add_sub: 5.666666666666666+15967.196202531646</span><br><span class="line">[&#39;5.666666666666666&#39;, &#39;15967.196202531646&#39;]</span><br><span class="line">add_sub_content: 15972.862869198312</span><br><span class="line">content: 15972.862869198312+405.7142857142857</span><br><span class="line">next_content_add_sub: 15972.862869198312+405.7142857142857</span><br><span class="line">[&#39;15972.862869198312&#39;, &#39;405.7142857142857&#39;]</span><br><span class="line">add_sub_content: 16378.577154912598</span><br><span class="line">content: 16378.577154912598</span><br><span class="line">next_expression: -1-2*((60+2*8442.0*16378.577154912598)-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">content: 60+2*8442.0*16378.577154912598</span><br><span class="line">next_content_mul_div: 2*8442.0</span><br><span class="line">[&#39;2&#39;, &#39;8442.0&#39;]</span><br><span class="line">mul_div_content: 16884.0</span><br><span class="line">content: 60+16884.0*16378.577154912598</span><br><span class="line">next_content_mul_div: 16884.0*16378.577154912598</span><br><span class="line">[&#39;16884.0&#39;, &#39;16378.577154912598&#39;]</span><br><span class="line">mul_div_content: 276535896.68354434</span><br><span class="line">content: 60+276535896.68354434</span><br><span class="line">next_content_add_sub: 60+276535896.68354434</span><br><span class="line">[&#39;60&#39;, &#39;276535896.68354434&#39;]</span><br><span class="line">add_sub_content: 276535956.68354434</span><br><span class="line">content: 276535956.68354434</span><br><span class="line">next_expression: -1-2*(276535956.68354434-(-4*3)&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">content: -4*3</span><br><span class="line">next_content_mul_div: 4*3</span><br><span class="line">[&#39;4&#39;, &#39;3&#39;]</span><br><span class="line">mul_div_content: 12.0</span><br><span class="line">content: -12.0</span><br><span class="line">next_expression: -1-2*(276535956.68354434--12.0&#x2F;(16-3*2))+56+(56-45)</span><br><span class="line">content: 16-3*2</span><br><span class="line">next_content_mul_div: 3*2</span><br><span class="line">[&#39;3&#39;, &#39;2&#39;]</span><br><span class="line">mul_div_content: 6.0</span><br><span class="line">content: 16-6.0</span><br><span class="line">next_content_add_sub: 16-6.0</span><br><span class="line">[&#39;16&#39;, &#39;6.0&#39;]</span><br><span class="line">add_sub_content: 10.0</span><br><span class="line">content: 10.0</span><br><span class="line">next_expression: -1-2*(276535956.68354434--12.0&#x2F;10.0)+56+(56-45)</span><br><span class="line">content: 276535956.68354434--12.0&#x2F;10.0</span><br><span class="line">next_content_mul_div: 12.0&#x2F;10.0</span><br><span class="line">[&#39;12.0&#39;, &#39;10.0&#39;]</span><br><span class="line">mul_div_content: 1.2</span><br><span class="line">content: 276535956.68354434--1.2</span><br><span class="line">next_content_add_sub: 276535956.68354434--1.2</span><br><span class="line">[&#39;276535956.68354434&#39;, &#39;&#39;, &#39;1.2&#39;]</span><br><span class="line">add_sub_content: 276535955.48354435</span><br><span class="line">content: 276535955.48354435</span><br><span class="line">next_expression: -1-2*276535955.48354435+56+(56-45)</span><br><span class="line">content: 56-45</span><br><span class="line">next_content_add_sub: 56-45</span><br><span class="line">[&#39;56&#39;, &#39;45&#39;]</span><br><span class="line">add_sub_content: 11.0</span><br><span class="line">content: 11.0</span><br><span class="line">next_expression: -1-2*276535955.48354435+56+11.0</span><br><span class="line">next_content_mul_div: 2*276535955.48354435</span><br><span class="line">[&#39;2&#39;, &#39;276535955.48354435&#39;]</span><br><span class="line">mul_div_content: 553071910.9670887</span><br><span class="line">content: -1-553071910.9670887+56+11.0</span><br><span class="line">next_content_add_sub: -1-553071910.9670887</span><br><span class="line">[&#39;&#39;, &#39;1&#39;, &#39;553071910.9670887&#39;]</span><br><span class="line">add_sub_content: -553071911.9670887</span><br><span class="line">content: -553071911.9670887+56+11.0</span><br><span class="line">next_content_add_sub: -553071911.9670887+56</span><br><span class="line">[&#39;-553071911.9670887&#39;, &#39;56&#39;]</span><br><span class="line">add_sub_content: -553071855.9670887</span><br><span class="line">content: -553071855.9670887+11.0</span><br><span class="line">next_content_add_sub: -553071855.9670887+11.0</span><br><span class="line">[&#39;-553071855.9670887&#39;, &#39;11.0&#39;]</span><br><span class="line">add_sub_content: -553071844.9670887</span><br><span class="line">content: -553071844.9670887</span><br><span class="line">-553071844.9670887</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/11-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98%E4%B9%8B%E8%8B%B1%E9%9B%84%E8%81%94%E7%9B%9F/">
+        <span class="nav-arrow">← </span>
+        
+          python/面向对象基础/11-面向对象基础实战之英雄联盟
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80/10-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80%E5%B0%8F%E7%BB%93/">
+        
+          python/面向对象基础/10-面向对象基础小结
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、正则表达式"><span class="toc-nav-text">一、正则表达式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-数量词的贪婪模式与非贪婪模式"><span class="toc-nav-text">1.1 数量词的贪婪模式与非贪婪模式</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-反斜杠的困扰"><span class="toc-nav-text">1.2 反斜杠的困扰</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-3-匹配模式"><span class="toc-nav-text">1.3 匹配模式</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、re模块的基本使用"><span class="toc-nav-text">二、re模块的基本使用</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、re模块中常用功能函数"><span class="toc-nav-text">三、re模块中常用功能函数</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-正则表达式的两种书写方式"><span class="toc-nav-text">3.1 正则表达式的两种书写方式</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-2-re-compile-strPattern-flag-函数"><span class="toc-nav-text">3.2 re.compile(strPattern[, flag])函数</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-1-re-S"><span class="toc-nav-text">3.2.1 re.S</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-2-re-I"><span class="toc-nav-text">3.2.2 re.I</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-3-re-M"><span class="toc-nav-text">3.2.3 re.M</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-4-re-sub"><span class="toc-nav-text">3.2.4 re.sub</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-3-re-match-pattern-string-flags-函数-常用"><span class="toc-nav-text">3.3 re.match(pattern, string[, flags])函数(常用)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-4-分组函数"><span class="toc-nav-text">3.4 分组函数</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-5-re-search-pattern-string-flags-函数"><span class="toc-nav-text">3.5 re.search(pattern, string[, flags])函数</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-6-re-findall-pattern-string-flags-函数-常用"><span class="toc-nav-text">3.6 re.findall(pattern, string[, flags])函数(常用)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-7-re-split-pattern-string-maxsplit-函数"><span class="toc-nav-text">3.7 re.split(pattern, string[, maxsplit])函数</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-8-re-sub-pattern-repl-string-count-函数"><span class="toc-nav-text">3.8 re.sub(pattern, repl, string[, count])函数</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-9-re-subn-pattern-repl-string-count-flags-函数"><span class="toc-nav-text">3.9 re.subn(pattern, repl, string,[, count][, flags])函数</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、注意事项"><span class="toc-nav-text">四、注意事项</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、计算器-经典"><span class="toc-nav-text">五、计算器(经典)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-1-复杂版本"><span class="toc-nav-text">5.1 复杂版本</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5-2-简单易懂版"><span class="toc-nav-text">5.2 简单易懂版</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/常用模块/12-re模块/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/常用模块/12-re模块",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

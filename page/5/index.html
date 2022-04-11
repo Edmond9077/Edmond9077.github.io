@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/13-__str__%E5%92%8C__repr__/">python/面向对象高阶/13-__str__和__repr__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、str
+打印时触发
+
+12345class Foo:    passobj &#x3D; Foo()
+
+
+
+1print(obj)
+
+
+
+1&lt;__main__.Foo object at 0x10d2b8f98&gt;
+
+
+
+12dic &#x3D; &#123;&#39;a&#3 ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/13-__str__%E5%92%8C__repr__/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/9-__slots__/">python/面向对象高阶/9-__slots__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、什么是slots
+slots是一个类变量，变量值可以是列表，元祖，或者可迭代对象，也可以是一个字符串(意味着所有实例只有一个数据属性)
+使用点来访问属性本质就是在访问类或者对象的dict属性字典(类的字典是共享的，而每个实例的是独立的)
+
+
+二、为什么用slots
+字典会占用大量内存，如 ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/9-__slots__/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/14-%E5%AE%9E%E7%8E%B0%E8%BF%AD%E4%BB%A3%E5%99%A8(__next__%E5%92%8C__iter__)/">python/面向对象高阶/14-实现迭代器(__next__和__iter__)</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、简单示例
+死循环
+
+123456789101112131415class Foo:    def __init__(self, x):        self.x &#x3D; x    def __iter__(self):        return self    def __ne ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/14-%E5%AE%9E%E7%8E%B0%E8%BF%AD%E4%BB%A3%E5%99%A8(__next__%E5%92%8C__iter__)/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/19-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%88%98%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">python/面向对象高阶/19-面向对象高级实战之单例模式</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          单例模式单例模式（Singleton Pattern）是一种常用的软件设计模式，该模式的主要目的是确保某一个类只有一个实例存在。当你希望在整个系统中，某个类只能出现一个实例时，单例对象就能派上用场。
+比如，某个服务器程序的配置信息存放在一个文件中，客户端通过一个 AppConfig 的类来读 ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/19-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%88%98%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/6-__setitem__%E5%92%8C__getitem%E5%92%8C__delitem__/">python/面向对象高阶/6-__setitem__和__getitem和__delitem__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          123456789101112131415161718192021class Foo:    def __init__(self, name):        self.name &#x3D; name    def __getitem__(self, item):        print ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/6-__setitem__%E5%92%8C__getitem%E5%92%8C__delitem__/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/8-__del__/">python/面向对象高阶/8-__del__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、del
+del也称之为析构方法
+del会在对象被删除之前自动触发
+
+
+12345678910111213class People:    def __init__(self, name, age):        self.name &#x3D; name        self.age ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/8-__del__/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/4-__getattribute__/">python/面向对象高阶/4-__getattribute__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、getattr
+不存在的属性访问，触发getattr
+
+12345678910class Foo:    def __init__(self, x):        self.x &#x3D; x    def __getattr__(self, item):        print( ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/4-__getattribute__/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/7-__format__/">python/面向对象高阶/7-__format__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、format
+自定制格式化字符串
+
+12345678910111213141516171819202122date_dic &#x3D; &#123;    &#39;ymd&#39;: &#39;&#123;0.year&#125;:&#123;0.month&#125;:&#123; ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/7-__format__/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/1-isinstance%E5%92%8Cissubclass/">python/面向对象高阶/1-isinstance和issubclass</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          一、isinstance与type在游戏项目中，我们会在每个接口验证客户端传过来的参数类型，如果验证不通过，返回给客户端“参数错误”错误码。
+这样做不但便于调试，而且增加健壮性。因为客户端是可以作弊的，不要轻易相信客户端传过来的参数。
+验证类型用type函数，非常好用，比如
+1print(t ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/1-isinstance%E5%92%8Cissubclass/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/15-__module__%E5%92%8C__class__/">python/面向对象高阶/15-__module__和__class__</a>
+      </h2>
+      <p class="article-date">2020年12月21日</p>
+      
+      <div class="article-summary">
+        
+          1234# lib&#x2F;aa.pyclass C:    def __init__(self):        self.name &#x3D; &#39;SB&#39;
+
+
+
+12345# index.pyfrom lib.aa import Cobj &#x3D; C()
+
+一、m ...
+        
+      </div>
+      <a class="more" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E9%AB%98%E9%98%B6/15-__module__%E5%92%8C__class__/">详情...</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/page/4/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a href="/page/6/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

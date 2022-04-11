@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django框架/5-路由控制 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django框架/5-路由控制</h2>
+
+
+
+  <p class="post-date">2020-09-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-Django中路由的作用"><a href="#一-Django中路由的作用" class="headerlink" title="一 Django中路由的作用"></a>一 Django中路由的作用</h2><p>URL配置(URLconf)就像Django 所支撑网站的目录。它的本质是<strong>URL与要为该URL调用的视图函数之间的映射表</strong>；你就是以这种方式告诉Django，对于客户端发来的某个URL调用哪一段逻辑代码对应执行</p>
+<p>典型的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">'articles'</span>, views.special),</span><br><span class="line">]</span><br><span class="line">articles这个路由对应着视图函数中special这个方法，浏览器输入这个链接，就会响应到special这个函数来执行</span><br></pre></td></tr></table></figure>
+
+<h2 id="二-简单的路由配置"><a href="#二-简单的路由配置" class="headerlink" title="二 简单的路由配置"></a>二 简单的路由配置</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">     url(正则表达式, views视图函数，参数，别名),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>正则表达式：一个正则表达式字符串</li>
+<li>views视图函数：一个可调用对象，通常为一个视图函数或一个指定视图函数路径的字符串</li>
+<li>参数：可选的要传递给视图函数的默认参数（字典形式）</li>
+<li>别名：一个可选的name参数</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'^articles/2003/$'</span>, views.special_case_2003),</span><br><span class="line">    re_path(<span class="string">r'^articles/([0-9]&#123;4&#125;)/$'</span>, views.year_archive),</span><br><span class="line">    re_path(<span class="string">r'^articles/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/$'</span>, views.month_archive),</span><br><span class="line">    re_path(<span class="string">r'^articles/([0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)/([0-9]+)/$'</span>, views.article_detail),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li>若要从URL 中捕获一个值，只需要在它周围放置一对圆括号。</li>
+<li>不需要添加一个前导的反斜杠，因为每个URL 都有。例如，应该是<code>^articles</code> 而不是 <code>^/articles</code>。</li>
+<li>每个正则表达式前面的’r’ 是可选的但是建议加上。它告诉Python 这个字符串是“原始的” —— 字符串中任何字符都不应该转义</li>
+<li>urlpatterns中的元素按照书写顺序从上往下逐一匹配正则表达式，一旦匹配成功则不再继续</li>
+</ul>
+<p>示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="string">'''</span></span><br><span class="line"><span class="string"> 一些请求的例子：</span></span><br><span class="line"><span class="string">/articles/2005/03/ 请求将匹配列表中的第三个模式。Django 将调用函数views.month_archive(request, '2005', '03')。</span></span><br><span class="line"><span class="string">/articles/2005/3/ 不匹配任何URL 模式，因为列表中的第三个模式要求月份应该是两个数字。</span></span><br><span class="line"><span class="string">/articles/2003/ 将匹配列表中的第一个模式不是第二个，因为模式按顺序匹配，第一个会首先测试是否匹配。请像这样自由插入一些特殊的情况来探测匹配的次序。</span></span><br><span class="line"><span class="string">/articles/2003 不匹配任何一个模式，因为每个模式要求URL 以一个反斜线结尾。</span></span><br><span class="line"><span class="string">/articles/2003/03/03/ 将匹配最后一个模式。Django 将调用函数views.article_detail(request, '2003', '03', '03')。</span></span><br><span class="line"><span class="string">   </span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<p> <strong>APPEND_SLASH</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 是否开启URL访问地址后面不为/跳转至带有/的路径的配置项</span></span><br><span class="line">APPEND_SLASH=<span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>Django settings.py配置文件中默认没有 APPEND_SLASH 这个参数，但 Django 默认这个参数为 APPEND_SLASH = True。 其作用就是自动在网址结尾加’/‘。</p>
+<p>其效果就是：</p>
+<p>我们定义了urls.py：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">        url(<span class="string">r'^blog/$'</span>, views.blog),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>访问 <a href="http://www.example.com/blog" target="_blank" rel="noopener">http://www.example.com/blog</a> 时，默认将网址自动转换为 <a href="http://www.example/com/blog/" target="_blank" rel="noopener">http://www.example/com/blog/</a> 。</p>
+<p>如果在settings.py中设置了 <strong>APPEND_SLASH=False</strong>，此时我们再请求 <a href="http://www.example.com/blog" target="_blank" rel="noopener">http://www.example.com/blog</a> 时就会提示找不到页面。</p>
+<h2 id="三-有名分组"><a href="#三-有名分组" class="headerlink" title="三 有名分组"></a>三 有名分组</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line">ret=re.search(<span class="string">'(?P&lt;year&gt;[0-9]&#123;4&#125;)/([0-9]&#123;2&#125;)'</span>,<span class="string">'2012/12'</span>)</span><br><span class="line">print(ret.group())</span><br><span class="line">print(ret.group(<span class="number">1</span>))</span><br><span class="line">print(ret.group(<span class="number">2</span>))</span><br><span class="line">print(ret.group(<span class="string">'year'</span>))</span><br></pre></td></tr></table></figure>
+
+<p>上面的示例使用简单的、没有命名的正则表达式组（通过圆括号）来捕获URL 中的值并以位置 参数传递给视图。在更高级的用法中，可以使用命名的正则表达式组来捕获URL 中的值并以关键字 参数传递给视图。</p>
+<p>在Python 正则表达式中，命名正则表达式组的语法是<strong><code>(?P&lt;name&gt;pattern)</code></strong>，其中<code>name</code> 是组的名称，<code>pattern</code> 是要匹配的模式。</p>
+<p>下面是以上URLconf 使用命名组的重写：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'^articles/2003/$'</span>, views.special_case_2003),</span><br><span class="line">    re_path(<span class="string">r'^articles/(?P&lt;year&gt;[0-9]&#123;4&#125;)/$'</span>, views.year_archive),</span><br><span class="line">    re_path(<span class="string">r'^articles/(?P&lt;year&gt;[0-9]&#123;4&#125;)/(?P&lt;month&gt;[0-9]&#123;2&#125;)/$'</span>, views.month_archive),</span><br><span class="line">    re_path(<span class="string">r'^articles/(?P&lt;year&gt;[0-9]&#123;4&#125;)/(?P&lt;month&gt;[0-9]&#123;2&#125;)/(?P&lt;day&gt;[0-9]&#123;2&#125;)/$'</span>, views.article_detail),</span><br><span class="line">]</span><br><span class="line"><span class="comment">#捕获到的数据都是str类型</span></span><br><span class="line"><span class="comment">#视图函数里可以指定默认值</span></span><br><span class="line">url(<span class="string">'blog/$'</span>, views.blog),</span><br><span class="line">url(<span class="string">'blog/?(?P&lt;num&gt;[0-9]&#123;1&#125;)'</span>, views.blog),</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">blog</span><span class="params">(request,num=<span class="number">1</span>)</span>:</span></span><br><span class="line">    print(num)</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">'ok'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个实现与前面的示例完全相同，只有一个细微的差别：捕获的值作为关键字参数而不是位置参数传递给视图函数。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">   /articles/2005/03/ 请求将调用views.month_archive(request, year='2005', month='03')函数，而不是views.month_archive(request, '2005', '03')。</span></span><br><span class="line"><span class="string">   /articles/2003/03/03/ 请求将调用函数views.article_detail(request, year='2003', month='03', day='03')。</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">   '''</span></span><br></pre></td></tr></table></figure>
+
+<p>在实际应用中，这意味你的URLconf 会更加明晰且不容易产生参数顺序问题的错误 —— 你可以在你的视图函数定义中重新安排参数的顺序。当然，这些好处是以简洁为代价；</p>
+<h2 id="四-路由分发"><a href="#四-路由分发" class="headerlink" title="四 路由分发"></a>四 路由分发</h2><p>Django1.1版本的分发</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#主urls</span></span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path,include</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> urls</span><br><span class="line">urlpatterns = [ </span><br><span class="line">　　<span class="comment"># re_path(r'^app01/',include('app01.urls')),#行</span></span><br><span class="line">　　<span class="comment"># re_path(r'^app01/&amp;',include('app01.urls')),#不行</span></span><br><span class="line">　　<span class="comment"># path('app01/',include('app01.urls')),#行　</span></span><br><span class="line">　　<span class="comment">#path('app01/', include(urls)),</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>在app01里创建一个urls</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line">urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'^test/(?P&lt;year&gt;[0-9]&#123;2&#125;)/$'</span>,views.url_test),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="五-反向解析"><a href="#五-反向解析" class="headerlink" title="五 反向解析"></a>五 反向解析</h2><p>在使用Django 项目时，一个常见的需求是获得URL  的最终形式，以用于嵌入到生成的内容中（视图中和显示给用户的URL等）或者用于处理服务器端的导航（重定向等）。人们强烈希望不要硬编码这些URL（费力、不可扩展且容易产生错误）或者设计一种与URLconf 毫不相关的专门的URL 生成机制，因为这样容易导致一定程度上产生过期的URL。</p>
+<p>在需要URL 的地方，对于不同层级，Django 提供不同的工具用于URL 反查：</p>
+<ul>
+<li>在模板中：使用url 模板标签。</li>
+<li>在Python 代码中：使用from django.urls import reverse函数</li>
+</ul>
+<p>urls.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line">urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'^test/(?P&lt;year&gt;[0-9]&#123;2&#125;)/(?P&lt;month&gt;[0-9]&#123;2&#125;)/$'</span>,views.url_test,name=<span class="string">'test'</span>),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href&#x3D;&quot;&#123;% url &#39;test&#39; 10 23 %&#125;&quot;&gt;哈哈&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+
+<p>视图函数中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render, HttpResponse,redirect,reverse</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">url_test</span><span class="params">(request,year,month)</span>:</span></span><br><span class="line">    print(year)</span><br><span class="line">    print(month)</span><br><span class="line">    url=reverse(<span class="string">'test'</span>,args=(<span class="number">10</span>,<span class="number">20</span>))</span><br><span class="line">    print(url)</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">'ok'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 在html代码里</span><br><span class="line">&#123;% url <span class="string">"别名"</span> 参数 参数%&#125;</span><br><span class="line"></span><br><span class="line"><span class="number">2</span> 在视图函数中：</span><br><span class="line">　　<span class="number">2.1</span> url=reverse(<span class="string">'test'</span>)</span><br><span class="line">　　<span class="number">2.2</span> url=reverse(<span class="string">'test'</span>,args=(<span class="number">10</span>,<span class="number">20</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当命名你的URL 模式时，请确保使用的名称不会与其它应用中名称冲突。如果你的URL 模式叫做<code>comment</code>，而另外一个应用中也有一个同样的名称，当你在模板中使用这个名称的时候不能保证将插入哪个URL。在URL 名称中加上一个前缀，比如应用的名称，将减少冲突的可能。我们建议使用<code>myapp-comment</code> 而不是<code>comment</code>。</p>
+<h2 id="六-名称空间"><a href="#六-名称空间" class="headerlink" title="六 名称空间"></a>六 名称空间</h2><p>命名空间（英语：Namespace）是表示标识符的可见范围。一个标识符可在多个命名空间中定义，它在不同命名空间中的含义是互不相干的。这样，在一个新的命名空间中可定义任何标识符，它们不会与任何已有的标识符发生冲突，因为已有的定义都处于其它命名空间中。</p>
+<p>由于name没有作用域，Django在反解URL时，会在项目全局顺序搜索，当查找到第一个name指定URL时，立即返回</p>
+<p>我们在开发项目时，会经常使用name属性反解出URL，当不小心在不同的app的urls中定义相同的name时，可能会导致URL反解错误，为了避免这种事情发生，引入了命名空间。</p>
+<p>创建一个app02：python manage.py startapp app02</p>
+<p>总<strong>urls.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path,include</span><br><span class="line">urlpatterns = [</span><br><span class="line">    path(<span class="string">'app01/'</span>, include(<span class="string">'app01.urls'</span>)),</span><br><span class="line">    path(<span class="string">'app02/'</span>, include(<span class="string">'app02.urls'</span>))</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><strong>app01 的urls.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path,re_path</span><br><span class="line"><span class="keyword">from</span> app01 <span class="keyword">import</span> views</span><br><span class="line">urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'index/'</span>,views.index,name=<span class="string">'index'</span>),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><strong>app02 的urls.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path, re_path, include</span><br><span class="line"><span class="keyword">from</span> app02 <span class="keyword">import</span> views</span><br><span class="line"></span><br><span class="line">urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'index/'</span>, views.index,name=<span class="string">'index'</span>),</span><br><span class="line"></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>app01的视图函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    url=reverse(<span class="string">'index'</span>)</span><br><span class="line">    print(url)</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">'index app01'</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>app02的视图函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">    url=reverse(<span class="string">'index'</span>)</span><br><span class="line">    print(url)</span><br><span class="line">    <span class="keyword">return</span> HttpResponse(<span class="string">'index app02'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>这样都找index，app01和app02找到的都是app02的index</strong></p>
+<p><strong>如何处理？在路由分发的时候指定名称空间</strong></p>
+<p><strong>总urls.py在路由分发时，指定名称空间</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">path(<span class="string">'app01/'</span>, include((<span class="string">'app01.urls'</span>,<span class="string">'app01'</span>))),</span><br><span class="line">path(<span class="string">'app02/'</span>, include((<span class="string">'app02.urls'</span>,<span class="string">'app02'</span>)))</span><br><span class="line">url(<span class="string">r'app01/'</span>,include(<span class="string">'app01.urls'</span>,namespace=<span class="string">'app01'</span>)),</span><br><span class="line">url(<span class="string">r'app02/'</span>,include(<span class="string">'app02.urls'</span>,namespace=<span class="string">'app02'</span>))</span><br><span class="line">url(<span class="string">r'app01/'</span>,include((<span class="string">'app01.urls'</span>,<span class="string">'app01'</span>))),</span><br><span class="line">url(<span class="string">r'app02/'</span>,include((<span class="string">'app02.urls'</span>,<span class="string">'app02'</span>)))</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在视图函数反向解析的时候，指定是那个名称空间下的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">url=reverse(<span class="string">'app02:index'</span>)</span><br><span class="line">print(url)</span><br><span class="line">url2=reverse(<span class="string">'app01:index'</span>)</span><br><span class="line">print(url2)</span><br></pre></td></tr></table></figure>
+
+<p>在模版里：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a href="&#123;% url 'app02:index'%&#125;"&gt;哈哈&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="七-django2-0版的path"><a href="#七-django2-0版的path" class="headerlink" title="七 django2.0版的path"></a>七 django2.0版的path</h2><p>django2.0的re_path和1.0的url一样</p>
+<p>思考情况如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns = [  </span><br><span class="line">    re_path(<span class="string">'articles/(?P&lt;year&gt;[0-9]&#123;4&#125;)/'</span>, year_archive),  </span><br><span class="line">    re_path(<span class="string">'article/(?P&lt;article_id&gt;[a-zA-Z0-9]+)/detail/'</span>, detail_view),  </span><br><span class="line">    re_path(<span class="string">'articles/(?P&lt;article_id&gt;[a-zA-Z0-9]+)/edit/'</span>, edit_view),  </span><br><span class="line">    re_path(<span class="string">'articles/(?P&lt;article_id&gt;[a-zA-Z0-9]+)/delete/'</span>, delete_view),  </span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>考虑下这样的两个问题：</p>
+<p>第一个问题，函数 <code>year_archive</code> 中year参数是字符串类型的，因此需要先转化为整数类型的变量值，当然<code>year=int(year)</code> 不会有诸如如TypeError或者ValueError的异常。那么有没有一种方法，在url中，使得这一转化步骤可以由Django自动完成？</p>
+<p>第二个问题，三个路由中article_id都是同样的正则表达式，但是你需要写三遍，当之后article_id规则改变后，需要同时修改三处代码，那么有没有一种方法，只需修改一处即可？</p>
+<p>在Django2.0中，可以使用 <code>path</code> 解决以上的两个问题。</p>
+<h3 id="基本示例"><a href="#基本示例" class="headerlink" title="基本示例"></a>基本示例</h3><p>这是一个简单的例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> path  </span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> views  </span><br><span class="line">urlpatterns = [  </span><br><span class="line">    path(<span class="string">'articles/2003/'</span>, views.special_case_2003),  </span><br><span class="line">    path(<span class="string">'articles/&lt;int:year&gt;/'</span>, views.year_archive),  </span><br><span class="line">    path(<span class="string">'articles/&lt;int:year&gt;/&lt;int:month&gt;/'</span>, views.month_archive),  </span><br><span class="line">    path(<span class="string">'articles/&lt;int:year&gt;/&lt;int:month&gt;/&lt;slug&gt;/'</span>, views.article_detail),  </span><br><span class="line">　　<span class="comment"># path才支持，re_path不支持</span></span><br><span class="line">　　path(<span class="string">'order/&lt;int:year&gt;'</span>,views.order),</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>基本规则：</p>
+<ul>
+<li>使用尖括号(<code>&lt;&gt;</code>)从url中捕获值。</li>
+<li>捕获值中可以包含一个转化器类型（converter type），比如使用 <code>&lt;int:name&gt;</code> 捕获一个整数变量。若果没有转化器，将匹配任何字符串，当然也包括了 <code>/</code> 字符。</li>
+<li>无需添加前导斜杠。</li>
+</ul>
+<p>以下是根据 <a href="https://docs.djangoproject.com/en/2.0/topics/http/urls/#example" target="_blank" rel="noopener">2.0官方文档</a> 而整理的示例分析表：(跟上面url的匹配关系)</p>
+<img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gj1wjmg5fuj30xq0bctds.jpg" alt="image-20200924181029872" style="zoom:50%;" />
+
+<h3 id="path转化器"><a href="#path转化器" class="headerlink" title="path转化器"></a>path转化器</h3><blockquote>
+<p>文档原文是Path converters，暂且翻译为转化器。</p>
+</blockquote>
+<p>Django默认支持以下5个转化器：</p>
+<ul>
+<li>str,匹配除了路径分隔符（<code>/</code>）之外的非空字符串，这是默认的形式</li>
+<li>int,匹配正整数，包含0。</li>
+<li>slug,匹配字母、数字以及横杠、下划线组成的字符串。</li>
+<li>uuid,匹配格式化的uuid，如 075194d3-6885-417e-a8a8-6c931e272f00。</li>
+<li>path,匹配任何非空字符串，包含了路径分隔符（/）（不能用？）</li>
+</ul>
+<h3 id="注册自定义转化器"><a href="#注册自定义转化器" class="headerlink" title="注册自定义转化器"></a>注册自定义转化器</h3><p>对于一些复杂或者复用的需要，可以定义自己的转化器。转化器是一个类或接口，它的要求有三点：</p>
+<ul>
+<li><p><code>regex</code> 类属性，字符串类型</p>
+</li>
+<li><p><code>to_python(self, value)</code> 方法，value是由类属性 <code>regex</code> 所匹配到的字符串，返回具体的Python变量值，以供Django传递到对应的视图函数中。</p>
+</li>
+<li><p><code>to_url(self, value)</code> 方法，和 <code>to_python</code> 相反，value是一个具体的Python变量值，返回其字符串，通常用于url反向引用。</p>
+</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FourDigitYearConverter</span>:</span>  </span><br><span class="line">    regex = <span class="string">'[0-9]&#123;4&#125;'</span>  </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">to_python</span><span class="params">(self, value)</span>:</span>  </span><br><span class="line">        <span class="keyword">return</span> int(value)  </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">to_url</span><span class="params">(self, value)</span>:</span>  </span><br><span class="line">        <span class="keyword">return</span> <span class="string">'%04d'</span> % value</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用<code>register_converter</code> 将其注册到URL配置中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> register_converter, path  </span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> converters, views  </span><br><span class="line">register_converter(converters.FourDigitYearConverter, <span class="string">'yyyy'</span>)  </span><br><span class="line">urlpatterns = [  </span><br><span class="line">    path(<span class="string">'articles/2003/'</span>, views.special_case_2003),  </span><br><span class="line">    path(<span class="string">'articles/&lt;yyyy:year&gt;/'</span>, views.year_archive),  </span><br><span class="line">    ...  </span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django%E6%A1%86%E6%9E%B6/16-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-%E4%B8%AD%E9%97%B4%E4%BB%B6/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django框架/16-Django高级之-中间件
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django%E6%A1%86%E6%9E%B6/8-%E6%A8%A1%E5%9E%8B%E5%B1%82-%E5%8D%95%E8%A1%A8%E6%93%8D%E4%BD%9C/">
+        
+          python/Django框架/8-模型层-单表操作
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-Django中路由的作用"><span class="toc-nav-text">一 Django中路由的作用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-简单的路由配置"><span class="toc-nav-text">二 简单的路由配置</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-有名分组"><span class="toc-nav-text">三 有名分组</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-路由分发"><span class="toc-nav-text">四 路由分发</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-反向解析"><span class="toc-nav-text">五 反向解析</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-名称空间"><span class="toc-nav-text">六 名称空间</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#七-django2-0版的path"><span class="toc-nav-text">七 django2.0版的path</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基本示例"><span class="toc-nav-text">基本示例</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#path转化器"><span class="toc-nav-text">path转化器</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#注册自定义转化器"><span class="toc-nav-text">注册自定义转化器</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django框架/5-路由控制/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django框架/5-路由控制",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

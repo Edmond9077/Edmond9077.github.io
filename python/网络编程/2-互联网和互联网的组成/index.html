@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/网络编程/2-互联网和互联网的组成 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/网络编程/2-互联网和互联网的组成</h2>
+
+
+
+  <p class="post-date">2020-10-17</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、互联网的组成-教材版"><a href="#一、互联网的组成-教材版" class="headerlink" title="一、互联网的组成(教材版)"></a>一、互联网的组成(教材版)</h1><p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnugf54dj30nm0c845o.jpg" alt="150-互联网的组成-拓扑结构.png?x-oss-process=style/watermark"></p>
+<p>互联网的拓扑结构非常复杂 ，并且在地理位置上覆盖了全球，从工作方式上看，可以划分为两大块：</p>
+<ol>
+<li>边缘部分：这部分由所有连接在互联网上的主机组成。这部分是用户直接使用的，用来进行通信和资源共享。</li>
+<li>核心部分：由大量网络和连接这些网络的路由器组成。这部分用来为边缘部分提供服务。</li>
+</ol>
+<p>注意：<strong>上述分类过于正规，有兴趣深入的同学可以看大学计算机网络的教材，请看我们下述的科普版本。</strong></p>
+<h1 id="二、互联网的组成-科普版"><a href="#二、互联网的组成-科普版" class="headerlink" title="二、互联网的组成(科普版)"></a>二、互联网的组成(科普版)</h1><p>说到互联网大家都不陌生，利用互联网打开电脑或手机看新闻、写邮件、逛淘宝、聊微信、看抖音。现代人离开了手机离开了互联网就好像和全世界断了联系，好像已经作为我们身体的一部分了。</p>
+<p>区块链号称是是下一代互联网。那么，到底什么是互联网？</p>
+<p>作为一个技术老兵，见证互联网的发展，以下是个人对什么是互联网的理解：谈互联网主要就是谈互联网的组成，也就是说明互联网的基础设施的组成。</p>
+<p>互联网的基础设施非常庞大，包含硬件、软件两部分。下面我们先来看下当你打开浏览器，输入一个网址比如 &lt;<a href="http://www.taobao.com&gt;" target="_blank" rel="noopener">www.taobao.com&gt;</a> ，几秒钟就看到淘宝首页。这个一个简单的动作，整个互联网到底发送了什么？其实这是一个非常非常复杂的事情。下面是一个简化的过程描述：</p>
+<ol>
+<li>浏览器检查是否有缓存过域名对应IP地址</li>
+<li>如果没有缓存的域名对应的IP，请求域名服务器解析成对应的IP地址（这个过程也非复杂，暂省了）</li>
+<li>浏览器建立Socket连接，根据http协议组装get 类型的http header，通过tcp/ip协议发送报文。</li>
+<li>tcp/ip协议会通过网络层网卡（wifi或网线）发射信号到家庭里面的路由器，家里的路由器发送信号到电讯厂商的交换机（中间可能会经过很多次的路由）找到目标服务器，服务器也许托管在IDC机房，也许在阿里云VPS，也许在国外。</li>
+<li>机房里面会有大型交换机、机柜、专业的精密空调，你要访问的那台IP的服务器就在其中某个机柜中。</li>
+<li>在服务器接收到信号后，会根据tcp/ip协议解出http协议头。根据get的请求决定需要返回的数据</li>
+<li>在服务器端实际上根据业务还有很复杂的逻辑；服务器后面还有许多台服务器，到底指定那台服务器来处理请求，需要负载均衡设备来完成</li>
+<li>要返回的数据是在缓存里面、还是在静态文件中、还是在数据库（如MySQL，Oracle）中</li>
+<li>浏览器根据返回的数据，发现有一些静态资源（如CSS，JS，图片等）时有重新发起新的http请求，而这些静态资源文件可能在CDN网络中，请求静态资源的整个过程需需要从第一步重新再走一遍，并且很可能中间经过的交换机，路由过程是不一样的。</li>
+</ol>
+<p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnu8s04nj30i90fxju1.jpg" alt="150-互联网和互联网的组成-架构图.png?x-oss-process=style/watermark"></p>
+<p>上面的过程是不是比你想象中的复杂呢？其实这只是非常非常简化的过程。在上面的过程中，也许你已经发现了一些名词，比如网卡，路由器，交换机，又比如tcp/ip,域名，http。这些其实就是互联网设施中的一部分，有些也许你听说过，有些也许没有听过。为了方便理解，笔者把互联网的组成分成硬件、软件两类总结如下。</p>
+<h2 id="2-1-互联网的硬件组成"><a href="#2-1-互联网的硬件组成" class="headerlink" title="2.1 互联网的硬件组成"></a>2.1 互联网的硬件组成</h2><p>硬件组成主要包括终端设备，主要是联网的个人设备；组成家庭（企业）局域网、城域网、主干网的网络设备；提供内容服务的服务主机设备等。</p>
+<ol>
+<li>终端设备：电脑（pc，笔记本），移动设备（手机，pad），智能电视，智能家居</li>
+<li>网络设备：网卡，网线，水晶头，路由器，家用交换机，防火墙设备，中继器，桥接器</li>
+<li>主机设备：IDC机房，机柜，精密空调，负载均衡器，服务器，工作站，小型机、大型机</li>
+</ol>
+<p>注意：<strong>应该没有列全，想到后再补充</strong></p>
+<h2 id="2-2-互联网的软件组成"><a href="#2-2-互联网的软件组成" class="headerlink" title="2.2 互联网的软件组成"></a>2.2 互联网的软件组成</h2><p>互联网的软件非常多，不太好分类，大致分成网络协议类，操作系统类，平台中间件类，应用类。</p>
+<ol>
+<li>网络协议类，比如互联网的基础协议tcp/ip协议</li>
+<li>操作系统类，比如window，linux，macOS，android，iOS</li>
+<li>平台中间件类：比如webServer，Nginx，Apache，Tomcat，MySQL等</li>
+<li>应用类：比如浏览器，微信，邮箱，游戏等等。</li>
+</ol>
+<p>注意：<strong>上述四种分类，上三种都是基于协议开发的应用程序，也就说作为开发的我们要想开发上三种应用程序，则必须得了解互联网的基础协议。</strong></p>
+<p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrnu0gyyxj30gc076aas.jpg" alt="150-互联网与互联网的组成-常用协议.jpg?x-oss-process=style/watermark"></p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/10-%E5%9F%BA%E4%BA%8EUDP%E5%8D%8F%E8%AE%AE%E7%9A%84socket%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E7%A8%8B/">
+        <span class="nav-arrow">← </span>
+        
+          python/网络编程/10-基于UDP协议的socket套接字编程
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/1-%E7%BD%91%E7%BB%9C%E6%9E%B6%E6%9E%84%E5%8F%8A%E5%85%B6%E6%BC%94%E5%8F%98%E8%BF%87%E7%A8%8B/">
+        
+          python/网络编程/1-网络架构及其演变过程
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、互联网的组成-教材版"><span class="toc-nav-text">一、互联网的组成(教材版)</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、互联网的组成-科普版"><span class="toc-nav-text">二、互联网的组成(科普版)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-互联网的硬件组成"><span class="toc-nav-text">2.1 互联网的硬件组成</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-互联网的软件组成"><span class="toc-nav-text">2.2 互联网的软件组成</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/网络编程/2-互联网和互联网的组成/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/网络编程/2-互联网和互联网的组成",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

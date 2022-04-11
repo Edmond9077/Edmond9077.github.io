@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/Django框架/13-Django高级之-分页器 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/Django框架/13-Django高级之-分页器</h2>
+
+
+
+  <p class="post-date">2020-09-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1-Django的分页器（paginator）简介"><a href="#1-Django的分页器（paginator）简介" class="headerlink" title="1 Django的分页器（paginator）简介"></a>1 Django的分页器（paginator）简介</h2><p>在页面显示分页数据，需要用到Django分页器组件</p>
+<p>from django.core.paginator import Paginator</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Paginator对象：    paginator = Paginator(user_list, <span class="number">10</span>)</span><br><span class="line"><span class="comment"># per_page: 每页显示条目数量</span></span><br><span class="line"><span class="comment"># count:    数据总个数</span></span><br><span class="line"><span class="comment"># num_pages:总页数</span></span><br><span class="line"><span class="comment"># page_range:总页数的索引范围，如: (1,10),(1,200)</span></span><br><span class="line"><span class="comment"># page:     page对象    </span></span><br><span class="line">page对象：page=paginator.page(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># has_next              是否有下一页</span></span><br><span class="line"><span class="comment"># next_page_number      下一页页码</span></span><br><span class="line"><span class="comment"># has_previous          是否有上一页</span></span><br><span class="line"><span class="comment"># previous_page_number  上一页页码</span></span><br><span class="line"><span class="comment"># object_list           分页之后的数据列表</span></span><br><span class="line"><span class="comment"># number                当前页</span></span><br><span class="line"><span class="comment"># paginator             paginator对象</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-应用View层"><a href="#2-应用View层" class="headerlink" title="2 应用View层"></a>2 应用View层</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render,HttpResponse</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> app01.models <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> django.core.paginator <span class="keyword">import</span> Paginator, EmptyPage, PageNotAnInteger</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    批量导入数据:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Booklist=[]</span></span><br><span class="line"><span class="string">    for i in range(100):</span></span><br><span class="line"><span class="string">        Booklist.append(Book(title="book"+str(i),price=30+i*i))</span></span><br><span class="line"><span class="string">    Book.objects.bulk_create(Booklist)</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">分页器的使用:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    book_list=Book.objects.all()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    paginator = Paginator(book_list, 10)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    print("count:",paginator.count)           #数据总数</span></span><br><span class="line"><span class="string">    print("num_pages",paginator.num_pages)    #总页数</span></span><br><span class="line"><span class="string">    print("page_range",paginator.page_range)  #页码的列表</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    page1=paginator.page(1) #第1页的page对象</span></span><br><span class="line"><span class="string">    for i in page1:         #遍历第1页的所有数据对象</span></span><br><span class="line"><span class="string">        print(i)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    print(page1.object_list) #第1页的所有数据</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    page2=paginator.page(2)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    print(page2.has_next())            #是否有下一页</span></span><br><span class="line"><span class="string">    print(page2.next_page_number())    #下一页的页码</span></span><br><span class="line"><span class="string">    print(page2.has_previous())        #是否有上一页</span></span><br><span class="line"><span class="string">    print(page2.previous_page_number()) #上一页的页码</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    # 抛错</span></span><br><span class="line"><span class="string">    #page=paginator.page(12)   # error:EmptyPage</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    #page=paginator.page("z")   # error:PageNotAnInteger</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    book_list=Book.objects.all()</span><br><span class="line"></span><br><span class="line">    paginator = Paginator(book_list, <span class="number">10</span>)</span><br><span class="line">    page = request.GET.get(<span class="string">'page'</span>,<span class="number">1</span>)</span><br><span class="line">    currentPage=int(page)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        print(page)</span><br><span class="line">        book_list = paginator.page(page)</span><br><span class="line">    <span class="keyword">except</span> PageNotAnInteger:</span><br><span class="line">        book_list = paginator.page(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">except</span> EmptyPage:</span><br><span class="line">        book_list = paginator.page(paginator.num_pages)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">"index.html"</span>,&#123;<span class="string">"book_list"</span>:book_list,<span class="string">"paginator"</span>:paginator,<span class="string">"currentPage"</span>:currentPage&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-模版层-index-html"><a href="#3-模版层-index-html" class="headerlink" title="3 模版层 index.html"></a>3 模版层 index.html</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=<span class="string">"en"</span>&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">"UTF-8"</span>&gt;</span><br><span class="line">    &lt;title&gt;Title&lt;/title&gt;</span><br><span class="line">    &lt;link rel=<span class="string">"stylesheet"</span> href=<span class="string">"https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"</span> </span><br><span class="line">    integrity=<span class="string">"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"</span> crossorigin=<span class="string">"anonymous"</span>&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;div class="container"&gt;</span><br><span class="line"></span><br><span class="line">    &lt;h4&gt;分页器&lt;/h4&gt;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line"></span><br><span class="line">        &#123;% <span class="keyword">for</span> book <span class="keyword">in</span> book_list %&#125;</span><br><span class="line">             &lt;li&gt;&#123;&#123; book.title &#125;&#125; -----&#123;&#123; book.price &#125;&#125;&lt;/li&gt;</span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">     &lt;/ul&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &lt;ul class="pagination" id="pager"&gt;</span><br><span class="line"></span><br><span class="line">                 &#123;% <span class="keyword">if</span> book_list.has_previous %&#125;</span><br><span class="line">                    &lt;li class="previous"&gt;&lt;a href="/index/?page=&#123;&#123; book_list.previous_page_number &#125;&#125;"&gt;上一页&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">                 &#123;% <span class="keyword">else</span> %&#125;</span><br><span class="line">                    &lt;li class="previous disabled"&gt;&lt;a href="#"&gt;上一页&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">                 &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                 &#123;% <span class="keyword">for</span> num <span class="keyword">in</span> paginator.page_range %&#125;</span><br><span class="line"></span><br><span class="line">                     &#123;% <span class="keyword">if</span> num == currentPage %&#125;</span><br><span class="line">                       &lt;li class="item active"&gt;&lt;a href="/index/?page=&#123;&#123; num &#125;&#125;"&gt;&#123;&#123; num &#125;&#125;&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">                     &#123;% <span class="keyword">else</span> %&#125;</span><br><span class="line">                       &lt;li class="item"&gt;&lt;a href="/index/?page=&#123;&#123; num &#125;&#125;"&gt;&#123;&#123; num &#125;&#125;&lt;/a&gt;&lt;/li&gt;</span><br><span class="line"></span><br><span class="line">                     &#123;% endif %&#125;</span><br><span class="line">                 &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                 &#123;% <span class="keyword">if</span> book_list.has_next %&#125;</span><br><span class="line">                    &lt;li class="next"&gt;&lt;a href="/index/?page=&#123;&#123; book_list.next_page_number &#125;&#125;"&gt;下一页&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">                 &#123;% <span class="keyword">else</span> %&#125;</span><br><span class="line">                    &lt;li class="next disabled"&gt;&lt;a href="#"&gt;下一页&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">                 &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">            &lt;/ul&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-扩展"><a href="#4-扩展" class="headerlink" title="4 扩展"></a>4 扩展</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">    显示左5，右5，总共11个页，</span></span><br><span class="line"><span class="string">    1 如果总页码大于11</span></span><br><span class="line"><span class="string">        1.1 if 当前页码减5小于1，要生成1到12的列表（顾头不顾尾，共11个页码）</span></span><br><span class="line"><span class="string">            page_range=range(1,12)</span></span><br><span class="line"><span class="string">        1.2 elif 当前页码+5大于总页码，生成当前页码减10，到当前页码加1的列表（顾头不顾尾，共11个页码）</span></span><br><span class="line"><span class="string">            page_range=range(paginator.num_pages-10,paginator.num_pages+1)</span></span><br><span class="line"><span class="string">        1.3 else 生成当前页码-5，到当前页码+6的列表</span></span><br><span class="line"><span class="string">            page_range=range(current_page_num-5,current_page_num+6)</span></span><br><span class="line"><span class="string">    2 其它情况，生成的列表就是pageinator的page_range</span></span><br><span class="line"><span class="string">        page_range=paginator.page_range</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    '''</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line"></span><br><span class="line">    book_list=Book.objects.all()</span><br><span class="line"></span><br><span class="line">    paginator = Paginator(book_list, <span class="number">15</span>)</span><br><span class="line">    page = request.GET.get(<span class="string">'page'</span>,<span class="number">1</span>)</span><br><span class="line">    currentPage=int(page)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#  如果页数十分多时，换另外一种显示方式</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> paginator.num_pages&gt;<span class="number">11</span>:</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> currentPage<span class="number">-5</span>&lt;<span class="number">1</span>:</span><br><span class="line">            pageRange=range(<span class="number">1</span>,<span class="number">11</span>)</span><br><span class="line">        <span class="keyword">elif</span> currentPage+<span class="number">5</span>&gt;paginator.num_pages:</span><br><span class="line">            pageRange=range(currentPage<span class="number">-5</span>,paginator.num_pages+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            pageRange=range(currentPage<span class="number">-5</span>,currentPage+<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        pageRange=paginator.page_range</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        print(page)</span><br><span class="line">        book_list = paginator.page(page)</span><br><span class="line">    <span class="keyword">except</span> PageNotAnInteger:</span><br><span class="line">        book_list = paginator.page(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">except</span> EmptyPage:</span><br><span class="line">        book_list = paginator.page(paginator.num_pages)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">"index.html"</span>,locals())</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">page_test</span><span class="params">(request)</span>:</span></span><br><span class="line">    <span class="comment"># book_list=[]</span></span><br><span class="line">    <span class="comment"># for i in range(100):</span></span><br><span class="line">    <span class="comment">#     book=Book(name='book%s'%i,price=10+i,pub_date='2018-09-18',publish_id=1)</span></span><br><span class="line">    <span class="comment">#     book_list.append(book)</span></span><br><span class="line">    <span class="comment"># Book.objects.bulk_create(book_list,10)</span></span><br><span class="line">    book_list=Book.objects.all()</span><br><span class="line">    <span class="comment"># 生成paginator对象，传入书籍列表，每页10条数据</span></span><br><span class="line">    paginator=Paginator(book_list,<span class="number">3</span>)</span><br><span class="line">    <span class="comment"># 总页码数</span></span><br><span class="line">    print(paginator.num_pages)</span><br><span class="line">    <span class="comment"># 页码列表</span></span><br><span class="line">    print(paginator.page_range)</span><br><span class="line">    <span class="comment"># 总数据</span></span><br><span class="line">    print(paginator.count)</span><br><span class="line">    <span class="comment"># 获取页面传来的页码</span></span><br><span class="line">    current_page=int(request.GET.get(<span class="string">'page'</span>,<span class="number">1</span>))</span><br><span class="line">    page_range=[]</span><br><span class="line">    <span class="comment"># 左5 右5</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 获取页面传来的页码的page对象</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        page=paginator.page(current_page)</span><br><span class="line">        <span class="comment"># print(page.has_next())            #是否有下一页</span></span><br><span class="line">        <span class="comment"># print(page.next_page_number())    #下一页的页码</span></span><br><span class="line">        <span class="comment"># print(page.has_previous())        #是否有上一页</span></span><br><span class="line">        <span class="comment"># print(page.previous_page_number()) #上一页的页码</span></span><br><span class="line">        <span class="comment"># 循环打印出当页对象</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> page:</span><br><span class="line">            print(i)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        current_page=<span class="number">1</span></span><br><span class="line">        page = paginator.page(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> paginator.num_pages&gt;<span class="number">11</span>:</span><br><span class="line">        <span class="keyword">if</span> current_page+<span class="number">5</span>&gt;paginator.num_pages:</span><br><span class="line">            page_range=range(paginator.num_pages<span class="number">-10</span>,paginator.num_pages+<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">elif</span> current_page<span class="number">-5</span>&lt;<span class="number">1</span>:</span><br><span class="line">            page_range=range(<span class="number">1</span>,<span class="number">12</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            page_range=range(current_page<span class="number">-5</span>,current_page+<span class="number">6</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        page_range=paginator.page_range</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render(request,<span class="string">'page_test.html'</span>,locals())</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"/static/bootstrap-3.3.7-dist/css/bootstrap.min.css"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    &#123;% for foo in page %&#125;</span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123; foo.name &#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nav</span> <span class="attr">aria-label</span>=<span class="string">"Page navigation"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"pagination"</span>&gt;</span></span><br><span class="line">        &#123;% if page.has_previous %&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/page_test/?page=&#123;&#123; page.previous_page_number &#125;&#125;"</span> <span class="attr">aria-label</span>=<span class="string">"Previous"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">span</span> <span class="attr">aria-hidden</span>=<span class="string">"true"</span>&gt;</span>上一页<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        &#123;% else %&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"disabled"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span> <span class="attr">aria-label</span>=<span class="string">"Previous"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">span</span> <span class="attr">aria-hidden</span>=<span class="string">"true"</span>&gt;</span>上一页<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">        &#123;% for foo in page_range %&#125;</span><br><span class="line">            &#123;% if current_page == foo %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"active"</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/page_test/?page=&#123;&#123; foo &#125;&#125;"</span>&gt;</span>&#123;&#123; foo &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            &#123;% else %&#125;</span><br><span class="line">                <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/page_test/?page=&#123;&#123; foo &#125;&#125;"</span>&gt;</span>&#123;&#123; foo &#125;&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line">        &#123;% if page.has_next %&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"/page_test/?page=&#123;&#123; page.next_page_number &#125;&#125;"</span> <span class="attr">aria-label</span>=<span class="string">"Next"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">span</span> <span class="attr">aria-hidden</span>=<span class="string">"true"</span>&gt;</span>下一页<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        &#123;% else %&#125;</span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"disabled"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span> <span class="attr">aria-label</span>=<span class="string">"Next"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">span</span> <span class="attr">aria-hidden</span>=<span class="string">"true"</span>&gt;</span>下一页<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django%E6%A1%86%E6%9E%B6/1-Web%E5%BA%94%E7%94%A8/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django框架/1-Web应用
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/Django%E6%A1%86%E6%9E%B6/11-%E6%A8%A1%E5%9E%8B%E5%B1%82-%E6%A8%A1%E5%9E%8B%E5%B1%82%E8%BF%9B%E9%98%B6/">
+        
+          python/Django框架/11-模型层-模型层进阶
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-Django的分页器（paginator）简介"><span class="toc-nav-text">1 Django的分页器（paginator）简介</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-应用View层"><span class="toc-nav-text">2 应用View层</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-模版层-index-html"><span class="toc-nav-text">3 模版层 index.html</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-扩展"><span class="toc-nav-text">4 扩展</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/Django框架/13-Django高级之-分页器/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/Django框架/13-Django高级之-分页器",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

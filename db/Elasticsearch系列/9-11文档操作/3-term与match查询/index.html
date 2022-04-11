@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Elasticsearch系列/9-11文档操作/3-term与match查询 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Elasticsearch系列/9-11文档操作/3-term与match查询</h2>
+
+
+
+  <p class="post-date">2020-03-09</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="term与match查询"><a href="#term与match查询" class="headerlink" title="term与match查询"></a>term与match查询</h1><h2 id="一-match查询"><a href="#一-match查询" class="headerlink" title="一 match查询"></a>一 match查询</h2><h3 id="1-1-准备数据"><a href="#1-1-准备数据" class="headerlink" title="1.1 准备数据"></a>1.1 准备数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">PUT lqz/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"顾老二"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">30</span>,</span><br><span class="line">  <span class="string">"from"</span>: <span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">  <span class="string">"tags"</span>: [<span class="string">"黑"</span>, <span class="string">"长"</span>, <span class="string">"直"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"大娘子"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">18</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"sheng"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"肤白貌美，娇憨可爱"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"白"</span>, <span class="string">"富"</span>,<span class="string">"美"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">3</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"龙套偏房"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">22</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"mmp，没怎么看，不知道怎么形容"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"造数据"</span>, <span class="string">"真"</span>,<span class="string">"难"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">4</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"石头"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">29</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"gu"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"粗中有细，狐假虎威"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"粗"</span>, <span class="string">"大"</span>,<span class="string">"猛"</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT lqz/doc/<span class="number">5</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>:<span class="string">"魏行首"</span>,</span><br><span class="line">  <span class="string">"age"</span>:<span class="number">25</span>,</span><br><span class="line">  <span class="string">"from"</span>:<span class="string">"广云台"</span>,</span><br><span class="line">  <span class="string">"desc"</span>:<span class="string">"仿佛兮若轻云之蔽月,飘飘兮若流风之回雪,mmp，最后竟然没有嫁给顾老二！"</span>,</span><br><span class="line">  <span class="string">"tags"</span>:[<span class="string">"闭月"</span>,<span class="string">"羞花"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-match系列之match（按条件查询）"><a href="#1-2-match系列之match（按条件查询）" class="headerlink" title="1.2 match系列之match（按条件查询）"></a>1.2 match系列之match（按条件查询）</h3><p>我们查看来自顾家的都有哪些人。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match"</span>: &#123;</span><br><span class="line">      <span class="string">"from"</span>: <span class="string">"gu"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上例，查询条件是一步步构建出来的，将查询条件添加到<code>match</code>中即可，而<code>match</code>则是查询所有<code>from</code>字段的值中含有<code>gu</code>的结果就会返回。<br> 结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : false,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">3</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : <span class="number">0.6931472</span>,</span><br><span class="line">    <span class="string">"hits"</span> : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"4"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.6931472</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"石头"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">29</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"粗中有细，狐假虎威"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"粗"</span>,</span><br><span class="line">            <span class="string">"大"</span>,</span><br><span class="line">            <span class="string">"猛"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.2876821</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"顾老二"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">30</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"黑"</span>,</span><br><span class="line">            <span class="string">"长"</span>,</span><br><span class="line">            <span class="string">"直"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"3"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.2876821</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"龙套偏房"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">22</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"mmp，没怎么看，不知道怎么形容"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"造数据"</span>,</span><br><span class="line">            <span class="string">"真"</span>,</span><br><span class="line">            <span class="string">"难"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-match系列之match-all（查询全部）"><a href="#1-3-match系列之match-all（查询全部）" class="headerlink" title="1.3 match系列之match_all（查询全部）"></a>1.3 match系列之match_all（查询全部）</h3><p>除了按条件查询之外，我们还可以查询<code>lqz</code>索引下的<code>doc</code>类型中的所有文档，那就是查询全部：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET lqz/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_all"</span>: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>match_all</code>的值为空，表示没有查询条件，那就是查询全部。就像<code>select * from table_name</code>一样。</p>
+<p>查询结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">0</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : false,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">    <span class="string">"hits"</span> : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"5"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"魏行首"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">25</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"广云台"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"仿佛兮若轻云之蔽月,飘飘兮若流风之回雪,mmp，最后竟然没有嫁给顾老二！"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"闭月"</span>,</span><br><span class="line">            <span class="string">"羞花"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"2"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"大娘子"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">18</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"sheng"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"肤白貌美，娇憨可爱"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"白"</span>,</span><br><span class="line">            <span class="string">"富"</span>,</span><br><span class="line">            <span class="string">"美"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"4"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"石头"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">29</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"粗中有细，狐假虎威"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"粗"</span>,</span><br><span class="line">            <span class="string">"大"</span>,</span><br><span class="line">            <span class="string">"猛"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"顾老二"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">30</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"皮肤黑、武器长、性格直"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"黑"</span>,</span><br><span class="line">            <span class="string">"长"</span>,</span><br><span class="line">            <span class="string">"直"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"lqz"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"3"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">1.0</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"name"</span> : <span class="string">"龙套偏房"</span>,</span><br><span class="line">          <span class="string">"age"</span> : <span class="number">22</span>,</span><br><span class="line">          <span class="string">"from"</span> : <span class="string">"gu"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"mmp，没怎么看，不知道怎么形容"</span>,</span><br><span class="line">          <span class="string">"tags"</span> : [</span><br><span class="line">            <span class="string">"造数据"</span>,</span><br><span class="line">            <span class="string">"真"</span>,</span><br><span class="line">            <span class="string">"难"</span></span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回的是<code>lqz</code>索引下<code>doc</code>类型的所有文档！</p>
+<h3 id="1-4-match系列之match-phrase（短语查询）"><a href="#1-4-match系列之match-phrase（短语查询）" class="headerlink" title="1.4 match系列之match_phrase（短语查询）"></a>1.4 match系列之match_phrase（短语查询）</h3><p>我们现在已经对match有了基本的了解，match查询的是散列映射，包含了我们希望搜索的字段和字符串。也就说，只要文档中只要有我们希望的那个关键字，但也因此带来了一些问题。<br> 首先来创建一些示例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">PUT t1/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"中国是世界上人口最多的国家"</span></span><br><span class="line">&#125;</span><br><span class="line">PUT t1/doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"美国是世界上军事实力最强大的国家"</span></span><br><span class="line">&#125;</span><br><span class="line">PUT t1/doc/<span class="number">3</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"北京是中国的首都"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，当我们以<code>中国</code>作为搜索条件，我们希望只返回和<code>中国</code>相关的文档。我们首先来使用<code>match</code>查询：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET t1/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match"</span>: &#123;</span><br><span class="line">      <span class="string">"title"</span>: <span class="string">"中国"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : false,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">3</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : <span class="number">0.68324494</span>,</span><br><span class="line">    <span class="string">"hits"</span> : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"t1"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.68324494</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"title"</span> : <span class="string">"中国是世界上人口最多的国家"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"t1"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"3"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.5753642</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"title"</span> : <span class="string">"北京是中国的首都"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"t1"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"2"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.39556286</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"title"</span> : <span class="string">"美国是世界上军事实力最强大的国家"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然如期的返回了<code>中国</code>的文档。但是却把和<code>美国</code>的文档也返回了，这并不是我们想要的。是怎么回事呢？因为这是elasticsearch在内部对文档做分词的时候，对于中文来说，就是一个字一个字分的，所以，我们搜<code>中国</code>，<code>中</code>和<code>国</code>都符合条件，返回，而美国的<code>国</code>也符合。<br> 而我们认为<code>中国</code>是个短语，是一个有具体含义的词。所以elasticsearch在处理中文分词方面比较弱势。后面会讲针对中文的插件。<br> 但目前我们还有办法解决，那就是使用短语查询：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET t1/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_phrase"</span>: &#123;</span><br><span class="line">      <span class="string">"title"</span>: &#123;</span><br><span class="line">        <span class="string">"query"</span>: <span class="string">"中国"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里<code>match_phrase</code>是在文档中搜索指定的词组，而<code>中国</code>则正是一个词组，所以愉快的返回了。<br> 那么，现在我们要想搜索<code>中国</code>和<code>世界</code>相关的文档，但又忘记其余部分了，怎么做呢？用<code>match</code>也不行，那就继续用<code>match_phrase</code>试试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET t1/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_phrase"</span>: &#123;</span><br><span class="line">      <span class="string">"title"</span>: <span class="string">"中国世界"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回结果也是空的，因为没有<code>中国世界</code>这个短语。<br> 我们搜索<code>中国</code>和<code>世界</code>这两个指定词组时，但又不清楚两个词组之间有多少别的词间隔。那么在搜的时候就要留有一些余地。这时就要用到了<code>slop</code>了。相当于正则中的<code>中国.*?世界</code>。这个间隔默认为0，导致我们刚才没有搜到,现在我们指定一个间隔。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET t1/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_phrase"</span>: &#123;</span><br><span class="line">      <span class="string">"title"</span>: &#123;</span><br><span class="line">        <span class="string">"query"</span>: <span class="string">"中国世界"</span>,</span><br><span class="line">        <span class="string">"slop"</span>: <span class="number">2</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，两个词组之间有了2个词的间隔，这个时候，就可以查询到结果了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : false,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">1</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : <span class="number">0.7445889</span>,</span><br><span class="line">    <span class="string">"hits"</span> : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"t1"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.7445889</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"title"</span> : <span class="string">"中国是世界上人口最多的国家"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>slop</code>间隔你可以根据需要适当改动。</p>
+<p>短语查询， 比如要查询：python系统<br>会把查询条件python和系统分词，放到列表中，再去搜索的时候，必须满足python和系统同时存在的才能搜出来<br>“slop”:6 ：python和系统这两个词之间最小的距离</p>
+<h3 id="1-4-match系列之match-phrase-prefix（最左前缀查询）"><a href="#1-4-match系列之match-phrase-prefix（最左前缀查询）" class="headerlink" title="1.4 match系列之match_phrase_prefix（最左前缀查询）"></a>1.4 match系列之match_phrase_prefix（最左前缀查询）</h3><p>现在凌晨2点半，单身狗小黑为了缓解寂寞，就准备搜索几个<code>beautiful girl</code>来陪伴自己。但是由于英语没过2级，但单词<code>beautiful</code>拼到<code>bea</code>就不知道往下怎么拼了。这个时候，我们的智能搜索要帮他啊，elasticsearch就看自己的词库有啥事<code>bea</code>开头的词，结果还真发现了两个：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PUT t3/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"maggie"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"beautiful girl you are beautiful so"</span></span><br><span class="line">&#125;</span><br><span class="line">PUT t3/doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"sun and beach"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"I like basking on the beach"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但这里用<code>match</code>和<code>match_phrase</code>都不太合适，因为小黑输入的不是完整的词。那怎么办呢？我们用<code>match_phrase_prefix</code>来搞：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET t3/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_phrase_prefix"</span>: &#123;</span><br><span class="line">      <span class="string">"desc"</span>: <span class="string">"bea"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"took"</span> : <span class="number">1</span>,</span><br><span class="line">  <span class="string">"timed_out"</span> : false,</span><br><span class="line">  <span class="string">"_shards"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"successful"</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">"skipped"</span> : <span class="number">0</span>,</span><br><span class="line">    <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"hits"</span> : &#123;</span><br><span class="line">    <span class="string">"total"</span> : <span class="number">2</span>,</span><br><span class="line">    <span class="string">"max_score"</span> : <span class="number">0.39556286</span>,</span><br><span class="line">    <span class="string">"hits"</span> : [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"t3"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.39556286</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"title"</span> : <span class="string">"maggie"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"beautiful girl,you are beautiful so"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"_index"</span> : <span class="string">"t3"</span>,</span><br><span class="line">        <span class="string">"_type"</span> : <span class="string">"doc"</span>,</span><br><span class="line">        <span class="string">"_id"</span> : <span class="string">"2"</span>,</span><br><span class="line">        <span class="string">"_score"</span> : <span class="number">0.2876821</span>,</span><br><span class="line">        <span class="string">"_source"</span> : &#123;</span><br><span class="line">          <span class="string">"title"</span> : <span class="string">"sun and beach"</span>,</span><br><span class="line">          <span class="string">"desc"</span> : <span class="string">"I like basking on the beach"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前缀查询是短语查询类似，但前缀查询可以更进一步的搜索词组，只不过它是和词组中最后一个词条进行前缀匹配（如搜这样的<code>you are bea</code>）。应用也非常的广泛，比如搜索框的提示信息，当使用这种行为进行搜索时，最好通过<code>max_expansions</code>来设置最大的前缀扩展数量，因为产生的结果会是一个很大的集合，不加限制的话，影响查询性能。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GET t3/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match_phrase_prefix"</span>: &#123;</span><br><span class="line">      <span class="string">"desc"</span>: &#123;</span><br><span class="line">        <span class="string">"query"</span>: <span class="string">"bea"</span>,</span><br><span class="line">        <span class="string">"max_expansions"</span>: <span class="number">1</span></span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是，如果此时你去尝试加上<code>max_expansions</code>测试后，你会发现并没有如你想想的一样，仅返回一条数据，而是返回了多条数据。<br> <code>max_expansions</code>执行的是搜索的编辑（Levenshtein）距离。那什么是编辑距离呢？编辑距离是一种计算两个字符串间的差异程度的字符串度量（string  metric）。我们可以认为编辑距离就是从一个字符串修改到另一个字符串时，其中编辑单个字符（比如修改、插入、删除）所需要的最少次数。俄罗斯科学家Vladimir Levenshtein于1965年提出了这一概念。<br> 我们再引用elasticsearch官网的一段话：<strong>该max_expansions设置定义了在停止搜索之前模糊查询将匹配的最大术语数，也可以对模糊查询的性能产生显着影响。但是，减少查询字词会产生负面影响，因为查询提前终止可能无法找到某些有效结果。重要的是要理解max_expansions查询限制在分片级别工作，这意味着即使设置为1，多个术语可能匹配，所有术语都来自不同的分片。此行为可能使其看起来好像max_expansions没有生效，因此请注意，计算返回的唯一术语不是确定是否有效的有效方法max_expansions。</strong>。<br> 我想你也没看懂这句话是啥意思，但我们只需知道该参数工作于分片层，也就是Lucene部分，超出我们的研究范围了。<br> 我们快刀斩乱麻的记住，使用前缀查询会非常的影响性能，要对结果集进行限制，就加上这个参数。</p>
+<h3 id="1-5-match系列之multi-match（多字段查询）"><a href="#1-5-match系列之multi-match（多字段查询）" class="headerlink" title="1.5 match系列之multi_match（多字段查询）"></a>1.5 match系列之multi_match（多字段查询）</h3><p>现在，我们有一个50个字段的索引，我们要在多个字段中查询同一个关键字，该怎么做呢？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PUT t3/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"maggie is beautiful girl"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"beautiful girl you are beautiful so"</span></span><br><span class="line">&#125;</span><br><span class="line">PUT t3/doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"beautiful beach"</span>,</span><br><span class="line">  <span class="string">"desc"</span>: <span class="string">"I like basking on the beach,and you? beautiful girl"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们先用原来的方法查询：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">GET t3/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"bool"</span>: &#123;</span><br><span class="line">      <span class="string">"must"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">"match"</span>: &#123;</span><br><span class="line">            <span class="string">"title"</span>: <span class="string">"beautiful"</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">"match"</span>: &#123;</span><br><span class="line">            <span class="string">"desc"</span>: <span class="string">"beautiful"</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>must</code>来限制两个字段（值）中必须同时含有关键字。这样虽然能达到目的，但是当有很多的字段呢，我们可以用<code>multi_match</code>来做：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET t3/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"multi_match"</span>: &#123;</span><br><span class="line">      <span class="string">"query"</span>: <span class="string">"beautiful"</span>,</span><br><span class="line">      <span class="string">"fields"</span>: [<span class="string">"title"</span>, <span class="string">"desc"</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们将多个字段放到<code>fields</code>列表中即可。以达到匹配多个字段的目的。<br> 除此之外，<code>multi_match</code>甚至可以当做<code>match_phrase</code>和<code>match_phrase_prefix</code>使用，只需要指定<code>type</code>类型即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">GET t3/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"multi_match"</span>: &#123;</span><br><span class="line">      <span class="string">"query"</span>: <span class="string">"gi"</span>,</span><br><span class="line">      <span class="string">"fields"</span>: [<span class="string">"title"</span>],</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"phrase_prefix"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">GET t3/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"multi_match"</span>: &#123;</span><br><span class="line">      <span class="string">"query"</span>: <span class="string">"girl"</span>,</span><br><span class="line">      <span class="string">"fields"</span>: [<span class="string">"title"</span>],</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"phrase"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>小结：</p>
+<ul>
+<li>match：返回所有匹配的分词。</li>
+<li>match_all：查询全部。</li>
+<li>match_phrase：短语查询，在match的基础上进一步查询词组，可以指定<code>slop</code>分词间隔。</li>
+<li>match_phrase_prefix：前缀查询，根据短语中最后一个词组做前缀匹配，可以应用于搜索提示，但注意和<code>max_expanions</code>搭配。其实默认是50…….</li>
+<li>multi_match：多字段查询，使用相当的灵活，可以完成<code>match_phrase</code>和<code>match_phrase_prefix</code>的工作。</li>
+</ul>
+<h2 id="二-term查询"><a href="#二-term查询" class="headerlink" title="二 term查询"></a>二 term查询</h2><p>默认情况下，elasticsearch在对文档分析期间（将文档分词后保存到倒排索引中），会对文档进行分词，比如默认的标准分析器会对文档进行：</p>
+<ul>
+<li>删除大多数的标点符号。</li>
+<li>将文档分解为单个词条，我们称为token。</li>
+<li>将token转为小写。</li>
+</ul>
+<p>完事再保存到倒排索引上，当然，原文件还是要保存一分的，而倒排索引使用来查询的。<br> 例如<code>Beautiful girl!</code>，在经过分析后是这样的了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"analyzer"</span>: <span class="string">"standard"</span>,</span><br><span class="line">  <span class="string">"text"</span>: <span class="string">"Beautiful girl!"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 结果</span></span><br><span class="line">[<span class="string">"beautiful"</span>, <span class="string">"girl"</span>]</span><br></pre></td></tr></table></figure>
+
+<p>而当在使用match查询时，elasticsearch同样会对查询关键字进行分析：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">PUT w10</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"mappings"</span>: &#123;</span><br><span class="line">    <span class="string">"doc"</span>:&#123;</span><br><span class="line">      <span class="string">"properties"</span>:&#123;</span><br><span class="line">        <span class="string">"t1"</span>:&#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"text"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT w10/doc/<span class="number">1</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"t1"</span>: <span class="string">"Beautiful girl!"</span></span><br><span class="line">&#125;</span><br><span class="line">PUT w10/doc/<span class="number">2</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"t1"</span>: <span class="string">"sexy girl!"</span></span><br><span class="line">&#125;</span><br><span class="line">GET w10/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"match"</span>: &#123;</span><br><span class="line">      <span class="string">"t1"</span>: <span class="string">"Beautiful girl!"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是对查询关键字<code>Beautiful girl!</code>进行分析，得到<code>[&quot;beautiful&quot;, &quot;girl&quot;]</code>，然后分别将这两个单独的token去索引<code>w10</code>中进行查询，结果就是将两篇文档都返回。</p>
+<p>这在有些情况下是非常好用的，但是，如果我们想查询确切的词怎么办？也就是精确查询，将<code>Beautiful girl!</code>当成一个token而不是分词后的两个token。</p>
+<p>这就要用到了term查询了，term查询的是没有经过分析的查询关键字。</p>
+<p>但是，这同样需要限制，如果你要查询的字段类型（如上例中的字段<code>t1</code>类型是<code>text</code>）是<code>text</code>（因为elasticsearch会对文档进行分析，上面说过），那么你得到的可能是不尽如人意的结果或者压根没有结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET w10/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"term"</span>: &#123;</span><br><span class="line">      <span class="string">"t1"</span>: <span class="string">"Beautiful girl!"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上面的查询，将不会有结果返回，因为索引<code>w10</code>中的两篇文档在经过elasticsearch分析后没有一个分词是<code>Beautiful girl!</code>，那此次查询结果为空也就好理解了。</p>
+<p>所以，我们这里得到一个论证结果：<strong>不要使用term对类型是text的字段进行查询</strong>，要查询text类型的字段，请改用match查询。</p>
+<p>学会了吗？那再来一个示例，你说一下结果是什么：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET w10/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"term"</span>: &#123;</span><br><span class="line">      <span class="string">"t1"</span>: <span class="string">"Beautiful"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>答案是，没有结果返回！因为elasticsearch在对文档进行分析时，会经过小写！人家倒排索引上存的是小写的<code>beautiful</code>，而我们查询的是大写的<code>Beautiful</code>。</p>
+<p>所以，要想有结果你这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET w10/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"term"</span>: &#123;</span><br><span class="line">      <span class="string">"t1"</span>: <span class="string">"beautiful"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那，term查询可以查询哪些类型的字段呢，例如elasticsearch会将keyword类型的字段当成一个token保存到倒排索引上，你可以将term和keyword结合使用。</p>
+<p>最后，要想使用term查询多个精确的值怎么办？我只能说：亲，这里推荐卸载es呢！低调又不失尴尬的玩笑！</p>
+<p>这里推荐使用<code>terms</code>查询：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">GET w10/doc/_search</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"query"</span>: &#123;</span><br><span class="line">    <span class="string">"terms"</span>: &#123;</span><br><span class="line">      <span class="string">"t1"</span>: [<span class="string">"beautiful"</span>, <span class="string">"sexy"</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/9-11%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C/2-Elasticsearch%E4%B9%8B%E6%9F%A5%E8%AF%A2%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+        <span class="nav-arrow">← </span>
+        
+          db/Elasticsearch系列/9-11文档操作/2-Elasticsearch之查询的两种方式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/9-11%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C/4%20Elasticsearch%E4%B9%8B%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2/">
+        
+          db/Elasticsearch系列/9-11文档操作/4 Elasticsearch之排序查询
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#term与match查询"><span class="toc-nav-text">term与match查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-match查询"><span class="toc-nav-text">一 match查询</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-准备数据"><span class="toc-nav-text">1.1 准备数据</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-match系列之match（按条件查询）"><span class="toc-nav-text">1.2 match系列之match（按条件查询）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-match系列之match-all（查询全部）"><span class="toc-nav-text">1.3 match系列之match_all（查询全部）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-match系列之match-phrase（短语查询）"><span class="toc-nav-text">1.4 match系列之match_phrase（短语查询）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-match系列之match-phrase-prefix（最左前缀查询）"><span class="toc-nav-text">1.4 match系列之match_phrase_prefix（最左前缀查询）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-5-match系列之multi-match（多字段查询）"><span class="toc-nav-text">1.5 match系列之multi_match（多字段查询）</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-term查询"><span class="toc-nav-text">二 term查询</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Elasticsearch系列/9-11文档操作/3-term与match查询/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Elasticsearch系列/9-11文档操作/3-term与match查询",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

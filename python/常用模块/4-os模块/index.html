@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/常用模块/4-os模块 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/常用模块/4-os模块</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、os模块"><a href="#一、os模块" class="headerlink" title="一、os模块"></a>一、os模块</h1><p>os模块负责程序与操作系统的交互，提供了访问操作系统底层的接口，多用于文件处理。</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">详解</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">os.getcwd()</td>
+<td align="center">获取当前工作目录，即当前python脚本工作的目录路径</td>
+</tr>
+<tr>
+<td align="center">os.chdir(“dirname”)</td>
+<td align="center">改变当前脚本工作目录；相当于shell下cd</td>
+</tr>
+<tr>
+<td align="center">os.curdir</td>
+<td align="center">返回当前目录: (‘.’)</td>
+</tr>
+<tr>
+<td align="center">os.pardir</td>
+<td align="center">获取当前目录的父目录字符串名：(‘..’)</td>
+</tr>
+<tr>
+<td align="center">os.makedirs(‘dirname1/dirname2’)</td>
+<td align="center">可生成多层递归目录</td>
+</tr>
+<tr>
+<td align="center">os.removedirs(‘dirname1’)</td>
+<td align="center">若目录为空，则删除，并递归到上一级目录，如若也为空，则删除，依此类推</td>
+</tr>
+<tr>
+<td align="center">os.mkdir(‘dirname’)</td>
+<td align="center">生成单级目录；相当于shell中mkdir dirname</td>
+</tr>
+<tr>
+<td align="center">os.rmdir(‘dirname’)</td>
+<td align="center">删除单级空目录，若目录不为空则无法删除，报错；相当于shell中rmdir dirname</td>
+</tr>
+<tr>
+<td align="center">os.listdir(‘dirname’)</td>
+<td align="center">列出指定目录下的所有文件和子目录，包括隐藏文件，并以列表方式打印</td>
+</tr>
+<tr>
+<td align="center">os.remove()</td>
+<td align="center">删除一个文件</td>
+</tr>
+<tr>
+<td align="center">os.rename(“oldname”,”newname”)</td>
+<td align="center">重命名文件/目录</td>
+</tr>
+<tr>
+<td align="center">os.stat(‘path/filename’)</td>
+<td align="center">获取文件/目录信息</td>
+</tr>
+<tr>
+<td align="center">os.sep</td>
+<td align="center">输出操作系统特定的路径分隔符，win下为”&quot;,Linux下为”/“</td>
+</tr>
+<tr>
+<td align="center">os.linesep</td>
+<td align="center">输出当前平台使用的行终止符，win下为”\r\n”,Linux下为”\n”</td>
+</tr>
+<tr>
+<td align="center">os.pathsep</td>
+<td align="center">输出用于分割文件路径的字符串 win下为;,Linux下为:</td>
+</tr>
+<tr>
+<td align="center">os.name</td>
+<td align="center">输出字符串指示当前使用平台。win-&gt;’nt’; Linux-&gt;’posix’</td>
+</tr>
+<tr>
+<td align="center">os.system(“bash command”)</td>
+<td align="center">运行shell命令，直接显示</td>
+</tr>
+<tr>
+<td align="center">os.environ</td>
+<td align="center">获取系统环境变量</td>
+</tr>
+<tr>
+<td align="center">os.path.abspath(path)</td>
+<td align="center">返回path规范化的绝对路径</td>
+</tr>
+<tr>
+<td align="center">os.path.split(path)</td>
+<td align="center">将path分割成目录和文件名二元组返回</td>
+</tr>
+<tr>
+<td align="center">os.path.dirname(path)</td>
+<td align="center">返回path的目录。其实就是os.path.split(path)的第一个元素</td>
+</tr>
+<tr>
+<td align="center">os.path.basename(path)</td>
+<td align="center">返回path最后的文件名。如何path以／或\结尾，那么就会返回空值。即os.path.split(path)的第二个元素</td>
+</tr>
+<tr>
+<td align="center">os.path.exists(path)</td>
+<td align="center">如果path存在，返回True；如果path不存在，返回False</td>
+</tr>
+<tr>
+<td align="center">os.path.isabs(path)</td>
+<td align="center">如果path是绝对路径，返回True</td>
+</tr>
+<tr>
+<td align="center">os.path.isfile(path)</td>
+<td align="center">如果path是一个存在的文件，返回True。否则返回False</td>
+</tr>
+<tr>
+<td align="center">os.path.isdir(path)</td>
+<td align="center">如果path是一个存在的目录，则返回True。否则返回False</td>
+</tr>
+<tr>
+<td align="center">os.path.join(path1[, path2[, …]])</td>
+<td align="center">将多个路径组合后返回，第一个绝对路径之前的参数将被忽略</td>
+</tr>
+<tr>
+<td align="center">os.path.getatime(path)</td>
+<td align="center">返回path所指向的文件或者目录的最后存取时间</td>
+</tr>
+<tr>
+<td align="center">os.path.getmtime(path)</td>
+<td align="center">返回path所指向的文件或者目录的最后修改时间</td>
+</tr>
+</tbody></table>
+<p>os.path.getsize(path) 返回path的大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">在Linux和Mac平台上，该函数会原样返回path，在windows平台上会将路径中所有字符转换为小写，并将所有斜杠转换为饭斜杠。</span><br><span class="line">&gt;&gt;&gt; os.path.normcase(&#39;c:&#x2F;windows\\system32\\&#39;)   </span><br><span class="line">&#39;c:\\windows\\system32\\&#39;   </span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">规范化路径，如..和&#x2F;</span><br><span class="line">&gt;&gt;&gt; os.path.normpath(&#39;c:&#x2F;&#x2F;windows\\System32\\..&#x2F;Temp&#x2F;&#39;)   </span><br><span class="line">&#39;c:\\windows\\Temp&#39;   </span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; a&#x3D;&#39;&#x2F;Users&#x2F;jieli&#x2F;test1&#x2F;\\\a1&#x2F;\\\\aa.py&#x2F;..&#x2F;..&#39;</span><br><span class="line">&gt;&gt;&gt; print(os.path.normpath(a))</span><br><span class="line">&#x2F;Users&#x2F;jieli&#x2F;test1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">os路径处理</span><br><span class="line"><span class="comment">#方式一：推荐使用</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment">#具体应用</span></span><br><span class="line"><span class="keyword">import</span> os,sys</span><br><span class="line">possible_topdir = os.path.normpath(os.path.join(</span><br><span class="line">    os.path.abspath(__file__),</span><br><span class="line">    os.pardir, <span class="comment">#上一级</span></span><br><span class="line">    os.pardir,</span><br><span class="line">    os.pardir</span><br><span class="line">))</span><br><span class="line">sys.path.insert(<span class="number">0</span>,possible_topdir)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#方式二：不推荐使用</span></span><br><span class="line">os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/20-ATM+%E8%B4%AD%E7%89%A9%E8%BD%A6%E9%A1%B9%E7%9B%AE/">
+        <span class="nav-arrow">← </span>
+        
+          python/常用模块/20-ATM+购物车项目
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/7-hashlib%E5%92%8Chmac%E6%A8%A1%E5%9D%97/">
+        
+          python/常用模块/7-hashlib和hmac模块
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、os模块"><span class="toc-nav-text">一、os模块</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/常用模块/4-os模块/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/常用模块/4-os模块",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

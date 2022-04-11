@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/面向对象进阶/6-类的多态和多态性 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/面向对象进阶/6-类的多态和多态性</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>很多人喜欢将多态与多态性二者混为一谈，然后百思不得其解，其实只要分开看，就会很明朗。</p>
+<h1 id="一、多态"><a href="#一、多态" class="headerlink" title="一、多态"></a>一、多态</h1><p>多态指的是一类事物有多种形态，（一个抽象类有多个子类，因而多态的概念依赖于继承）</p>
+<ol>
+<li>序列数据类型有多种形态：字符串，列表，元组</li>
+<li>动物有多种形态：人，狗，猪</li>
+</ol>
+<h2 id="1-1-动物的多种形态"><a href="#1-1-动物的多种形态" class="headerlink" title="1.1 动物的多种形态"></a>1.1 动物的多种形态</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># 动物有多种形态：人类、猪、狗</span><br><span class="line">class Animal:</span><br><span class="line">    def run(self):  # 子类约定俗称的必须实现这个方法</span><br><span class="line">        raise AttributeError(&#39;子类必须实现这个方法&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&#39;人正在走&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Pig(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&#39;pig is walking&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Dog(Animal):</span><br><span class="line">    def run(self):</span><br><span class="line">        print(&#39;dog is running&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">peo1 &#x3D; People()</span><br><span class="line">pig1 &#x3D; Pig()</span><br><span class="line">d1 &#x3D; Dog()</span><br><span class="line"></span><br><span class="line">peo1.run()</span><br><span class="line">pig1.run()</span><br><span class="line">d1.run()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">人正在走</span><br><span class="line">pig is walking</span><br><span class="line">dog is running</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">import abc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Animal(metaclass&#x3D;abc.ABCMeta):  # 同一类事物:动物</span><br><span class="line">    @abc.abstractmethod  # 上述代码子类是约定俗称的实现这个方法，加上@abc.abstractmethod装饰器后严格控制子类必须实现这个方法</span><br><span class="line">    def talk(self):</span><br><span class="line">        raise AttributeError(&#39;子类必须实现这个方法&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class People(Animal):  # 动物的形态之一:人</span><br><span class="line">    def talk(self):</span><br><span class="line">        print(&#39;say hello&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Dog(Animal):  # 动物的形态之二:狗</span><br><span class="line">    def talk(self):</span><br><span class="line">        print(&#39;say wangwang&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Pig(Animal):  # 动物的形态之三:猪</span><br><span class="line">    def talk(self):</span><br><span class="line">        print(&#39;say aoao&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">peo2 &#x3D; People()</span><br><span class="line">pig2 &#x3D; Pig()</span><br><span class="line">d2 &#x3D; Dog()</span><br><span class="line"></span><br><span class="line">peo2.talk()</span><br><span class="line">pig2.talk()</span><br><span class="line">d2.talk()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">say hello</span><br><span class="line">say aoao</span><br><span class="line">say wangwang</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-2-文件的多种形态"><a href="#1-2-文件的多种形态" class="headerlink" title="1.2 文件的多种形态"></a>1.2 文件的多种形态</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 文件有多种形态：文件、文本文件、可执行文件</span><br><span class="line">import abc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class File(metaclass&#x3D;abc.ABCMeta):  # 同一类事物:文件</span><br><span class="line">    @abc.abstractmethod</span><br><span class="line">    def click(self):</span><br><span class="line">        pass</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Text(File):  # 文件的形态之一:文本文件</span><br><span class="line">    def click(self):</span><br><span class="line">        print(&#39;open file&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ExeFile(File):  # 文件的形态之二:可执行文件</span><br><span class="line">    def click(self):</span><br><span class="line">        print(&#39;execute file&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">text &#x3D; Text()</span><br><span class="line">exe_file &#x3D; ExeFile()</span><br><span class="line"></span><br><span class="line">text.click()</span><br><span class="line">exe_file.click()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">open file</span><br><span class="line">execute file</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、多态性"><a href="#二、多态性" class="headerlink" title="二、多态性"></a>二、多态性</h1><p>注意：多态与多态性是两种概念</p>
+<p>多态性是指具有不同功能的函数可以使用相同的函数名，这样就可以用一个函数名调用不同内容的函数。在面向对象方法中一般是这样表述多态性：向不同的对象发送同一条消息，不同的对象在接收时会产生不同的行为（即方法）。也就是说，每个对象可以用自己的方式去响应共同的消息。所谓消息，就是调用函数，不同的行为就是指不同的实现，即执行不同的函数。</p>
+<h2 id="2-1-动物形态多态性的使用"><a href="#2-1-动物形态多态性的使用" class="headerlink" title="2.1 动物形态多态性的使用"></a>2.1 动物形态多态性的使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 多态性：一种调用方式，不同的执行效果（多态性）</span><br><span class="line">def func(obj):</span><br><span class="line">    obj.run()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func(peo1)</span><br><span class="line">func(pig1)</span><br><span class="line">func(d1)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">人正在走</span><br><span class="line">pig is walking</span><br><span class="line">dog is running</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 多态性依赖于：继承</span><br><span class="line"># 多态性：定义统一的接口</span><br><span class="line">def func(obj):  # obj这个参数没有类型限制，可以传入不同类型的值</span><br><span class="line">    obj.talk()  # 调用的逻辑都一样，执行的结果却不一样</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func(peo2)</span><br><span class="line">func(pig2)</span><br><span class="line">func(d2)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">say hello</span><br><span class="line">say aoao</span><br><span class="line">say wangwang</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-文件形态多态性的使用"><a href="#2-2-文件形态多态性的使用" class="headerlink" title="2.2 文件形态多态性的使用"></a>2.2 文件形态多态性的使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def func(obj):</span><br><span class="line">    obj.click()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func(text)</span><br><span class="line">func(exe_file)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">open file</span><br><span class="line">execute file</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-序列数据类型多态性的使用"><a href="#2-3-序列数据类型多态性的使用" class="headerlink" title="2.3 序列数据类型多态性的使用"></a>2.3 序列数据类型多态性的使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def func(obj):</span><br><span class="line">    print(len(obj))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func(&#39;hello&#39;)</span><br><span class="line">func([1, 2, 3])</span><br><span class="line">func((1, 2, 3))</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">5</span><br><span class="line">3</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>综上可以说，多态性是一个接口（函数func）的多种实现（如obj.run()，obj.talk()，obj.click()，len(obj)）</p>
+<h1 id="三、多态性的好处"><a href="#三、多态性的好处" class="headerlink" title="三、多态性的好处"></a>三、多态性的好处</h1><p>其实大家从上面多态性的例子可以看出，我们并没有增加新的知识，也就是说Python本身就是支持多态性的，这么做的好处是什么呢？</p>
+<ol>
+<li>增加了程序的灵活性：以不变应万变，不论对象千变万化，使用者都是同一种形式去调用，如func(animal)</li>
+<li>增加了程序额可扩展性：通过继承Animal类创建了一个新的类，使用者无需更改自己的代码，还是用func(animal)去调用</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Cat(Animal):  # 属于动物的另外一种形态：猫</span><br><span class="line">    def talk(self):</span><br><span class="line">        print(&#39;say miao&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def func(animal):  # 对于使用者来说，自己的代码根本无需改动</span><br><span class="line">    animal.talk()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cat1 &#x3D; Cat()  # 实例出一只猫</span><br><span class="line">func(cat1)  # 甚至连调用方式也无需改变，就能调用猫的talk功能</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">say miao</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>上述代码我们新增了一个形态Cat，由Cat类产生的实例cat1，使用者可以在完全不需要修改自己代码的情况下。使用和人、狗、猪一样的方式调用cat1的talk方法，即func(cat1)</li>
+</ul>
+<h1 id="四、小结"><a href="#四、小结" class="headerlink" title="四、小结"></a>四、小结</h1><p>多态：同一种事物的多种形态，动物分为人类，猪类（在定义角度）<br>多态性：一种调用方式，不同的执行效果（多态性）</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/9-%E7%B1%BB%E5%92%8C%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%91%E5%AE%9A%E6%96%B9%E6%B3%95%E5%8F%8A%E9%9D%9E%E7%BB%91%E5%AE%9A%E6%96%B9%E6%B3%95/">
+        <span class="nav-arrow">← </span>
+        
+          python/面向对象进阶/9-类和对象的绑定方法及非绑定方法
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/7-%E7%B1%BB%E7%9A%84%E5%B0%81%E8%A3%85/">
+        
+          python/面向对象进阶/7-类的封装
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、多态"><span class="toc-nav-text">一、多态</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-动物的多种形态"><span class="toc-nav-text">1.1 动物的多种形态</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-文件的多种形态"><span class="toc-nav-text">1.2 文件的多种形态</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、多态性"><span class="toc-nav-text">二、多态性</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-动物形态多态性的使用"><span class="toc-nav-text">2.1 动物形态多态性的使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-文件形态多态性的使用"><span class="toc-nav-text">2.2 文件形态多态性的使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-3-序列数据类型多态性的使用"><span class="toc-nav-text">2.3 序列数据类型多态性的使用</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、多态性的好处"><span class="toc-nav-text">三、多态性的好处</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、小结"><span class="toc-nav-text">四、小结</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/面向对象进阶/6-类的多态和多态性/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/面向对象进阶/6-类的多态和多态性",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

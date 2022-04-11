@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/9-上线/1-docker | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/9-上线/1-docker</h2>
+
+
+
+  <p class="post-date">2020-03-07</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><h4 id="入门到精通"><a href="#入门到精通" class="headerlink" title="入门到精通"></a>入门到精通</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）docker就是Linux上及其轻量的虚拟机</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）虚拟机是存在宿主系统中，通过镜像给宿主系统拓展子系统的（一个镜像理论上可以做n个子系统）</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）两个特别重要的概念</span></span><br><span class="line"><span class="string">	image：镜像</span></span><br><span class="line"><span class="string">	container：容器(子系统)</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">4）工作方式：</span></span><br><span class="line"><span class="string">	i）在服务器系统下载docker(为服务器安装虚拟机，服务器系统就是宿主系统)</span></span><br><span class="line"><span class="string">	ii）用docker去下载对应需求的镜像：镜像操作</span></span><br><span class="line"><span class="string">	iii）通过镜像制造容器(装子系统)：容器操作</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">5）优势</span></span><br><span class="line"><span class="string">	i）超级轻量级，docker安装的容器体积可以按kB度量</span></span><br><span class="line"><span class="string">	ii）集群部署，docker可以通过一个镜像制造出多个一模一样的容器</span></span><br><span class="line"><span class="string">	iii）便捷管理所有镜像与容器（命令行操作）</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">6）镜像和容器特点</span></span><br><span class="line"><span class="string">	一般一个镜像中只包含一种软件：比如mysql镜像，创建的容器中只有mysql环境；redis镜像，创建的容器中只有redis环境</span></span><br><span class="line"><span class="string">	注：一个镜像中有多个环境的需要自己制作镜像</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="CentOS安装Docker"><a href="#CentOS安装Docker" class="headerlink" title="CentOS安装Docker"></a>CentOS安装Docker</h2><h3 id="设置管理Docker的仓库"><a href="#设置管理Docker的仓库" class="headerlink" title="设置管理Docker的仓库"></a>设置管理Docker的仓库</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）安装依赖</span></span><br><span class="line"><span class="string">sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）安装稳定仓库</span></span><br><span class="line"><span class="string">sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="安装Docker-Engine-Community"><a href="#安装Docker-Engine-Community" class="headerlink" title="安装Docker Engine-Community"></a>安装Docker Engine-Community</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）安装</span></span><br><span class="line"><span class="string">&gt;: yum install docker-ce docker-ce-cli containerd.io</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）如果提示您接受 GPG 密钥，请允许</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Docker基础命令"><a href="#Docker基础命令" class="headerlink" title="Docker基础命令"></a>Docker基础命令</h2><h3 id="开启关闭"><a href="#开启关闭" class="headerlink" title="开启关闭"></a>开启关闭</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）启动</span></span><br><span class="line"><span class="string">&gt;: service docker start  |  systemctl start docker</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）关闭</span></span><br><span class="line"><span class="string">&gt;: service docker stop  |  systemctl stop docker</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）重启</span></span><br><span class="line"><span class="string">&gt;: service docker restart  |  systemctl restart docker</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="镜像操作"><a href="#镜像操作" class="headerlink" title="镜像操作"></a>镜像操作</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）列出镜像</span></span><br><span class="line"><span class="string">&gt;: docker image ls</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）拉取镜像</span></span><br><span class="line"><span class="string">&gt;: docker [image] pull 镜像名:版本</span></span><br><span class="line"><span class="string">eg: docker image pull hello-world:latest</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）删除镜像</span></span><br><span class="line"><span class="string">&gt;: docker image rm 镜像ID</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）将容器反向打包镜像</span></span><br><span class="line"><span class="string">&gt;: docker save -o &lt;文件名.tar&gt;  &lt;镜像名&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">5）根据打包的镜像文件加载镜像</span></span><br><span class="line"><span class="string">&gt;: docker load -i &lt;文件名.tar&gt;</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a>容器操作</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）创建容器</span></span><br><span class="line"><span class="string">&gt;: docker run [选项参数] 镜像名 [命令]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）查看所有容器：-a就是--all代表全部展示</span></span><br><span class="line"><span class="string">&gt;: docker container ls [-a]</span></span><br><span class="line"><span class="string">&gt;: docker ps [-a]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）停止一个已经在运行的容器</span></span><br><span class="line"><span class="string">&gt;: docker [container] stop 容器id</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">3）启动一个已经停止的容器</span></span><br><span class="line"><span class="string">&gt;: docker [container] start 容器id</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）kill掉一个已经在运行的容器</span></span><br><span class="line"><span class="string">&gt;: docker [container] kill 容器id</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">5）删除容器</span></span><br><span class="line"><span class="string">&gt;: docker [container] rm 容器id</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">6）进入容器</span></span><br><span class="line"><span class="string">&gt;: docker [container] exec 参数 容器id bash</span></span><br><span class="line"><span class="string">eg: docker exec -it 685e1 bash</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">7）退出容器</span></span><br><span class="line"><span class="string">&gt;: exit</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Docker安装Mysql"><a href="#Docker安装Mysql" class="headerlink" title="Docker安装Mysql"></a>Docker安装Mysql</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）安装</span></span><br><span class="line"><span class="string">&gt;: docker image pull mysql:5.7</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">2）创建容器：root根用户的密码MYSQL_ROOT_PASSWORD采用的是root</span></span><br><span class="line"><span class="string">&gt;: docker container run -itd -p3306:3306 -e MYSQL_ROOT_PASSWORD=root mysql:5.7</span></span><br><span class="line"><span class="string">        </span></span><br><span class="line"><span class="string">注：本地测试</span></span><br><span class="line"><span class="string">&gt;: mysql -hIP -P端口 -uroot -p密码</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&gt;: mysql -h 39.99.192.127 -P 3306 -u root -p</span></span><br><span class="line"><span class="string">&gt;: root</span></span><br><span class="line"><span class="string">&gt;: create database luffy default charset=utf8;</span></span><br><span class="line"><span class="string">&gt;: grant all privileges on luffy.* to 'luffy'@'%' identified by 'Luffy123?';</span></span><br><span class="line"><span class="string">&gt;: grant all privileges on luffy.* to 'luffy'@'localhost' identified by 'Luffy123?';</span></span><br><span class="line"><span class="string">&gt;: flush privileges;</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Docker安装Redis"><a href="#Docker安装Redis" class="headerlink" title="Docker安装Redis"></a>Docker安装Redis</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）安装</span></span><br><span class="line"><span class="string">&gt;: docker pull redis:4.0.9</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）创建容器</span></span><br><span class="line"><span class="string">&gt;: docker container run -itd -p6379:6379 redis:4.0.9</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">3）进入容器</span></span><br><span class="line"><span class="string">&gt;: docker container exec -it &lt;容器名称/容器ID&gt; bash</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）测试</span></span><br><span class="line"><span class="string">&gt;: redis-cli</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&gt;: redis-cli -h 39.99.192.127 -p 6379</span></span><br><span class="line"><span class="string">&gt;: config set requirepass Admin123</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/8-%E6%94%AF%E4%BB%98/1-%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%AF%E4%BB%98/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/8-支付/1-支付宝支付
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/9-%E4%B8%8A%E7%BA%BF/2-%E4%B8%8A%E7%BA%BF/">
+        
+          python/路飞项目/9-上线/2-上线
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Docker"><span class="toc-nav-text">Docker</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#入门到精通"><span class="toc-nav-text">入门到精通</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#CentOS安装Docker"><span class="toc-nav-text">CentOS安装Docker</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#设置管理Docker的仓库"><span class="toc-nav-text">设置管理Docker的仓库</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装Docker-Engine-Community"><span class="toc-nav-text">安装Docker Engine-Community</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Docker基础命令"><span class="toc-nav-text">Docker基础命令</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#开启关闭"><span class="toc-nav-text">开启关闭</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#镜像操作"><span class="toc-nav-text">镜像操作</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#容器操作"><span class="toc-nav-text">容器操作</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Docker安装Mysql"><span class="toc-nav-text">Docker安装Mysql</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#Docker安装Redis"><span class="toc-nav-text">Docker安装Redis</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/9-上线/1-docker/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/9-上线/1-docker",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

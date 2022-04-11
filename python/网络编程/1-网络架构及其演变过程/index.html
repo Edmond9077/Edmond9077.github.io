@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/网络编程/1-网络架构及其演变过程 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/网络编程/1-网络架构及其演变过程</h2>
+
+
+
+  <p class="post-date">2020-10-17</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、单机架构"><a href="#一、单机架构" class="headerlink" title="一、单机架构"></a>一、单机架构</h1><p>应用领域：</p>
+<ul>
+<li>植物大战僵尸</li>
+<li>office</li>
+</ul>
+<h1 id="二、CS架构"><a href="#二、CS架构" class="headerlink" title="二、CS架构"></a>二、CS架构</h1><p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrmuh8zuyg30i20bft8v.gif" alt="149-网络架构及其演变过程-cs架构.jpg?x-oss-process=style/watermark"></p>
+<p>应用领域：</p>
+<ul>
+<li>QQ</li>
+<li>大型网络游戏</li>
+</ul>
+<p>计算机发展初期用户去取数据，直接就去主机拿，从这里开始就分出了客户端和服务端。</p>
+<p>客户端：用户安装的软件；</p>
+<p>服务端：统一管理数据库的主机中的软件就叫做服务端，再后来服务端不只是管理数据，外加处理业务逻辑。</p>
+<h2 id="2-1-CS架构要求"><a href="#2-1-CS架构要求" class="headerlink" title="2.1 CS架构要求"></a>2.1 CS架构要求</h2><ol>
+<li>用户操作系统安装客户端；产商操作系统部署服务端</li>
+<li>每个用户需要独立安装软件、服务端升级也要每个用户升级</li>
+</ol>
+<h2 id="2-2-面试题：数据放在服务端和客户端的利与弊？答："><a href="#2-2-面试题：数据放在服务端和客户端的利与弊？答：" class="headerlink" title="2.2 面试题：数据放在服务端和客户端的利与弊？答："></a>2.2 面试题：数据放在服务端和客户端的利与弊？答：</h2><ul>
+<li>服务端统一处理有更好的安全性和稳定性而且升级比较容易，不过服务器负担就增加了。</li>
+<li>客户端将负担分配到每个用户，从而可以节约服务器资源，安全性和稳定性可能会有一定的问题，但是升级比较麻烦，每个安装的客户端程序都需要升级，另外为了节省网络资源，通过网络传输的数据应该尽量减少！</li>
+</ul>
+<h1 id="三、BS架构"><a href="#三、BS架构" class="headerlink" title="三、BS架构"></a>三、BS架构</h1><p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrmu37lukj30iu0bcq3i.jpg" alt="149-网络架构及其演变过程-bs架构.jpg?x-oss-process=style/watermark"></p>
+<p>应用领域：</p>
+<ul>
+<li>淘宝</li>
+<li>京东</li>
+</ul>
+<p>统一客户端即默认安装用户电脑中的浏览器，访问同种类的网站，具体业务的处理根据相应协议和标准提供通用的服务器程序，在不同的服务器处理。</p>
+<h2 id="3-1-两种BS架构"><a href="#3-1-两种BS架构" class="headerlink" title="3.1 两种BS架构#"></a>3.1 两种BS架构<a href="https://www.cnblogs.com/nickchen121/p/11004951.html#3155618247" target="_blank" rel="noopener">#</a></h2><p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrmtrs29sg30az06mdfq.gif" alt="149-网络架构及其演变过程-osi和tcp.jpg?x-oss-process=style/watermark"></p>
+<p>OSI主要用于教学（万恶的大学、绿本的计算机书），我们在编程的时候用的都是TCP/IP。</p>
+<p>TCP/IP的对应关系，就像我们在淘宝购物，所在位置有的快递（网络接入层），告诉卖家地址（网络互联层）、快递送货（运输层）、收到货物拆包使用（应用层）。</p>
+<p>注意：<strong>对于广泛使用的东西就需要制定相应的标准，就像大公司有很多制度来规范做事情的流程。由于网络传输应用非常广泛，但是规矩不是强制性的，所以叫做协议而不是标准，TCP/IP参考模型也可以看做是一种协议。BS结构中TCP/IP模型中的网络接入层没有响应的协议，网络互联层是IP协议，传输层是TCP协议，应用层是HTTP协议，另外还是用到了DNS结构，而且在HTTP上层还有相应。</strong></p>
+<p>基于BS结构下的程序就要求解决速度问题，而速度问题的核心就是解决海量数据操作和高并发问题，网站复杂架构就是从这两个问题演变出来的。</p>
+<h1 id="四、CS架构和BS架构区别"><a href="#四、CS架构和BS架构区别" class="headerlink" title="四、CS架构和BS架构区别"></a>四、CS架构和BS架构区别</h1><p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrmtfxqs4j30dw0afmxt.jpg" alt="149-网络架构及其演变过程-csbs区别.jpg?x-oss-process=style/watermark"></p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/2-%E4%BA%92%E8%81%94%E7%BD%91%E5%92%8C%E4%BA%92%E8%81%94%E7%BD%91%E7%9A%84%E7%BB%84%E6%88%90/">
+        <span class="nav-arrow">← </span>
+        
+          python/网络编程/2-互联网和互联网的组成
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/MySQL%E5%85%A5%E9%97%A8/10-MySQL%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C/">
+        
+          python/MySQL入门/10-MySQL记录操作
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、单机架构"><span class="toc-nav-text">一、单机架构</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、CS架构"><span class="toc-nav-text">二、CS架构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-CS架构要求"><span class="toc-nav-text">2.1 CS架构要求</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-面试题：数据放在服务端和客户端的利与弊？答："><span class="toc-nav-text">2.2 面试题：数据放在服务端和客户端的利与弊？答：</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、BS架构"><span class="toc-nav-text">三、BS架构</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-两种BS架构"><span class="toc-nav-text">3.1 两种BS架构</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、CS架构和BS架构区别"><span class="toc-nav-text">四、CS架构和BS架构区别</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/网络编程/1-网络架构及其演变过程/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/网络编程/1-网络架构及其演变过程",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

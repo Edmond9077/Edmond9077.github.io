@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/Redis%E7%B3%BB%E5%88%97/08-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-Redis-Cluster/">db/Redis系列/08-Redis系列之-Redis-Cluster</a>
+      </h2>
+      <p class="article-date">2019年12月29日</p>
+      
+      <div class="article-summary">
+        
+          一  Redis Cluser介绍背景1.1问题123# 存在问题 1 并发量：单机redis qps为10w/s,但是我们可能需要百万级别的并发量2 数据量：机器内存16g--256g，如果存500g数据呢？
+
+1.2 解决12# 解决：加机器，分布式redis cluster 在2015 ...
+        
+      </div>
+      <a class="more" href="/db/Redis%E7%B3%BB%E5%88%97/08-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-Redis-Cluster/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/Redis%E7%B3%BB%E5%88%97/06-Redis%E7%B3%BB%E5%88%97%E4%B9%8B%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E4%BC%98%E5%8C%96/">db/Redis系列/06-Redis系列之主从复制原理与优化</a>
+      </h2>
+      <p class="article-date">2019年12月29日</p>
+      
+      <div class="article-summary">
+        
+          一 什么是主从复制机器故障；容量瓶颈；QPS瓶颈
+一主一从，一主多从
+做读写分离
+做数据副本
+扩展数据性能
+一个maskter可以有多个slave
+一个slave只能有一个master
+数据流向是单向的，从master到slave
+1.1 原理1234567891. 副本库通过slaveof ...
+        
+      </div>
+      <a class="more" href="/db/Redis%E7%B3%BB%E5%88%97/06-Redis%E7%B3%BB%E5%88%97%E4%B9%8B%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E4%BC%98%E5%8C%96/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/Redis%E7%B3%BB%E5%88%97/05-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E4%BD%BF%E7%94%A8%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/">db/Redis系列/05-Redis系列之-使用常见问题</a>
+      </h2>
+      <p class="article-date">2019年12月29日</p>
+      
+      <div class="article-summary">
+        
+          一 子进程开销和优化1 cpu
+开销：rdb和aof文件生成，属于cpu密集型
+优化：不做cpu绑定，不和cpu密集型的服务一起部署
+2 内存
+开销：fork内存开销，copy-on-write，
+优化：单机部署尽量少重写
+ 3 硬盘
+开销：aof和rdb写入，可以结合分析工具使用
+优化：
+ ...
+        
+      </div>
+      <a class="more" href="/db/Redis%E7%B3%BB%E5%88%97/05-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E4%BD%BF%E7%94%A8%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E5%85%B6%E4%BB%96/02-MySQL%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8Edocker/">python/其他/02-MySQL主从搭建基于docker</a>
+      </h2>
+      <p class="article-date">2019年12月29日</p>
+      
+      <div class="article-summary">
+        
+          10分钟搭建MySQL主从同步（基于docker)一 主从配置原理
+mysql主从配置的流程大体如图：
+1）master会将变动记录到二进制日志里面；
+2）master有一个I/O线程将二进制日志发送到slave;
+3) slave有一个I/O线程把master发送的二进制写入到relay日 ...
+        
+      </div>
+      <a class="more" href="/python/%E5%85%B6%E4%BB%96/02-MySQL%E4%B8%BB%E4%BB%8E%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8Edocker/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/Redis%E7%B3%BB%E5%88%97/04-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E6%8C%81%E4%B9%85%E5%8C%96/">db/Redis系列/04-Redis系列之-持久化</a>
+      </h2>
+      <p class="article-date">2019年12月26日</p>
+      
+      <div class="article-summary">
+        
+          一 持久化的作用1.1 什么是持久化redis的所有数据保存在内存中，对数据的更新将异步的保存到硬盘上
+1.2 持久化的实现方式1234567快照：某时某刻数据的一个完成备份，	-mysql的Dump    -redis的RDB写日志：任何操作记录日志，要恢复数据，只要把日志重新走一遍即可	 ...
+        
+      </div>
+      <a class="more" href="/db/Redis%E7%B3%BB%E5%88%97/04-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E6%8C%81%E4%B9%85%E5%8C%96/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/Redis%E7%B3%BB%E5%88%97/03-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/">db/Redis系列/03-Redis系列之-高级用法</a>
+      </h2>
+      <p class="article-date">2019年12月26日</p>
+      
+      <div class="article-summary">
+        
+          一 慢查询1.1 生命周期我们配置一个时间，如果查询时间超过了我们设置的时间，我们就认为这是一个慢查询.
+慢查询发生在第三阶段
+客户端超时不一定慢查询，但慢查询是客户端超时的一个可能因素
+
+1.2 两个配置1.2.1 slowlog-max-len慢查询是一个先进先出的队列
+固定长度
+保存在 ...
+        
+      </div>
+      <a class="more" href="/db/Redis%E7%B3%BB%E5%88%97/03-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/Redis%E7%B3%BB%E5%88%97/02-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8/">db/Redis系列/02-Redis系列之-客户端使用</a>
+      </h2>
+      <p class="article-date">2019年12月25日</p>
+      
+      <div class="article-summary">
+        
+          一 Python客户端二 Go客户端
+        
+      </div>
+      <a class="more" href="/db/Redis%E7%B3%BB%E5%88%97/02-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/Redis%E7%B3%BB%E5%88%97/01-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-API%E7%9A%84%E4%BD%BF%E7%94%A8/">db/Redis系列/01-Redis系列之-API的使用</a>
+      </h2>
+      <p class="article-date">2019年12月24日</p>
+      
+      <div class="article-summary">
+        
+          一 通用命令1.1 通用命令12345678910111213141516171819202122232425262728293031323334353637383940####1-keys #打印出所有keykeys * #打印出所有以he开头的keykeys he*#打印出所有以he开头 ...
+        
+      </div>
+      <a class="more" href="/db/Redis%E7%B3%BB%E5%88%97/01-Redis%E7%B3%BB%E5%88%97%E4%B9%8B-API%E7%9A%84%E4%BD%BF%E7%94%A8/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/MySQL%E7%B3%BB%E5%88%97/10-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-MHA%E9%AB%98%E5%8F%AF%E7%94%A8/">db/MySQL系列/10-MySQL系列之-MHA高可用</a>
+      </h2>
+      <p class="article-date">2019年12月24日</p>
+      
+      <div class="article-summary">
+        
+          1.  主从复制架构演变介绍1.1 基本结构12345（1）一主一从（2）一主多从（3）多级主从（4）双主（5）循环复制
+
+1.2 高级应用架构演变1.2.1 高性能架构123456789读写分离架构(读性能较高)代码级别MySQL proxy (Atlas,mysql router,pro ...
+        
+      </div>
+      <a class="more" href="/db/MySQL%E7%B3%BB%E5%88%97/10-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-MHA%E9%AB%98%E5%8F%AF%E7%94%A8/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/db/MySQL%E7%B3%BB%E5%88%97/01-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-MySQL%E4%BB%8B%E7%BB%8D%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">db/MySQL系列/01-MySQL系列之-MySQL介绍安装配置</a>
+      </h2>
+      <p class="article-date">2019年12月24日</p>
+      
+      <div class="article-summary">
+        
+          一 MySQL介绍和安装1.1 什么是数据？1234567数据：文字、图片、视频。。。人类认知的数据表现方式计算机：二进制、16进制的机器语言基于数据的重要性和复杂性的不同，我们可能有不同的管理方式。哪些数据是适合存储到数据库的呢？重要性比较高的关系较复杂的数据
+
+1.2 什么是数据库管理系 ...
+        
+      </div>
+      <a class="more" href="/db/MySQL%E7%B3%BB%E5%88%97/01-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-MySQL%E4%BB%8B%E7%BB%8D%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">详情...</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/page/32/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a href="/page/34/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

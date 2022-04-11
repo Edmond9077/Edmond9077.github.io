@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Apache ab压力测试工具使用 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>Apache ab压力测试工具使用</h2>
+
+
+
+  <p class="post-date">2020-02-10</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="一-介绍"><a href="#一-介绍" class="headerlink" title="一 介绍"></a>一 介绍</h2><p>Apache Benchmark(简称ab) 是Apache安装包中自带的压力测试工具 ，简单易用。<br>使用起来非常的简单和方便。<br>不仅仅是可以apache服务器进行网站访问压力测试，还可以对其他类型的服务器进行压力测试。<br>比如nginx,tomcat,IIS等</p>
+<h2 id="二-安装"><a href="#二-安装" class="headerlink" title="二 安装"></a>二 安装</h2><h3 id="2-1-windows安装"><a href="#2-1-windows安装" class="headerlink" title="2.1 windows安装"></a>2.1 windows安装</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载地址：</span></span><br><span class="line"><span class="comment">#https://www.apachehaus.com/cgi-bin/download.plx</span></span><br><span class="line"><span class="comment">#下载完成后解压</span></span><br><span class="line"><span class="comment">#修改解压根目录下的conf/httpd.conf文件的端口配置，默认是80端口，应该是被占用了，无法安装，可以自行修改为其他，改为8088端口</span></span><br><span class="line"><span class="comment">#安装</span></span><br><span class="line">httpd -k install</span><br><span class="line"></span><br><span class="line"><span class="comment">#提示如下错误，详见windows 提示缺少VCRUNTIME140.dll错误：</span></span><br><span class="line">---------------------------</span><br><span class="line">abs.exe - 系统错误</span><br><span class="line">---------------------------</span><br><span class="line">由于找不到 VCRUNTIME140.dll，无法继续执行代码。重新安装程序可能会解决此问题。 </span><br><span class="line">---------------------------</span><br><span class="line">确定   </span><br><span class="line">---------------------------</span><br><span class="line"><span class="comment">#使用</span></span><br><span class="line">ab -n <span class="number">2</span> -c <span class="number">2</span> https://www.cnblogs.com/index.html</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Linux安装"><a href="#2-2-Linux安装" class="headerlink" title="2.2 Linux安装"></a>2.2 Linux安装</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- centOS7 下的安装</span><br><span class="line">	yum -y install httpd-tools</span><br><span class="line">- centos6<span class="number">.5</span> 默认已安装了ab</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-使用"><a href="#三-使用" class="headerlink" title="三 使用"></a>三 使用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#使用：-n 表示请求数，-c 表示并发数.</span></span><br><span class="line">ab -n <span class="number">100</span> -c <span class="number">10</span> http://www.baidu.com/s</span><br><span class="line"><span class="comment">#返回内容：</span></span><br><span class="line"></span><br><span class="line">Server Software:        BWS/<span class="number">1.1</span>   </span><br><span class="line"><span class="comment">##服务器软件和版本</span></span><br><span class="line">Server Hostname:        www.baidu.com  </span><br><span class="line"><span class="comment">##请求的地址/域名</span></span><br><span class="line">Server Port:            <span class="number">80</span>   </span><br><span class="line"><span class="comment">##端口</span></span><br><span class="line">Document Path:          /s  </span><br><span class="line"><span class="comment">##请求的路径</span></span><br><span class="line">Document Length:        <span class="number">112435</span> bytes  </span><br><span class="line"><span class="comment">##页面数据/返回的数据量</span></span><br><span class="line">Concurrency Level:      <span class="number">10</span>   </span><br><span class="line"><span class="comment">##并发数</span></span><br><span class="line">Time taken <span class="keyword">for</span> tests:   <span class="number">4.764</span> seconds  </span><br><span class="line"><span class="comment">##共使用了多少时间 </span></span><br><span class="line">Complete requests:      <span class="number">100</span>  </span><br><span class="line"><span class="comment">##请求数 </span></span><br><span class="line">Failed requests:        <span class="number">99</span>  </span><br><span class="line"><span class="comment">##失败请求  百度为什么失败这么多，应该是百度做了防范  </span></span><br><span class="line">   (Connect: <span class="number">0</span>, Receive: <span class="number">0</span>, Length: <span class="number">99</span>, Exceptions: <span class="number">0</span>)</span><br><span class="line">Total transferred:      <span class="number">11342771</span> bytes  </span><br><span class="line"><span class="comment">##总共传输字节数，包含http的头信息等 </span></span><br><span class="line">HTML transferred:       <span class="number">11247622</span> bytes  </span><br><span class="line"><span class="comment">##html字节数，实际的页面传递字节数 </span></span><br><span class="line">Requests per second:    <span class="number">20.99</span> [<span class="comment">#/sec] (mean) </span></span><br><span class="line"> <span class="comment">##每秒多少请求，这个是非常重要的参数数值，服务器的吞吐量 </span></span><br><span class="line">Time per request:       <span class="number">476.427</span> [ms] (mean)   </span><br><span class="line"><span class="comment">##用户平均请求等待时间 </span></span><br><span class="line">Time per request:       <span class="number">47.643</span> [ms] (mean, across all concurrent requests)  </span><br><span class="line"><span class="comment">##服务器平均处理时间，也就是服务器吞吐量的倒数 </span></span><br><span class="line">Transfer rate:          <span class="number">2325.00</span> [Kbytes/sec] received</span><br><span class="line"> <span class="comment">##每秒获取的数据长度</span></span><br><span class="line"></span><br><span class="line">Connection Times (ms)</span><br><span class="line">              min  mean[+/-sd] median   max</span><br><span class="line">Connect:       <span class="number">22</span>   <span class="number">41</span>  <span class="number">12.4</span>     <span class="number">39</span>      <span class="number">82</span></span><br><span class="line"><span class="comment">##连接的最小时间，平均值，中值，最大值</span></span><br><span class="line">Processing:   <span class="number">113</span>  <span class="number">386</span> <span class="number">211.1</span>    <span class="number">330</span>    <span class="number">1246</span></span><br><span class="line"><span class="comment">##处理时间</span></span><br><span class="line">Waiting:       <span class="number">25</span>   <span class="number">80</span>  <span class="number">43.9</span>     <span class="number">73</span>     <span class="number">266</span></span><br><span class="line"><span class="comment">##等待时间</span></span><br><span class="line">Total:        <span class="number">152</span>  <span class="number">427</span> <span class="number">210.1</span>    <span class="number">373</span>    <span class="number">1283</span></span><br><span class="line"><span class="comment">##合计时间</span></span><br><span class="line"></span><br><span class="line">Percentage of the requests served within a certain time (ms)</span><br><span class="line">  <span class="number">50</span>%    <span class="number">373</span>   </span><br><span class="line"><span class="comment">## 50%的请求在373ms内返回 </span></span><br><span class="line">  <span class="number">66</span>%    <span class="number">400</span>   </span><br><span class="line"><span class="comment">## 60%的请求在400ms内返回 </span></span><br><span class="line">  <span class="number">75</span>%    <span class="number">426</span></span><br><span class="line">  <span class="number">80</span>%    <span class="number">465</span></span><br><span class="line">  <span class="number">90</span>%    <span class="number">761</span></span><br><span class="line">  <span class="number">95</span>%    <span class="number">930</span></span><br><span class="line">  <span class="number">98</span>%   <span class="number">1192</span></span><br><span class="line">  <span class="number">99</span>%   <span class="number">1283</span></span><br><span class="line"> <span class="number">100</span>%   <span class="number">1283</span> (longest request)</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-参数介绍"><a href="#四-参数介绍" class="headerlink" title="四 参数介绍"></a>四 参数介绍</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-n	即requests，用于指定压力测试总共的执行次数。</span><br><span class="line">-c	即concurrency，用于指定的并发数。</span><br><span class="line">-t	即timelimit，等待响应的最大时间(单位：秒)。</span><br><span class="line">-b	即windowsize，TCP发送/接收的缓冲大小(单位：字节)。</span><br><span class="line">-p	即postfile，发送POST请求时需要上传的文件，此外还必须设置-T参数。</span><br><span class="line">-u	即putfile，发送PUT请求时需要上传的文件，此外还必须设置-T参数。</span><br><span class="line">-T	即content-type，用于设置Content-Type请求头信息，例如：application/x-www-form-urlencoded，默认值为text/plain。</span><br><span class="line">-v	即verbosity，指定打印帮助信息的冗余级别。</span><br><span class="line">-w	以HTML表格形式打印结果。</span><br><span class="line">-i	使用HEAD请求代替GET请求。</span><br><span class="line">-x	插入字符串作为table标签的属性。</span><br><span class="line">-y	插入字符串作为tr标签的属性。</span><br><span class="line">-z	插入字符串作为td标签的属性。</span><br><span class="line">-C	添加cookie信息，例如：<span class="string">"Apache=1234"</span>(可以重复该参数选项以添加多个)。</span><br><span class="line">-H	添加任意的请求头，例如：<span class="string">"Accept-Encoding: gzip"</span>，请求头将会添加在现有的多个请求头之后(可以重复该参数选项以添加多个)。</span><br><span class="line">-A	添加一个基本的网络认证信息，用户名和密码之间用英文冒号隔开。</span><br><span class="line">-P	添加一个基本的代理认证信息，用户名和密码之间用英文冒号隔开。</span><br><span class="line">-X	指定使用的和端口号，例如:<span class="string">"126.10.10.3:88"</span>。</span><br><span class="line">-V	打印版本号并退出。</span><br><span class="line">-k	使用HTTP的KeepAlive特性。</span><br><span class="line">-d	不显示百分比。</span><br><span class="line">-S	不显示预估和警告信息。</span><br><span class="line">-g	输出结果信息到gnuplot格式的文件中。</span><br><span class="line">-e	输出结果信息到CSV格式的文件中。</span><br><span class="line">-r	指定接收到错误信息时不退出程序。</span><br><span class="line">-h	显示用法信息，其实就是ab -help。</span><br></pre></td></tr></table></figure>
+
+</section>
+    <!-- Tags START -->
+    
+      <div class="tags">
+        <span>Tags:</span>
+        
+  <a href="/tags#随笔" >
+    <span class="tag-code">随笔</span>
+  </a>
+
+      </div>
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/article/1/05-CGI,FastCGI,WSGI,uWSGI,uwsgi%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82/">
+        <span class="nav-arrow">← </span>
+        
+          CGI, FastCGI, WSGI, uWSGI, uwsgi一文搞懂
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/others/1/02-windows%E6%8F%90%E7%A4%BA%E7%BC%BA%E5%B0%91VCRUNTIME140.dll%E9%94%99%E8%AF%AF/">
+        
+          windows 提示缺少VCRUNTIME140.dll错误
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-介绍"><span class="toc-nav-text">一 介绍</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-安装"><span class="toc-nav-text">二 安装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-windows安装"><span class="toc-nav-text">2.1 windows安装</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-Linux安装"><span class="toc-nav-text">2.2 Linux安装</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-使用"><span class="toc-nav-text">三 使用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-参数介绍"><span class="toc-nav-text">四 参数介绍</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/article/1/03-Apache-ab压力测试工具使用/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "Apache ab压力测试工具使用",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

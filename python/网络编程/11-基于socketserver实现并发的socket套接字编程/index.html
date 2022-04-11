@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/网络编程/11-基于socketserver实现并发的socket套接字编程 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/网络编程/11-基于socketserver实现并发的socket套接字编程</h2>
+
+
+
+  <p class="post-date">2020-10-17</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h1 id="一、基于TCP协议"><a href="#一、基于TCP协议" class="headerlink" title="一、基于TCP协议"></a>一、基于TCP协议</h1><p>基于tcp的套接字，关键就是两个循环，一个链接循环，一个通信循环</p>
+<p>socketserver模块中分两大类：server类（解决链接问题）和request类（解决通信问题）</p>
+<h2 id="1-1-server类"><a href="#1-1-server类" class="headerlink" title="1.1 server类"></a>1.1 server类</h2><p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrn33c777j30cj0k1jsh.jpg" alt="126-基于socketserver实现并发的socket-server类.png?x-oss-process=style/watermark"></p>
+<h2 id="1-2-request类"><a href="#1-2-request类" class="headerlink" title="1.2 request类"></a>1.2 request类</h2><p>[<img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrn3iozvoj309b09q74j.jpg" alt="126-基于socketserver实现并发的socket-request类.png?x-oss-process=style/watermark"></p>
+<h2 id="1-3-继承关系"><a href="#1-3-继承关系" class="headerlink" title="1.3 继承关系"></a>1.3 继承关系</h2><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrn3wa5e8j30mo0d9mxv.jpg" alt="126-基于socketserver实现并发的socket-继承关系1.png?x-oss-process=style/watermark"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrn4188ntj30lz0cjjs2.jpg" alt="126-基于socketserver实现并发的socket-继承关系2.png?x-oss-process=style/watermark"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjrn4bt7sgj30aw05nmx6.jpg" alt="126-基于socketserver实现并发的socket-继承关系3.png?x-oss-process=style/watermark"></p>
+<h2 id="1-4-服务端"><a href="#1-4-服务端" class="headerlink" title="1.4 服务端"></a>1.4 服务端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socketserver</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHandler</span><span class="params">(socketserver.BaseRequestHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 通信循环</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            <span class="comment"># print(self.client_address)</span></span><br><span class="line">            <span class="comment"># print(self.request) #self.request=conn</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                data = self.request.recv(<span class="number">1024</span>)</span><br><span class="line">                <span class="keyword">if</span> len(data) == <span class="number">0</span>: <span class="keyword">break</span></span><br><span class="line">                self.request.send(data.upper())</span><br><span class="line">            <span class="keyword">except</span> ConnectionResetError:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    s = socketserver.ThreadingTCPServer((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>), MyHandler, bind_and_activate=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    s.serve_forever()  <span class="comment"># 代表连接循环</span></span><br><span class="line">    <span class="comment"># 循环建立连接，每建立一个连接就会启动一个线程（服务员）+调用Myhanlder类产生一个对象，调用该对象下的handle方法，专门与刚刚建立好的连接做通信循环</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="1-5-客户端"><a href="#1-5-客户端" class="headerlink" title="1.5 客户端"></a>1.5 客户端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">phone = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">phone.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))  <span class="comment"># 指定服务端ip和端口</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># msg=input('&gt;&gt;: ').strip() #msg=''</span></span><br><span class="line">    msg = <span class="string">'client33333'</span>  <span class="comment"># msg=''</span></span><br><span class="line">    <span class="keyword">if</span> len(msg) == <span class="number">0</span>: <span class="keyword">continue</span></span><br><span class="line">    phone.send(msg.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    data = phone.recv(<span class="number">1024</span>)</span><br><span class="line">    print(data)</span><br><span class="line"></span><br><span class="line">phone.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-6-客户端"><a href="#1-6-客户端" class="headerlink" title="1.6 客户端"></a>1.6 客户端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">phone = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">phone.connect((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))  <span class="comment"># 指定服务端ip和端口</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># msg=input('&gt;&gt;: ').strip() #msg=''</span></span><br><span class="line">    msg = <span class="string">'client11111'</span>  <span class="comment"># msg=''</span></span><br><span class="line">    <span class="keyword">if</span> len(msg) == <span class="number">0</span>: <span class="keyword">continue</span></span><br><span class="line">    phone.send(msg.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    data = phone.recv(<span class="number">1024</span>)</span><br><span class="line">    print(data)</span><br><span class="line"></span><br><span class="line">phone.close()</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、基于UDP协议"><a href="#二、基于UDP协议" class="headerlink" title="二、基于UDP协议"></a>二、基于UDP协议</h1><h2 id="2-1-服务端"><a href="#2-1-服务端" class="headerlink" title="2.1 服务端"></a>2.1 服务端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socketserver</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyHandler</span><span class="params">(socketserver.BaseRequestHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># 通信循环</span></span><br><span class="line">        print(self.client_address)</span><br><span class="line">        print(self.request)</span><br><span class="line"></span><br><span class="line">        data = self.request[<span class="number">0</span>]</span><br><span class="line">        print(<span class="string">'客户消息'</span>, data)</span><br><span class="line">        self.request[<span class="number">1</span>].sendto(data.upper(), self.client_address)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    s = socketserver.ThreadingUDPServer((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>), MyHandler)</span><br><span class="line">    s.serve_forever()</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-客户端"><a href="#2-2-客户端" class="headerlink" title="2.2 客户端"></a>2.2 客户端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  <span class="comment"># 数据报协议-》udp</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># msg=input('&gt;&gt;: ').strip() #msg=''</span></span><br><span class="line">    msg = <span class="string">'client1111'</span></span><br><span class="line">    client.sendto(msg.encode(<span class="string">'utf-8'</span>), (<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line">    data, server_addr = client.recvfrom(<span class="number">1024</span>)</span><br><span class="line">    print(data)</span><br><span class="line"></span><br><span class="line">client.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-客户端"><a href="#2-3-客户端" class="headerlink" title="2.3 客户端"></a>2.3 客户端</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line">client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  <span class="comment"># 数据报协议-》udp</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># msg=input('&gt;&gt;: ').strip() #msg=''</span></span><br><span class="line">    msg = <span class="string">'client2222'</span></span><br><span class="line">    client.sendto(msg.encode(<span class="string">'utf-8'</span>), (<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>))</span><br><span class="line">    data, server_addr = client.recvfrom(<span class="number">1024</span>)</span><br><span class="line">    print(data)</span><br><span class="line"></span><br><span class="line">client.close()</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、socketserver源码分析"><a href="#三、socketserver源码分析" class="headerlink" title="三、socketserver源码分析"></a>三、socketserver源码分析</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ftpserver=socketserver.ThreadingTCPServer((<span class="string">'127.0.0.1'</span>, <span class="number">8080</span>)，FtpServer)</span><br><span class="line">ftpserver.serve_forever()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查找属性的顺序：ThreadingTCPServer-&gt;ThreadingMixIn-&gt;TCPServer-&gt;BaseServer<ol>
+<li>实例化得到ftpserver，先找类ThreadingTCPServer的<strong>init</strong>，在TCPServer中找到，进而执行server_bind，server_active</li>
+<li>找ftpserver下的serve_forever，在BaseServer中找到，进而执行self._handle_request_noblock()，该方法同样是在BaseServer中</li>
+<li>执行self._handle_request_noblock()进而执行request， client_address = self.get_request()（就是TCPServer中的self.socket.accept()），然后执行self.process_request(request， client_address)</li>
+<li>在ThreadingMixIn中找到process_request，开启多线程应对并发，进而执行process_request_thread，执行self.finish_request(request， client_address)</li>
+<li>上述四部分完成了链接循环，本部分开始进入处理通讯部分，在BaseServer中找到finish_request，触发我们自己定义的类的实例化，去找<strong>init</strong>方法，而我们自己定义的类没有该方法，则去它的父类也就是BaseRequestHandler中找….</li>
+</ol>
+</li>
+</ul>
+<h2 id="3-1-源码总结"><a href="#3-1-源码总结" class="headerlink" title="3.1 源码总结"></a>3.1 源码总结</h2><ul>
+<li><p>基于tcp的socketserver我们自己定义的类中的</p>
+<ul>
+<li><p>self.server即套接字对象</p>
+</li>
+<li><p>self.request即一个链接</p>
+</li>
+<li><p>self.client_address即客户端地址</p>
+</li>
+</ul>
+</li>
+<li><p>基于udp的socketserver我们自己定义的类中的</p>
+<ul>
+<li><p>self.request是一个元组（第一个元素是客户端发来的数据，第二部分是服务端的udp套接字对象），如(b’adsf’, &lt;socket.socket fd=200, family=AddressFamily.AF_INET, type=SocketKind.SOCK_DGRAM, proto=0, laddr=(‘127.0.0.1’, 8080)&gt;)</p>
+</li>
+<li><p>self.client_address即客户端地址</p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/8-%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98/">
+        <span class="nav-arrow">← </span>
+        
+          python/网络编程/8-粘包问题
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/6-Socket%E6%8A%BD%E8%B1%A1%E5%B1%82/">
+        
+          python/网络编程/6-Socket抽象层
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、基于TCP协议"><span class="toc-nav-text">一、基于TCP协议</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-server类"><span class="toc-nav-text">1.1 server类</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-request类"><span class="toc-nav-text">1.2 request类</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-3-继承关系"><span class="toc-nav-text">1.3 继承关系</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-4-服务端"><span class="toc-nav-text">1.4 服务端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-5-客户端"><span class="toc-nav-text">1.5 客户端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-6-客户端"><span class="toc-nav-text">1.6 客户端</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、基于UDP协议"><span class="toc-nav-text">二、基于UDP协议</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-服务端"><span class="toc-nav-text">2.1 服务端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-客户端"><span class="toc-nav-text">2.2 客户端</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-3-客户端"><span class="toc-nav-text">2.3 客户端</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、socketserver源码分析"><span class="toc-nav-text">三、socketserver源码分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-1-源码总结"><span class="toc-nav-text">3.1 源码总结</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/网络编程/11-基于socketserver实现并发的socket套接字编程/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/网络编程/11-基于socketserver实现并发的socket套接字编程",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

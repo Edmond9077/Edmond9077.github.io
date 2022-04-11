@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/前端/13-JS的DOM操作 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/前端/13-JS的DOM操作</h2>
+
+
+
+  <p class="post-date">2020-11-03</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1、DOM概述"><a href="#1、DOM概述" class="headerlink" title="1、DOM概述"></a>1、DOM概述</h2><h3 id="1-1-什么是DOM"><a href="#1-1-什么是DOM" class="headerlink" title="1-1 什么是DOM"></a>1-1 什么是DOM</h3><ul>
+<li>文档对象模型 Document Object Model</li>
+<li>文档对象模型 是表示和操作 HTML和XML文档内容的基础API</li>
+<li>文档对象模型，是W3C组织推荐的处理可扩展标志语言的标准编程接口</li>
+</ul>
+<h3 id="12-DOM分类"><a href="#12-DOM分类" class="headerlink" title="12 DOM分类"></a>12 DOM分类</h3><ul>
+<li>核心 DOM - 针对任何结构化文档的标准模型</li>
+<li>XML DOM - 针对 XML 文档的标准模型</li>
+<li>HTML DOM - 针对 HTML 文档的标准模型</li>
+</ul>
+<h3 id="1-3-DOM分级"><a href="#1-3-DOM分级" class="headerlink" title="1-3 DOM分级"></a>1-3 DOM分级</h3><ul>
+<li><p>1级dom</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1级DOM在1998年10月份成为W3C的提议，由DOM核心与DOM HTML两个模块组成。DOM核心能映射以XML为基础的文档结构，允许获取和操作文档的任意部分。DOM HTML通过添加HTML专用的对象与函数对DOM核心进行了扩展。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>2级dom</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">通过对原有DOM的扩展，2级DOM通过对象接口增加了对鼠标和用户界面事件、范围、遍历（重复执行DOM文档）和层叠样式表（CSS）的支持。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3级dom</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3级DOM通过引入统一方式载入和保存文档和文档验证方法对DOM进行进一步扩展，DOM3包含一个名为“DOM载入与保存”的新模块，DOM核心扩展后可支持XML1.0的所有内容，包括XML Infoset、 XPath、和XML Base。</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="1-4-DOM树"><a href="#1-4-DOM树" class="headerlink" title="1-4 DOM树"></a>1-4 DOM树</h3><p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1gkftm8npgvj30di07edfr.jpg" alt="img"></p>
+<h2 id="2-查找标签"><a href="#2-查找标签" class="headerlink" title="2 查找标签"></a>2 查找标签</h2><h3 id="2-1-直接查找"><a href="#2-1-直接查找" class="headerlink" title="2-1 直接查找"></a>2-1 直接查找</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>div上面的div<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>div上面的div<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"d1"</span>&gt;</span>div</span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span>div&gt;div<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"c1"</span>&gt;</span>div&gt;p</span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>div&gt;p&gt;span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>div&gt;p<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>div下面div<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>div下面div<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">id查找</span></span><br><span class="line"><span class="string">类查找</span></span><br><span class="line"><span class="string">标签查找</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="comment"># 注意三个方法的返回值是不一样的</span></span><br><span class="line">document.getElementById(<span class="string">'d1'</span>)</span><br><span class="line">&lt;div id="d1"&gt;…&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">document.getElementsByClassName(<span class="string">'c1'</span>)</span><br><span class="line">HTMLCollection [p.c1]<span class="number">0</span>: p.c1length: <span class="number">1</span>__proto__: HTMLCollection</span><br><span class="line">      </span><br><span class="line">document.getElementsByTagName(<span class="string">'div'</span>)</span><br><span class="line">HTMLCollection(<span class="number">3</span>) [div<span class="comment">#d1, div, div, d1: div#d1]</span></span><br><span class="line">                   </span><br><span class="line">                   </span><br><span class="line">let divEle = document.getElementsByTagName(<span class="string">'div'</span>)[<span class="number">1</span>]</span><br><span class="line">divEle</span><br><span class="line">&lt;div&gt;div&gt;div&lt;/div&gt;</span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">当你用变量名指代标签对象的时候 一般情况下都推荐你书写成</span></span><br><span class="line"><span class="string">xxxEle</span></span><br><span class="line"><span class="string">	divEle</span></span><br><span class="line"><span class="string">	aEle</span></span><br><span class="line"><span class="string">	pEle</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-间接查找-熟悉"><a href="#2-2-间接查找-熟悉" class="headerlink" title="2-2 间接查找(熟悉)"></a>2-2 间接查找(熟悉)</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">let pEle = document.getElementsByClassName(<span class="string">'c1'</span>)[<span class="number">0</span>]  <span class="comment"># 注意是否需要索引取值</span></span><br><span class="line"></span><br><span class="line">pEle.parentElement  <span class="comment"># 拿父节点</span></span><br><span class="line">&lt;div id=<span class="string">"d1"</span>&gt;<span class="string">"div</span></span><br><span class="line">    "&lt;div&gt;div&gt;div&lt;/div&gt;&lt;p class="c1"&gt;…&lt;/p&gt;&lt;p&gt;div&gt;p&lt;/p&gt;&lt;/div&gt;</span><br><span class="line">pEle.parentElement.parentElement</span><br><span class="line">&lt;body&gt;…&lt;/body&gt;</span><br><span class="line">pEle.parentElement.parentElement.parentElement</span><br><span class="line">&lt;html lang="en"&gt;&lt;head&gt;…&lt;/head&gt;&lt;body&gt;…&lt;/body&gt;&lt;/html&gt;</span><br><span class="line">pEle.parentElement.parentElement.parentElement.parentElement</span><br><span class="line">null</span><br><span class="line"></span><br><span class="line">let divEle = document.getElementById(<span class="string">'d1'</span>)</span><br><span class="line">divEle.children  <span class="comment"># 获取所有的子标签</span></span><br><span class="line">divEle.children[<span class="number">0</span>]</span><br><span class="line">&lt;div&gt;div&gt;div&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">divEle.firstElementChild</span><br><span class="line">&lt;div&gt;div&gt;div&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">divEle.lastElementChild</span><br><span class="line">&lt;p&gt;div&gt;p&lt;/p&gt;</span><br><span class="line"></span><br><span class="line">divEle.nextElementSibling  <span class="comment"># 同级别下面第一个</span></span><br><span class="line">&lt;div&gt;div下面div&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">divEle.previousElementSibling  <span class="comment"># 同级别上面第一个</span></span><br><span class="line">&lt;div&gt;div上面的div&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-节点操作"><a href="#3-节点操作" class="headerlink" title="3 节点操作"></a>3 节点操作</h2><h3 id="3-1-基本操作"><a href="#3-1-基本操作" class="headerlink" title="3-1 基本操作"></a>3-1 基本操作</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"d1"</span>&gt;</span>div</span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">id</span>=<span class="string">"d2"</span>&gt;</span>div&gt;p<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span>&gt;</span>div&gt;span<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">通过DOM操作动态的创建img标签</span></span><br><span class="line"><span class="string">并且给标签加属性</span></span><br><span class="line"><span class="string">最后将标签添加到文本中</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">let imgEle = document.createElement(<span class="string">'img'</span>)  <span class="comment"># 创建标签</span></span><br><span class="line"></span><br><span class="line">imgEle.src = <span class="string">'111.png'</span>  <span class="comment"># 给标签设置默认的属性</span></span><br><span class="line"><span class="string">"111.png"</span></span><br><span class="line">imgEle</span><br><span class="line"></span><br><span class="line">imgEle.username = <span class="string">'jason'</span>  <span class="comment"># 自定义的属性没办法点的方式直接设置</span></span><br><span class="line"><span class="string">"jason"</span></span><br><span class="line">imgEle</span><br><span class="line">&lt;img src=<span class="string">"111.png"</span>&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">imgEle.setAttribute(<span class="string">'username'</span>,<span class="string">'jason'</span>)   <span class="comment"># 既可以设置自定义的属性也可以设置默认的书写</span></span><br><span class="line">undefined</span><br><span class="line">imgEle</span><br><span class="line">&lt;img src=<span class="string">"111.png"</span> username=<span class="string">"jason"</span>&gt;</span><br><span class="line">imgEle.setAttribute(<span class="string">'title'</span>,<span class="string">'一张图片'</span>)</span><br><span class="line">imgEle</span><br><span class="line">&lt;img src=<span class="string">"111.png"</span> username=<span class="string">"jason"</span> title=<span class="string">"一张图片"</span>&gt;</span><br><span class="line"></span><br><span class="line">let divEle = document.getElementById(<span class="string">'d1'</span>)</span><br><span class="line">undefined</span><br><span class="line">divEle.appendChild(imgEle)  <span class="comment"># 标签内部添加元素(尾部追加)</span></span><br><span class="line">&lt;img src=<span class="string">"111.png"</span> username=<span class="string">"jason"</span> title=<span class="string">"一张图片"</span>&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">创建a标签</span></span><br><span class="line"><span class="string">设置属性</span></span><br><span class="line"><span class="string">设置文本</span></span><br><span class="line"><span class="string">添加到标签内部</span></span><br><span class="line"><span class="string">	添加到指定的标签的上面</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">let aEle = document.createElement(<span class="string">'a'</span>)</span><br><span class="line"></span><br><span class="line">aEle</span><br><span class="line">&lt;a&gt;&lt;/a&gt;</span><br><span class="line">aEle.href = <span class="string">'https://www.mzitu.com/'</span></span><br><span class="line"><span class="string">"https://www.mzitu.com/"</span></span><br><span class="line">aEle</span><br><span class="line">&lt;a href="https://www.mzitu.com/"&gt;&lt;/a&gt;</span><br><span class="line"></span><br><span class="line">aEle.innerText = <span class="string">'点我有你好看!'</span>  <span class="comment"># 给标签设置文本内容</span></span><br><span class="line"><span class="string">"点我有你好看!"</span></span><br><span class="line">aEle</span><br><span class="line">&lt;a href="https://www.mzitu.com/"&gt;点我有你好看!&lt;/a&gt;</span><br><span class="line">let divEle = document.getElementById(<span class="string">'d1'</span>)</span><br><span class="line">undefined</span><br><span class="line">let pEle = document.getElementById(<span class="string">'d2'</span>)</span><br><span class="line">undefined</span><br><span class="line">divEle.insertBefore(aEle,pEle)  <span class="comment"># 添加标签内容指定位置添加</span></span><br><span class="line">&lt;a href="https://www.mzitu.com/"&gt;点我有你好看!&lt;/a&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">额外补充</span></span><br><span class="line"><span class="string">	appendChild()</span></span><br><span class="line"><span class="string">		removeChild()</span></span><br><span class="line"><span class="string">		replaceChild()</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	</span></span><br><span class="line"><span class="string">	setAttribute()  设置属性</span></span><br><span class="line"><span class="string">		getAttribute()  获取属性</span></span><br><span class="line"><span class="string">		removeAttribute()  移除属性</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># innerText与innerHTML</span></span><br><span class="line">divEle.innerText  <span class="comment"># 获取标签内部所有的文本</span></span><br><span class="line"><span class="string">"div 点我有你好看!</span></span><br><span class="line"><span class="string">div&gt;p</span></span><br><span class="line"><span class="string">div&gt;span"</span></span><br><span class="line"></span><br><span class="line">divEle.innerHTML  <span class="comment"># 内部文本和标签都拿到</span></span><br><span class="line"><span class="string">"div</span></span><br><span class="line"><span class="string">        &lt;a href="</span>https://www.mzitu.com/<span class="string">"&gt;点我有你好看!&lt;/a&gt;&lt;p id="</span>d2<span class="string">"&gt;div&amp;gt;p&lt;/p&gt;</span></span><br><span class="line"><span class="string">        &lt;span&gt;div&amp;gt;span&lt;/span&gt;</span></span><br><span class="line"><span class="string">    "</span></span><br><span class="line">    </span><br><span class="line">divEle.innerText = <span class="string">'heiheihei'</span></span><br><span class="line"><span class="string">"heiheihei"</span></span><br><span class="line">divEle.innerHTML = <span class="string">'hahahaha'</span></span><br><span class="line"><span class="string">"hahahaha"</span></span><br><span class="line"></span><br><span class="line">divEle.innerText = <span class="string">'&lt;h1&gt;heiheihei&lt;/h1&gt;'</span>  <span class="comment"># 不识别html标签</span></span><br><span class="line"><span class="string">"&lt;h1&gt;heiheihei&lt;/h1&gt;"</span></span><br><span class="line">divEle.innerHTML = <span class="string">'&lt;h1&gt;hahahaha&lt;/h1&gt;'</span>  <span class="comment"># 识别html标签</span></span><br><span class="line"><span class="string">"&lt;h1&gt;hahahaha&lt;/h1&gt;"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-获取值操作"><a href="#3-2-获取值操作" class="headerlink" title="3-2 获取值操作"></a>3-2 获取值操作</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"d1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">id</span>=<span class="string">"d3"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">name</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"d2"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"111"</span>&gt;</span>哈哈<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"222"</span>&gt;</span>嘿嘿<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"333"</span>&gt;</span>么么<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取用户数据标签内部的数据</span></span><br><span class="line">let seEle = document.getElementById(<span class="string">'d2'</span>)</span><br><span class="line">seEle.value</span><br><span class="line"><span class="string">"111"</span></span><br><span class="line">seEle.value</span><br><span class="line"><span class="string">"333"</span></span><br><span class="line"></span><br><span class="line">let inputEle = document.getElementById(<span class="string">'d1'</span>)</span><br><span class="line">inputEle.value</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如何获取用户上传的文件数据</span></span><br><span class="line">let fileEle = document.getElementById(<span class="string">'d3'</span>)</span><br><span class="line">fileEle.value  <span class="comment"># 无法获取到文件数据</span></span><br><span class="line"><span class="string">"C:\fakepath\02_测试路由.png"</span></span><br><span class="line"></span><br><span class="line">fileEle.files</span><br><span class="line">FileList &#123;<span class="number">0</span>: File, length: <span class="number">1</span>&#125;<span class="number">0</span>: File &#123;name: <span class="string">"02_测试路由.png"</span>, lastModified: <span class="number">1557043082000</span>, lastModifiedDate: Sun May <span class="number">05</span> <span class="number">2019</span> <span class="number">15</span>:<span class="number">58</span>:<span class="number">02</span> GMT+<span class="number">0800</span> (中国标准时间), webkitRelativePath: <span class="string">""</span>, size: <span class="number">29580</span>, …&#125;length: <span class="number">1</span>__proto__: FileList</span><br><span class="line">      </span><br><span class="line">fileEle.files[<span class="number">0</span>]  <span class="comment"># 获取文件数据</span></span><br><span class="line">File &#123;name: <span class="string">"02_测试路由.png"</span>, lastModified: <span class="number">1557043082000</span>, lastModifiedDate: Sun May <span class="number">05</span> <span class="number">2019</span> <span class="number">15</span>:<span class="number">58</span>:<span class="number">02</span> GMT+<span class="number">0800</span> (中国标准时间), webkitRelativePath: <span class="string">""</span>, size: <span class="number">29580</span>, …&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-class、css操作"><a href="#3-3-class、css操作" class="headerlink" title="3-3 class、css操作"></a>3-3 class、css操作</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="css">        <span class="selector-class">.c1</span> &#123;</span></span><br><span class="line">            height: 400px;</span><br><span class="line">            width: 400px;</span><br><span class="line">            border-radius: 50%;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="css">        <span class="selector-class">.bg_green</span> &#123;</span></span><br><span class="line">            background-color: greenyellow;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="css">        <span class="selector-class">.bg_red</span> &#123;</span></span><br><span class="line">            background-color: red;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"d1"</span> <span class="attr">class</span>=<span class="string">"c1 bg_red bg_green"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>今天难得拖堂 大伙儿见谅<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">let divEle = document.getElementById(<span class="string">'d1'</span>)</span><br><span class="line">undefined</span><br><span class="line">divEle.classList  <span class="comment"># 获取标签所有的类属性</span></span><br><span class="line">DOMTokenList(<span class="number">3</span>) [<span class="string">"c1"</span>, <span class="string">"bg_red"</span>, <span class="string">"bg_green"</span>, value: <span class="string">"c1 bg_red bg_green"</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">divEle.classList.remove(<span class="string">'bg_red'</span>)  <span class="comment"># 移除某个类属性</span></span><br><span class="line">undefined</span><br><span class="line"></span><br><span class="line">divEle.classList.add(<span class="string">'bg_red'</span>)  <span class="comment"># 添加类属性</span></span><br><span class="line">undefined</span><br><span class="line">divEle.classList.contains(<span class="string">'c1'</span>)  <span class="comment"># 验证是否包含某个类属性</span></span><br><span class="line">true</span><br><span class="line">divEle.classList.contains(<span class="string">'c2'</span>)</span><br><span class="line">false</span><br><span class="line"></span><br><span class="line">divEle.classList.toggle(<span class="string">'bg_red'</span>)  <span class="comment"># 有则删除无则添加</span></span><br><span class="line">false</span><br><span class="line">divEle.classList.toggle(<span class="string">'bg_red'</span>)</span><br><span class="line">true</span><br><span class="line">divEle.classList.toggle(<span class="string">'bg_red'</span>)</span><br><span class="line">false</span><br><span class="line">divEle.classList.toggle(<span class="string">'bg_red'</span>)</span><br><span class="line">true</span><br><span class="line">divEle.classList.toggle(<span class="string">'bg_red'</span>)</span><br><span class="line">false</span><br><span class="line">divEle.classList.toggle(<span class="string">'bg_red'</span>)</span><br><span class="line">true</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># DOM操作操作标签样式 统一先用style起手</span></span><br><span class="line">let pEle = document.getElementsByTagName(<span class="string">'p'</span>)[<span class="number">0</span>]</span><br><span class="line">undefined</span><br><span class="line">pEle.style.color = <span class="string">'red'</span></span><br><span class="line"><span class="string">"red"</span></span><br><span class="line">pEle.style.fontSize = <span class="string">'28px'</span></span><br><span class="line"><span class="string">"28px"</span></span><br><span class="line">pEle.style.backgroundColor = <span class="string">'yellow'</span></span><br><span class="line"><span class="string">"yellow"</span></span><br><span class="line">pEle.style.border = <span class="string">'3px solid red'</span></span><br><span class="line"><span class="string">"3px solid red"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-事件"><a href="#4-事件" class="headerlink" title="4 事件"></a>4 事件</h2><p>HTML 4.0 的新特性之一是有能力使 HTML 事件触发浏览器中的动作（action），比如当用户点击某个 HTML 元素时启动一段 JavaScript。下面是一个属性列表，这些属性可插入 HTML 标签来定义事件动作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">onclick        当用户点击某个对象时调用的事件句柄。</span><br><span class="line">ondblclick     当用户双击某个对象时调用的事件句柄。</span><br><span class="line"></span><br><span class="line">onfocus        元素获得焦点。               &#x2F;&#x2F; 练习：输入框</span><br><span class="line">onblur         元素失去焦点。               应用场景：用于表单验证,用户离开某个输入框时,代表已经输入完了,我们可以对它进行验证.</span><br><span class="line">onchange       域的内容被改变。             应用场景：通常用于表单元素,当元素内容被改变时触发.（select联动）</span><br><span class="line"></span><br><span class="line">onkeydown      某个键盘按键被按下。          应用场景: 当用户在最后一个输入框按下回车按键时,表单提交.</span><br><span class="line">onkeypress     某个键盘按键被按下并松开。</span><br><span class="line">onkeyup        某个键盘按键被松开。</span><br><span class="line">onload         一张页面或一幅图像完成加载。</span><br><span class="line">onmousedown    鼠标按钮被按下。</span><br><span class="line">onmousemove    鼠标被移动。</span><br><span class="line">onmouseout     鼠标从某元素移开。</span><br><span class="line">onmouseover    鼠标移到某元素之上。</span><br><span class="line"></span><br><span class="line">onselect      在文本框中的文本被选中时发生。</span><br><span class="line">onsubmit      确认按钮被点击，使用的对象是form。</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-1-基本使用"><a href="#4-1-基本使用" class="headerlink" title="4-1 基本使用"></a>4-1 基本使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">达到某个事先设定的条件 自动触发的动作</span></span><br><span class="line"><span class="string">"</span><span class="string">""</span></span><br><span class="line"># 绑定事件的两种方式</span><br><span class="line">&lt;button onclick=<span class="string">"func1()"</span>&gt;点我&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">&lt;button id="d1"&gt;点我&lt;/</span>button&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="comment">// 第一种绑定事件的方式</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">func1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        alert(<span class="number">111</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 第二种</span></span><br><span class="line">    <span class="keyword">let</span> btnEle = <span class="built_in">document</span>.getElementById(<span class="string">'d1'</span>);</span><br><span class="line">    btnEle.onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        alert(<span class="number">222</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">"""</span></span><br><span class="line"><span class="regexp">script标签既可以放在head内 也可以放在body内</span></span><br><span class="line"><span class="regexp">但是通常情况下都是放在body内的最底部</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp"># 等待浏览器窗口加载完毕之后再执行代码</span></span><br><span class="line"><span class="regexp">window.onload = function () &#123;</span></span><br><span class="line"><span class="regexp">            /</span><span class="regexp">/ 第一种绑定事件的方式</span></span><br><span class="line"><span class="regexp">            function func1() &#123;</span></span><br><span class="line"><span class="regexp">                alert(111)</span></span><br><span class="line"><span class="regexp">            &#125;</span></span><br><span class="line"><span class="regexp">            /</span><span class="regexp">/ 第二种</span></span><br><span class="line"><span class="regexp">            let btnEle = document.getElementById('d1');</span></span><br><span class="line"><span class="regexp">            btnEle.onclick = function () &#123;</span></span><br><span class="line"><span class="regexp">                alert(222)</span></span><br><span class="line"><span class="regexp">            &#125;</span></span><br><span class="line"><span class="regexp">        &#125;</span></span><br><span class="line"><span class="regexp">"""</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-事件案例"><a href="#4-2-事件案例" class="headerlink" title="4-2 事件案例"></a>4-2 事件案例</h3><ul>
+<li><p>开关灯案例</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"d1"</span> <span class="attr">class</span>=<span class="string">"c1 bg_red bg_green"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"d2"</span>&gt;</span>变色<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> btnEle = <span class="built_in">document</span>.getElementById(<span class="string">'d2'</span>)</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> divEle = <span class="built_in">document</span>.getElementById(<span class="string">'d1'</span>)</span></span><br><span class="line"><span class="actionscript">        btnEle.onclick = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;  <span class="comment">// 绑定点击事件</span></span></span><br><span class="line"><span class="actionscript">            <span class="comment">// 动态的修改div标签的类属性</span></span></span><br><span class="line"><span class="actionscript">            divEle.classList.toggle(<span class="string">'bg_red'</span>)</span></span><br><span class="line">        &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>input框获取焦点失去焦点案例</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">value</span>=<span class="string">"老板 去吗?"</span> <span class="attr">id</span>=<span class="string">"d1"</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> iEle = <span class="built_in">document</span>.getElementById(<span class="string">'d1'</span>)</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 获取焦点事件</span></span></span><br><span class="line"><span class="actionscript">    iEle.onfocus = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 将input框内部值去除</span></span></span><br><span class="line"><span class="actionscript">        iEle.value = <span class="string">''</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">//  点value就是获取   等号赋值就是设置</span></span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="actionscript">    <span class="comment">// 失去焦点事件</span></span></span><br><span class="line"><span class="actionscript">    iEle.onblur = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 给input标签重写赋值</span></span></span><br><span class="line"><span class="actionscript">        iEle.value = <span class="string">'没钱 不去!'</span></span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实时展示当前时间</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">id</span>=<span class="string">"d1"</span> <span class="attr">style</span>=<span class="string">"display: block;height: 50px;width: 200px"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"d2"</span>&gt;</span>开始<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"d3"</span>&gt;</span>结束<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 先定义一个全局存储定时器的变量</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> t = <span class="literal">null</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> inputEle = <span class="built_in">document</span>.getElementById(<span class="string">'d1'</span>)</span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> startBtnEle = <span class="built_in">document</span>.getElementById(<span class="string">'d2'</span>)</span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> endBtnEle = <span class="built_in">document</span>.getElementById(<span class="string">'d3'</span>)</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 1 访问页面之后 将访问的时间展示到input框中</span></span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 2 动态展示当前时间</span></span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 3 页面上加两个按钮 一个开始 一个结束</span></span></span><br><span class="line"><span class="actionscript">    <span class="function"><span class="keyword">function</span> <span class="title">showTime</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> currentTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</span></span><br><span class="line">        inputEle.value = currentTime.toLocaleString()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">    startBtnEle.onclick = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 限制定时器只能开一个</span></span></span><br><span class="line">        if(!t)&#123;</span><br><span class="line"><span class="actionscript">            t = setInterval(showTime,<span class="number">1000</span>)  <span class="comment">// 每点击一次就会开设一个定时器 而t只指代最后一个</span></span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="actionscript">    endBtnEle.onclick = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line">        clearInterval(t)</span><br><span class="line"><span class="actionscript">        <span class="comment">// 还应该将t重置为空</span></span></span><br><span class="line"><span class="actionscript">        t = <span class="literal">null</span></span></span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>省市联动</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">name</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"d1"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">""</span> <span class="attr">selected</span> <span class="attr">disabled</span>&gt;</span>--请选择--<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">name</span>=<span class="string">""</span> <span class="attr">id</span>=<span class="string">"d2"</span>&gt;</span><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> proEle = <span class="built_in">document</span>.getElementById(<span class="string">'d1'</span>)</span></span><br><span class="line"><span class="javascript">    <span class="keyword">let</span> cityEle = <span class="built_in">document</span>.getElementById(<span class="string">'d2'</span>)</span></span><br><span class="line"><span class="actionscript">    <span class="comment">// 先模拟省市数据</span></span></span><br><span class="line">    data = &#123;</span><br><span class="line"><span class="actionscript">        <span class="string">"河北"</span>: [<span class="string">"廊坊"</span>, <span class="string">"邯郸"</span>,<span class="string">'唐山'</span>],</span></span><br><span class="line"><span class="actionscript">        <span class="string">"北京"</span>: [<span class="string">"朝阳区"</span>, <span class="string">"海淀区"</span>,<span class="string">'昌平区'</span>],</span></span><br><span class="line"><span class="actionscript">        <span class="string">"山东"</span>: [<span class="string">"威海市"</span>, <span class="string">"烟台市"</span>,<span class="string">'临沂市'</span>],</span></span><br><span class="line"><span class="actionscript">        <span class="string">'上海'</span>:[<span class="string">'浦东新区'</span>,<span class="string">'静安区'</span>,<span class="string">'黄浦区'</span>],</span></span><br><span class="line"><span class="actionscript">        <span class="string">'深圳'</span>:[<span class="string">'南山区'</span>,<span class="string">'宝安区'</span>,<span class="string">'福田区'</span>]</span></span><br><span class="line">    &#125;;</span><br><span class="line"><span class="actionscript">    <span class="comment">// 选for循环获取省</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> data)&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 将省信息做成一个个option标签 添加到第一个select框中</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 1 创建option标签</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> opEle = <span class="built_in">document</span>.createElement(<span class="string">'option'</span>)</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 2 设置文本</span></span></span><br><span class="line">        opEle.innerText = key</span><br><span class="line"><span class="actionscript">        <span class="comment">// 3 设置value</span></span></span><br><span class="line"><span class="handlebars"><span class="xml">        opEle.value = key  // <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"省"</span>&gt;</span>省<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 4 将创建好的option标签添加到第一个select中</span></span></span><br><span class="line">        proEle.appendChild(opEle)</span><br><span class="line">    &#125;</span><br><span class="line"><span class="actionscript">    <span class="comment">// 文本域变化事件  change事件</span></span></span><br><span class="line"><span class="actionscript">    proEle.onchange = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 先获取到用户选择的省</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> currentPro = proEle.value</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 获取对应的市信息</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> currentCityList = data[currentPro]</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 清空市select中所有的option</span></span></span><br><span class="line"><span class="actionscript">        cityEle.innerHTML = <span class="string">''</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 自己加一个请选择</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> ss = <span class="string">"&lt;option disabled selected&gt;请选择&lt;/option&gt;"</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// let oppEle = document.createElement('option')</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// oppEle.innerText = '请选择'</span></span></span><br><span class="line"><span class="actionscript">        <span class="comment">// oppEle.setAttribute('selected','selected')</span></span></span><br><span class="line">        cityEle.innerHTML = ss</span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">// for循环所有的市 渲染到第二个select中</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">for</span> (<span class="keyword">let</span> i=<span class="number">0</span>;i&lt;currentCityList.length;i++)&#123;</span></span><br><span class="line"><span class="javascript">            <span class="keyword">let</span> currentCity = currentCityList[i]</span></span><br><span class="line"><span class="actionscript">            <span class="comment">// 1 创建option标签</span></span></span><br><span class="line"><span class="javascript">            <span class="keyword">let</span> opEle = <span class="built_in">document</span>.createElement(<span class="string">'option'</span>)</span></span><br><span class="line"><span class="actionscript">            <span class="comment">// 2 设置文本</span></span></span><br><span class="line">            opEle.innerText = currentCity</span><br><span class="line"><span class="actionscript">            <span class="comment">// 3 设置value</span></span></span><br><span class="line"><span class="handlebars"><span class="xml">            opEle.value = currentCity  // <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">"省"</span>&gt;</span>省<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span></span></span><br><span class="line"><span class="actionscript">            <span class="comment">// 4 将创建好的option标签添加到第一个select中</span></span></span><br><span class="line">            cityEle.appendChild(opEle)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%89%8D%E7%AB%AF/11-JavaScript%E5%86%85%E7%BD%AE%E6%96%B9%E6%B3%95/">
+        <span class="nav-arrow">← </span>
+        
+          python/前端/11-JavaScript内置方法
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%89%8D%E7%AB%AF/18-JQuery%E5%8A%A8%E7%94%BB%E6%95%88%E6%9E%9C/">
+        
+          python/前端/18-JQuery动画效果
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1、DOM概述"><span class="toc-nav-text">1、DOM概述</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-什么是DOM"><span class="toc-nav-text">1-1 什么是DOM</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#12-DOM分类"><span class="toc-nav-text">12 DOM分类</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-DOM分级"><span class="toc-nav-text">1-3 DOM分级</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-DOM树"><span class="toc-nav-text">1-4 DOM树</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-查找标签"><span class="toc-nav-text">2 查找标签</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-直接查找"><span class="toc-nav-text">2-1 直接查找</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-间接查找-熟悉"><span class="toc-nav-text">2-2 间接查找(熟悉)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3-节点操作"><span class="toc-nav-text">3 节点操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-1-基本操作"><span class="toc-nav-text">3-1 基本操作</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-获取值操作"><span class="toc-nav-text">3-2 获取值操作</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-3-class、css操作"><span class="toc-nav-text">3-3 class、css操作</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4-事件"><span class="toc-nav-text">4 事件</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-1-基本使用"><span class="toc-nav-text">4-1 基本使用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-2-事件案例"><span class="toc-nav-text">4-2 事件案例</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#"><span class="toc-nav-text"></span></a></li></ol></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/前端/13-JS的DOM操作/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/前端/13-JS的DOM操作",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

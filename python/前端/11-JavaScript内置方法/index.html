@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/前端/11-JavaScript内置方法 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/前端/11-JavaScript内置方法</h2>
+
+
+
+  <p class="post-date">2020-11-03</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1、Number"><a href="#1、Number" class="headerlink" title="1、Number"></a>1、Number</h2><h3 id="1-1-属性"><a href="#1-1-属性" class="headerlink" title="1-1 属性"></a>1-1 属性</h3><ul>
+<li>MAX_VALUE JS可以表示的最大的数字</li>
+<li>MIN_VALUE JS可以表示的最小的数字</li>
+</ul>
+<h3 id="1-2-方法"><a href="#1-2-方法" class="headerlink" title="1-2 方法"></a>1-2 方法</h3><ul>
+<li>toFixed(length) 指定保留长度的小数</li>
+<li>toExponential() 用科学计数法表示</li>
+<li>toPrecision(length) 要求数字按照指定长度显示 整数+小数</li>
+<li>toString(number) 把数字转换为字符串 可以按照指定的 进制 返回</li>
+</ul>
+<h2 id="2、String"><a href="#2、String" class="headerlink" title="2、String"></a>2、String</h2><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.length</td>
+<td>返回长度</td>
+</tr>
+<tr>
+<td>.trim()</td>
+<td>移除空白</td>
+</tr>
+<tr>
+<td>.trimLeft()</td>
+<td>移除左边的空白</td>
+</tr>
+<tr>
+<td>.trimRight()</td>
+<td>移除右边的空白</td>
+</tr>
+<tr>
+<td>.charAt(n)</td>
+<td>返回第n个字符</td>
+</tr>
+<tr>
+<td>.concat(value, …)</td>
+<td>拼接</td>
+</tr>
+<tr>
+<td>.indexOf(substring, start)</td>
+<td>子序列位置</td>
+</tr>
+<tr>
+<td>.substring(from, to)</td>
+<td>根据索引获取子序列(不支持负数)</td>
+</tr>
+<tr>
+<td>.slice(start, end)</td>
+<td>切片(直接使用它)</td>
+</tr>
+<tr>
+<td>.toLowerCase()</td>
+<td>小写</td>
+</tr>
+<tr>
+<td>.toUpperCase()</td>
+<td>大写</td>
+</tr>
+<tr>
+<td>.split(delimiter, limit)</td>
+<td>分割</td>
+</tr>
+</tbody></table>
+<h3 id="2-1-属性"><a href="#2-1-属性" class="headerlink" title="2-1 属性"></a>2-1 属性</h3><ul>
+<li>length 字符串长度</li>
+</ul>
+<h3 id="2-2-方法"><a href="#2-2-方法" class="headerlink" title="2-2 方法"></a>2-2 方法</h3><ul>
+<li>charAt(index) 返回指定位置的字符</li>
+<li>concat(string) 连接字符串</li>
+<li>indexOf(str) 返回小字符串在字符串对象中第一次出现位置 -1表示不存在</li>
+<li>lastIndexOf() 返回小字符在字符串中最后一次出现的位置</li>
+<li>substr(start, length) 截取字符串 省略长度截取到结束</li>
+<li>substring(start, end) 截取字符串, 省略结束位置 一直到最后</li>
+<li>slice(start, end) 与substring 一模一样</li>
+<li>split(char) 把字符串分割为数组</li>
+<li>toUpperCase() 把字符串转为大写</li>
+<li>toLowerCase() 把字符串转为小写</li>
+<li>match() 匹配字符串 可用正则</li>
+<li>search() 查找字符串 可用正则</li>
+<li>replace() 替换字符串可用正则</li>
+<li>charCodeAt() 返回在指定的位置的字符的 Unicode 编码。</li>
+<li>String.formCharCode() 从字符编码创建一个字符串。</li>
+</ul>
+<h3 id="2-3-代码"><a href="#2-3-代码" class="headerlink" title="2-3 代码"></a>2-3 代码</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = <span class="string">'egondsb'</span></span><br><span class="line"><span class="literal">undefined</span></span><br><span class="line"></span><br><span class="line">name.length</span><br><span class="line"><span class="number">7</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> name1 = <span class="string">'  egonDSB  '</span></span><br><span class="line"><span class="literal">undefined</span></span><br><span class="line">name1</span><br><span class="line"><span class="string">"  egonDSB  "</span></span><br><span class="line">name1.trim()</span><br><span class="line"><span class="string">"egonDSB"</span></span><br><span class="line">name1.trimLeft()</span><br><span class="line"><span class="string">"egonDSB  "</span></span><br><span class="line">name1.trimRight()</span><br><span class="line"><span class="string">"  egonDSB"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> name2 = <span class="string">'$$jason$$'</span></span><br><span class="line"><span class="literal">undefined</span></span><br><span class="line">name2.trim('$')  # 不能加括号指定去除的内容</span><br><span class="line"><span class="string">"$$jason$$"</span></span><br><span class="line"></span><br><span class="line">name2.charAt(<span class="number">0</span>)</span><br><span class="line"><span class="string">"$"</span></span><br><span class="line">name2.indexOf(<span class="string">'as'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"></span><br><span class="line">name2.substring(<span class="number">0</span>,<span class="number">5</span>)</span><br><span class="line"><span class="string">"$$jas"</span></span><br><span class="line">name2.slice(<span class="number">0</span>,<span class="number">5</span>)</span><br><span class="line"><span class="string">"$$jas"</span></span><br><span class="line">name2.substring(0,-1)  # 不识别负数</span><br><span class="line"><span class="string">""</span></span><br><span class="line">name2.slice(0,-1)  # 后面推荐就使用slice就可以</span><br><span class="line"><span class="string">"$$jason$"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> name3 = <span class="string">'eGoNDsb123666HahA'</span></span><br><span class="line"><span class="literal">undefined</span></span><br><span class="line">name3.toLowerCase()</span><br><span class="line"><span class="string">"egondsb123666haha"</span></span><br><span class="line">name3.toUpperCase()</span><br><span class="line"><span class="string">"EGONDSB123666HAHA"</span></span><br><span class="line"><span class="keyword">var</span> name = <span class="string">'tank|hecha|liaomei|mengsao|...'</span></span><br><span class="line"><span class="literal">undefined</span></span><br><span class="line"></span><br><span class="line">name.split(<span class="string">'|'</span>)</span><br><span class="line">(<span class="number">5</span>) [<span class="string">"tank"</span>, <span class="string">"hecha"</span>, <span class="string">"liaomei"</span>, <span class="string">"mengsao"</span>, <span class="string">"..."</span>]</span><br><span class="line">name.split(<span class="string">'|'</span>,<span class="number">2</span>)</span><br><span class="line">(<span class="number">2</span>) [<span class="string">"tank"</span>, <span class="string">"hecha"</span>]<span class="number">0</span>: <span class="string">"tank"</span><span class="number">1</span>: <span class="string">"hecha"</span>length: <span class="number">2</span>__proto__: <span class="built_in">Array</span>(<span class="number">0</span>)</span><br><span class="line">name.split('|',10)  # 第二个参数不是限制切割字符的个数还是获取切割之后元素的个数</span><br><span class="line">(<span class="number">5</span>) [<span class="string">"tank"</span>, <span class="string">"hecha"</span>, <span class="string">"liaomei"</span>, <span class="string">"mengsao"</span>, <span class="string">"..."</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">name.concat(name1,name2)</span><br><span class="line"><span class="string">"tank|hecha|liaomei|mengsao|...  egonDSB  $$jason$$"</span></span><br><span class="line"><span class="keyword">var</span> p = <span class="number">1111</span></span><br><span class="line"><span class="literal">undefined</span></span><br><span class="line">name.concat(p)  # js是弱类型(内部会自动转换成相同的数据类型做操作)</span><br><span class="line"><span class="string">"tank|hecha|liaomei|mengsao|...1111"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3Array"><a href="#3Array" class="headerlink" title="3Array"></a>3Array</h2><h3 id="3-1-创建数组"><a href="#3-1-创建数组" class="headerlink" title="3-1 创建数组"></a>3-1 创建数组</h3><ul>
+<li>使用直接量 <code>[]</code></li>
+<li>构造函数方式 <code>new Array()</code></li>
+</ul>
+<h3 id="3-2-数组特点"><a href="#3-2-数组特点" class="headerlink" title="3-2 数组特点"></a>3-2 数组特点</h3><ul>
+<li>索引必须连续</li>
+<li>如果索引不连续，会产生稀疏数组</li>
+</ul>
+<h3 id="3-3-数组的遍历-迭代"><a href="#3-3-数组的遍历-迭代" class="headerlink" title="3-3 数组的遍历(迭代)"></a>3-3 数组的遍历(迭代)</h3><ul>
+<li>for 循环遍历</li>
+<li>for…in 循环</li>
+<li>for…of 循环</li>
+</ul>
+<h3 id="34-数组元素的添加和删除"><a href="#34-数组元素的添加和删除" class="headerlink" title="34 数组元素的添加和删除"></a>34 数组元素的添加和删除</h3><h4 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h4><ul>
+<li>为新索引赋值</li>
+<li>利用数组长度,在数组尾部插入新元素</li>
+<li>push()</li>
+<li>unshift()</li>
+<li>splice()</li>
+</ul>
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><ul>
+<li><p>改变数组长度</p>
+</li>
+<li><p>pop()</p>
+</li>
+<li><p>shift()</p>
+</li>
+<li><p>splice()</p>
+</li>
+<li><p>运算符 delete</p>
+</li>
+</ul>
+<h3 id="3-5-数组对象属性"><a href="#3-5-数组对象属性" class="headerlink" title="3-5 数组对象属性"></a>3-5 数组对象属性</h3><ul>
+<li>length 数组长度 元素个数</li>
+</ul>
+<h3 id="3-6-数组对象方法"><a href="#3-6-数组对象方法" class="headerlink" title="3-6 数组对象方法"></a>3-6 数组对象方法</h3><ul>
+<li><p>splice()</p>
+<blockquote>
+<p>删除指定位置指定个数的元素<br>替换指定位置指定个数的元素<br>添加指定位置的元素<br>返回 被删除的元素组成的数组</p>
+</blockquote>
+</li>
+<li><p>reverse() 翻转数组</p>
+</li>
+<li><p>sort() 数组排序</p>
+</li>
+<li><p>push() 和 pop() 在数组的最后添加或删除元素</p>
+</li>
+<li><p>unshift()和shift() 在数组的最前面添加或删除元素</p>
+</li>
+<li><p>toString() 和 toLocalString() 把数组转换为字符串</p>
+</li>
+<li><p>join() 把数组的元素拼接成字符串</p>
+</li>
+<li><p>slice() 截取数组中的一部分,返回新的数组 slice(start, end)</p>
+</li>
+<li><p>concat() 合并多个数组</p>
+</li>
+<li><p>indexOf() 搜索数组中的元素，并返回它所在的位置。</p>
+</li>
+<li><p>lastIndexOf() 返回一个指定的字符串值最后出现的位置，在一个字符串中的指定位置从后向前搜索。</p>
+</li>
+<li><p>forEach() 遍历 循环</p>
+</li>
+<li><p>map() 通过指定函数处理数组的每个元素，并返回处理后的数组。</p>
+</li>
+<li><p>filter() 检测数值元素，并返回符合条件所有元素的数组。</p>
+</li>
+<li><p>every() 检测数值元素的每个元素是否都符合条件。</p>
+</li>
+<li><p>some() 检测数组元素中是否有元素符合指定条件。</p>
+</li>
+<li><p>reduce() 将数组元素 索引值从低到高 进行组合<br>reduceRight() 将数组元素 索引值从高到低进行组合</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.length</td>
+<td>数组的大小</td>
+</tr>
+<tr>
+<td>.push(ele)</td>
+<td>尾部追加元素</td>
+</tr>
+<tr>
+<td>.pop()</td>
+<td>获取尾部的元素</td>
+</tr>
+<tr>
+<td>.unshift(ele)</td>
+<td>头部插入元素</td>
+</tr>
+<tr>
+<td>.shift()</td>
+<td>头部移除元素</td>
+</tr>
+<tr>
+<td>.slice(start, end)</td>
+<td>切片</td>
+</tr>
+<tr>
+<td>.reverse()</td>
+<td>反转</td>
+</tr>
+<tr>
+<td>.join(seq)</td>
+<td>将数组元素连接成字符串</td>
+</tr>
+<tr>
+<td>.concat(val, …)</td>
+<td>连接数组</td>
+</tr>
+<tr>
+<td>.sort()</td>
+<td>排序</td>
+</tr>
+<tr>
+<td>.forEach()</td>
+<td>将数组的每个元素传递给回调函数</td>
+</tr>
+<tr>
+<td>.splice()</td>
+<td>删除元素，并向数组添加新元素。</td>
+</tr>
+<tr>
+<td>.map()</td>
+<td>返回一个数组元素调用函数处理后的值的新数组</td>
+</tr>
+</tbody></table>
+<h2 id="4、Math"><a href="#4、Math" class="headerlink" title="4、Math"></a>4、Math</h2><h3 id="4-1-属性"><a href="#4-1-属性" class="headerlink" title="4-1 属性"></a>4-1 属性</h3><ul>
+<li>PI 返回圆周率（约等于3.14159）。</li>
+</ul>
+<h3 id="4-2-方法"><a href="#4-2-方法" class="headerlink" title="4-2 方法"></a>4-2 方法</h3><ul>
+<li>abs(x) 返回数的绝对值。</li>
+<li>sqrt(x) 返回数的平方根。</li>
+<li>pow(x,y) 返回 x 的 y 次幂。</li>
+<li>ceil(x) 对数进行上舍入。</li>
+<li>floor(x) 对数进行下舍入。</li>
+<li>round(x) 把数四舍五入为最接近的整数。</li>
+<li>max(x,y) 返回 x 和 y 中的最高值。</li>
+<li>min(x,y) 返回 x 和 y 中的最低值。</li>
+<li>random() 返回 0 ~ 1 之间的随机数。</li>
+</ul>
+<h2 id="5、Date"><a href="#5、Date" class="headerlink" title="5、Date"></a>5、Date</h2><h3 id="5-1-方法"><a href="#5-1-方法" class="headerlink" title="5-1 方法"></a>5-1 方法</h3><ul>
+<li>getYear() 请使用 getFullYear() 方法代替。</li>
+<li>getFullYear() 从 Date 对象以四位数字返回年份。</li>
+<li>getMonth() 从 Date 对象返回月份 (0 ~ 11)。</li>
+<li>getDate() 从 Date 对象返回一个月中的某一天 (1 ~ 31)。</li>
+<li>getDay() 从 Date 对象返回一周中的某一天 (0 ~ 6)。</li>
+<li>getHours() 返回 Date 对象的小时 (0 ~ 23)。</li>
+<li>getMinutes() 返回 Date 对象的分钟 (0 ~ 59)。</li>
+<li>getSeconds() 返回 Date 对象的秒数 (0 ~ 59)。</li>
+<li>getMilliseconds() 返回 Date 对象的毫秒(0 ~ 999)。</li>
+<li>getTime() 返回 1970 年 1 月 1 日至今的毫秒数。</li>
+<li>getTimezoneOffset() 返回本地时间与格林威治标准时间 (GMT) 的分钟差。</li>
+<li>getUTC…. 标准时区</li>
+<li>set…</li>
+<li>setUTC…</li>
+<li>toTimeString() 把 Date 对象的时间部分转换为字符串。</li>
+<li>toDateString() 把 Date 对象的日期部分转换为字符串。</li>
+<li>toUTCString() 根据世界时，把 Date 对象转换为字符串。</li>
+<li>toLocaleString() 根据本地时间格式，把 Date 对象转换为字符串。</li>
+<li>toLocaleTimeString() 根据本地时间格式，把 Date 对象的时间部分转换为字符串。</li>
+<li>toLocaleDateString() 根据本地时间格式，把 Date 对象的日期部分转换为字符串。</li>
+</ul>
+<h2 id="6、RegExp"><a href="#6、RegExp" class="headerlink" title="6、RegExp"></a>6、RegExp</h2><h3 id="6-1-属性"><a href="#6-1-属性" class="headerlink" title="6-1 属性"></a>6-1 属性</h3><ul>
+<li>global RegExp 对象是否具有标志 g。</li>
+<li>ignoreCase RegExp 对象是否具有标志 i。</li>
+<li>lastIndex 一个整数，标示开始下一次匹配的字符位置。</li>
+<li>multiline RegExp 对象是否具有标志 m。</li>
+<li>source 正则表达式的源文本。</li>
+</ul>
+<h3 id="6-2-方法"><a href="#6-2-方法" class="headerlink" title="6-2 方法"></a>6-2 方法</h3><ul>
+<li>exec() 检索字符串中指定的值。返回找到的值，并确定其位置。</li>
+<li>test() 检索字符串中指定的值。返回 true 或 false。</li>
+</ul>
+<h2 id="7、JSON"><a href="#7、JSON" class="headerlink" title="7、JSON"></a>7、JSON</h2><h3 id="7-1-方法"><a href="#7-1-方法" class="headerlink" title="7-1 方法"></a>7-1 方法</h3><ul>
+<li>JSON.parse() 解析json格式的字符串</li>
+<li>JSON.stringify() 序列化对象 数组 或 原始值</li>
+</ul>
+<h2 id="8、Global"><a href="#8、Global" class="headerlink" title="8、Global"></a>8、Global</h2><h3 id="10-1-属性"><a href="#10-1-属性" class="headerlink" title="10-1 属性"></a>10-1 属性</h3><ul>
+<li>NaN</li>
+<li>InFinity</li>
+</ul>
+<h3 id="10-2-方法"><a href="#10-2-方法" class="headerlink" title="10-2 方法"></a>10-2 方法</h3><ul>
+<li>escape() 对字符串进行Unicode编码。</li>
+<li>unescape() 对由 escape() 编码的字符串进行解码。</li>
+<li>encodeURI() 把字符串编码为 URI。 对其他一些在网址中有特殊含义的符号“; / ? : @ &amp; = + $ , #”不进行编码</li>
+<li>decodeURI() 解码某个编码的 URI。</li>
+<li>encodeURIComponent() 把字符串编码为 URI 组件</li>
+<li>decodeURIComponent() 解码一个编码的 URI 组件。</li>
+<li>eval() 计算 JavaScript 字符串，并把它作为脚本代码来执行。</li>
+<li>isFinite() 检查某个值是否为有穷大的数。</li>
+<li>isNaN() 检查某个值是否是数字。</li>
+<li>parseInt() 解析一个字符串并返回一个整数。</li>
+<li>parseFloat() 解析一个字符串并返回一个浮点数。</li>
+<li>Number() 把对象的值转换为数字。</li>
+<li>String() 把对象的值转换为字符串。</li>
+<li>所有内置构造函数 都是 全局对象的属性</li>
+</ul>
+<h2 id="9-函数对象"><a href="#9-函数对象" class="headerlink" title="9 函数对象"></a>9 函数对象</h2><h3 id="9-1-自定义对象"><a href="#9-1-自定义对象" class="headerlink" title="9-1 自定义对象"></a>9-1 自定义对象</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 你可以看成是我们python中的字典 但是js中的自定义对象要比python里面的字典操作起来更加的方便</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建自定义对象 &#123;&#125;</span></span><br><span class="line"><span class="string">"""第一种创建自定义对象的方式"""</span></span><br><span class="line">var d1 = &#123;<span class="string">'name'</span>:<span class="string">'jason'</span>,<span class="string">'age'</span>:<span class="number">18</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">var d = &#123;<span class="string">'name'</span>:<span class="string">'jason'</span>,<span class="string">'age'</span>:<span class="number">18</span>&#125;</span><br><span class="line">typeof d</span><br><span class="line"><span class="string">"object"</span></span><br><span class="line"></span><br><span class="line">d[<span class="string">'name'</span>]</span><br><span class="line"><span class="string">"jason"</span></span><br><span class="line">d.name  <span class="comment"># 比python从字典获取值更加的方便</span></span><br><span class="line"><span class="string">"jason"</span></span><br><span class="line">d.age</span><br><span class="line"><span class="number">18</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(let i <span class="keyword">in</span> d)&#123;</span><br><span class="line">  console.log(i,d[i])</span><br><span class="line">&#125;  <span class="comment"># 支持for循环 暴露给外界可以直接获取的也是键</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="string">"""第二种创建自定义对象的方式  需要使用关键字 new"""</span></span><br><span class="line">var d2 = new Object()  <span class="comment"># &#123;&#125;</span></span><br><span class="line"></span><br><span class="line">d2.name = <span class="string">'jason'</span></span><br><span class="line">&#123;name: <span class="string">"jason"</span>&#125;</span><br><span class="line"></span><br><span class="line">d2[<span class="string">'age'</span>] = <span class="number">18</span></span><br><span class="line">&#123;name: <span class="string">"jason"</span>, age: <span class="number">18</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-2-Date对象"><a href="#9-2-Date对象" class="headerlink" title="9-2 Date对象"></a>9-2 Date对象</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">let d3 = new Date()</span><br><span class="line">Fri May <span class="number">15</span> <span class="number">2020</span> <span class="number">14</span>:<span class="number">41</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (中国标准时间)</span><br><span class="line">   </span><br><span class="line">d3.toLocaleString()</span><br><span class="line"><span class="string">"2020/5/15 下午2:41:06"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 也支持自己手动输入时间</span></span><br><span class="line">let d4 = new Date(<span class="string">'2200/11/11 11:11:11'</span>)</span><br><span class="line">d4.toLocaleString()</span><br><span class="line"></span><br><span class="line">let d5 = new Date(<span class="number">1111</span>,<span class="number">11</span>,<span class="number">11</span>,<span class="number">11</span>,<span class="number">11</span>,<span class="number">11</span>)</span><br><span class="line">d5.toLocaleString()  <span class="comment"># 月份从0开始0-11月</span></span><br><span class="line"><span class="string">"1111/12/11 上午11:11:11"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 时间对象具体方法</span></span><br><span class="line">let d6 = new Date();</span><br><span class="line">d6.getDate()  获取日</span><br><span class="line">d6.getDay()		获取星期</span><br><span class="line">d6.getMonth()		获取月份(<span class="number">0</span><span class="number">-11</span>)</span><br><span class="line">d6.getFullYear()		获取完整的年份</span><br><span class="line">d6.getHours()			获取小时</span><br><span class="line">d6.getMinutes()		获取分钟</span><br><span class="line">d6.getSeconds()		获取秒</span><br><span class="line">d6.getMilliseconds()  获取毫秒</span><br><span class="line">d6.getTime()					时间戳</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-3-JSON对象"><a href="#9-3-JSON对象" class="headerlink" title="9-3 JSON对象"></a>9-3 JSON对象</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">在python中序列化反序列化</span></span><br><span class="line"><span class="string">	dumps 		序列化</span></span><br><span class="line"><span class="string">	loads			反序列化</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">在js中也有序列化反序列化</span></span><br><span class="line"><span class="string">	JSON.stringify()								dumps</span></span><br><span class="line"><span class="string">	JSON.parse()										loads			</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line">let d7 = &#123;<span class="string">'name'</span>:<span class="string">'jason'</span>,<span class="string">'age'</span>:<span class="number">18</span>&#125;</span><br><span class="line">let res666 = JSON.stringify(d7)</span><br><span class="line"><span class="string">"&#123;"</span>name<span class="string">":"</span>jason<span class="string">","</span>age<span class="string">":18&#125;"</span></span><br><span class="line"></span><br><span class="line">JSON.parse(res666)</span><br><span class="line">&#123;name: <span class="string">"jason"</span>, age: <span class="number">18</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-4-RegExp对象"><a href="#9-4-RegExp对象" class="headerlink" title="9-4 RegExp对象"></a>9-4 RegExp对象</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">在python中如果需要使用正则 需要借助于re模块</span></span><br><span class="line"><span class="string">在js中需要你创建正则对象</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="comment"># 第一种 有点麻烦</span></span><br><span class="line">let reg1 = new RegExp(<span class="string">'^[a-zA-Z][a-zA-Z0-9]&#123;5,11&#125;'</span>)</span><br><span class="line"><span class="comment"># 第二种 个人推荐</span></span><br><span class="line">let reg2 = /^[a-zA-Z][a-zA-Z0<span class="number">-9</span>]&#123;<span class="number">5</span>,<span class="number">11</span>&#125;/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 匹配内容</span></span><br><span class="line">reg1.test(<span class="string">'egondsb'</span>)</span><br><span class="line">reg2.test(<span class="string">'egondsb'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 题目 获取字符串里面所有的字母s</span></span><br><span class="line">let sss = <span class="string">'egondsb dsb dsb'</span></span><br><span class="line">sss.match(/s/)  <span class="comment"># 拿到一个就停止了</span></span><br><span class="line">sss.match(/s/g)	<span class="comment"># 全局匹配  g就表示全局模式</span></span><br><span class="line"></span><br><span class="line">sss.match(/s/)</span><br><span class="line">[<span class="string">"s"</span>, index: <span class="number">5</span>, input: <span class="string">"egondsb dsb dsb"</span>, groups: undefined]</span><br><span class="line">sss.match(/s/g)</span><br><span class="line">(<span class="number">3</span>) [<span class="string">"s"</span>, <span class="string">"s"</span>, <span class="string">"s"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 全局匹配模式吐槽点</span></span><br><span class="line">let reg3 = /^[a-zA-Z][a-zA-Z0<span class="number">-9</span>]&#123;<span class="number">5</span>,<span class="number">11</span>&#125;/g</span><br><span class="line">reg2.test(<span class="string">'egondsb'</span>)</span><br><span class="line"></span><br><span class="line">reg3.test(<span class="string">'egondsb'</span>)  <span class="comment"># 全局模式有一个lastIndex属性</span></span><br><span class="line">true</span><br><span class="line">reg3.test(<span class="string">'egondsb'</span>)</span><br><span class="line">false</span><br><span class="line">reg3.test(<span class="string">'egondsb'</span>)</span><br><span class="line">true</span><br><span class="line">reg3.test(<span class="string">'egondsb'</span>)</span><br><span class="line">false</span><br><span class="line"></span><br><span class="line">reg3.lastIndex</span><br><span class="line"><span class="number">0</span></span><br><span class="line">reg3.test(<span class="string">'egondsb'</span>)</span><br><span class="line">true</span><br><span class="line">reg3.lastIndex</span><br><span class="line"><span class="number">7</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 吐槽点二 </span></span><br><span class="line">let reg4 = /^[a-zA-Z][a-zA-Z0<span class="number">-9</span>]&#123;<span class="number">5</span>,<span class="number">11</span>&#125;/</span><br><span class="line">reg4.test()</span><br><span class="line"></span><br><span class="line">reg4.test()  <span class="comment"># 什么都不传 默认传的是undefined</span></span><br><span class="line">true</span><br><span class="line">reg4.test()</span><br><span class="line">true</span><br><span class="line"></span><br><span class="line">reg4.test(undefined)</span><br><span class="line">true</span><br><span class="line">let reg5 = /undefined/</span><br><span class="line">undefined</span><br><span class="line">reg5.test(<span class="string">'jason'</span>)</span><br><span class="line">false</span><br><span class="line">reg5.test()</span><br><span class="line">true</span><br><span class="line"></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">总结 你在用js书写正则的时候一定要注意上述问题</span></span><br><span class="line"><span class="string">一般情况下你后续也不会解除到了</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="9-5-Math对象-了解"><a href="#9-5-Math对象-了解" class="headerlink" title="9-5 Math对象(了解)"></a>9-5 Math对象(了解)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">abs(x)      返回数的绝对值。</span><br><span class="line">exp(x)      返回 e 的指数。</span><br><span class="line">floor(x)    对数进行下舍入。</span><br><span class="line">log(x)      返回数的自然对数（底为e）。</span><br><span class="line">max(x,y)    返回 x 和 y 中的最高值。</span><br><span class="line">min(x,y)    返回 x 和 y 中的最低值。</span><br><span class="line">pow(x,y)    返回 x 的 y 次幂。</span><br><span class="line">random()    返回 <span class="number">0</span> ~ <span class="number">1</span> 之间的随机数。</span><br><span class="line">round(x)    把数四舍五入为最接近的整数。</span><br><span class="line">sin(x)      返回数的正弦。</span><br><span class="line">sqrt(x)     返回数的平方根。</span><br><span class="line">tan(x)      返回角的正切。</span><br></pre></td></tr></table></figure>
+
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E5%89%8D%E7%AB%AF/5-CSS3%E5%9F%BA%E7%A1%80%E6%A0%B7%E5%BC%8F/">
+        <span class="nav-arrow">← </span>
+        
+          python/前端/5-CSS3基础样式
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%89%8D%E7%AB%AF/13-JS%E7%9A%84DOM%E6%93%8D%E4%BD%9C/">
+        
+          python/前端/13-JS的DOM操作
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1、Number"><span class="toc-nav-text">1、Number</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-属性"><span class="toc-nav-text">1-1 属性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-方法"><span class="toc-nav-text">1-2 方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2、String"><span class="toc-nav-text">2、String</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-1-属性"><span class="toc-nav-text">2-1 属性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-2-方法"><span class="toc-nav-text">2-2 方法</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#2-3-代码"><span class="toc-nav-text">2-3 代码</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#3Array"><span class="toc-nav-text">3Array</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-1-创建数组"><span class="toc-nav-text">3-1 创建数组</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-2-数组特点"><span class="toc-nav-text">3-2 数组特点</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-3-数组的遍历-迭代"><span class="toc-nav-text">3-3 数组的遍历(迭代)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#34-数组元素的添加和删除"><span class="toc-nav-text">34 数组元素的添加和删除</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#添加"><span class="toc-nav-text">添加</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#删除"><span class="toc-nav-text">删除</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-5-数组对象属性"><span class="toc-nav-text">3-5 数组对象属性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#3-6-数组对象方法"><span class="toc-nav-text">3-6 数组对象方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#4、Math"><span class="toc-nav-text">4、Math</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-1-属性"><span class="toc-nav-text">4-1 属性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#4-2-方法"><span class="toc-nav-text">4-2 方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#5、Date"><span class="toc-nav-text">5、Date</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#5-1-方法"><span class="toc-nav-text">5-1 方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#6、RegExp"><span class="toc-nav-text">6、RegExp</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-1-属性"><span class="toc-nav-text">6-1 属性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#6-2-方法"><span class="toc-nav-text">6-2 方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#7、JSON"><span class="toc-nav-text">7、JSON</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#7-1-方法"><span class="toc-nav-text">7-1 方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#8、Global"><span class="toc-nav-text">8、Global</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#10-1-属性"><span class="toc-nav-text">10-1 属性</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#10-2-方法"><span class="toc-nav-text">10-2 方法</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#9-函数对象"><span class="toc-nav-text">9 函数对象</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-1-自定义对象"><span class="toc-nav-text">9-1 自定义对象</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-2-Date对象"><span class="toc-nav-text">9-2 Date对象</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-3-JSON对象"><span class="toc-nav-text">9-3 JSON对象</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-4-RegExp对象"><span class="toc-nav-text">9-4 RegExp对象</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#9-5-Math对象-了解"><span class="toc-nav-text">9-5 Math对象(了解)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#"><span class="toc-nav-text"></span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/前端/11-JavaScript内置方法/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/前端/11-JavaScript内置方法",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

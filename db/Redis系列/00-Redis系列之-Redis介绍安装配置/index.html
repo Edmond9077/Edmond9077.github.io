@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      db/Redis系列/00-Redis系列之-Redis介绍安装配置 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>db/Redis系列/00-Redis系列之-Redis介绍安装配置</h2>
+
+
+
+  <p class="post-date">2019-12-24</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="第一章-redis初识"><a href="#第一章-redis初识" class="headerlink" title="第一章 redis初识"></a>第一章 redis初识</h2><h3 id="1-1-Redis是什么"><a href="#1-1-Redis是什么" class="headerlink" title="1.1 Redis是什么"></a>1.1 Redis是什么</h3><p><strong>介绍</strong></p>
+<p>开源：早起版本2w3千行</p>
+<p>基于键值对的存储系统：字典形式 </p>
+<p>多种数据结构：字符串，hash，列表，集合，有序集合</p>
+<p>高性能，功能丰富</p>
+<p><strong>那些公司在用</strong></p>
+<p>github，twitter，stackoverflow，阿里，百度，微博，美团，搜狐</p>
+<h3 id="1-2-Redis特性（8个）"><a href="#1-2-Redis特性（8个）" class="headerlink" title="1.2 Redis特性（8个）"></a>1.2 Redis特性（8个）</h3><p><strong>速度快</strong>：10w ops（每秒10w读写），数据存在内存中，c语言实现，单线程模型</p>
+<p><strong>持久化</strong>：rdb和aof</p>
+<p><strong>多种数据结构</strong>：</p>
+<p>5大数据结构 </p>
+<p>BitMaps位图：布隆过滤器   本质是 字符串</p>
+<p>HyperLogLog：超小内存唯一值计数，12kb  HyperLogLog  本质是 字符串</p>
+<p>GEO：地理信息定位  本质是有序集合</p>
+<p><strong>支持多种编程语言</strong>：基于tcp通信协议，各大编程语言都支持</p>
+<p><strong>功能丰富</strong>：发布订阅（消息） Lua脚本，事务（pipeline）</p>
+<p><strong>简单</strong>：源代码几万行，不依赖外部库</p>
+<p><strong>主从复制</strong>：主服务器和从服务器，主服务器可以同步到从服务器中</p>
+<p><strong>高可用和分布式</strong>：</p>
+<p>​    2.8版本以后使用redis-sentinel支持高可用</p>
+<p>​    3.0版本以后支持分布式</p>
+<h3 id="1-3-Redis单机安装"><a href="#1-3-Redis单机安装" class="headerlink" title="1.3 Redis单机安装"></a>1.3 Redis单机安装</h3><h4 id="1-3-1下载安装"><a href="#1-3-1下载安装" class="headerlink" title="1.3.1下载安装"></a>1.3.1下载安装</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载</span></span><br><span class="line">wget http://download.redis.io/releases/redis<span class="number">-5.0</span><span class="number">.7</span>.tar.gz</span><br><span class="line"><span class="comment">#解压</span></span><br><span class="line">tar -xzf redis<span class="number">-5.0</span><span class="number">.7</span>.tar.gz</span><br><span class="line"><span class="comment">#建立软连接</span></span><br><span class="line">ln -s redis<span class="number">-5.0</span><span class="number">.7</span> redis</span><br><span class="line">cd redis</span><br><span class="line">make&amp;&amp;make install</span><br><span class="line"><span class="comment">#在src目录下可以看到</span></span><br><span class="line"><span class="comment">#redis-server---&gt;redis服务器</span></span><br><span class="line"><span class="comment">#redis-cli---》redis命令行客户端</span></span><br><span class="line"><span class="comment">#redis-benchmark---》redis性能测试工具</span></span><br><span class="line"><span class="comment">#redis-check-aof---&gt;aof文件修复工具</span></span><br><span class="line"><span class="comment">#redis-check-dump---》rdb文件检查工具</span></span><br><span class="line"><span class="comment">#redis-sentinel---》sentinel服务器，哨兵</span></span><br><span class="line"><span class="comment">#redis作者对windows维护不好，window自己有安装包</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####卸载redis</span></span><br><span class="line"><span class="comment"># 1、查看redis进程；</span></span><br><span class="line">ps aux|grep redis</span><br><span class="line"><span class="comment"># 2、kill掉进程；</span></span><br><span class="line">kill 进程id</span><br><span class="line"><span class="comment"># 3、进入到redis目录</span></span><br><span class="line">cd /usr/local/</span><br><span class="line"><span class="comment"># 4、删除redis对应的文件</span></span><br><span class="line">rm -f /usr/local/redis/bin/redis*</span><br><span class="line">rm -f /usr/local/bin/redis*</span><br><span class="line"><span class="comment"># 5、删除对应的文件</span></span><br><span class="line">rm -rf redis</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-2三种启动方式"><a href="#1-3-2三种启动方式" class="headerlink" title="1.3.2三种启动方式"></a>1.3.2三种启动方式</h4><h5 id="1-3-2-1-最简启动"><a href="#1-3-2-1-最简启动" class="headerlink" title="1.3.2.1 最简启动"></a>1.3.2.1 最简启动</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#最简启动</span></span><br><span class="line">redis-server</span><br><span class="line">ps -ef|grep redis  <span class="comment">#查看进程</span></span><br><span class="line">netstat -antpl|grep redis <span class="comment">#查看端口</span></span><br><span class="line">redis-cli -h ip -p port ping <span class="comment">#命令查看</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="1-3-2-2-动态参数启动"><a href="#1-3-2-2-动态参数启动" class="headerlink" title="1.3.2.2 动态参数启动"></a>1.3.2.2 动态参数启动</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#动态参数启动</span></span><br><span class="line">redis-serve --port <span class="number">6380</span> <span class="comment">#启动，监听6380端口</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="1-3-2-2-配置文件启动"><a href="#1-3-2-2-配置文件启动" class="headerlink" title="1.3.2.2 配置文件启动"></a>1.3.2.2 配置文件启动</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#配置文件启动（6379对应手机按键MERZ，意大利女歌手Alessia Merz的名字）</span></span><br><span class="line"><span class="comment">#####通过redis-cli连接，输入config get * 可以获得默认配置</span></span><br><span class="line"><span class="comment">#在redis目录下创建config目录，copy一个redis.conf文件</span></span><br><span class="line"><span class="comment">#daemonize--》是否是守护进程启动（no|yes）</span></span><br><span class="line"><span class="comment">#port---》端口号</span></span><br><span class="line"><span class="comment">#logfile--》redis系统日志</span></span><br><span class="line"><span class="comment">#dir--》redis工作目录</span></span><br></pre></td></tr></table></figure>
+
+<p>配置文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看一下默认注释，把#和空格去掉</span></span><br><span class="line">cat redis.conf|grep -v <span class="string">"#"</span> |grep -v <span class="string">"^$"</span></span><br><span class="line"><span class="comment">#重定向到另一个文件</span></span><br><span class="line">cat redis.conf|grep -v <span class="string">"#"</span> |grep -v <span class="string">"^$"</span> &gt;redis<span class="number">-6382.</span>conf</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">daemonize yes #是否以守护进程启动</span></span><br><span class="line"><span class="string">pidfile /var/run/redis.pid   #进程号的位置，删除</span></span><br><span class="line"><span class="string">port 6379    #端口号</span></span><br><span class="line"><span class="string">dir "/opt/soft/redis/data"  #工作目录</span></span><br><span class="line"><span class="string">logfile “6379.log” #日志位置  </span></span><br><span class="line"><span class="string">#其他全删掉</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#在redis目录下新建data目录，用来存放书籍</span></span><br><span class="line"><span class="comment">#启动redis</span></span><br><span class="line">redis-server config/redis.conf</span><br><span class="line"><span class="comment">#查看进程</span></span><br><span class="line">ps -ef |grep redis-server |grep <span class="number">6379</span></span><br><span class="line"><span class="comment">#查看日志</span></span><br><span class="line">cd data</span><br><span class="line">cat <span class="number">6379.l</span>og</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-3-3-客户端连接-命令"><a href="#1-3-3-客户端连接-命令" class="headerlink" title="1.3.3 客户端连接(命令)"></a>1.3.3 客户端连接(命令)</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">###客户端连接###</span></span><br><span class="line">redis-cli -h <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -p <span class="number">6379</span></span><br><span class="line">ping <span class="comment">#返回PONG</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 有密码的情况可以两种登陆方式</span></span><br><span class="line"><span class="comment"># 方式一</span></span><br><span class="line">redis-cli -h <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>    -p <span class="number">6370</span> -a <span class="number">123456</span></span><br><span class="line"><span class="comment"># 方式二</span></span><br><span class="line">先登陆，再通过auth输入密码</span><br><span class="line"></span><br><span class="line"><span class="comment">## redis-cli进入</span></span><br><span class="line">CONFIG GET *   一百多对建值</span><br><span class="line">CONFIG SET maxmemory <span class="number">128</span>M  <span class="comment"># 设置最大使用的内存</span></span><br><span class="line">CONFIG set requirepass <span class="number">123456</span>  <span class="comment"># 设置密码</span></span><br><span class="line">CONFIG REWRITE  <span class="comment"># 保存到配置文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-3-4-redis返回值"><a href="#1-3-4-redis返回值" class="headerlink" title="1.3.4 redis返回值"></a>1.3.4 redis返回值</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">####redis返回值</span></span><br><span class="line">状态回复：ping---》PONG</span><br><span class="line">错误回复：hget hello field ---》(error)WRONGTYPE Operation against</span><br><span class="line">整数回复：incr hello---》(integer) <span class="number">1</span></span><br><span class="line">字符串回复：get hello---》<span class="string">"world"</span></span><br><span class="line">多行字符串回复：mget hello foo---》<span class="string">"world"</span> <span class="string">"bar"</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="1-4-Redis典型使用场景"><a href="#1-4-Redis典型使用场景" class="headerlink" title="1.4 Redis典型使用场景"></a>1.4 Redis典型使用场景</h3><p>缓存系统：使用最广泛的就是缓存</p>
+<p>计数器：网站访问量，转发量，评论数（文章转发，商品销量，单线程模型，不会出现并发问题）</p>
+<p>消息队列：发布订阅，阻塞队列实现（简单的分布式，blpop：阻塞队列，生产者消费者）</p>
+<p>排行榜：有序集合（阅读排行，点赞排行，推荐（销量高的，推荐））</p>
+<p>社交网络：很多特效跟社交网络匹配，粉丝数，关注数</p>
+<p>实时系统：垃圾邮件处理系统，布隆过滤器</p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/db/MySQL%E7%B3%BB%E5%88%97/08-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%9F%BA%E7%A1%80/">
+        <span class="nav-arrow">← </span>
+        
+          db/MySQL系列/08-MySQL系列之-主从复制基础
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/MySQL%E7%B3%BB%E5%88%97/06-MySQL%E7%B3%BB%E5%88%97%E4%B9%8B-%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86/">
+        
+          db/MySQL系列/06-MySQL系列之-日志管理
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#第一章-redis初识"><span class="toc-nav-text">第一章 redis初识</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-1-Redis是什么"><span class="toc-nav-text">1.1 Redis是什么</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-2-Redis特性（8个）"><span class="toc-nav-text">1.2 Redis特性（8个）</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-3-Redis单机安装"><span class="toc-nav-text">1.3 Redis单机安装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-1下载安装"><span class="toc-nav-text">1.3.1下载安装</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-2三种启动方式"><span class="toc-nav-text">1.3.2三种启动方式</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#1-3-2-1-最简启动"><span class="toc-nav-text">1.3.2.1 最简启动</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#1-3-2-2-动态参数启动"><span class="toc-nav-text">1.3.2.2 动态参数启动</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#1-3-2-2-配置文件启动"><span class="toc-nav-text">1.3.2.2 配置文件启动</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-3-客户端连接-命令"><span class="toc-nav-text">1.3.3 客户端连接(命令)</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1-3-4-redis返回值"><span class="toc-nav-text">1.3.4 redis返回值</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#1-4-Redis典型使用场景"><span class="toc-nav-text">1.4 Redis典型使用场景</span></a></li></ol></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/db/Redis系列/00-Redis系列之-Redis介绍安装配置/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "db/Redis系列/00-Redis系列之-Redis介绍安装配置",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

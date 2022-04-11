@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/9-上线/2-上线 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/9-上线/2-上线</h2>
+
+
+
+  <p class="post-date">2020-03-07</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 购买阿里云服务器</span></span><br><span class="line"><span class="comment"># 短期或是测试使用，创建 按量收费 服务器，可以随时删除，删除后不再计费，但要保证账户余额100元以上</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="连接服务器"><a href="#连接服务器" class="headerlink" title="连接服务器"></a>连接服务器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1）账号</span><br><span class="line">&gt;: ssh root@39.99.192.127</span><br><span class="line"></span><br><span class="line">2）密码</span><br><span class="line">&gt;: ********</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="服务器命令"><a href="#服务器命令" class="headerlink" title="服务器命令"></a>服务器命令</h3><h5 id="管理员权限"><a href="#管理员权限" class="headerlink" title="管理员权限"></a>管理员权限</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1）以下所有的服务器命令均可以在管理员权限下执行</span><br><span class="line">&gt;: sudo 命令</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置终端"><a href="#配置终端" class="headerlink" title="配置终端"></a>配置终端</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">1）编辑配置文件</span><br><span class="line">&gt;: vim ~&#x2F;.bash_profile</span><br><span class="line"></span><br><span class="line">2）将原来内容全部删除掉</span><br><span class="line">&gt;: ggdG</span><br><span class="line"></span><br><span class="line">3）进入编辑状态：填入下方两行</span><br><span class="line">&gt;: i</span><br><span class="line"></span><br><span class="line">export PATH&#x3D;$PATH:$HOME&#x2F;bin</span><br><span class="line">PS1&#x3D;&#39;Path:\w\n&gt;:&#39;</span><br><span class="line"></span><br><span class="line">4）退出编辑状态</span><br><span class="line">&gt;: esc</span><br><span class="line"></span><br><span class="line">5）保存修改并退出</span><br><span class="line">&gt;: :wq</span><br><span class="line"></span><br><span class="line">6）生效配置</span><br><span class="line">&gt;: source ~&#x2F;.bash_profile</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="重要"><a href="#重要" class="headerlink" title="重要"></a>重要</h2><h5 id="更新系统软件包"><a href="#更新系统软件包" class="headerlink" title="更新系统软件包"></a>更新系统软件包</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;: yum update -y</span><br></pre></td></tr></table></figure>
+
+<h5 id="安装软件管理包和可能使用的依赖"><a href="#安装软件管理包和可能使用的依赖" class="headerlink" title="安装软件管理包和可能使用的依赖"></a>安装软件管理包和可能使用的依赖</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;: yum -y groupinstall &quot;Development tools&quot;</span><br><span class="line">&gt;: yum install openssl-devel bzip2-devel expat-devel gdbm-devel readline-devel sqlite-devel psmisc libffi-devel</span><br></pre></td></tr></table></figure>
+
+<h5 id="检测是否成功：会将git作为依赖安装号"><a href="#检测是否成功：会将git作为依赖安装号" class="headerlink" title="检测是否成功：会将git作为依赖安装号"></a>检测是否成功：会将git作为依赖安装号</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;: git</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="安装Mysql：Docker安装了"><a href="#安装Mysql：Docker安装了" class="headerlink" title="安装Mysql：Docker安装了"></a>安装Mysql：Docker安装了</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1）前往用户根目录</span><br><span class="line">&gt;: cd ~</span><br><span class="line"></span><br><span class="line">2）下载mysql57</span><br><span class="line">&gt;: wget http:&#x2F;&#x2F;dev.mysql.com&#x2F;get&#x2F;mysql57-community-release-el7-10.noarch.rpm</span><br><span class="line"></span><br><span class="line">也可以本地上传，这条命令要在本地终端上执行</span><br><span class="line">&gt;: scp -r C:\Users\dell\Desktop\pkg\mysql57-community-release-el7-10.noarch.rpm root@39.99.192.127:~</span><br><span class="line"></span><br><span class="line">3）安装mysql57</span><br><span class="line">&gt;: yum -y install mysql57-community-release-el7-10.noarch.rpm</span><br><span class="line">&gt;: yum -y install mysql-community-server</span><br><span class="line"></span><br><span class="line">4）启动mysql57并查看启动状态</span><br><span class="line">&gt;: systemctl start mysqld.service</span><br><span class="line">&gt;: systemctl status mysqld.service</span><br><span class="line"></span><br><span class="line">5）查看默认密码并登录</span><br><span class="line">&gt;: grep &quot;password&quot; &#x2F;var&#x2F;log&#x2F;mysqld.log</span><br><span class="line">&gt;: mysql -uroot -p</span><br><span class="line"></span><br><span class="line">6）修改密码</span><br><span class="line">&gt;: ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;new password&#39;;</span><br><span class="line">&gt;: ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Owen1234?&#39;;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="安装Redis：Docker安装了"><a href="#安装Redis：Docker安装了" class="headerlink" title="安装Redis：Docker安装了"></a>安装Redis：Docker安装了</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">1）前往用户根目录</span><br><span class="line">&gt;: cd ~</span><br><span class="line"></span><br><span class="line">2）下载redis-5.0.5</span><br><span class="line">&gt;: wget http:&#x2F;&#x2F;download.redis.io&#x2F;releases&#x2F;redis-5.0.5.tar.gz</span><br><span class="line">&gt;: scp -r C:\Users\dell\Desktop\pkg\redis-5.0.5.tar.gz root@39.99.192.127:~</span><br><span class="line"></span><br><span class="line">3）解压安装包</span><br><span class="line">&gt;: tar -xf redis-5.0.5.tar.gz</span><br><span class="line"></span><br><span class="line">4）进入目标文件</span><br><span class="line">&gt;: cd redis-5.0.5</span><br><span class="line"></span><br><span class="line">5）编译环境</span><br><span class="line">&gt;: make</span><br><span class="line"></span><br><span class="line">6）复制环境到指定路径完成安装</span><br><span class="line">&gt;: cp -r ~&#x2F;redis-5.0.5 &#x2F;usr&#x2F;local&#x2F;redis</span><br><span class="line"></span><br><span class="line">7）配置redis可以后台启动：修改下方内容</span><br><span class="line">&gt;: vim &#x2F;usr&#x2F;local&#x2F;redis&#x2F;redis.conf</span><br><span class="line"></span><br><span class="line">daemonize yes</span><br><span class="line"></span><br><span class="line">8）完成配置修改</span><br><span class="line">&gt;: esc</span><br><span class="line">&gt;: :wq</span><br><span class="line"></span><br><span class="line">9）建立软连接</span><br><span class="line">&gt;: ln -s &#x2F;usr&#x2F;local&#x2F;redis&#x2F;src&#x2F;redis-server &#x2F;usr&#x2F;bin&#x2F;redis-server</span><br><span class="line">&gt;: ln -s &#x2F;usr&#x2F;local&#x2F;redis&#x2F;src&#x2F;redis-cli &#x2F;usr&#x2F;bin&#x2F;redis-cli</span><br><span class="line"></span><br><span class="line">10）后台运行redis</span><br><span class="line">&gt;: cd &#x2F;usr&#x2F;local&#x2F;redis</span><br><span class="line">&gt;: redis-server .&#x2F;redis.conf &amp;</span><br><span class="line"></span><br><span class="line">ctrl + c</span><br><span class="line"></span><br><span class="line">11）测试redis环境</span><br><span class="line">&gt;: redis-cli</span><br><span class="line">ctrl + c</span><br><span class="line"></span><br><span class="line">12）关闭redis服务</span><br><span class="line">&gt;: pkill -f redis -9</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装Python3-6"><a href="#安装Python3-6" class="headerlink" title="安装Python3.6"></a>安装Python3.6</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">1）前往用户根目录</span><br><span class="line">&gt;: cd ~</span><br><span class="line"></span><br><span class="line">2）下载 或 上传 Python3.6.7</span><br><span class="line"># 服务器终端</span><br><span class="line">&gt;: wget https:&#x2F;&#x2F;www.python.org&#x2F;ftp&#x2F;python&#x2F;3.6.7&#x2F;Python-3.6.7.tar.xz</span><br><span class="line"></span><br><span class="line"># 本地终端，给服务器上传</span><br><span class="line">&gt;: scp -r 本地Python-3.6.7.tar.xz ssh root@39.99.192.127:服务器路径</span><br><span class="line">&gt;: scp -r C:\Users\dell\Desktop\pkg\Python-3.6.7.tar.xz ssh root@39.99.192.127~</span><br><span class="line"></span><br><span class="line">3）解压安装包</span><br><span class="line">&gt;: tar -xf Python-3.6.7.tar.xz</span><br><span class="line"></span><br><span class="line">4）进入目标文件</span><br><span class="line">&gt;: cd Python-3.6.7</span><br><span class="line"></span><br><span class="line">5）配置安装路径：&#x2F;usr&#x2F;local&#x2F;python3</span><br><span class="line">&gt;: .&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;python3</span><br><span class="line"></span><br><span class="line">6）编译并安装</span><br><span class="line">&gt;: make &amp;&amp; sudo make install</span><br><span class="line"></span><br><span class="line">7）建立软连接：终端命令 python3，pip3</span><br><span class="line">&gt;: ln -s &#x2F;usr&#x2F;local&#x2F;python3&#x2F;bin&#x2F;python3.6 &#x2F;usr&#x2F;bin&#x2F;python3</span><br><span class="line">&gt;: ln -s &#x2F;usr&#x2F;local&#x2F;python3&#x2F;bin&#x2F;pip3.6 &#x2F;usr&#x2F;bin&#x2F;pip3</span><br><span class="line"></span><br><span class="line">8）删除安装包与文件：</span><br><span class="line">&gt;: rm -rf Python-3.6.7</span><br><span class="line">&gt;: rm -rf Python-3.6.7.tar.xz</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="配置pip源：阿里云不用配置，默认配置阿里源"><a href="#配置pip源：阿里云不用配置，默认配置阿里源" class="headerlink" title="配置pip源：阿里云不用配置，默认配置阿里源"></a>配置pip源：阿里云不用配置，默认配置阿里源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1）创建pip配置路径</span><br><span class="line">&gt;: mkdir ~&#x2F;.pip</span><br><span class="line"></span><br><span class="line">2）进入目录编辑配置文件：填入下方内容</span><br><span class="line">cd ~&#x2F;.pip &amp;&amp; vim pip.conf</span><br><span class="line"></span><br><span class="line">[global]</span><br><span class="line">index-url &#x3D; http:&#x2F;&#x2F;pypi.douban.com&#x2F;simple</span><br><span class="line">[install]</span><br><span class="line">use-mirrors &#x3D;true</span><br><span class="line">mirrors &#x3D;http:&#x2F;&#x2F;pypi.douban.com&#x2F;simple&#x2F;</span><br><span class="line">trusted-host &#x3D;pypi.douban.com</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="安装uwsgi"><a href="#安装uwsgi" class="headerlink" title="安装uwsgi"></a>安装uwsgi</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1）在真实环境下安装</span><br><span class="line">pip3 install uwsgi</span><br><span class="line"></span><br><span class="line">2）建立软连接</span><br><span class="line">ln -s &#x2F;usr&#x2F;local&#x2F;python3&#x2F;bin&#x2F;uwsgi &#x2F;usr&#x2F;bin&#x2F;uwsgi</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="安装虚拟环境"><a href="#安装虚拟环境" class="headerlink" title="安装虚拟环境"></a>安装虚拟环境</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">1）安装依赖</span><br><span class="line">&gt;: pip3 install virtualenv</span><br><span class="line">&gt;: pip3 install virtualenvwrapper</span><br><span class="line"></span><br><span class="line">2）建立虚拟环境软连接</span><br><span class="line">&gt;: ln -s &#x2F;usr&#x2F;local&#x2F;python3&#x2F;bin&#x2F;virtualenv &#x2F;usr&#x2F;bin&#x2F;virtualenv</span><br><span class="line"></span><br><span class="line">3）配置虚拟环境：填入下方内容</span><br><span class="line">&gt;: vim ~&#x2F;.bash_profile</span><br><span class="line"></span><br><span class="line">VIRTUALENVWRAPPER_PYTHON&#x3D;&#x2F;usr&#x2F;bin&#x2F;python3</span><br><span class="line">source &#x2F;usr&#x2F;local&#x2F;python3&#x2F;bin&#x2F;virtualenvwrapper.sh</span><br><span class="line"></span><br><span class="line">4）退出编辑状态</span><br><span class="line">&gt;: esc</span><br><span class="line"></span><br><span class="line">5）保存修改并退出</span><br><span class="line">&gt;: :wq</span><br><span class="line"></span><br><span class="line">6）更新配置文件内容</span><br><span class="line">&gt;: source ~&#x2F;.bash_profile</span><br><span class="line"></span><br><span class="line">7）虚拟环境默认根目录：~&#x2F;.virtualenvs</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">1）前往用户根目录</span><br><span class="line">&gt;: cd ~</span><br><span class="line"></span><br><span class="line">2）下载nginx1.13.7</span><br><span class="line">&gt;: wget http:&#x2F;&#x2F;nginx.org&#x2F;download&#x2F;nginx-1.13.7.tar.gz</span><br><span class="line"></span><br><span class="line">3）解压安装包</span><br><span class="line">&gt;: tar -xf nginx-1.13.7.tar.gz</span><br><span class="line"></span><br><span class="line">4）进入目标文件</span><br><span class="line">&gt;: cd nginx-1.13.7</span><br><span class="line"></span><br><span class="line">5）配置安装路径：&#x2F;usr&#x2F;local&#x2F;nginx</span><br><span class="line">&gt;: .&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;nginx</span><br><span class="line"></span><br><span class="line">6）编译并安装</span><br><span class="line">&gt;: make &amp;&amp; sudo make install</span><br><span class="line"></span><br><span class="line">7）建立软连接：终端命令 nginx</span><br><span class="line">&gt;: ln -s &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;sbin&#x2F;nginx &#x2F;usr&#x2F;bin&#x2F;nginx</span><br><span class="line"></span><br><span class="line">8）删除安装包与文件：</span><br><span class="line">&gt;: cd ~</span><br><span class="line">&gt;: rm -rf nginx-1.13.7</span><br><span class="line">&gt;: rm -rf nginx-1.13.7.tar.xz</span><br><span class="line"></span><br><span class="line">9）测试Nginx环境，服务器运行nginx，本地访问服务器ip</span><br><span class="line">&gt;: nginx</span><br><span class="line">&gt;: 服务器绑定的域名 或 ip:80</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Nginx命令"><a href="#Nginx命令" class="headerlink" title="Nginx命令"></a>Nginx命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1）启动</span><br><span class="line">&gt;: nginx</span><br><span class="line"></span><br><span class="line">2）关闭nginx</span><br><span class="line">&gt;: nginx -s stop</span><br><span class="line"></span><br><span class="line">3）重启nginx</span><br><span class="line">&gt;: nginx -s reload</span><br><span class="line"></span><br><span class="line">4）查看端口，强行关闭</span><br><span class="line">&gt;: ps -aux|grep nginx</span><br><span class="line">&gt;: kill &lt;pid:进程编号&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="路飞项目部署：Nginx-uwsgi-django-vue"><a href="#路飞项目部署：Nginx-uwsgi-django-vue" class="headerlink" title="路飞项目部署：Nginx + uwsgi + django + vue"></a>路飞项目部署：Nginx + uwsgi + django + vue</h2><h3 id="配置前台项目"><a href="#配置前台项目" class="headerlink" title="配置前台项目"></a>配置前台项目</h3><h4 id="上线前配置"><a href="#上线前配置" class="headerlink" title="上线前配置"></a>上线前配置</h4><h5 id="settings-js"><a href="#settings-js" class="headerlink" title="settings.js"></a>settings.js</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">base_url: <span class="string">'http://39.99.192.127:8000'</span>,  <span class="comment">// 真实环境：django项目就是跑在8000端口上的</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="上线"><a href="#上线" class="headerlink" title="上线"></a>上线</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string"># 本地终端操作</span></span><br><span class="line"><span class="string">1）本地项目打包，前往luffycity项目目录下</span></span><br><span class="line"><span class="string">&gt;: cnpm run build</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）本地终端上传</span></span><br><span class="line"><span class="string">&gt;: scp -r dist root@39.99.192.127:~</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 开始服务器连接，在服务器终端操作</span></span><br><span class="line"><span class="string">3）移动并重命名</span></span><br><span class="line"><span class="string">mv ~/dist /home/html</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）去向Nginx配置目录，备份配置，完全更新配置：填入下方内容</span></span><br><span class="line"><span class="string">&gt;: cd /usr/local/nginx/conf</span></span><br><span class="line"><span class="string">&gt;: mv nginx.conf nginx.conf.bak</span></span><br><span class="line"><span class="string">&gt;: vim nginx.conf</span></span><br><span class="line"><span class="string">&gt;: i</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">events &#123;</span></span><br><span class="line"><span class="string">    worker_connections  1024;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">http &#123;</span></span><br><span class="line"><span class="string">    include       mime.types;</span></span><br><span class="line"><span class="string">    default_type  application/octet-stream;</span></span><br><span class="line"><span class="string">    sendfile        on;</span></span><br><span class="line"><span class="string">    server &#123;</span></span><br><span class="line"><span class="string">        listen 80;</span></span><br><span class="line"><span class="string">        server_name  127.0.0.1; # 改为自己的域名，没域名修改为127.0.0.1:80</span></span><br><span class="line"><span class="string">        charset utf-8;</span></span><br><span class="line"><span class="string">        location / &#123;</span></span><br><span class="line"><span class="string">            root /home/html; # html访问路径</span></span><br><span class="line"><span class="string">            index index.html; # html文件名称</span></span><br><span class="line"><span class="string">            try_files $uri $uri/ /index.html; # 解决单页面应用刷新404问题</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;   </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">5）退出</span></span><br><span class="line"><span class="string">&gt;: esc</span></span><br><span class="line"><span class="string">&gt;: :wq</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">6）重启nginx</span></span><br><span class="line"><span class="string">&gt;: nginx -s reload</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="路飞后台部署"><a href="#路飞后台部署" class="headerlink" title="路飞后台部署"></a>路飞后台部署</h3><h3 id="本地操作"><a href="#本地操作" class="headerlink" title="本地操作"></a>本地操作</h3><h4 id="上线前配置-1"><a href="#上线前配置-1" class="headerlink" title="上线前配置"></a>上线前配置</h4><h5 id="prod-py：上线的配置文件，内容拷贝dev-py，前身就是settings-py"><a href="#prod-py：上线的配置文件，内容拷贝dev-py，前身就是settings-py" class="headerlink" title="prod.py：上线的配置文件，内容拷贝dev.py，前身就是settings.py"></a>prod.py：上线的配置文件，内容拷贝dev.py，前身就是settings.py</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭测试环境</span></span><br><span class="line">DEBUG = <span class="literal">False</span></span><br><span class="line">ALLOWED_HOSTS = [</span><br><span class="line">    <span class="string">'39.99.192.127'</span>  <span class="comment"># 公网ip地址</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">CORS_ORIGIN_ALLOW_ALL = <span class="literal">True</span>  <span class="comment"># 允许所有跨域</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 静态文件配置：上线后还有额外配置，见下方 后台样式问题</span></span><br><span class="line">STATIC_URL = <span class="string">'/static/'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 后台http根路径</span></span><br><span class="line"><span class="comment"># BASE_URL = 'http://127.0.0.1:8000'</span></span><br><span class="line">BASE_URL = <span class="string">'http://39.99.192.127:8000'</span></span><br><span class="line"><span class="comment"># 前台http根路径</span></span><br><span class="line"><span class="comment"># LUFFY_URL = 'http://127.0.0.1:8080'</span></span><br><span class="line">LUFFY_URL = <span class="string">'http://39.99.192.127:80'</span></span><br><span class="line"><span class="comment"># 订单支付成功的后台异步回调接口</span></span><br><span class="line">NOTIFY_URL = BASE_URL + <span class="string">'/order/success/'</span></span><br><span class="line"><span class="comment"># 订单支付成功的前台同步回调接口</span></span><br><span class="line">RETURN_URL = LUFFY_URL + <span class="string">'/order/pay/success/'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">REST_FRAMEWORK = &#123;</span><br><span class="line">    <span class="comment"># 渲染模块</span></span><br><span class="line">    <span class="string">'DEFAULT_RENDERER_CLASSES'</span>: [</span><br><span class="line">        <span class="string">'rest_framework.renderers.JSONRenderer'</span>,</span><br><span class="line">        <span class="comment"># 'rest_framework.renderers.BrowsableAPIRenderer',</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="wsgi-py-、manage-prod-py该文件就是manage-py的一个副本"><a href="#wsgi-py-、manage-prod-py该文件就是manage-py的一个副本" class="headerlink" title="wsgi.py 、manage_prod.py该文件就是manage.py的一个副本)"></a>wsgi.py 、manage_prod.py该文件就是manage.py的一个副本)</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 需要做上线修改的内容</span></span><br><span class="line">os.environ.setdefault(<span class="string">'DJANGO_SETTINGS_MODULE'</span>, <span class="string">'luffyapi.settings.prod'</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="导出项目环境"><a href="#导出项目环境" class="headerlink" title="导出项目环境"></a>导出项目环境</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1）进入本地项目根目录</span><br><span class="line">&gt;: cd 项目根目录</span><br><span class="line"></span><br><span class="line">2）本地导出项目环境</span><br><span class="line">&gt;: pip3 freeze &gt; packages.txt</span><br><span class="line"></span><br><span class="line">3）如果环境中有特殊的安装包，需要处理一下xadmin</span><br><span class="line">packages.txt中的</span><br><span class="line">	xadmin&#x3D;&#x3D;2.0.1</span><br><span class="line">要被替换为</span><br><span class="line">	https:&#x2F;&#x2F;codeload.github.com&#x2F;sshwsfc&#x2F;xadmin&#x2F;zip&#x2F;django2</span><br></pre></td></tr></table></figure>
+
+<h4 id="项目提交到远程git仓库"><a href="#项目提交到远程git仓库" class="headerlink" title="项目提交到远程git仓库"></a>项目提交到远程git仓库</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1）去向本地项目仓库</span><br><span class="line">&gt;: cd 项目根目录</span><br><span class="line"></span><br><span class="line">2）本地版本库操作</span><br><span class="line">&gt;: git status</span><br><span class="line">&gt;: git add .</span><br><span class="line">&gt;: git commit -m &#39;项目2.0上线&#39;</span><br><span class="line"></span><br><span class="line">3）提交到远程版本库</span><br><span class="line">&gt;: git pull origin master</span><br><span class="line">&gt;: git push origin master</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="线上操作"><a href="#线上操作" class="headerlink" title="线上操作"></a>线上操作</h3><h4 id="git同步上线项目"><a href="#git同步上线项目" class="headerlink" title="git同步上线项目"></a>git同步上线项目</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1）创建存放后台项目的目录</span><br><span class="line">&gt;: mkdir &#x2F;home&#x2F;project</span><br><span class="line"></span><br><span class="line">2）进入后台项目管理目录同步git仓库中的项目</span><br><span class="line">&gt;: cd &#x2F;home&#x2F;project</span><br><span class="line">&gt;: git clone https:&#x2F;&#x2F;gitee.com&#x2F;doctor_owen&#x2F;luffyapi.git</span><br></pre></td></tr></table></figure>
+
+<h4 id="项目虚拟环境"><a href="#项目虚拟环境" class="headerlink" title="项目虚拟环境"></a>项目虚拟环境</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1）创建线上luffy项目虚拟环境</span><br><span class="line">&gt;: mkvirtualenv luffy</span><br><span class="line">&gt;: workon luffy</span><br><span class="line"></span><br><span class="line">2）安装所需环境，在packages.txt所在目录下安装执行packages.txt文件</span><br><span class="line">&gt;: pip install uwsgi</span><br><span class="line">&gt;: pip install -r &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;packages.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="完成uwsgi与nginx后台项目配置"><a href="#完成uwsgi与nginx后台项目配置" class="headerlink" title="完成uwsgi与nginx后台项目配置"></a>完成uwsgi与nginx后台项目配置</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）进行uwsgi服务配置，内容如下</span></span><br><span class="line"><span class="string">&gt;: vim /home/project/luffyapi/luffyapi.xml</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;uwsgi&gt;    </span></span><br><span class="line"><span class="string">   &lt;socket&gt;127.0.0.1:8808&lt;/socket&gt; &lt;!-- 内部端口，自定义 --&gt; </span></span><br><span class="line"><span class="string">   &lt;chdir&gt;/home/project/luffyapi/&lt;/chdir&gt; &lt;!-- 项目路径 --&gt;            </span></span><br><span class="line"><span class="string">   &lt;module&gt;luffyapi.wsgi&lt;/module&gt;  &lt;!-- luffyapi为wsgi.py所在目录名--&gt; </span></span><br><span class="line"><span class="string">   &lt;processes&gt;4&lt;/processes&gt; &lt;!-- 进程数 --&gt;     </span></span><br><span class="line"><span class="string">   &lt;daemonize&gt;uwsgi.log&lt;/daemonize&gt; &lt;!-- 日志文件 --&gt;</span></span><br><span class="line"><span class="string">&lt;/uwsgi&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">4）去向Nginx配置目录，备份配置，完全更新配置：填入下方内容</span></span><br><span class="line"><span class="string">&gt;: vim /usr/local/nginx/conf/nginx.conf</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">events &#123;</span></span><br><span class="line"><span class="string">    worker_connections  1024;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">http &#123;</span></span><br><span class="line"><span class="string">    include       mime.types;</span></span><br><span class="line"><span class="string">    default_type  application/octet-stream;</span></span><br><span class="line"><span class="string">    sendfile        on;</span></span><br><span class="line"><span class="string">    server &#123;</span></span><br><span class="line"><span class="string">        listen 80;</span></span><br><span class="line"><span class="string">        server_name  127.0.0.1; # 改为自己的域名，没域名修改为127.0.0.1:80</span></span><br><span class="line"><span class="string">        charset utf-8;</span></span><br><span class="line"><span class="string">        location / &#123;</span></span><br><span class="line"><span class="string">            root /home/html; # html访问路径</span></span><br><span class="line"><span class="string">            index index.html; # html文件名称</span></span><br><span class="line"><span class="string">            try_files $uri $uri/ /index.html; # 解决单页面应用刷新404问题</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    # 新增的server</span></span><br><span class="line"><span class="string">    server &#123;</span></span><br><span class="line"><span class="string">        listen 8000;</span></span><br><span class="line"><span class="string">        server_name  127.0.0.1; # 改为自己的域名，没域名修改为127.0.0.1:80</span></span><br><span class="line"><span class="string">        charset utf-8;</span></span><br><span class="line"><span class="string">        location / &#123;</span></span><br><span class="line"><span class="string">           include uwsgi_params;</span></span><br><span class="line"><span class="string">           uwsgi_pass 127.0.0.1:8808;  # 端口要和uwsgi里配置的一样</span></span><br><span class="line"><span class="string">           uwsgi_param UWSGI_SCRIPT luffyapi.wsgi;  #wsgi.py所在的目录名+.wsgi</span></span><br><span class="line"><span class="string">           uwsgi_param UWSGI_CHDIR /home/project/luffyapi/; # 项目路径</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125; </span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="数据库设置：docker中操作"><a href="#数据库设置：docker中操作" class="headerlink" title="数据库设置：docker中操作"></a>数据库设置：docker中操作</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">1）管理员连接数据库</span><br><span class="line">&gt;: mysql -uroot -pOwen1234?</span><br><span class="line"></span><br><span class="line">2）创建数据库</span><br><span class="line">&gt;: create database luffy default charset&#x3D;utf8;</span><br><span class="line"></span><br><span class="line">3）设置权限账号密码：账号密码要与项目中配置的一致</span><br><span class="line">&gt;: grant all privileges on luffy.* to &#39;luffy&#39;@&#39;%&#39; identified by &#39;Luffy123?&#39;;</span><br><span class="line">&gt;: grant all privileges on luffy.* to &#39;luffy&#39;@&#39;localhost&#39; identified by &#39;Luffy123?&#39;;</span><br><span class="line">&gt;: flush privileges;</span><br><span class="line"></span><br><span class="line">4）退出mysql</span><br><span class="line">&gt;: quit;</span><br></pre></td></tr></table></figure>
+
+<h4 id="完成项目的数据库迁移：Django采用2-0-7"><a href="#完成项目的数据库迁移：Django采用2-0-7" class="headerlink" title="完成项目的数据库迁移：Django采用2.0.7"></a>完成项目的数据库迁移：Django采用2.0.7</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 必须在luffy环境下</span><br><span class="line">1）数据库迁移</span><br><span class="line">&gt;: cd &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;</span><br><span class="line">&gt;: python manage_prod.py migrate</span><br><span class="line"></span><br><span class="line">2）创建超级用户</span><br><span class="line">&gt;: python manage_prod.py createsuperuser</span><br><span class="line"># 账号密码：admin|Admin123</span><br></pre></td></tr></table></figure>
+
+<h4 id="如何Django不是2-0-7的其他版本，数据库迁移保存解决方案：修改源码"><a href="#如何Django不是2-0-7的其他版本，数据库迁移保存解决方案：修改源码" class="headerlink" title="如何Django不是2.0.7的其他版本，数据库迁移保存解决方案：修改源码"></a>如何Django不是2.0.7的其他版本，数据库迁移保存解决方案：修改源码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1）修改base.py源码</span><br><span class="line">&gt;: vim &#x2F;root&#x2F;.virtualenvs&#x2F;luffy&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;django&#x2F;db&#x2F;backends&#x2F;mysql&#x2F;base.py</span><br><span class="line"></span><br><span class="line">方案：36，37行注释掉</span><br><span class="line"></span><br><span class="line">2）修改operations.py源码</span><br><span class="line">&gt;: vim &#x2F;root&#x2F;.virtualenvs&#x2F;luffy&#x2F;lib&#x2F;python3.6&#x2F;site-packages&#x2F;django&#x2F;db&#x2F;backends&#x2F;mysql&#x2F;operations.py</span><br><span class="line"></span><br><span class="line">方案：146行添加</span><br><span class="line">	query &#x3D; query.encode()</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动uwsgi，重启nginx测试"><a href="#启动uwsgi，重启nginx测试" class="headerlink" title="启动uwsgi，重启nginx测试"></a>启动uwsgi，重启nginx测试</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">1）启动uwsgi</span></span><br><span class="line"><span class="string">&gt;: uwsgi -x /home/project/luffyapi/luffyapi.xml</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">2）重启nginx</span></span><br><span class="line"><span class="string">&gt;: nginx -s reload</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="后台样式：admin、rest-framework、xadmin等框架的静态样式也需要处理"><a href="#后台样式：admin、rest-framework、xadmin等框架的静态样式也需要处理" class="headerlink" title="后台样式：admin、rest_framework、xadmin等框架的静态样式也需要处理"></a>后台样式：admin、rest_framework、xadmin等框架的静态样式也需要处理</h4><h5 id="修改线上配置"><a href="#修改线上配置" class="headerlink" title="修改线上配置"></a>修改线上配置</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1）编辑线上配置文件</span><br><span class="line">&gt;: vim &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;luffyapi&#x2F;settings&#x2F;prod.py</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">2）修改static配置，新增STATIC_ROOT、STATICFILES_DIRS</span><br><span class="line">STATIC_URL &#x3D; &#39;&#x2F;static&#x2F;&#39;</span><br><span class="line">STATIC_ROOT &#x3D; &#39;&#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;luffyapi&#x2F;static&#39;  </span><br><span class="line">STATICFILES_DIRS &#x3D; (os.path.join(BASE_DIR, &quot;static&quot;),)</span><br><span class="line"></span><br><span class="line">3）退出编辑</span><br><span class="line">&gt;: esc</span><br><span class="line">&gt;: :wq</span><br></pre></td></tr></table></figure>
+
+<h5 id="迁移静态样式：项目目录下"><a href="#迁移静态样式：项目目录下" class="headerlink" title="迁移静态样式：项目目录下"></a>迁移静态样式：项目目录下</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1）项目目录下没有 static 文件夹需要新建</span><br><span class="line">&gt;: mkdir &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;luffyapi&#x2F;static</span><br><span class="line"></span><br><span class="line">2）完成静态文件迁移</span><br><span class="line">&gt;: python &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;manage_prod.py collectstatic</span><br></pre></td></tr></table></figure>
+
+<h5 id="Nginx配置静态路径"><a href="#Nginx配置静态路径" class="headerlink" title="Nginx配置静态路径"></a>Nginx配置静态路径</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">1）修改nginx配置</span><br><span class="line">&gt;: vim &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application&#x2F;octet-stream;</span><br><span class="line">    sendfile        on;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        server_name  127.0.0.1; # 改为自己的域名，没域名修改为127.0.0.1:80</span><br><span class="line">        charset utf-8;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">            root &#x2F;home&#x2F;html; # html访问路径</span><br><span class="line">            index index.html; # html文件名称</span><br><span class="line">            try_files $uri $uri&#x2F; &#x2F;index.html; # 解决单页面应用刷新404问题</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen 8000;</span><br><span class="line">        server_name  127.0.0.1; # 改为自己的域名，没域名修改为127.0.0.1:80</span><br><span class="line">        charset utf-8;</span><br><span class="line">        location &#x2F; &#123;</span><br><span class="line">           include uwsgi_params;</span><br><span class="line">           uwsgi_pass 127.0.0.1:8808;  # 端口要和uwsgi里配置的一样</span><br><span class="line">           uwsgi_param UWSGI_SCRIPT luffyapi.wsgi;  #wsgi.py所在的目录名+.wsgi</span><br><span class="line">           uwsgi_param UWSGI_CHDIR &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;; # 项目路径</span><br><span class="line">        &#125;</span><br><span class="line">        # 新增的配置静态文件</span><br><span class="line">        location &#x2F;static &#123;</span><br><span class="line">            alias &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;luffyapi&#x2F;static;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">2）退出</span><br><span class="line">&gt;: esc</span><br><span class="line">&gt;: :wq</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1）关闭 uwsgi，重新启动 uwsgi</span><br><span class="line">&gt;: pkill -f uwsgi -9</span><br><span class="line">&gt;: uwsgi -x &#x2F;home&#x2F;project&#x2F;luffyapi&#x2F;luffyapi.xml</span><br><span class="line"></span><br><span class="line">2）关闭 nginx，重新启动 nginx</span><br><span class="line">&gt;: nginx -s stop</span><br><span class="line">&gt;: nginx</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="线上项目测试"><a href="#线上项目测试" class="headerlink" title="线上项目测试"></a>线上项目测试</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1）本地浏览器访问xadmin后台</span><br><span class="line">http:&#x2F;&#x2F;39.99.192.127:8000&#x2F;xadmin</span><br><span class="line"></span><br><span class="line">2）登录，录入测试数据</span><br><span class="line"># 账号密码：admin|Admin123</span><br><span class="line"></span><br><span class="line">3）或是导出本地数据库为sql，再在线上导入sql</span><br><span class="line">&gt;: mysql -h 39.99.192.127 -P 3306 -u luffy -p</span><br><span class="line">&gt;: Luffy123?</span><br><span class="line">&gt;: use luffy</span><br><span class="line">&gt;: 复制之前的数据备份</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="重点-重点-重点"><a href="#重点-重点-重点" class="headerlink" title="重点 重点 重点"></a>重点 重点 重点</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1、真实环境和虚拟环境都要安装uwsgi，将真实环境下的uwsgi建立软连接</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 2、redis服务一定要后台启动：redis-server &amp;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3、uwsgi启动django项目一定要进入虚拟环境下，因为环境都是安装在虚拟环境中</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 4、服务器的日志都会被记录在于uwsgi配置文件 luffyapi.xml 同类目下的 uwsgi.log 中</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/9-%E4%B8%8A%E7%BA%BF/1-docker/">
+        <span class="nav-arrow">← </span>
+        
+          python/路飞项目/9-上线/1-docker
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/db/Elasticsearch%E7%B3%BB%E5%88%97/9-11%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C/1-Elasticsearch%E7%9A%84%E5%A2%9E%E5%88%A0%E6%9F%A5%E6%94%B9(CURD)/">
+        
+          db/Elasticsearch系列/9-11文档操作/1-Elasticsearch的增删查改(CURD)
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#购买服务器"><span class="toc-nav-text">购买服务器</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#连接服务器"><span class="toc-nav-text">连接服务器</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#服务器命令"><span class="toc-nav-text">服务器命令</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#管理员权限"><span class="toc-nav-text">管理员权限</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#配置终端"><span class="toc-nav-text">配置终端</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#重要"><span class="toc-nav-text">重要</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#更新系统软件包"><span class="toc-nav-text">更新系统软件包</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#安装软件管理包和可能使用的依赖"><span class="toc-nav-text">安装软件管理包和可能使用的依赖</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#检测是否成功：会将git作为依赖安装号"><span class="toc-nav-text">检测是否成功：会将git作为依赖安装号</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装Mysql：Docker安装了"><span class="toc-nav-text">安装Mysql：Docker安装了</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装Redis：Docker安装了"><span class="toc-nav-text">安装Redis：Docker安装了</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装Python3-6"><span class="toc-nav-text">安装Python3.6</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#配置pip源：阿里云不用配置，默认配置阿里源"><span class="toc-nav-text">配置pip源：阿里云不用配置，默认配置阿里源</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装uwsgi"><span class="toc-nav-text">安装uwsgi</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装虚拟环境"><span class="toc-nav-text">安装虚拟环境</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#安装Nginx"><span class="toc-nav-text">安装Nginx</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#Nginx命令"><span class="toc-nav-text">Nginx命令</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#路飞项目部署：Nginx-uwsgi-django-vue"><span class="toc-nav-text">路飞项目部署：Nginx + uwsgi + django + vue</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#配置前台项目"><span class="toc-nav-text">配置前台项目</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#上线前配置"><span class="toc-nav-text">上线前配置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#settings-js"><span class="toc-nav-text">settings.js</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#上线"><span class="toc-nav-text">上线</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#路飞后台部署"><span class="toc-nav-text">路飞后台部署</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#本地操作"><span class="toc-nav-text">本地操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#上线前配置-1"><span class="toc-nav-text">上线前配置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#prod-py：上线的配置文件，内容拷贝dev-py，前身就是settings-py"><span class="toc-nav-text">prod.py：上线的配置文件，内容拷贝dev.py，前身就是settings.py</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#wsgi-py-、manage-prod-py该文件就是manage-py的一个副本"><span class="toc-nav-text">wsgi.py 、manage_prod.py该文件就是manage.py的一个副本)</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#导出项目环境"><span class="toc-nav-text">导出项目环境</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#项目提交到远程git仓库"><span class="toc-nav-text">项目提交到远程git仓库</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#线上操作"><span class="toc-nav-text">线上操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#git同步上线项目"><span class="toc-nav-text">git同步上线项目</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#项目虚拟环境"><span class="toc-nav-text">项目虚拟环境</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#完成uwsgi与nginx后台项目配置"><span class="toc-nav-text">完成uwsgi与nginx后台项目配置</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#数据库设置：docker中操作"><span class="toc-nav-text">数据库设置：docker中操作</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#完成项目的数据库迁移：Django采用2-0-7"><span class="toc-nav-text">完成项目的数据库迁移：Django采用2.0.7</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#如何Django不是2-0-7的其他版本，数据库迁移保存解决方案：修改源码"><span class="toc-nav-text">如何Django不是2.0.7的其他版本，数据库迁移保存解决方案：修改源码</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#启动uwsgi，重启nginx测试"><span class="toc-nav-text">启动uwsgi，重启nginx测试</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#后台样式：admin、rest-framework、xadmin等框架的静态样式也需要处理"><span class="toc-nav-text">后台样式：admin、rest_framework、xadmin等框架的静态样式也需要处理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#修改线上配置"><span class="toc-nav-text">修改线上配置</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#迁移静态样式：项目目录下"><span class="toc-nav-text">迁移静态样式：项目目录下</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#Nginx配置静态路径"><span class="toc-nav-text">Nginx配置静态路径</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#启动服务"><span class="toc-nav-text">启动服务</span></a></li></ol></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#线上项目测试"><span class="toc-nav-text">线上项目测试</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#重点-重点-重点"><span class="toc-nav-text">重点 重点 重点</span></a>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/9-上线/2-上线/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/9-上线/2-上线",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

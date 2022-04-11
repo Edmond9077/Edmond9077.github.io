@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/路飞项目/1-项目基础/0-路飞学城 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/路飞项目/1-项目基础/0-路飞学城</h2>
+
+
+
+  <p class="post-date">2020-07-16</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><h2 id="1-1-企业的web项目类型"><a href="#1-1-企业的web项目类型" class="headerlink" title="1.1 企业的web项目类型"></a>1.1 企业的web项目类型</h2><ol>
+<li><p>商城</p>
+<p>1.1 B2C  直销商城  商家与会员直接交易  ( Business To Customer )</p>
+<p>1.2 B2B  批发商城  商家与商家直接交易</p>
+<p>1.3 B2B2C   购物平台   商家和会员在另一个商家提供的平台上面进行交易</p>
+<p>1.4 C2B   定制商城   会员向商家发起定制商品的需求，商家去完成。</p>
+<p>1.5 O2O  线上线下交易平台   </p>
+<p>1.6 C2C   二手交易平台</p>
+</li>
+<li><p>门户网站[企业站和门户站]</p>
+</li>
+<li><p>社交网络</p>
+</li>
+<li><p>资讯论坛</p>
+</li>
+<li><p>内部系统</p>
+</li>
+<li><p>个人博客</p>
+</li>
+<li><p>内容收费站</p>
+</li>
+</ol>
+<h2 id="1-2-企业项目开发流程"><a href="#1-2-企业项目开发流程" class="headerlink" title="1.2 企业项目开发流程"></a>1.2 企业项目开发流程</h2><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplfqw1vlj30o10oldij.jpg" alt="开发流程"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplfvihpqj30z50oun17.jpg" alt="img"></p>
+<h2 id="1-3-立项申请阶段"><a href="#1-3-立项申请阶段" class="headerlink" title="1.3 立项申请阶段"></a>1.3 立项申请阶段</h2><p>立项其实就是对产品项目能不能做和怎么做，提出理论基础。大的互联网公司都有比较正规的立项流程。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplg1qjibj30nq09fmyw.jpg" alt="img"></p>
+<p>通常公司内部要研发一款软硬件的产品之前，都要经过市场评估和调研分析，产生一份<code>产品项目立项报告</code>给公司。</p>
+<p>产品项目立项报告一般包含以下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">项目概述</span><br><span class="line">需求市场</span><br><span class="line">需求分析和项目建设的必要性</span><br><span class="line">业务分析</span><br><span class="line">总体建设方案</span><br><span class="line">项目风险和风险管理</span><br><span class="line">可行性分析阶段</span><br></pre></td></tr></table></figure>
+
+<p>参考资料：<a href="https://blog.csdn.net/m0_37370820/article/details/81077886" target="_blank" rel="noopener">https://blog.csdn.net/m0_37370820/article/details/81077886</a></p>
+<h1 id="2-需求分析"><a href="#2-需求分析" class="headerlink" title="2. 需求分析"></a>2. 需求分析</h1><h2 id="2-1-首页"><a href="#2-1-首页" class="headerlink" title="2.1 首页"></a>2.1 首页</h2><p>功能：导航菜单、轮播图、退出登录</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplg7g16aj311y0hdaz4.jpg" alt="1555309744206"></p>
+<h2 id="2-2-登录注册"><a href="#2-2-登录注册" class="headerlink" title="2.2 登录注册"></a>2.2 登录注册</h2><p>功能：用户登录、极验验证码、多条件登录、记住密码、短信发送、短信冷却倒计时、jwt认证</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplgcg73fj311y0hd1g6.jpg" alt="1555309859755"></p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplghjsduj311y0hde5w.jpg" alt="1555310015496"></p>
+<h2 id="2-3-课程列表"><a href="#2-3-课程列表" class="headerlink" title="2.3 课程列表"></a>2.3 课程列表</h2><p>功能：课程分类、课程列表、课程多条件筛选展示、课程分类展示、课程分页展示、课程章节课时展示、课程优惠策略</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplgmb0unj30u01584d5.jpg" alt="1555311221819"></p>
+<h2 id="2-4-课程详情"><a href="#2-4-课程详情" class="headerlink" title="2.4 课程详情"></a>2.4 课程详情</h2><p>功能：课程信息展示、视频播放、富文本编辑器</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplgtmwqqj30u026j4qp.jpg" alt="1555311433851"></p>
+<h2 id="2-5-购物车"><a href="#2-5-购物车" class="headerlink" title="2.5 购物车"></a>2.5 购物车</h2><p>功能：购物车商品列表、添加商品、删除商品、勾选商品状态、商品结算、订单生成、唯一订单号生成</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplgyok02j311j0hdt9w.jpg" alt="1555311588633"></p>
+<h2 id="2-6-商品结算"><a href="#2-6-商品结算" class="headerlink" title="2.6 商品结算"></a>2.6 商品结算</h2><p>功能：订单商品信息列表、订单信息展示、积分计算功能、优惠券策略、课程有效期计算、第三方支付平台接口</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplh2xa30j311g0r8wgd.jpg" alt="1555311715736"></p>
+<h2 id="2-7-购买成功"><a href="#2-7-购买成功" class="headerlink" title="2.7 购买成功"></a>2.7 购买成功</h2><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplh6vri5j30ui0e9jsh.jpg" alt="1553138273460"></p>
+<h2 id="2-8-个人中心"><a href="#2-8-个人中心" class="headerlink" title="2.8 个人中心"></a>2.8 个人中心</h2><p>功能列表：我的订单、订单状态改变</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplhbjvs7j30u0178gpr.jpg" alt="1555312510196"></p>
+<h2 id="2-9-视频播放"><a href="#2-9-视频播放" class="headerlink" title="2.9 视频播放"></a>2.9 视频播放</h2><p>功能：视频加密播放</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggplhi5mxsj311c0etwtn.jpg" alt="1553137882937"></p>
+</section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/Django-rest-framework%E6%A1%86%E6%9E%B6/12-RBAC-%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6/">
+        <span class="nav-arrow">← </span>
+        
+          python/Django-rest-framework框架/12-RBAC-基于角色的访问控制
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E8%B7%AF%E9%A3%9E%E9%A1%B9%E7%9B%AE/1-%E9%A1%B9%E7%9B%AE%E5%9F%BA%E7%A1%80/15-%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82%E8%AF%A6%E8%A7%A3/">
+        
+          python/路飞项目/1-项目基础/15-跨域请求详解
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-1-企业的web项目类型"><span class="toc-nav-text">1.1 企业的web项目类型</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-2-企业项目开发流程"><span class="toc-nav-text">1.2 企业项目开发流程</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#1-3-立项申请阶段"><span class="toc-nav-text">1.3 立项申请阶段</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#2-需求分析"><span class="toc-nav-text">2. 需求分析</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-1-首页"><span class="toc-nav-text">2.1 首页</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-2-登录注册"><span class="toc-nav-text">2.2 登录注册</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-3-课程列表"><span class="toc-nav-text">2.3 课程列表</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-4-课程详情"><span class="toc-nav-text">2.4 课程详情</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-5-购物车"><span class="toc-nav-text">2.5 购物车</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-6-商品结算"><span class="toc-nav-text">2.6 商品结算</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-7-购买成功"><span class="toc-nav-text">2.7 购买成功</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-8-个人中心"><span class="toc-nav-text">2.8 个人中心</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#2-9-视频播放"><span class="toc-nav-text">2.9 视频播放</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/路飞项目/1-项目基础/0-路飞学城/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/路飞项目/1-项目基础/0-路飞学城",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

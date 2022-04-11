@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      python/常用模块/11-matplotlib模块 | Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <div id="article-banner">
+  <h2>python/常用模块/11-matplotlib模块</h2>
+
+
+
+  <p class="post-date">2020-12-21</p>
+    <!-- 不蒜子统计 -->
+    <span id="busuanzi_container_page_pv" style='display:none' class="">
+        <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+    </span>
+  <div class="arrow-down">
+    <a href="javascript:;"></a>
+  </div>
+</div>
+<main class="app-body flex-box">
+  <!-- Article START -->
+  <article class="post-article">
+    <section class="markdown-content"><p>matplotlib官方文档：<a href="https://matplotlib.org/contents.html?v=20190307135750" target="_blank" rel="noopener">https://matplotlib.org/contents.html?v=20190307135750</a></p>
+<p>matplotlib是一个绘图库，它可以创建常用的统计图，包括条形图、箱型图、折线图、散点图、饼图和直方图。</p>
+<h1 id="一、条形图"><a href="#一、条形图" class="headerlink" title="一、条形图"></a>一、条形图</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from matplotlib.font_manager import FontProperties</span><br><span class="line">%matplotlib inline</span><br><span class="line">font &#x3D; FontProperties(fname&#x3D;&#39;&#x2F;Library&#x2F;Fonts&#x2F;Heiti.ttc&#39;)</span><br><span class="line"></span><br><span class="line"># 修改背景为条纹</span><br><span class="line">plt.style.use(&#39;ggplot&#39;)</span><br><span class="line"></span><br><span class="line">classes &#x3D; [&#39;3班&#39;, &#39;4班&#39;, &#39;5班&#39;, &#39;6班&#39;]</span><br><span class="line"></span><br><span class="line">classes_index &#x3D; range(len(classes))</span><br><span class="line">print(list(classes_index))</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[0, 1, 2, 3]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">student_amounts &#x3D; [66, 55, 45, 70]</span><br><span class="line"></span><br><span class="line"># 画布设置</span><br><span class="line">fig &#x3D; plt.figure()</span><br><span class="line"># 1,1,1表示一张画布切割成1行1列共一张图的第1个；2,2,1表示一张画布切割成2行2列共4张图的第一个（左上角）</span><br><span class="line">ax1 &#x3D; fig.add_subplot(1, 1, 1)</span><br><span class="line">ax1.bar(classes_index, student_amounts, align&#x3D;&#39;center&#39;, color&#x3D;&#39;darkblue&#39;)</span><br><span class="line">ax1.xaxis.set_ticks_position(&#39;bottom&#39;)</span><br><span class="line">ax1.yaxis.set_ticks_position(&#39;left&#39;)</span><br><span class="line"></span><br><span class="line">plt.xticks(classes_index,</span><br><span class="line">           classes,</span><br><span class="line">           rotation&#x3D;0,</span><br><span class="line">           fontsize&#x3D;13,</span><br><span class="line">           fontproperties&#x3D;font)</span><br><span class="line">plt.xlabel(&#39;班级&#39;, fontproperties&#x3D;font, fontsize&#x3D;15)</span><br><span class="line">plt.ylabel(&#39;学生人数&#39;, fontproperties&#x3D;font, fontsize&#x3D;15)</span><br><span class="line">plt.title(&#39;班级-学生人数&#39;, fontproperties&#x3D;font, fontsize&#x3D;20)</span><br><span class="line"># 保存图片，bbox_inches&#x3D;&#39;tight&#39;去掉图形四周的空白</span><br><span class="line"># plt.savefig(&#39;classes_students.png&#39;, dpi&#x3D;400, bbox_inches&#x3D;&#39;tight&#39;)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1glwz6f5anwj30au0813yh.jpg" alt="img"></p>
+<h1 id="二、直方图"><a href="#二、直方图" class="headerlink" title="二、直方图"></a>二、直方图</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from matplotlib.font_manager import FontProperties</span><br><span class="line">%matplotlib inline</span><br><span class="line">font &#x3D; FontProperties(fname&#x3D;&#39;&#x2F;Library&#x2F;Fonts&#x2F;Heiti.ttc&#39;)</span><br><span class="line"></span><br><span class="line"># 修改背景为条纹</span><br><span class="line">plt.style.use(&#39;ggplot&#39;)</span><br><span class="line"></span><br><span class="line">mu1, mu2, sigma &#x3D; 50, 100, 10</span><br><span class="line"># 构造均值为50的符合正态分布的数据</span><br><span class="line">x1 &#x3D; mu1 + sigma * np.random.randn(10000)</span><br><span class="line">print(x1)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[59.00855949 43.16272141 48.77109774 ... 57.94645859 54.70312714</span><br><span class="line"> 58.94125528]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 构造均值为100的符合正态分布的数据</span><br><span class="line">x2 &#x3D; mu2 + sigma * np.random.randn(10000)</span><br><span class="line">print(x2)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[115.19915511  82.09208214 110.88092454 ...  95.0872103  104.21549068</span><br><span class="line"> 133.36025251]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">fig &#x3D; plt.figure()</span><br><span class="line">ax1 &#x3D; fig.add_subplot(121)</span><br><span class="line"># bins&#x3D;50表示每个变量的值分成50份，即会有50根柱子</span><br><span class="line">ax1.hist(x1, bins&#x3D;50, color&#x3D;&#39;darkgreen&#39;)</span><br><span class="line"></span><br><span class="line">ax2 &#x3D; fig.add_subplot(122)</span><br><span class="line">ax2.hist(x2, bins&#x3D;50, color&#x3D;&#39;orange&#39;)</span><br><span class="line"></span><br><span class="line">fig.suptitle(&#39;两个正态分布&#39;, fontproperties&#x3D;font, fontweight&#x3D;&#39;bold&#39;, fontsize&#x3D;15)</span><br><span class="line">ax1.set_title(&#39;绿色的正态分布&#39;, fontproperties&#x3D;font)</span><br><span class="line">ax2.set_title(&#39;橙色的正态分布&#39;, fontproperties&#x3D;font)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1glwz6i7p9ej30ai07pt8r.jpg" alt="img"></p>
+<h1 id="三、折线图"><a href="#三、折线图" class="headerlink" title="三、折线图"></a>三、折线图</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">from numpy.random import randn</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from matplotlib.font_manager import FontProperties</span><br><span class="line">%matplotlib inline</span><br><span class="line">font &#x3D; FontProperties(fname&#x3D;&#39;&#x2F;Library&#x2F;Fonts&#x2F;Heiti.ttc&#39;)</span><br><span class="line"></span><br><span class="line"># 修改背景为条纹</span><br><span class="line">plt.style.use(&#39;ggplot&#39;)</span><br><span class="line"></span><br><span class="line">np.random.seed(1)</span><br><span class="line"></span><br><span class="line"># 使用numpy的累加和，保证数据取值范围不会在（0，1）内波动</span><br><span class="line">plot_data1 &#x3D; randn(40).cumsum()</span><br><span class="line">print(plot_data1)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[ 1.62434536  1.01258895  0.4844172  -0.58855142  0.2768562  -2.02468249</span><br><span class="line"> -0.27987073 -1.04107763 -0.72203853 -0.97140891  0.49069903 -1.56944168</span><br><span class="line"> -1.89185888 -2.27591324 -1.1421438  -2.24203506 -2.41446327 -3.29232169</span><br><span class="line"> -3.25010794 -2.66729273 -3.76791191 -2.6231882  -1.72159748 -1.21910314</span><br><span class="line"> -0.31824719 -1.00197505 -1.12486527 -2.06063471 -2.32852279 -1.79816732</span><br><span class="line"> -2.48982807 -2.8865816  -3.5737543  -4.41895994 -5.09020607 -5.10287067</span><br><span class="line"> -6.22018102 -5.98576532 -4.32596314 -3.58391898]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">plot_data2 &#x3D; randn(40).cumsum()</span><br><span class="line">plot_data3 &#x3D; randn(40).cumsum()</span><br><span class="line">plot_data4 &#x3D; randn(40).cumsum()</span><br><span class="line"></span><br><span class="line">plt.plot(plot_data1, marker&#x3D;&#39;o&#39;, color&#x3D;&#39;red&#39;, linestyle&#x3D;&#39;-&#39;, label&#x3D;&#39;红实线&#39;)</span><br><span class="line">plt.plot(plot_data2, marker&#x3D;&#39;x&#39;, color&#x3D;&#39;orange&#39;, linestyle&#x3D;&#39;--&#39;, label&#x3D;&#39;橙虚线&#39;)</span><br><span class="line">plt.plot(plot_data3, marker&#x3D;&#39;*&#39;, color&#x3D;&#39;yellow&#39;, linestyle&#x3D;&#39;-.&#39;, label&#x3D;&#39;黄点线&#39;)</span><br><span class="line">plt.plot(plot_data4, marker&#x3D;&#39;s&#39;, color&#x3D;&#39;green&#39;, linestyle&#x3D;&#39;:&#39;, label&#x3D;&#39;绿点图&#39;)</span><br><span class="line"></span><br><span class="line"># loc&#x3D;&#39;best&#39;给label自动选择最好的位置</span><br><span class="line">plt.legend(loc&#x3D;&#39;best&#39;, prop&#x3D;font)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1glwz6lwcbxj30ae07074r.jpg" alt="img"></p>
+<h1 id="四、散点图-直线图"><a href="#四、散点图-直线图" class="headerlink" title="四、散点图+直线图"></a>四、散点图+直线图</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">from numpy.random import randn</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from matplotlib.font_manager import FontProperties</span><br><span class="line">%matplotlib inline</span><br><span class="line">font &#x3D; FontProperties(fname&#x3D;&#39;&#x2F;Library&#x2F;Fonts&#x2F;Heiti.ttc&#39;)</span><br><span class="line"></span><br><span class="line"># 修改背景为条纹</span><br><span class="line">plt.style.use(&#39;ggplot&#39;)</span><br><span class="line"></span><br><span class="line">x &#x3D; np.arange(1, 20, 1)</span><br><span class="line">print(x)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 拟合一条水平散点线</span><br><span class="line">np.random.seed(1)</span><br><span class="line">y_linear &#x3D; x + 10 * np.random.randn(19)</span><br><span class="line">print(y_linear)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ 17.24345364  -4.11756414  -2.28171752  -6.72968622  13.65407629</span><br><span class="line"> -17.01538697  24.44811764   0.38793099  12.19039096   7.50629625</span><br><span class="line">  25.62107937  -8.60140709   9.77582796  10.15945645  26.33769442</span><br><span class="line">   5.00108733  15.27571792   9.22141582  19.42213747]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 拟合一条x²的散点线</span><br><span class="line">y_quad &#x3D; x**2 + 10 * np.random.randn(19)</span><br><span class="line">print(y_quad)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[  6.82815214  -7.00619177  20.4472371   25.01590721  30.02494339</span><br><span class="line">  45.00855949  42.16272141  62.77109774  71.64230566  97.3211192</span><br><span class="line"> 126.30355467 137.08339248 165.03246473 189.128273   216.54794359</span><br><span class="line"> 249.28753869 288.87335401 312.82689651 363.34415698]</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># s是散点大小</span><br><span class="line">fig &#x3D; plt.figure()</span><br><span class="line">ax1 &#x3D; fig.add_subplot(121)</span><br><span class="line">plt.scatter(x, y_linear, s&#x3D;30, color&#x3D;&#39;r&#39;, label&#x3D;&#39;蓝点&#39;)</span><br><span class="line">plt.scatter(x, y_quad, s&#x3D;100, color&#x3D;&#39;b&#39;, label&#x3D;&#39;红点&#39;)</span><br><span class="line"></span><br><span class="line">ax2 &#x3D; fig.add_subplot(122)</span><br><span class="line">plt.plot(x, y_linear, color&#x3D;&#39;r&#39;)</span><br><span class="line">plt.plot(x, y_quad, color&#x3D;&#39;b&#39;)</span><br><span class="line"></span><br><span class="line"># 限制x轴和y轴的范围取值</span><br><span class="line">plt.xlim(min(x) - 1, max(x) + 1)</span><br><span class="line">plt.ylim(min(y_quad) - 10, max(y_quad) + 10)</span><br><span class="line">fig.suptitle(&#39;散点图+直线图&#39;, fontproperties&#x3D;font, fontsize&#x3D;20)</span><br><span class="line">ax1.set_title(&#39;散点图&#39;, fontproperties&#x3D;font)</span><br><span class="line">ax1.legend(prop&#x3D;font)</span><br><span class="line">ax2.set_title(&#39;直线图&#39;, fontproperties&#x3D;font)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1glwz6pmywcj30al07pt91.jpg" alt="img"></p>
+<h1 id="五、饼图"><a href="#五、饼图" class="headerlink" title="五、饼图"></a>五、饼图</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from pylab import mpl</span><br><span class="line">mpl.rcParams[&#39;font.sans-serif&#39;] &#x3D; [&#39;SimHei&#39;]</span><br><span class="line"></span><br><span class="line">fig, ax &#x3D; plt.subplots(subplot_kw&#x3D;dict(aspect&#x3D;&quot;equal&quot;))</span><br><span class="line"></span><br><span class="line">recipe &#x3D; [&#39;优&#39;, &#39;良&#39;, &#39;轻度污染&#39;, &#39;中度污染&#39;, &#39;重度污染&#39;, &#39;严重污染&#39;, &#39;缺&#39;]</span><br><span class="line"></span><br><span class="line">data &#x3D; [2, 49, 21, 9, 11, 6, 2]</span><br><span class="line">colors &#x3D; [&#39;lime&#39;, &#39;yellow&#39;, &#39;darkorange&#39;, &#39;red&#39;, &#39;purple&#39;, &#39;maroon&#39;, &#39;grey&#39;]</span><br><span class="line">wedges, texts, texts2 &#x3D; ax.pie(data,</span><br><span class="line">                               wedgeprops&#x3D;dict(width&#x3D;0.5),</span><br><span class="line">                               startangle&#x3D;40,</span><br><span class="line">                               colors&#x3D;colors,</span><br><span class="line">                               autopct&#x3D;&#39;%1.0f%%&#39;,</span><br><span class="line">                               pctdistance&#x3D;0.8)</span><br><span class="line">plt.setp(texts2, size&#x3D;14, weight&#x3D;&quot;bold&quot;)</span><br><span class="line"></span><br><span class="line">bbox_props &#x3D; dict(boxstyle&#x3D;&quot;square,pad&#x3D;0.3&quot;, fc&#x3D;&quot;w&quot;, ec&#x3D;&quot;k&quot;, lw&#x3D;0.72)</span><br><span class="line">kw &#x3D; dict(xycoords&#x3D;&#39;data&#39;,</span><br><span class="line">          textcoords&#x3D;&#39;data&#39;,</span><br><span class="line">          arrowprops&#x3D;dict(arrowstyle&#x3D;&quot;-&gt;&quot;),</span><br><span class="line">          bbox&#x3D;None,</span><br><span class="line">          zorder&#x3D;0,</span><br><span class="line">          va&#x3D;&quot;center&quot;)</span><br><span class="line"></span><br><span class="line">for i, p in enumerate(wedges):</span><br><span class="line">    ang &#x3D; (p.theta2 - p.theta1) &#x2F; 2. + p.theta1</span><br><span class="line">    y &#x3D; np.sin(np.deg2rad(ang))</span><br><span class="line">    x &#x3D; np.cos(np.deg2rad(ang))</span><br><span class="line">    horizontalalignment &#x3D; &#123;-1: &quot;right&quot;, 1: &quot;left&quot;&#125;[int(np.sign(x))]</span><br><span class="line">    connectionstyle &#x3D; &quot;angle,angleA&#x3D;0,angleB&#x3D;&#123;&#125;&quot;.format(ang)</span><br><span class="line">    kw[&quot;arrowprops&quot;].update(&#123;&quot;connectionstyle&quot;: connectionstyle&#125;)</span><br><span class="line">    ax.annotate(recipe[i],</span><br><span class="line">                xy&#x3D;(x, y),</span><br><span class="line">                xytext&#x3D;(1.25 * np.sign(x), 1.3 * y),</span><br><span class="line">                size&#x3D;16,</span><br><span class="line">                horizontalalignment&#x3D;horizontalalignment,</span><br><span class="line">                fontproperties&#x3D;font,</span><br><span class="line">                **kw)</span><br><span class="line"></span><br><span class="line">ax.set_title(&quot;饼图示例&quot;,fontproperties&#x3D;font)</span><br><span class="line"></span><br><span class="line">plt.show()</span><br><span class="line"># plt.savefig(&#39;jiaopie2.png&#39;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1glwz6t24q3j309z079aab.jpg" alt="img"></p>
+<h1 id="六、箱型图"><a href="#六、箱型图" class="headerlink" title="六、箱型图"></a>六、箱型图</h1><p>箱型图：又称为盒须图、盒式图、盒状图或箱线图，是一种用作显示一组数据分散情况资料的统计图（在数据分析中常用在异常值检测）</p>
+<p>包含一组数据的：最大值、最小值、中位数、上四分位数（Q3）、下四分位数（Q1）、异常值</p>
+<ol>
+<li>中位数 → 一组数据平均分成两份，中间的数</li>
+<li>上四分位数Q1 → 是将序列平均分成四份，计算(n+1)/4与(n-1)/4两种，一般使用(n+1)/4</li>
+<li>下四分位数Q3 → 是将序列平均分成四份，计算(1+n)/4*3=6.75</li>
+<li>内限 → T形的盒须就是内限，最大值区间Q3+1.5IQR,最小值区间Q1-1.5IQR （IQR=Q3-Q1）</li>
+<li>外限 → T形的盒须就是内限，最大值区间Q3+3IQR,最小值区间Q1-3IQR （IQR=Q3-Q1）</li>
+<li>异常值 → 内限之外 - 中度异常，外限之外 - 极度异常</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import pandas as pd</span><br><span class="line">from numpy.random import randn</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from matplotlib.font_manager import FontProperties</span><br><span class="line">%matplotlib inline</span><br><span class="line">font &#x3D; FontProperties(fname&#x3D;&#39;&#x2F;Library&#x2F;Fonts&#x2F;Heiti.ttc&#39;)</span><br><span class="line">df &#x3D; pd.DataFrame(np.random.rand(10, 5), columns&#x3D;[&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;D&#39;, &#39;E&#39;])</span><br><span class="line">plt.figure(figsize&#x3D;(10, 4))</span><br><span class="line"># 创建图表、数据</span><br><span class="line"></span><br><span class="line">f &#x3D; df.boxplot(</span><br><span class="line">    sym&#x3D;&#39;o&#39;,  # 异常点形状，参考marker</span><br><span class="line">    vert&#x3D;True,  # 是否垂直</span><br><span class="line">    whis&#x3D;1.5,  # IQR，默认1.5，也可以设置区间比如[5,95]，代表强制上下边缘为数据95%和5%位置</span><br><span class="line">    patch_artist&#x3D;True,  # 上下四分位框内是否填充，True为填充</span><br><span class="line">    meanline&#x3D;False,</span><br><span class="line">    showmeans&#x3D;True,  # 是否有均值线及其形状</span><br><span class="line">    showbox&#x3D;True,  # 是否显示箱线</span><br><span class="line">    showcaps&#x3D;True,  # 是否显示边缘线</span><br><span class="line">    showfliers&#x3D;True,  # 是否显示异常值</span><br><span class="line">    notch&#x3D;False,  # 中间箱体是否缺口</span><br><span class="line">    return_type&#x3D;&#39;dict&#39;  # 返回类型为字典</span><br><span class="line">)</span><br><span class="line">plt.title(&#39;boxplot&#39;)</span><br><span class="line"></span><br><span class="line">for box in f[&#39;boxes&#39;]:</span><br><span class="line">    box.set(color&#x3D;&#39;b&#39;, linewidth&#x3D;1)  # 箱体边框颜色</span><br><span class="line">    box.set(facecolor&#x3D;&#39;b&#39;, alpha&#x3D;0.5)  # 箱体内部填充颜色</span><br><span class="line">for whisker in f[&#39;whiskers&#39;]:</span><br><span class="line">    whisker.set(color&#x3D;&#39;k&#39;, linewidth&#x3D;0.5, linestyle&#x3D;&#39;-&#39;)</span><br><span class="line">for cap in f[&#39;caps&#39;]:</span><br><span class="line">    cap.set(color&#x3D;&#39;gray&#39;, linewidth&#x3D;2)</span><br><span class="line">for median in f[&#39;medians&#39;]:</span><br><span class="line">    median.set(color&#x3D;&#39;DarkBlue&#39;, linewidth&#x3D;2)</span><br><span class="line">for flier in f[&#39;fliers&#39;]:</span><br><span class="line">    flier.set(marker&#x3D;&#39;o&#39;, color&#x3D;&#39;y&#39;, alpha&#x3D;0.5)</span><br><span class="line"># boxes, 箱线</span><br><span class="line"># medians, 中位值的横线,</span><br><span class="line"># whiskers, 从box到error bar之间的竖线.</span><br><span class="line"># fliers, 异常值</span><br><span class="line"># caps, error bar横线</span><br><span class="line"># means, 均值的横线</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwgy1glwz6wsiiqj30gm07cwed.jpg" alt="img"></p>
+<h1 id="七、plot函数参数"><a href="#七、plot函数参数" class="headerlink" title="七、plot函数参数"></a>七、plot函数参数</h1><ul>
+<li>线型linestyle（-,-.,–,..）</li>
+<li>点型marker（v,^,s,*,H,+,x,D,o,…）</li>
+<li>颜色color（b,g,r,y,k,w,…）</li>
+</ul>
+<h1 id="八、图像标注参数"><a href="#八、图像标注参数" class="headerlink" title="八、图像标注参数"></a>八、图像标注参数</h1><ul>
+<li>设置图像标题：plt.title()</li>
+<li>设置x轴名称：plt.xlabel()</li>
+<li>设置y轴名称：plt.ylabel()</li>
+<li>设置X轴范围：plt.xlim()</li>
+<li>设置Y轴范围：plt.ylim()</li>
+<li>设置X轴刻度：plt.xticks()</li>
+<li>设置Y轴刻度：plt.yticks()</li>
+<li>设置曲线图例：plt.legend()</li>
+</ul>
+<h1 id="九、Matplolib应用"><a href="#九、Matplolib应用" class="headerlink" title="九、Matplolib应用"></a>九、Matplolib应用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">import pandas as pd</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line">from matplotlib.font_manager import FontProperties</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"># 找到自己电脑的字体路径，然后修改字体路径</span><br><span class="line">font &#x3D; FontProperties(fname&#x3D;&#39;&#x2F;Library&#x2F;Fonts&#x2F;Heiti.ttc&#39;)</span><br><span class="line"></span><br><span class="line">header_list &#x3D; [&#39;方程组&#39;, &#39;函数&#39;, &#39;导数&#39;, &#39;微积分&#39;, &#39;线性代数&#39;, &#39;概率论&#39;, &#39;统计学&#39;]</span><br><span class="line">py3_df &#x3D; pd.read_excel(&#39;py3.xlsx&#39;, header&#x3D;None,</span><br><span class="line">                       skiprows&#x3D;[0, 1], names&#x3D;header_list)</span><br><span class="line"># 处理带有NaN的行</span><br><span class="line">py3_df &#x3D; py3_df.dropna(axis&#x3D;0)</span><br><span class="line">print(py3_df)</span><br><span class="line"></span><br><span class="line"># 自定义映射</span><br><span class="line">map_dict &#x3D; &#123;</span><br><span class="line">    &#39;不会&#39;: 0,</span><br><span class="line">    &#39;了解&#39;: 1,</span><br><span class="line">    &#39;熟悉&#39;: 2,</span><br><span class="line">    &#39;使用过&#39;: 3,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">for header in header_list:</span><br><span class="line">    py3_df[header] &#x3D; py3_df[header].map(map_dict)</span><br><span class="line"></span><br><span class="line">unable_series &#x3D; (py3_df &#x3D;&#x3D; 0).sum(axis&#x3D;0)</span><br><span class="line">know_series &#x3D; (py3_df &#x3D;&#x3D; 1).sum(axis&#x3D;0)</span><br><span class="line">familiar_series &#x3D; (py3_df &#x3D;&#x3D; 2).sum(axis&#x3D;0)</span><br><span class="line">use_series &#x3D; (py3_df &#x3D;&#x3D; 3).sum(axis&#x3D;0)</span><br><span class="line"></span><br><span class="line">unable_label &#x3D; &#39;不会&#39;</span><br><span class="line">know_label &#x3D; &#39;了解&#39;</span><br><span class="line">familiar_label &#x3D; &#39;熟悉&#39;</span><br><span class="line">use_label &#x3D; &#39;使用过&#39;</span><br><span class="line">for i in range(len(header_list)):</span><br><span class="line">    bottom &#x3D; 0</span><br><span class="line"></span><br><span class="line">    # 描绘不会的条形图</span><br><span class="line">    plt.bar(x&#x3D;header_list[i], height&#x3D;unable_series[i],</span><br><span class="line">            width&#x3D;0.60, color&#x3D;&#39;r&#39;, label&#x3D;unable_label)</span><br><span class="line">    if unable_series[i] !&#x3D; 0:</span><br><span class="line">        plt.text(header_list[i], bottom, s&#x3D;unable_series[i],</span><br><span class="line">                 ha&#x3D;&#39;center&#39;, va&#x3D;&#39;bottom&#39;, fontsize&#x3D;15, color&#x3D;&#39;white&#39;)</span><br><span class="line">    bottom +&#x3D; unable_series[i]</span><br><span class="line"></span><br><span class="line">    # 描绘了解的条形图</span><br><span class="line">    plt.bar(x&#x3D;header_list[i], height&#x3D;know_series[i],</span><br><span class="line">            width&#x3D;0.60, color&#x3D;&#39;y&#39;, bottom&#x3D;bottom, label&#x3D;know_label)</span><br><span class="line">    if know_series[i] !&#x3D; 0:</span><br><span class="line">        plt.text(header_list[i], bottom, s&#x3D;know_series[i],</span><br><span class="line">                 ha&#x3D;&#39;center&#39;, va&#x3D;&#39;bottom&#39;, fontsize&#x3D;15, color&#x3D;&#39;white&#39;)</span><br><span class="line">    bottom +&#x3D; know_series[i]</span><br><span class="line"></span><br><span class="line">    # 描绘熟悉的条形图</span><br><span class="line">    plt.bar(x&#x3D;header_list[i], height&#x3D;familiar_series[i],</span><br><span class="line">            width&#x3D;0.60, color&#x3D;&#39;g&#39;, bottom&#x3D;bottom, label&#x3D;familiar_label)</span><br><span class="line">    if familiar_series[i] !&#x3D; 0:</span><br><span class="line">        plt.text(header_list[i], bottom, s&#x3D;familiar_series[i],</span><br><span class="line">                 ha&#x3D;&#39;center&#39;, va&#x3D;&#39;bottom&#39;, fontsize&#x3D;15, color&#x3D;&#39;white&#39;)</span><br><span class="line">    bottom +&#x3D; familiar_series[i]</span><br><span class="line"></span><br><span class="line">    # 描绘使用过的条形图</span><br><span class="line">    plt.bar(x&#x3D;header_list[i], height&#x3D;use_series[i],</span><br><span class="line">            width&#x3D;0.60, color&#x3D;&#39;b&#39;, bottom&#x3D;bottom, label&#x3D;use_label)</span><br><span class="line">    if use_series[i] !&#x3D; 0:</span><br><span class="line">        plt.text(header_list[i], bottom, s&#x3D;use_series[i],</span><br><span class="line">                 ha&#x3D;&#39;center&#39;, va&#x3D;&#39;bottom&#39;, fontsize&#x3D;15, color&#x3D;&#39;white&#39;)</span><br><span class="line"></span><br><span class="line">    unable_label &#x3D; know_label &#x3D; familiar_label &#x3D; use_label &#x3D; &#39;&#39;</span><br><span class="line"></span><br><span class="line">plt.xticks(header_list, fontproperties&#x3D;font)</span><br><span class="line">plt.ylabel(&#39;人数&#39;, fontproperties&#x3D;font)</span><br><span class="line">plt.title(&#39;Python3期数学摸底可视化&#39;, fontproperties&#x3D;font)</span><br><span class="line">plt.legend(prop&#x3D;font, loc&#x3D;&#39;upper left&#39;)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">    方程组   函数   导数        微积分       线性代数  概率论  统计学</span><br><span class="line">0   使用过  使用过   不会         不会         不会   不会   不会</span><br><span class="line">1   使用过  使用过   了解         不会         不会   不会   不会</span><br><span class="line">2   使用过  使用过   熟悉         不会         不会   不会   不会</span><br><span class="line">3    熟悉   熟悉   熟悉         了解         了解   了解   了解</span><br><span class="line">4   使用过  使用过  使用过        使用过        使用过  使用过  使用过</span><br><span class="line">5   使用过  使用过  使用过         不会         不会   不会   了解</span><br><span class="line">6    熟悉   熟悉   熟悉         熟悉         熟悉   熟悉   不会</span><br><span class="line">7   使用过  使用过  使用过        使用过        使用过  使用过  使用过</span><br><span class="line">8    熟悉   熟悉   熟悉         熟悉         熟悉  使用过  使用过</span><br><span class="line">9    熟悉   熟悉  使用过         不会        使用过  使用过   不会</span><br><span class="line">10  使用过  使用过   熟悉         熟悉         熟悉   熟悉   熟悉</span><br><span class="line">11  使用过  使用过  使用过        使用过        使用过   不会   不会</span><br><span class="line">12  使用过  使用过  使用过        使用过        使用过  使用过  使用过</span><br><span class="line">13  使用过  使用过   了解         不会         不会   不会   不会</span><br><span class="line">14  使用过  使用过  使用过        使用过        使用过   不会   不会</span><br><span class="line">15  使用过  使用过   熟悉         不会         不会   不会   不会</span><br><span class="line">16   熟悉   熟悉  使用过        使用过        使用过   不会   不会</span><br><span class="line">17  使用过  使用过  使用过         了解         不会   不会   不会</span><br><span class="line">18  使用过  使用过  使用过        使用过         熟悉   熟悉   熟悉</span><br><span class="line">19  使用过  使用过  使用过         了解         不会   不会   不会</span><br><span class="line">20  使用过  使用过  使用过        使用过        使用过  使用过  使用过</span><br><span class="line">21  使用过  使用过  使用过        使用过        使用过  使用过  使用过</span><br><span class="line">22  使用过  很了解   熟悉  了解一点，不会运用  了解一点，不会运用   了解   不会</span><br><span class="line">23  使用过  使用过  使用过        使用过         熟悉  使用过   熟悉</span><br><span class="line">24   熟悉   熟悉   熟悉        使用过         不会   不会   不会</span><br><span class="line">25  使用过  使用过  使用过        使用过        使用过  使用过  使用过</span><br><span class="line">26  使用过  使用过  使用过        使用过        使用过   不会   不会</span><br><span class="line">27  使用过  使用过   不会         不会         不会   不会   不会</span><br><span class="line">28  使用过  使用过  使用过        使用过        使用过  使用过   了解</span><br><span class="line">29  使用过  使用过  使用过        使用过        使用过   了解   不会</span><br><span class="line">30  使用过  使用过  使用过        使用过        使用过   不会   不会</span><br><span class="line">31  使用过  使用过  使用过        使用过         不会  使用过  使用过</span><br><span class="line">32   熟悉   熟悉  使用过        使用过        使用过   不会   不会</span><br><span class="line">33  使用过  使用过  使用过        使用过         熟悉  使用过   熟悉</span><br><span class="line">34   熟悉   熟悉   熟悉        使用过        使用过   熟悉   不会</span><br><span class="line">35  使用过  使用过  使用过        使用过        使用过  使用过  使用过</span><br><span class="line">36  使用过  使用过  使用过        使用过        使用过  使用过   了解</span><br><span class="line">37  使用过  使用过  使用过        使用过        使用过   不会   不会</span><br><span class="line">38  使用过  使用过  使用过         不会         不会   不会   不会</span><br><span class="line">39  使用过  使用过   不会         不会         不会   不会   不会</span><br><span class="line">40  使用过  使用过  使用过        使用过        使用过   不会   不会</span><br><span class="line">41  使用过  使用过   熟悉         了解         了解   了解   不会</span><br><span class="line">42  使用过  使用过  使用过         不会         不会   不会   不会</span><br><span class="line">43   熟悉  使用过   了解         了解         不会   不会   不会</span><br></pre></td></tr></table></figure></section>
+    <!-- Tags START -->
+    
+    <!-- Tags END -->
+    <!-- NAV START -->
+    
+  <div class="nav-container">
+    <!-- reverse left and right to put prev and next in a more logic postition -->
+    
+      <a class="nav-left" href="/python/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E8%BF%9B%E9%98%B6/7-%E7%B1%BB%E7%9A%84%E5%B0%81%E8%A3%85/">
+        <span class="nav-arrow">← </span>
+        
+          python/面向对象进阶/7-类的封装
+        
+      </a>
+    
+    
+      <a class="nav-right" href="/python/%E5%B8%B8%E7%94%A8%E6%A8%A1%E5%9D%97/9-numpy%E6%A8%A1%E5%9D%97/">
+        
+          python/常用模块/9-numpy模块
+        
+        <span class="nav-arrow"> →</span>
+      </a>
+    
+  </div>
+
+    <!-- NAV END -->
+    <!-- 打赏 START -->
+    
+      <div class="money-like">
+        <div class="reward-btn">
+          赏
+          <span class="money-code">
+            <span class="alipay-code">
+              <div class="code-image"></div>
+              <b>使用支付宝打赏</b>
+            </span>
+            <span class="wechat-code">
+              <div class="code-image"></div>
+              <b>使用微信打赏</b>
+            </span>
+          </span>
+        </div>
+        <p class="notice">点击上方按钮,请我喝杯咖啡！</p>
+      </div>
+    
+    <!-- 打赏 END -->
+    <!-- 二维码 START -->
+    
+      <div class="qrcode">
+        <canvas id="share-qrcode"></canvas>
+        <p class="notice">扫描二维码，分享此文章</p>
+      </div>
+    
+    <!-- 二维码 END -->
+    
+      <!-- Gitment START -->
+      <div id="comments"></div>
+      <!-- Gitment END -->
+    
+  </article>
+  <!-- Article END -->
+  <!-- Catalog START -->
+  
+    <aside class="catalog-container">
+  <div class="toc-main">
+  <!-- 不蒜子统计 -->
+    <strong class="toc-title">目录</strong>
+    
+      <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#一、条形图"><span class="toc-nav-text">一、条形图</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#二、直方图"><span class="toc-nav-text">二、直方图</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#三、折线图"><span class="toc-nav-text">三、折线图</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#四、散点图-直线图"><span class="toc-nav-text">四、散点图+直线图</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#五、饼图"><span class="toc-nav-text">五、饼图</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#六、箱型图"><span class="toc-nav-text">六、箱型图</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#七、plot函数参数"><span class="toc-nav-text">七、plot函数参数</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#八、图像标注参数"><span class="toc-nav-text">八、图像标注参数</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#九、Matplolib应用"><span class="toc-nav-text">九、Matplolib应用</span></a></li></ol>
+    
+  </div>
+</aside>
+  
+  <!-- Catalog END -->
+</main>
+
+<script>
+  (function () {
+    var url = 'http://www.liuqingzheng.top/python/常用模块/11-matplotlib模块/';
+    var banner = ''
+    if (banner !== '' && banner !== 'undefined' && banner !== 'null') {
+      $('#article-banner').css({
+        'background-image': 'url(' + banner + ')'
+      })
+    } else {
+      $('#article-banner').geopattern(url)
+    }
+    $('.header').removeClass('fixed-header')
+
+    // error image
+    $(".markdown-content img").on('error', function() {
+      $(this).attr('src', 'http://file.muyutech.com/error-img.png')
+      $(this).css({
+        'cursor': 'default'
+      })
+    })
+
+    // zoom image
+    $(".markdown-content img").on('click', function() {
+      var src = $(this).attr('src')
+      if (src !== 'http://file.muyutech.com/error-img.png') {
+        var imageW = $(this).width()
+        var imageH = $(this).height()
+
+        var zoom = ($(window).width() * 0.95 / imageW).toFixed(2)
+        zoom = zoom < 1 ? 1 : zoom
+        zoom = zoom > 2 ? 2 : zoom
+        var transY = (($(window).height() - imageH) / 2).toFixed(2)
+
+        $('body').append('<div class="image-view-wrap"><div class="image-view-inner"><img src="'+ src +'" /></div></div>')
+        $('.image-view-wrap').addClass('wrap-active')
+        $('.image-view-wrap img').css({
+          'width': `${imageW}`,
+          'transform': `translate3d(0, ${transY}px, 0) scale3d(${zoom}, ${zoom}, 1)`
+        })
+        $('html').css('overflow', 'hidden')
+
+        $('.image-view-wrap').on('click', function() {
+          $(this).remove()
+          $('html').attr('style', '')
+        })
+      }
+    })
+  })();
+</script>
+
+
+  <script>
+    var qr = new QRious({
+      element: document.getElementById('share-qrcode'),
+      value: document.location.href
+    });
+  </script>
+
+
+
+  <script>
+    var gitmentConfig = "liuqingzheng";
+    if (gitmentConfig !== 'undefined') {
+      var gitment = new Gitment({
+        id: "python/常用模块/11-matplotlib模块",
+        owner: "liuqingzheng",
+        repo: "FuckBlog",
+        oauth: {
+          client_id: "32a4076431cf39d0ecea",
+          client_secret: "94484bd79b3346a949acb2fda3c8a76ce16990c6"
+        },
+        theme: {
+          render(state, instance) {
+            const container = document.createElement('div')
+            container.lang = "en-US"
+            container.className = 'gitment-container gitment-root-container'
+            container.appendChild(instance.renderHeader(state, instance))
+            container.appendChild(instance.renderEditor(state, instance))
+            container.appendChild(instance.renderComments(state, instance))
+            container.appendChild(instance.renderFooter(state, instance))
+            return container;
+          }
+        }
+      })
+      gitment.render(document.getElementById('comments'))
+    }
+  </script>
+
+
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>

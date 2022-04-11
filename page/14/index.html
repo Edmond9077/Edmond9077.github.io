@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <meta name="description" content="刘清政">
+  <meta name="keyword" content="hexo-theme">
+  
+    <link rel="shortcut icon" href="/css/images/logo.png">
+  
+  <title>
+    
+      Justin-刘清政的博客
+    
+  </title>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" rel="stylesheet">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/tomorrow.min.css" rel="stylesheet">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/css/plugins/gitment.css">
+
+  
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/geopattern/1.2.3/js/geopattern.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+  
+    
+<script src="/js/qrious.js"></script>
+
+  
+  
+    
+<script src="/js/gitment.js"></script>
+
+  
+  
+
+  
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div class="wechat-share">
+  <img src="/css/images/logo.png" />
+</div>
+
+  <body>
+    <header class="header fixed-header">
+  <div class="header-container">
+    <a class="home-link" href="/">
+      <div class="logo"></div>
+      <span>Justin-刘清政的博客</span>
+    </a>
+    <ul class="right-list">
+      
+        <li class="list-item">
+          
+            <a href="/" class="item-link active">主页</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/tags/" class="item-link">标签</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/archives/" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="list-item">
+          
+            <a href="/about/" class="item-link">关于我</a>
+          
+        </li>
+      
+    </ul>
+    <div class="menu">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </div>
+    <div class="menu-mask">
+      <ul class="menu-list">
+        
+          <li class="menu-item">
+            
+              <a href="/" class="menu-link mobile-active">主页</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/tags/" class="menu-link">标签</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/archives/" class="menu-link">归档</a>
+            
+          </li>
+        
+          <li class="menu-item">
+            
+              <a href="/about/" class="menu-link">关于我</a>
+            
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</header>
+
+    <main class="app-body">
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/8-%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98/">python/网络编程/8-粘包问题</a>
+      </h2>
+      <p class="article-date">2020年10月17日</p>
+      
+      <div class="article-summary">
+        
+          一、什么是粘包？注意：只有TCP有粘包现象，UDP永远不会粘包，为何，且听我娓娓道来。
+首先需要掌握一个socket收发消息的原理
+
+发送端可以是一K一K地发送数据，而接收端的应用程序可以两K两K地提走数据，当然也有可能一次提走3K或6K数据，或者一次只提走几个字节的数据，也就是说，应用程序 ...
+        
+      </div>
+      <a class="more" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/8-%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/5-%E5%9F%BA%E4%BA%8ETCP%E5%8D%8F%E8%AE%AE%E7%9A%84socket%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E7%A8%8B/">python/网络编程/5-基于TCP协议的socket套接字编程</a>
+      </h2>
+      <p class="article-date">2020年10月17日</p>
+      
+      <div class="article-summary">
+        
+          一、什么是ScoketSocket是应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。
+所以，我 ...
+        
+      </div>
+      <a class="more" href="/python/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/5-%E5%9F%BA%E4%BA%8ETCP%E5%8D%8F%E8%AE%AE%E7%9A%84socket%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E7%A8%8B/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/12-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-Django%E4%B8%8EAjax/">python/Django框架/12-Django高级之-Django与Ajax</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          *一 什么是Ajax *AJAX（Asynchronous Javascript And XML）翻译成中文就是“异步Javascript和XML”。即使用Javascript语言与服务器进行异步交互，传输的数据为XML（当然，传输的数据不只是XML,现在更多使用json数据）。
+
+同步交互 ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/12-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-Django%E4%B8%8EAjax/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/17-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-Auth/">python/Django框架/17-Django高级之-Auth</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          1 Auth模块是什么Auth模块是Django自带的用户认证模块：
+我们在开发一个网站的时候，无可避免的需要设计实现网站的用户系统。此时我们需要实现包括用户注册、用户登录、用户认证、注销、修改密码等功能，这还真是个麻烦的事情呢。
+Django作为一个完美主义者的终极框架，当然也会想到用户的 ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/17-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-Auth/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/23-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-cookie-session-token/">python/Django框架/23-Django高级之-cookie-session-token</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          发展史1、很久很久以前，Web 基本上就是文档的浏览而已， 既然是浏览，作为服务器，  不需要记录谁在某一段时间里都浏览了什么文档，每次请求都是一个新的HTTP协议， 就是请求加响应，  尤其是我不用记住是谁刚刚发了HTTP请求，   每个请求对我来说都是全新的。这段时间很嗨皮
+2、但是随着 ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/23-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-cookie-session-token/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/20-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-%E4%BF%A1%E5%8F%B7/">python/Django框架/20-Django高级之-信号</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          一 信号简介Django提供一种信号机制。其实就是观察者模式，又叫发布-订阅(Publish/Subscribe) 。当发生一些动作的时候，发出信号，然后监听了这个信号的函数就会执行。
+通俗来讲，就是一些动作发生的时候，信号允许特定的发送者去提醒一些接受者。用于在框架执行操作时解耦。
+二 D ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/20-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-%E4%BF%A1%E5%8F%B7/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/18-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-ContentType/">python/Django框架/18-Django高级之-ContentType</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          一 项目背景路飞学成项目，有课程，学位课（不同的课程字段不一样），价格策略
+问题，1 如何设计表结构，来表示这种规则    　 2 为专题课，添加三个价格策略      3 查询所有价格策略，并且显示对应的课程名称      4 通过课程id，获取课程信息和价格策略
+二 版本一一个课程表，包 ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/18-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-ContentType/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/22-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/">python/Django框架/22-Django高级之-跨域问题</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          一 同源策略同源策略（Same origin policy）是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，则浏览器的正常功能可能都会受到影响。可以说Web是构建在同源策略基础之上的，浏览器只是针对同源策略的一种实现
+请求的url地址,必须与浏览器上的url地址处于同域上 ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/22-Django%E9%AB%98%E7%BA%A7%E4%B9%8B-%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/3-Web%E6%A1%86%E6%9E%B6/">python/Django框架/3-Web框架</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          一 web框架Web框架（Web  framework）是一种开发框架，用来支持动态网站、网络应用和网络服务的开发。这大多数的web框架提供了一套开发和部署网站的方式，也为web行为提供了一套通用的方法。web框架已经实现了很多功能，开发人员使用框架提供的方法并且完成自己的业务逻辑，就能快速 ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/3-Web%E6%A1%86%E6%9E%B6/">详情...</a>
+    </article>
+  
+    <article class="article-card">
+      <h2 class="article-head">
+        <a href="/python/Django%E6%A1%86%E6%9E%B6/4-Django%E7%AE%80%E4%BB%8B/">python/Django框架/4-Django简介</a>
+      </h2>
+      <p class="article-date">2020年9月24日</p>
+      
+      <div class="article-summary">
+        
+          一 MVC与MTV模型1.1 MVCWeb服务器开发领域里著名的MVC模式，所谓MVC就是把Web应用分为模型(M)，控制器(C)和视图(V)三层，他们之间以一种插件式的、松耦合的方式连接在一起，模型负责业务对象与数据库的映射(ORM)，视图负责与用户的交互(页面)，控制器接受用户的输入调用 ...
+        
+      </div>
+      <a class="more" href="/python/Django%E6%A1%86%E6%9E%B6/4-Django%E7%AE%80%E4%BB%8B/">详情...</a>
+    </article>
+  
+
+  
+    <div class="guide-pager">
+  
+    <a href="/page/13/"><span class="page-arrow">← </span>Prev</a>
+  
+  
+    <a href="/page/15/">Next<span class="page-arrow"> →</span></a>
+  
+</div>
+  
+</main>
+
+
+    <div class="scroll-top">
+  <span class="arrow-icon"></span>
+</div>
+    <footer class="app-footer">
+<!-- 不蒜子统计 -->
+<span id="busuanzi_container_site_pv">
+     本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span class="post-meta-divider">|</span>
+<span id="busuanzi_container_site_uv" style='display:none'>
+     本站访客数<span id="busuanzi_value_site_uv"></span>人
+</span>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+  <p class="copyright">
+    &copy; 2021 | Proudly powered by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank">小猿取经</a>
+    <br>
+    Theme by <a href="https://www.cnblogs.com/xiaoyuanqujing" target="_blank" rel="noopener">小猿取经</a>
+  </p>
+</footer>
+
+<script>
+  function async(u, c) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+</script>
+<script>
+  async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+    FastClick.attach(document.body);
+  })
+</script>
+
+<script>
+  var hasLine = 'true';
+  async("//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js", function(){
+    $('figure pre').each(function(i, block) {
+      var figure = $(this).parents('figure');
+      if (hasLine === 'false') {
+        figure.find('.gutter').hide();
+      }
+      var lang = figure.attr('class').split(' ')[1] || 'code';
+      var codeHtml = $(this).html();
+      var codeTag = document.createElement('code');
+      codeTag.className = lang;
+      codeTag.innerHTML = codeHtml;
+      $(this).attr('class', '').empty().html(codeTag);
+      figure.attr('data-lang', lang.toUpperCase());
+      hljs.highlightBlock(block);
+    });
+  })
+</script>
+
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = 'c5fd96eee1193585be191f318c3fa725';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<script src="/js/script.js"></script>
+
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/load.js"></script>
+
+
+
+  <span class="local-search local-search-google local-search-plugin" style="right: 50px;top: 70px;;position:absolute;z-index:2;">
+      <input type="search" placeholder="站内搜索" id="local-search-input" class="local-search-input-cls" style="">
+      <div id="local-search-result" class="local-search-result-cls"></div>
+  </span>
+
+
+  </body>
+</html>
